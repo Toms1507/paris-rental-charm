@@ -1,0 +1,77 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Check } from "lucide-react";
+import { LeadForm } from "@/components/site/LeadForm";
+
+const TITLE = "Tarifs conciergerie Airbnb Paris : 20 % tout compris — Spinelle Conciergerie";
+const DESCRIPTION =
+  "Une commission unique de 20 % des revenus locatifs, sans frais de mise en place ni abonnement. Découvrez ce que comprend la gestion complète de votre location courte durée à Paris.";
+
+const INCLUDED = [
+  "Création et optimisation des annonces Airbnb, Booking et Abritel",
+  "Photos professionnelles du logement",
+  "Tarification dynamique ajustée chaque jour",
+  "Gestion des messages et sélection des voyageurs 7j/7",
+  "Arrivées, départs et remise des clés",
+  "Ménage hôtelier entre chaque séjour",
+  "Linge de lit et de toilette professionnel",
+  "Réassort des consommables (café, savon, papier)",
+  "Maintenance, petits travaux et suivi des artisans",
+  "Déclaration en mairie, taxe de séjour, suivi de conformité",
+  "Récapitulatif mensuel de vos revenus",
+];
+
+export const Route = createFileRoute("/tarifs")({
+  head: () => ({
+    meta: [
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:url", content: "/tarifs" },
+    ],
+    links: [{ rel: "canonical", href: "/tarifs" }],
+  }),
+  component: TarifsPage,
+});
+
+function TarifsPage() {
+  return (
+    <>
+      <section className="border-b border-border bg-[var(--sand)] py-16">
+        <div className="container-page max-w-3xl">
+          <p className="eyebrow">Tarifs</p>
+          <h1 className="mt-4 text-4xl sm:text-5xl">Un tarif simple, sans surprise</h1>
+          <p className="mt-5 text-muted-foreground">
+            Nous ne gagnons que lorsque votre logement est loué. Pas d'abonnement, pas de frais
+            cachés, pas d'engagement de durée.
+          </p>
+        </div>
+      </section>
+
+      <section className="container-page py-20">
+        <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
+          <div className="rounded-2xl border border-border p-8 shadow-[var(--shadow-soft)]">
+            <p className="eyebrow">Gestion complète</p>
+            <p className="mt-4 font-[family-name:var(--font-display)] text-5xl text-primary">20 %</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              des revenus locatifs encaissés, TTC, tout compris
+            </p>
+            <ul className="mt-8 space-y-3">
+              {INCLUDED.map((i) => (
+                <li key={i} className="flex gap-3 text-sm">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <span>{i}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 text-xs text-muted-foreground">
+              Les frais de plateforme (Airbnb, Booking) et la taxe de séjour sont prélevés
+              directement par les plateformes. Le premier shooting photo est offert.
+            </p>
+          </div>
+          <LeadForm />
+        </div>
+      </section>
+    </>
+  );
+}

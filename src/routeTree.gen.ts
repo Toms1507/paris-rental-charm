@@ -10,33 +10,141 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AvisRouteImport } from './routes/avis'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as TarifsRouteImport } from './routes/tarifs'
+import { Route as ZonesRouteImport } from './routes/zones'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AvisRoute = AvisRouteImport.update({
+  id: '/avis',
+  path: '/avis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TarifsRoute = TarifsRouteImport.update({
+  id: '/tarifs',
+  path: '/tarifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ZonesRoute = ZonesRouteImport.update({
+  id: '/zones',
+  path: '/zones',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/avis': typeof AvisRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/services': typeof ServicesRoute
+  '/tarifs': typeof TarifsRoute
+  '/zones': typeof ZonesRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/avis': typeof AvisRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/services': typeof ServicesRoute
+  '/tarifs': typeof TarifsRoute
+  '/zones': typeof ZonesRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/avis': typeof AvisRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/services': typeof ServicesRoute
+  '/tarifs': typeof TarifsRoute
+  '/zones': typeof ZonesRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/avis'
+    | '/contact'
+    | '/faq'
+    | '/services'
+    | '/tarifs'
+    | '/zones'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/avis'
+    | '/contact'
+    | '/faq'
+    | '/services'
+    | '/tarifs'
+    | '/zones'
+    | '/blog/$slug'
+    | '/blog'
+  id:
+    | '__root__'
+    | '/'
+    | '/avis'
+    | '/contact'
+    | '/faq'
+    | '/services'
+    | '/tarifs'
+    | '/zones'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AvisRoute: typeof AvisRoute
+  ContactRoute: typeof ContactRoute
+  FaqRoute: typeof FaqRoute
+  ServicesRoute: typeof ServicesRoute
+  TarifsRoute: typeof TarifsRoute
+  ZonesRoute: typeof ZonesRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +156,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/avis': {
+      id: '/avis'
+      path: '/avis'
+      fullPath: '/avis'
+      preLoaderRoute: typeof AvisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tarifs': {
+      id: '/tarifs'
+      path: '/tarifs'
+      fullPath: '/tarifs'
+      preLoaderRoute: typeof TarifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/zones': {
+      id: '/zones'
+      path: '/zones'
+      fullPath: '/zones'
+      preLoaderRoute: typeof ZonesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AvisRoute: AvisRoute,
+  ContactRoute: ContactRoute,
+  FaqRoute: FaqRoute,
+  ServicesRoute: ServicesRoute,
+  TarifsRoute: TarifsRoute,
+  ZonesRoute: ZonesRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
