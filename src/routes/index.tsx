@@ -3,7 +3,7 @@ import { ArrowRight, BadgeCheck, Clock, Home, Sparkles, Star, TrendingUp } from 
 import heroImage from "@/assets/hero-paris.jpg";
 import roomImage from "@/assets/room.jpg";
 import { LeadForm } from "@/components/site/LeadForm";
-import { FAQ, REVIEWS, SERVICES, STEPS, ZONES, POSTS } from "@/content/site";
+import { REVIEWS, SERVICES, STEPS, ZONES, POSTS } from "@/content/site";
 
 const TITLE = "Conciergerie Airbnb Paris | Gestion locative courte durée — Spinelle Conciergerie";
 const DESCRIPTION =
