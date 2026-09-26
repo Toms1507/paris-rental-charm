@@ -35,7 +35,18 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
     }
 
     setStatus("sending");
-    const { error: insertError } = await supabase.from("leads").insert(parsed.data);
+    const d = parsed.data;
+    const { error: insertError } = await supabase.from("leads").insert({
+      full_name: d.full_name,
+      email: d.email,
+      phone: d.phone,
+      property_type: d.property_type ?? null,
+      bedrooms: d.bedrooms ?? null,
+      surface: d.surface ?? null,
+      district: d.district ?? null,
+      city: d.city ?? null,
+      message: d.message ?? null,
+    });
     if (insertError) {
       setStatus("idle");
       setError("L'envoi a échoué. Merci de réessayer dans un instant.");
