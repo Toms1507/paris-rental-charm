@@ -10,7 +10,7 @@ export const SITE = {
   // Il sert aux URL canoniques, au sitemap et aux images de partage.
   url:
     (import.meta.env.VITE_SITE_URL as string | undefined)?.replace(/\/$/, "") ??
-    "https://www.spinelle-conciergerie.fr",
+    "https://spinelleconciergerie.fr",
 };
 
 export const NAV = [
