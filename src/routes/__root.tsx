@@ -13,22 +13,28 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { CookieConsent } from "@/components/site/CookieConsent";
+import { CITIES, SITE } from "@/content/site";
+import { ADS_ID, GA_ID, gtagBootstrapScript, TRACKING_ENABLED } from "@/lib/analytics";
+import { DEFAULT_IMAGE, jsonLdScript } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-[60vh] items-center justify-center bg-background px-4 py-24">
+      {/* Les pages 404 ne doivent pas être indexées. */}
+      <meta name="robots" content="noindex" />
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <p className="text-7xl font-bold text-foreground">404</p>
+        <h1 className="mt-4 text-xl font-semibold text-foreground">Page introuvable</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          Cette page n'existe pas ou a été déplacée.
         </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link to="/" className="btn-outline">
+            Retour à l'accueil
+          </Link>
+          <Link to="/contact" className="btn-primary">
+            Estimation gratuite
           </Link>
         </div>
       </div>
@@ -47,10 +53,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          Cette page n'a pas pu se charger
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Une erreur est survenue de notre côté. Réessayez ou revenez à l'accueil.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -60,13 +66,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            Réessayer
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            Retour à l'accueil
           </a>
         </div>
       </div>
@@ -79,11 +85,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "Spinelle Conciergerie" },
-      { property: "og:site_name", content: "Spinelle Conciergerie" },
+      { name: "author", content: SITE.name },
+      { name: "theme-color", content: "#ffffff" },
+      { name: "format-detection", content: "telephone=no" },
+      { name: "geo.region", content: "FR-75" },
+      { name: "geo.placename", content: "Paris" },
+      { property: "og:site_name", content: SITE.name },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "fr_FR" },
+      { property: "og:image", content: DEFAULT_IMAGE },
+      { property: "og:image:width", content: "1600" },
+      { property: "og:image:height", content: "1104" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: DEFAULT_IMAGE },
+      // Vérification Google Search Console (optionnel) : VITE_GOOGLE_SITE_VERIFICATION
+      ...(import.meta.env.VITE_GOOGLE_SITE_VERIFICATION
+        ? [
+            {
+              name: "google-site-verification",
+              content: import.meta.env.VITE_GOOGLE_SITE_VERIFICATION as string,
+            },
+          ]
+        : []),
     ],
     links: [
       {
@@ -99,20 +122,57 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
     scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          name: "Spinelle Conciergerie",
-          description:
-            "Conciergerie Airbnb et Booking à Paris et alentours : gestion complète de votre location courte durée.",
-          email: "simontom33@sfr.fr",
-          areaServed: "Paris et alentours",
-          address: { "@type": "PostalAddress", addressLocality: "Paris", addressCountry: "FR" },
-          priceRange: "20% des revenus locatifs",
-        }),
-      },
+      jsonLdScript({
+        "@type": "LocalBusiness",
+        "@id": `${SITE.url}/#organization`,
+        name: SITE.name,
+        url: SITE.url,
+        image: DEFAULT_IMAGE,
+        description:
+          "Conciergerie Airbnb et Booking à Paris et alentours : gestion complète de votre location courte durée.",
+        email: SITE.email,
+        telephone: SITE.phone.replace(/ /g, ""),
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Paris",
+          addressRegion: "Île-de-France",
+          addressCountry: "FR",
+        },
+        geo: { "@type": "GeoCoordinates", latitude: 48.8566, longitude: 2.3522 },
+        areaServed: CITIES.map((c) => ({ "@type": "City", name: c.name })),
+        priceRange: "20 % des revenus locatifs",
+        knowsAbout: [
+          "Conciergerie Airbnb",
+          "Gestion locative courte durée",
+          "Location saisonnière",
+          "Tarification dynamique",
+        ],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Services de conciergerie",
+          itemListElement: [
+            "Création et optimisation d'annonces Airbnb et Booking",
+            "Gestion des voyageurs 7j/7",
+            "Ménage hôtelier et linge",
+            "Maintenance",
+            "Tarification dynamique",
+          ].map((name) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name } })),
+        },
+      }),
+      jsonLdScript({
+        "@type": "WebSite",
+        "@id": `${SITE.url}/#website`,
+        url: SITE.url,
+        name: SITE.name,
+        inLanguage: "fr-FR",
+        publisher: { "@id": `${SITE.url}/#organization` },
+      }),
+      ...(TRACKING_ENABLED
+        ? [
+            { children: gtagBootstrapScript() },
+            { src: `https://www.googletagmanager.com/gtag/js?id=${GA_ID || ADS_ID}`, async: true },
+          ]
+        : []),
     ],
   }),
   shellComponent: RootShell,
@@ -123,7 +183,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>
@@ -148,6 +208,7 @@ function RootComponent() {
         </main>
         <Footer />
       </div>
+      <CookieConsent />
     </QueryClientProvider>
   );
 }

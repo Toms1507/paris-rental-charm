@@ -23,7 +23,6 @@ export function Header() {
               to={item.to}
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
               activeProps={{ className: "text-sm font-medium text-primary" }}
-              activeOptions={{ exact: item.to === "/" }}
             >
               {item.label}
             </Link>
@@ -31,8 +30,8 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link to="/contact" className="btn-primary hidden sm:inline-flex">
-            Estimation gratuite
+          <Link to="/" hash="estimation" className="btn-primary hidden sm:inline-flex">
+            Audit gratuit
           </Link>
           <button
             type="button"
@@ -58,8 +57,13 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Link to="/contact" onClick={() => setOpen(false)} className="btn-primary mt-3">
-              Estimation gratuite
+            <Link
+              to="/"
+              hash="estimation"
+              onClick={() => setOpen(false)}
+              className="btn-primary mt-3"
+            >
+              Audit gratuit
             </Link>
           </div>
         </nav>

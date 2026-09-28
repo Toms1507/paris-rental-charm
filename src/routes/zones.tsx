@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import rooftops from "@/assets/paris-rooftops.jpg";
-import { ZONES } from "@/content/site";
+import { CITIES, ZONES } from "@/content/site";
+import { absoluteUrl, pageHead } from "@/lib/seo";
 
-const TITLE = "Conciergerie Airbnb à Paris et alentours : nos zones — Spinelle Conciergerie";
+const TITLE = "Conciergerie Airbnb à Paris et alentours : nos zones — Spinelle Conciergerie";
 const DESCRIPTION =
-  "Nous gérons des locations courte durée dans les 20 arrondissements de Paris et en proche banlieue : Boulogne, Neuilly, Levallois, Montreuil, Vincennes, Saint-Ouen, Clichy et alentours.";
+  "Nous gérons des locations courte durée dans les 20 arrondissements de Paris et en proche banlieue : Boulogne, Neuilly, Levallois, Montreuil, Vincennes, Saint-Ouen, Clichy et alentours.";
 
 const ARRONDISSEMENTS = [
   "Paris 1er — Louvre",
@@ -30,16 +31,25 @@ const ARRONDISSEMENTS = [
 ];
 
 export const Route = createFileRoute("/zones")({
-  head: () => ({
-    meta: [
-      { title: TITLE },
-      { name: "description", content: DESCRIPTION },
-      { property: "og:title", content: TITLE },
-      { property: "og:description", content: DESCRIPTION },
-      { property: "og:url", content: "/zones" },
-    ],
-    links: [{ rel: "canonical", href: "/zones" }],
-  }),
+  head: () =>
+    pageHead({
+      title: TITLE,
+      description: DESCRIPTION,
+      path: "/zones",
+      breadcrumb: [{ name: "Zones", path: "/zones" }],
+      jsonLd: [
+        {
+          "@type": "ItemList",
+          name: "Zones desservies",
+          itemListElement: CITIES.map((c, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: `Conciergerie Airbnb ${c.inName}`,
+            url: absoluteUrl(`/conciergerie-airbnb/${c.slug}`),
+          })),
+        },
+      ],
+    }),
   component: ZonesPage,
 });
 
@@ -81,12 +91,14 @@ function ZonesPage() {
           ))}
         </ul>
 
-        <h2 className="mt-16 text-3xl sm:text-4xl">Proche banlieue</h2>
+        <h2 className="mt-16 text-3xl sm:text-4xl">Nos secteurs</h2>
         <div className="mt-8 grid gap-6 md:grid-cols-2">
           {ZONES.map((z) => (
             <article key={z.city} className="rounded-xl border border-border p-6">
               <h3 className="text-lg">{z.city}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{z.detail}</p>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-muted-foreground">
+                {z.detail}
+              </p>
             </article>
           ))}
         </div>

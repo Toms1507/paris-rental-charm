@@ -1,27 +1,57 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, MapPin } from "lucide-react";
-import { NAV, SITE, ZONES } from "@/content/site";
+import { ArrowRight, Mail, MapPin, MessageCircle } from "lucide-react";
+import { NAV, SITE } from "@/content/site";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-border bg-[var(--sand)]">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-4">
+    <footer className="mt-24 bg-[var(--ink)] text-white">
+      {/* Bandeau d'appel */}
+      <div className="container-page border-b border-white/10 py-14">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div>
+            <p className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
+              Prêt à louer l'esprit libre&nbsp;?
+            </p>
+            <p className="mt-2 text-[0.95rem] text-white/70">
+              Recevez sous 24&nbsp;h une estimation gratuite et sans engagement.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/" hash="estimation" className="btn-primary">
+              Audit gratuit <ArrowRight className="size-4" />
+            </Link>
+            <a
+              href={SITE.whatsapp}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center justify-center gap-2 rounded-[var(--radius)] border border-white/30 px-6 py-3.5 text-[0.95rem] font-semibold transition-colors hover:bg-white/10"
+            >
+              <MessageCircle className="size-4" /> WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p className="font-[family-name:var(--font-display)] text-lg font-semibold">
-            Spinelle Conciergerie
+          <p className="font-[family-name:var(--font-display)] text-2xl">
+            Spinelle <span className="eyebrow ml-1 !text-[oklch(0.8_0.09_45)]">Conciergerie</span>
           </p>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Conciergerie Airbnb et Booking à Paris et alentours. Nous gérons votre location courte
-            durée de A à Z : annonces, voyageurs, ménage, maintenance et conformité.
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
+            Nous gérons votre location courte durée de A&nbsp;à&nbsp;Z&nbsp;: annonce, voyageurs,
+            ménage, maintenance et conformité, à Paris, en proche banlieue et au-delà.
           </p>
         </div>
 
         <div>
-          <p className="text-sm font-semibold">Navigation</p>
-          <ul className="mt-3 space-y-2">
+          <p className="text-xs font-semibold tracking-wider text-white/50 uppercase">Navigation</p>
+          <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5">
             {NAV.map((item) => (
               <li key={item.to}>
-                <Link to={item.to} className="text-sm text-muted-foreground hover:text-primary">
+                <Link
+                  to={item.to}
+                  className="text-sm text-white/80 transition-colors hover:text-white"
+                >
                   {item.label}
                 </Link>
               </li>
@@ -30,33 +60,46 @@ export function Footer() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold">Zones desservies</p>
-          <ul className="mt-3 space-y-2">
-            {ZONES.map((z) => (
-              <li key={z.city} className="text-sm text-muted-foreground">
-                {z.city}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-sm font-semibold">Contact</p>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2">
-              <Mail className="size-4 text-primary" /> {SITE.email}
+          <p className="text-xs font-semibold tracking-wider text-white/50 uppercase">Contact</p>
+          <ul className="mt-4 space-y-3 text-sm text-white/80">
+            <li>
+              <a
+                href={SITE.whatsapp}
+                target="_blank"
+                rel="noopener"
+                className="flex items-center gap-2.5 transition-colors hover:text-white"
+              >
+                <MessageCircle className="size-4 text-[oklch(0.8_0.09_45)]" />
+                <span className="whitespace-nowrap">{SITE.phone}</span>
+              </a>
             </li>
-            <li className="flex items-center gap-2">
-              <MapPin className="size-4 text-primary" /> Paris et alentours
+            <li>
+              <a
+                href={`mailto:${SITE.email}`}
+                className="flex items-center gap-2.5 transition-colors hover:text-white"
+              >
+                <Mail className="size-4 text-[oklch(0.8_0.09_45)]" /> {SITE.email}
+              </a>
+            </li>
+            <li className="flex items-center gap-2.5">
+              <MapPin className="size-4 text-[oklch(0.8_0.09_45)]" /> Paris et alentours
             </li>
           </ul>
-          <Link to="/contact" className="btn-primary mt-5">
-            Estimation gratuite
-          </Link>
         </div>
       </div>
-      <div className="container-page border-t border-border py-6 text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Spinelle Conciergerie — Tous droits réservés.
+
+      <div className="container-page border-t border-white/10 py-6 text-xs text-white/50">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span>© {new Date().getFullYear()} Spinelle Conciergerie. Tous droits réservés.</span>
+          <span className="flex gap-5">
+            <Link to="/mentions-legales" className="transition-colors hover:text-white">
+              Mentions légales
+            </Link>
+            <Link to="/confidentialite" className="transition-colors hover:text-white">
+              Confidentialité et cookies
+            </Link>
+          </span>
+        </div>
       </div>
     </footer>
   );

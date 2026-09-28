@@ -72,7 +72,7 @@
   --secondary: oklch(0.974 0.006 62);
   --secondary-foreground: oklch(0.243 0 0);
   --muted: oklch(0.974 0.006 62);
-  --muted-foreground: oklch(0.51 0.012 60);
+  --muted-foreground: oklch(0.46 0.012 60);
   --accent: oklch(0.606 0.104 40.6);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -135,6 +135,22 @@
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.015em;
+    /* Répartit les titres sur des lignes de longueur égale : jamais un mot seul en fin de titre. */
+    text-wrap: balance;
+  }
+
+  /* Évite les mots orphelins en dernière ligne des paragraphes et listes. */
+  p,
+  li,
+  dd,
+  summary,
+  blockquote {
+    text-wrap: pretty;
+  }
+
+  body {
+    font-size: 1rem;
+    line-height: 1.6;
   }
 }
 
@@ -204,5 +220,36 @@
   &:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px oklch(0.606 0.104 40.6 / 15%);
+  }
+}
+
+/* Bandeau défilant (hero) */
+@utility marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+@utility marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0.625rem;
+  animation: marquee-scroll 28s linear infinite;
+  &:hover {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* La liste étant doublée, -50 % moins la moitié de l'écart ramène exactement au point de départ. */
+    transform: translateX(calc(-50% - 0.3125rem));
   }
 }

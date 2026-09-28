@@ -1,23 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Clock, Mail, MapPin } from "lucide-react";
+import { Clock, Mail, MapPin, MessageCircle } from "lucide-react";
 import { LeadForm } from "@/components/site/LeadForm";
 import { SITE } from "@/content/site";
+import { absoluteUrl, pageHead } from "@/lib/seo";
 
 const TITLE = "Estimation gratuite de vos revenus locatifs — Spinelle Conciergerie";
 const DESCRIPTION =
-  "Décrivez votre bien (type, surface, quartier, ville) et recevez sous 24 h une estimation gratuite des revenus possibles en location courte durée à Paris et alentours.";
+  "Décrivez votre bien (type, surface, quartier, ville) et recevez sous 24 h une estimation gratuite des revenus possibles en location courte durée à Paris et alentours.";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: TITLE },
-      { name: "description", content: DESCRIPTION },
-      { property: "og:title", content: TITLE },
-      { property: "og:description", content: DESCRIPTION },
-      { property: "og:url", content: "/contact" },
-    ],
-    links: [{ rel: "canonical", href: "/contact" }],
-  }),
+  head: () =>
+    pageHead({
+      title: TITLE,
+      description: DESCRIPTION,
+      path: "/contact",
+      breadcrumb: [{ name: "Estimation gratuite", path: "/contact" }],
+      jsonLd: [
+        {
+          "@type": "ContactPage",
+          name: TITLE,
+          url: absoluteUrl("/contact"),
+          about: { "@id": `${SITE.url}/#organization` },
+        },
+      ],
+    }),
   component: ContactPage,
 });
 
@@ -31,11 +37,28 @@ function ContactPage() {
           <p className="mt-5 text-muted-foreground">
             Remplissez le formulaire avec les caractéristiques de votre logement. Nous analysons les
             réservations réelles de votre quartier et vous envoyons une projection de revenus sous
-            24 h, sans engagement.
+            24&nbsp;h, sans engagement.
           </p>
-          <ul className="mt-8 space-y-4 text-sm">
-            <li className="flex items-center gap-3">
-              <Mail className="size-4 text-primary" /> {SITE.email}
+          <ul className="mt-8 space-y-4 text-[0.95rem]">
+            <li>
+              <a
+                href={SITE.whatsapp}
+                target="_blank"
+                rel="noopener"
+                className="flex items-center gap-3 font-semibold transition-colors hover:text-primary"
+              >
+                <MessageCircle className="size-4 text-primary" />
+                <span className="whitespace-nowrap">{SITE.phone}</span>
+                <span className="text-xs font-normal text-muted-foreground">WhatsApp</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href={`mailto:${SITE.email}`}
+                className="flex items-center gap-3 transition-colors hover:text-primary"
+              >
+                <Mail className="size-4 text-primary" /> {SITE.email}
+              </a>
             </li>
             <li className="flex items-center gap-3">
               <MapPin className="size-4 text-primary" /> Paris et alentours

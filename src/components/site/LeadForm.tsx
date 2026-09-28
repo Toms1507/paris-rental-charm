@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { trackLead } from "@/lib/analytics";
+import { submitLead } from "@/lib/leads";
 
 const schema = z.object({
   full_name: z.string().trim().min(2, "Merci d'indiquer votre nom").max(100),
@@ -15,7 +16,15 @@ const schema = z.object({
   message: z.string().trim().max(1500).optional(),
 });
 
-const PROPERTY_TYPES = ["Studio", "2 pièces", "3 pièces", "4 pièces ou plus", "Maison", "Loft", "Autre"];
+const PROPERTY_TYPES = [
+  "Studio",
+  "2 pièces",
+  "3 pièces",
+  "4 pièces ou plus",
+  "Maison",
+  "Loft",
+  "Autre",
+];
 const BEDROOMS = ["0 (studio)", "1", "2", "3", "4 et plus"];
 
 export function LeadForm({ compact = false }: { compact?: boolean }) {
@@ -36,22 +45,13 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
 
     setStatus("sending");
     const d = parsed.data;
-    const { error: insertError } = await supabase.from("leads").insert({
-      full_name: d.full_name,
-      email: d.email,
-      phone: d.phone,
-      property_type: d.property_type ?? null,
-      bedrooms: d.bedrooms ?? null,
-      surface: d.surface ?? null,
-      district: d.district ?? null,
-      city: d.city ?? null,
-      message: d.message ?? null,
-    });
-    if (insertError) {
+    const { ok } = await submitLead({ ...d, source: "formulaire" });
+    if (!ok) {
       setStatus("idle");
       setError("L'envoi a échoué. Merci de réessayer dans un instant.");
       return;
     }
+    trackLead({ email: d.email, phone: d.phone, city: d.city });
     setStatus("done");
   }
 
@@ -60,9 +60,9 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       <div className="rounded-xl border border-border bg-background p-8 text-center shadow-[var(--shadow-soft)]">
         <CheckCircle2 className="mx-auto size-10 text-primary" />
         <h3 className="mt-4 text-xl">Demande envoyée, merci !</h3>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Nous étudions votre bien et revenons vers vous sous 24 h avec une estimation de revenus
-          personnalisée.
+        <p className="mt-2 text-[0.95rem] leading-relaxed text-muted-foreground">
+          Nous étudions votre bien et revenons vers vous sous 24&nbsp;h avec une estimation de
+          revenus personnalisée.
         </p>
       </div>
     );
@@ -75,14 +75,20 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
     >
       <p className="eyebrow">Estimation gratuite en 1 minute</p>
       <h3 className="mt-2 text-2xl">Parlez-nous de votre bien</h3>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Réponse sous 24 h avec une projection de revenus. Sans engagement.
+      <p className="mt-2 text-[0.95rem] leading-relaxed text-muted-foreground">
+        Réponse sous 24&nbsp;h avec une projection de revenus. Sans engagement.
       </p>
 
       <div className={`mt-6 grid gap-4 ${compact ? "" : "sm:grid-cols-2"}`}>
         <label className="block text-sm">
           <span className="font-medium">Nom et prénom *</span>
-          <input name="full_name" required maxLength={100} className="field-input mt-1.5" />
+          <input
+            name="full_name"
+            required
+            maxLength={100}
+            autoComplete="name"
+            className="field-input mt-1.5"
+          />
         </label>
         <label className="block text-sm">
           <span className="font-medium">Email *</span>
@@ -90,13 +96,21 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
             name="email"
             type="email"
             required
+            autoComplete="email"
             maxLength={255}
             className="field-input mt-1.5"
           />
         </label>
         <label className="block text-sm">
           <span className="font-medium">Téléphone *</span>
-          <input name="phone" type="tel" required maxLength={30} className="field-input mt-1.5" />
+          <input
+            name="phone"
+            type="tel"
+            required
+            maxLength={30}
+            autoComplete="tel"
+            className="field-input mt-1.5"
+          />
         </label>
         <label className="block text-sm">
           <span className="font-medium">Type de bien</span>
@@ -122,7 +136,13 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         </label>
         <label className="block text-sm">
           <span className="font-medium">Surface (m²)</span>
-          <input name="surface" maxLength={30} placeholder="35" className="field-input mt-1.5" />
+          <input
+            name="surface"
+            maxLength={30}
+            inputMode="numeric"
+            placeholder="35"
+            className="field-input mt-1.5"
+          />
         </label>
         <label className="block text-sm">
           <span className="font-medium">Quartier / arrondissement</span>
@@ -135,7 +155,13 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         </label>
         <label className="block text-sm">
           <span className="font-medium">Ville</span>
-          <input name="city" maxLength={80} placeholder="Paris" className="field-input mt-1.5" />
+          <input
+            name="city"
+            maxLength={80}
+            autoComplete="address-level2"
+            placeholder="Paris"
+            className="field-input mt-1.5"
+          />
         </label>
         <label className={`block text-sm ${compact ? "" : "sm:col-span-2"}`}>
           <span className="font-medium">Précisions (facultatif)</span>
@@ -161,7 +187,10 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         )}
       </button>
       <p className="mt-3 text-xs text-muted-foreground">
-        Vos informations ne servent qu'à vous répondre et ne sont jamais transmises à des tiers.
+        Vos informations ne servent qu'à vous répondre et ne sont jamais transmises à des tiers.{" "}
+        <a href="/confidentialite" className="underline">
+          En savoir plus
+        </a>
       </p>
     </form>
   );
