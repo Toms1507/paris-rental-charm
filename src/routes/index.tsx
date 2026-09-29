@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import {
   ArrowDown,
   ArrowRight,
@@ -97,27 +98,32 @@ const PROMISES = [
   "Transparence totale sur vos revenus",
 ];
 
-// Bandeau continu qui défile de droite à gauche. La liste est doublée pour boucler sans saut.
-function BenefitsMarquee() {
+// Une promesse à la fois, qui apparaît puis s'efface en fondu.
+function RotatingBenefits() {
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % HERO_BENEFITS.length), 3200);
+    return () => window.clearInterval(id);
+  }, []);
   return (
     <div
       data-reveal="up"
       style={stagger(4, 150)}
-      className="marquee mt-14 w-full"
+      className="relative mt-14 h-12 w-full"
       aria-label="Nos engagements"
     >
-      <ul className="marquee-track">
-        {[...HERO_BENEFITS, ...HERO_BENEFITS].map((b, i) => (
-          <li
-            key={i}
-            aria-hidden={i >= HERO_BENEFITS.length}
-            className="flex shrink-0 items-center gap-3 pr-12 font-[family-name:var(--font-display)] text-2xl whitespace-nowrap text-white sm:text-3xl"
-          >
-            <b.icon className="size-6 shrink-0 text-[oklch(0.82_0.07_235)] sm:size-7" />
-            {b.label}
-          </li>
-        ))}
-      </ul>
+      {HERO_BENEFITS.map((b, i) => (
+        <p
+          key={b.label}
+          aria-hidden={i !== index}
+          className={`absolute inset-0 flex items-center justify-center gap-3 font-[family-name:var(--font-display)] text-2xl whitespace-nowrap text-white transition-all duration-1000 ease-out sm:text-3xl ${
+            i === index ? "translate-y-0 opacity-100 blur-0" : "translate-y-3 opacity-0 blur-sm"
+          }`}
+        >
+          <b.icon className="size-6 shrink-0 text-[oklch(0.82_0.07_235)] sm:size-7" />
+          {b.label}
+        </p>
+      ))}
     </div>
   );
 }
@@ -178,7 +184,7 @@ function HomePage() {
               Simuler mes revenus
             </a>
           </div>
-          <BenefitsMarquee />
+          <RotatingBenefits />
         </div>
       </section>
 

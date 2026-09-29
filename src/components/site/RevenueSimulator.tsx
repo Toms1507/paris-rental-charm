@@ -5,9 +5,10 @@ import { MARKET_PARIS, type MarketCell } from "@/content/market-paris";
 
 // Paris : prix médians réels par arrondissement, secteur et taille, sur les 12 derniers relevés
 // mensuels Inside Airbnb, avec la saisonnalité mois par mois et la tendance sur un an.
-// Proche banlieue : pas de données publiques, on applique le niveau de prix indicatif de la
-// ville aux médianes parisiennes. Hors zone : données Inside Airbnb de Lyon, Bordeaux et du Pays
-// basque ; ailleurs, étude personnalisée.
+// Hors zone : mêmes données pour Lyon, Bordeaux et le Pays basque. Proche banlieue et autres
+// villes : aucune donnée publique fiable, donc étude personnalisée plutôt qu'un chiffre inventé.
+// Tous les coefficients (capacité, type de bien, salles de bain, chambres, équipements) sont
+// mesurés sur les annonces réelles et recalculés à chaque mise à jour des données.
 
 const SECTORS = [
   { id: "", label: "Tout l'arrondissement" },
@@ -19,32 +20,48 @@ const SECTORS = [
 type Sector = (typeof SECTORS)[number]["id"];
 
 const SUBURBS = CITIES.filter((c) => c.slug !== "paris");
-const PARIS_PRICE_LEVEL = CITIES.find((c) => c.slug === "paris")?.nightlyBase ?? 115;
 const OUT_OF_ZONE = "hors-zone";
 
+// Type de bien : valeurs par défaut à la sélection ; l'effet sur le prix et l'occupation vient
+// des données (lofts et maisons comparés aux appartements, à arrondissement et taille égaux).
 const PROPERTY_TYPES = [
-  { label: "Studio", bedrooms: 0, surface: 25, guests: 2, factor: 1 },
-  { label: "2 pièces", bedrooms: 1, surface: 40, guests: 4, factor: 1 },
-  { label: "3 pièces", bedrooms: 2, surface: 60, guests: 5, factor: 1 },
-  { label: "4 pièces ou plus", bedrooms: 3, surface: 85, guests: 7, factor: 1 },
-  { label: "Maison", bedrooms: 3, surface: 100, guests: 7, factor: 1.05 },
-  { label: "Loft", bedrooms: 1, surface: 70, guests: 4, factor: 1.1 },
-];
+  { label: "Studio", kind: "appartement", bedrooms: 0, guests: 2 },
+  { label: "Appartement", kind: "appartement", bedrooms: 1, guests: 3 },
+  { label: "Maison", kind: "maison", bedrooms: 3, guests: 6 },
+  { label: "Loft", kind: "loft", bedrooms: 1, guests: 3 },
+] as const;
 
-// Surface typique de chaque tranche (studio, 1, 2, 3 chambres et plus) : le prix évolue avec
-// l'écart à cette surface (élasticité 0,35 : +10 % de surface ≈ +3,4 % de prix par nuit).
-const TYPICAL_SURFACE = [25, 40, 60, 85];
-const SURFACE_ELASTICITY = 0.35;
-const MAX_SURFACE = 250;
+// Capacité d'accueil la plus courante selon le nombre de chambres (médiane observée sur les
+// annonces parisiennes) : proposée par défaut quand le nombre de chambres change.
+const TYPICAL_GUESTS = [2, 3, 4, 6, 8];
+
+// Au-delà, les logements comparables sont trop rares : étude personnalisée.
+const MAX_BEDROOMS = 4;
+const MAX_GUESTS = 10;
 
 const AMENITIES = [
-  { id: "balcon", label: "Balcon ou terrasse", bonus: 0.05 },
-  { id: "clim", label: "Climatisation", bonus: 0.05 },
-  { id: "vue", label: "Belle vue", bonus: 0.06 },
-  { id: "ascenseur", label: "Ascenseur", bonus: 0.02 },
-  { id: "parking", label: "Parking", bonus: 0.04 },
-  { id: "jardin", label: "Jardin", bonus: 0.06 },
+  { id: "balcon", label: "Balcon ou terrasse" },
+  { id: "clim", label: "Climatisation" },
+  { id: "vue", label: "Belle vue" },
+  { id: "ascenseur", label: "Ascenseur" },
+  { id: "parking", label: "Parking" },
+  { id: "jardin", label: "Jardin" },
 ];
+
+// Effet de chaque équipement sur le prix et l'occupation, mesuré chaque mois sur les annonces
+// parisiennes à arrondissement et taille égaux (effets positifs uniquement, plafonnés).
+type Effect = { price: number; occupancy: number };
+const EFFECTS = MARKET_PARIS as unknown as {
+  amenities?: Record<string, Effect>;
+  propertyKinds?: Record<string, Effect>;
+  bathrooms?: Record<string, Effect>;
+  extraBedrooms?: Record<string, Effect>;
+};
+const NEUTRAL: Effect = { price: 1, occupancy: 1 };
+const AMENITY_EFFECTS = EFFECTS.amenities ?? {};
+
+// Taux d'occupation maximal retenu, même en haute saison : un logement n'est jamais plein à 100 %.
+const MAX_OCCUPANCY = 0.92;
 
 const PLATFORM_FEE = 0.15;
 const COMMISSION = 0.2;
@@ -68,13 +85,24 @@ const normalize = (s: string) =>
     .trim();
 
 type Bucket = "0" | "1" | "2" | "3";
+const BUCKETS: Bucket[] = ["0", "1", "2", "3"];
+
+// Règle de cohérence : un logement plus grand, bien géré, peut atteindre au moins l'occupation
+// d'un logement plus petit du même secteur. Son prix par nuit étant plus élevé, son revenu estimé
+// n'est jamais inférieur à celui d'un logement plus petit.
+function occupancyFloor(buckets: Partial<Record<Bucket, MarketCell>>, bucket: Bucket) {
+  return Math.max(
+    ...BUCKETS.slice(0, BUCKETS.indexOf(bucket) + 1).map((b) => buckets[b]?.occupancyTop ?? 0),
+  );
+}
 type Month = keyof typeof MARKET_PARIS.seasonality;
 type CityData = {
   label: string;
   snapshot: string;
   listings: number;
   areas: readonly string[];
-  buckets: Record<Bucket, MarketCell>;
+  buckets: Partial<Record<Bucket, MarketCell>>;
+  seasonality?: Record<string, { price: number; occupancy: number }>;
 };
 const OTHER_CITIES =
   (MARKET_PARIS as unknown as { cities?: Record<string, CityData> }).cities ?? {};
@@ -96,11 +124,12 @@ function matchCity(input: string): CityData | null {
   return null;
 }
 
+type Season = { price: number; occupancy: number };
 type Market = {
   cell: MarketCell;
-  source: "quartier" | "arrondissement" | "banlieue" | "ville";
+  source: "quartier" | "arrondissement" | "ville";
   trend: number | null;
-  seasonal: boolean;
+  seasonality: Record<string, Season>;
   label: string;
 };
 
@@ -111,12 +140,14 @@ function marketFor(
   bucket: Bucket,
 ): Market | null {
   if (location === OUT_OF_ZONE) {
-    if (!outOfZone) return null;
+    const found = outOfZone?.buckets[bucket];
+    if (!outOfZone || !found || !outOfZone.seasonality) return null;
+    const cell = { ...found, occupancyTop: occupancyFloor(outOfZone.buckets, bucket) };
     return {
-      cell: outOfZone.buckets[bucket],
+      cell,
       source: "ville",
       trend: null,
-      seasonal: false,
+      seasonality: outOfZone.seasonality,
       label: outOfZone.label,
     };
   }
@@ -124,39 +155,43 @@ function marketFor(
     const arr = location.slice(6) as keyof typeof MARKET_PARIS.arrondissements;
     const area = MARKET_PARIS.arrondissements[arr] as unknown as {
       priceTrend: number | null;
-      sectors?: Record<string, { index: number; sample: number }>;
+      sectors?: Record<string, { index: number; occupancyIndex?: number; sample: number }>;
       buckets: Record<Bucket, MarketCell>;
     };
     const base = area.buckets[bucket];
-    const index = sector ? (area.sectors?.[sector]?.index ?? 1) : 1;
+    const zone = sector ? area.sectors?.[sector] : undefined;
+    const index = zone?.index ?? 1;
+    const occIndex = zone?.occupancyIndex ?? 1;
     const n = Number(arr);
     return {
-      cell: { ...base, price: Math.round(base.price * index) },
+      cell: {
+        ...base,
+        price: Math.round(base.price * index),
+        occupancyTop: Math.min(MAX_OCCUPANCY, occupancyFloor(area.buckets, bucket) * occIndex),
+      },
       source: base.estimated ? "arrondissement" : "quartier",
       trend: area.priceTrend,
-      seasonal: true,
+      seasonality: MARKET_PARIS.seasonality,
       label: `Paris ${n}${n === 1 ? "er" : "e"}${sector ? ` (${sector})` : ""}`,
     };
   }
-  const city = SUBURBS.find((c) => c.slug === location);
-  const ref: MarketCell = MARKET_PARIS.paris[bucket];
-  const level = (city?.nightlyBase ?? PARIS_PRICE_LEVEL) / PARIS_PRICE_LEVEL;
-  return {
-    cell: { ...ref, price: Math.round(ref.price * level), sample: 0 },
-    source: "banlieue",
-    trend: (MARKET_PARIS.parisTrend as { price: number } | null)?.price ?? null,
-    seasonal: true,
-    label: city?.name ?? "",
-  };
+  // Proche banlieue : aucune donnée publique, étude personnalisée.
+  return null;
 }
 
 // Écart de prix lié au nombre de voyageurs, mesuré sur les annonces réelles de la même tranche.
+// On retient le meilleur ratio observé jusqu'à cette capacité : accueillir un voyageur de plus ne
+// fait jamais baisser l'estimation (les creux ponctuels des médianes sont du bruit statistique).
 function capacityRatio(bucket: Bucket, guests: number) {
   const ratios = MARKET_PARIS.capacity[bucket] as Record<string, number>;
-  const available = Object.keys(ratios).map(Number);
-  if (!available.length) return 1;
-  const nearest = available.reduce((a, b) => (Math.abs(b - guests) < Math.abs(a - guests) ? b : a));
-  return ratios[String(nearest)] ?? 1;
+  const known = Object.keys(ratios)
+    .map(Number)
+    .filter((g) => g <= guests);
+  if (!known.length) {
+    const smallest = Math.min(...Object.keys(ratios).map(Number));
+    return Number.isFinite(smallest) ? (ratios[String(smallest)] ?? 1) : 1;
+  }
+  return Math.max(...known.map((g) => ratios[String(g)] ?? 1));
 }
 
 /** Fait défiler un nombre jusqu'à sa nouvelle valeur (0,7 s, décélération douce). */
@@ -191,51 +226,65 @@ export function RevenueSimulator() {
   const [sector, setSector] = useState<Sector>("");
   const [outOfZoneText, setOutOfZoneText] = useState("");
   const [typeIndex, setTypeIndex] = useState(1);
-  const [surface, setSurface] = useState(40);
-  const [guests, setGuests] = useState(4);
+  const [guests, setGuests] = useState(3);
   const [bedrooms, setBedrooms] = useState(1);
   const [bathrooms, setBathrooms] = useState(1);
   const [amenities, setAmenities] = useState<string[]>([]);
   const [showMonths, setShowMonths] = useState(false);
 
-  const tooLarge = surface > MAX_SURFACE;
+  const tooLarge = bedrooms > MAX_BEDROOMS || guests > MAX_GUESTS;
   const bucket = String(Math.min(bedrooms, 3)) as Bucket;
   const outOfZone = useMemo(() => matchCity(outOfZoneText), [outOfZoneText]);
   const market = useMemo(
     () => marketFor(location, sector, outOfZone, bucket),
     [location, sector, outOfZone, bucket],
   );
-  // Nuits louées par mois : choix du propriétaire, ou médiane du secteur par défaut.
-  const occupancy = market?.cell.occupancy ?? 0.4;
+  const kind = PROPERTY_TYPES[typeIndex]!.kind;
+  const structure = useMemo(() => {
+    const parts = [
+      kind === "appartement" ? NEUTRAL : (EFFECTS.propertyKinds?.[kind] ?? NEUTRAL),
+      bathrooms >= 2 ? (EFFECTS.bathrooms?.["2"] ?? NEUTRAL) : NEUTRAL,
+      bedrooms >= 5
+        ? (EFFECTS.extraBedrooms?.["5"] ?? NEUTRAL)
+        : bedrooms === 4
+          ? (EFFECTS.extraBedrooms?.["4"] ?? NEUTRAL)
+          : NEUTRAL,
+    ];
+    return {
+      price: parts.reduce((p, e) => p * e.price, 1),
+      occupancy: parts.reduce((p, e) => p * e.occupancy, 1),
+    };
+  }, [kind, bathrooms, bedrooms]);
+
+  const chosen = AMENITIES.filter((a) => amenities.includes(a.id)).map(
+    (a) => AMENITY_EFFECTS[a.id] ?? { price: 1, occupancy: 1 },
+  );
+  const amenityPrice = chosen.reduce((p, e) => p * e.price, 1);
+  const amenityOccupancy = chosen.reduce((p, e) => p * e.occupancy, 1);
+  // Occupation visée : niveau des 25 % d'annonces les mieux gérées du secteur (gestion
+  // professionnelle), ajusté aux équipements du bien et plafonné.
+  const occupancy = Math.min(
+    MAX_OCCUPANCY,
+    (market?.cell.occupancyTop ?? 0.6) * structure.occupancy * Math.min(1.15, amenityOccupancy),
+  );
 
   const result = useMemo(() => {
     if (!market) return null;
-    const type = PROPERTY_TYPES[typeIndex]!;
-    const amenityBonus = AMENITIES.filter((a) => amenities.includes(a.id)).reduce(
-      (sum, a) => sum + a.bonus,
-      0,
-    );
-    const surfaceFactor =
-      (Math.min(surface, MAX_SURFACE) / TYPICAL_SURFACE[Number(bucket)]!) ** SURFACE_ELASTICITY;
-    const extraRooms = Math.max(0, bedrooms - 3) * 0.08 + Math.max(0, bathrooms - 1) * 0.05;
     // Prix moyen annuel d'une nuit pour ce bien, avant saisonnalité.
     const base =
       market.cell.price *
       capacityRatio(bucket, guests) *
-      surfaceFactor *
-      type.factor *
-      (1 + amenityBonus + extraRooms);
+      structure.price *
+      Math.min(1.3, amenityPrice);
 
-    // Les 12 prochains mois : occupation médiane du secteur et prix, ajustés à la saison.
+    // Les 12 prochains mois : occupation visée et prix, ajustés mois par mois à la saison.
     const now = new Date();
     const months = Array.from({ length: 12 }, (_, i) => {
       const date = new Date(now.getFullYear(), now.getMonth() + 1 + i, 1);
       const days = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-      const season = market.seasonal
-        ? MARKET_PARIS.seasonality[String(date.getMonth() + 1) as Month]
-        : { price: 1, occupancy: 1 };
+      const season = market.seasonality[String(date.getMonth() + 1)] ?? NEUTRAL;
       const price = Math.round(base * season.price);
-      const nights = Math.round(days * Math.min(0.97, occupancy * season.occupancy));
+      const nights = Math.round(days * Math.min(MAX_OCCUPANCY, occupancy * season.occupancy));
       return { date, days, nights, price, gross: nights * price };
     });
 
@@ -266,7 +315,7 @@ export function RevenueSimulator() {
       })(),
       averagePrice: nights ? Math.round(gross / nights) : 0,
     };
-  }, [market, bucket, typeIndex, surface, guests, bedrooms, bathrooms, amenities, occupancy]);
+  }, [market, bucket, guests, structure, amenityPrice, occupancy]);
 
   const animatedNet = useCountUp(result?.monthly.net ?? 0);
 
@@ -274,13 +323,15 @@ export function RevenueSimulator() {
     setAmenities((list) => (list.includes(id) ? list.filter((a) => a !== id) : [...list, id]));
 
   const peakMonth = useMemo(() => {
-    const [m] = Object.entries(MARKET_PARIS.seasonality).reduce((a, b) =>
+    if (!market) return "";
+    const [m] = Object.entries(market.seasonality).reduce((a, b) =>
       b[1].price * b[1].occupancy > a[1].price * a[1].occupancy ? b : a,
     );
     return new Date(2000, Number(m) - 1, 1).toLocaleDateString("fr-FR", { month: "long" });
-  }, []);
+  }, [market]);
 
-  const needsStudy = tooLarge || (location === OUT_OF_ZONE && !market);
+  // Pas de données fiables (banlieue, ville non couverte) ou bien hors norme : étude personnalisée.
+  const needsStudy = tooLarge || !market;
 
   return (
     <div className="grid overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-soft)] lg:grid-cols-[1.2fr_1fr]">
@@ -305,7 +356,7 @@ export function RevenueSimulator() {
                     </option>
                   ))}
                 </optgroup>
-                <optgroup label="Proche banlieue">
+                <optgroup label="Proche banlieue (étude personnalisée)">
                   {SUBURBS.map((c) => (
                     <option key={c.slug} value={c.slug}>
                       {c.name}
@@ -363,7 +414,6 @@ export function RevenueSimulator() {
                 const i = Number(e.target.value);
                 const t = PROPERTY_TYPES[i]!;
                 setTypeIndex(i);
-                setSurface(t.surface);
                 setBedrooms(t.bedrooms);
                 setGuests(t.guests);
               }}
@@ -377,34 +427,38 @@ export function RevenueSimulator() {
             </select>
           </Field>
 
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-4 grid grid-cols-3 gap-3">
             <Stepper
-              label="Surface"
-              unit="m²"
-              value={surface}
-              display={tooLarge ? `+${MAX_SURFACE}` : String(surface)}
-              onChange={setSurface}
-              min={10}
-              max={MAX_SURFACE + 5}
-              step={5}
+              label="Voyageurs"
+              value={guests}
+              display={guests > MAX_GUESTS ? `${MAX_GUESTS}+` : String(guests)}
+              onChange={setGuests}
+              min={1}
+              max={MAX_GUESTS + 1}
             />
-            <Stepper label="Voyageurs" value={guests} onChange={setGuests} min={1} max={10} />
             <Stepper
               label="Chambres"
               value={bedrooms}
-              display={bedrooms === 0 ? "Studio" : String(bedrooms)}
+              display={
+                bedrooms === 0
+                  ? "Studio"
+                  : bedrooms > MAX_BEDROOMS
+                    ? `${MAX_BEDROOMS}+`
+                    : String(bedrooms)
+              }
               onChange={(v) => {
                 setBedrooms(v);
+                setGuests(TYPICAL_GUESTS[Math.min(v, TYPICAL_GUESTS.length - 1)]!);
               }}
               min={0}
-              max={6}
+              max={MAX_BEDROOMS + 1}
             />
             <Stepper
               label="Salles de bain"
               value={bathrooms}
               onChange={setBathrooms}
               min={1}
-              max={5}
+              max={4}
             />
           </div>
 
@@ -436,8 +490,10 @@ export function RevenueSimulator() {
         <section className="p-6 sm:p-8">
           <p className="text-sm font-semibold">Comment est calculée l'estimation&nbsp;?</p>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Nous partons du prix et du taux d'occupation médians des logements comparables de votre
-            secteur, ajustés à la taille de votre bien, à ses équipements et à la saison. Le
+            Nous partons du prix médian des logements comparables de votre secteur et du taux
+            d'occupation atteint par les 25&nbsp;% d'annonces les mieux gérées, le niveau que vise
+            notre gestion. Nous ajustons ensuite selon la taille de votre bien, sa capacité
+            d'accueil, ses équipements (effets mesurés sur les annonces réelles) et la saison. Le
             résultat réel dépend du nombre de nuits louées&nbsp;: nous ne le garantissons pas, mais
             nous mettons tout en œuvre pour le maximiser.
           </p>
@@ -449,7 +505,11 @@ export function RevenueSimulator() {
         {needsStudy ? (
           <div className="flex flex-1 flex-col justify-center">
             <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
-              {tooLarge ? `Bien de plus de ${MAX_SURFACE}\u00a0m²` : "Bien hors zone"}
+              {tooLarge
+                ? "Grand logement"
+                : location === OUT_OF_ZONE
+                  ? "Bien hors zone"
+                  : "Proche banlieue"}
             </p>
             <p className="mt-3 font-[family-name:var(--font-display)] text-3xl">
               {tooLarge
@@ -458,8 +518,8 @@ export function RevenueSimulator() {
             </p>
             <p className="mt-4 text-[0.95rem] leading-relaxed text-white/75">
               {tooLarge
-                ? `Au-delà de ${MAX_SURFACE}\u00a0m², les logements comparables sont trop rares pour une estimation automatique fiable.`
-                : "Nous ne disposons pas encore de données publiques fiables pour ce secteur."}{" "}
+                ? `Au-delà de ${MAX_BEDROOMS} chambres ou ${MAX_GUESTS} voyageurs, les logements comparables sont trop rares pour une estimation automatique fiable.`
+                : "Aucune donnée publique fiable ne couvre ce secteur : plutôt qu'un chiffre approximatif, nous préférons étudier votre bien à partir des annonces comparables."}{" "}
               Décrivez votre bien dans le formulaire&nbsp;: nous vous adressons sous 24&nbsp;h une
               étude personnalisée.
             </p>
@@ -491,7 +551,7 @@ export function RevenueSimulator() {
               <Line
                 label="Taux d'occupation estimé"
                 value={pct(result.occupancyRate)}
-                hint="médiane du secteur"
+                hint="gestion professionnelle"
               />
               <Line
                 label="Nuits louées par mois"
@@ -501,7 +561,7 @@ export function RevenueSimulator() {
               <Line
                 label="Prix moyen par nuit"
                 value={euros(result.averagePrice)}
-                hint={market?.seasonal ? "selon la saison" : undefined}
+                hint="selon la saison"
               />
               <Line label="Loyers encaissés par mois" value={euros(result.monthly.gross)} strong />
               <Line
@@ -571,9 +631,7 @@ export function RevenueSimulator() {
                 {market!.trend === null ? (
                   <>
                     <p className="text-xs text-white/55">Mois le plus demandé</p>
-                    <p className="mt-1 font-semibold capitalize">
-                      {market!.seasonal ? peakMonth : "—"}
-                    </p>
+                    <p className="mt-1 font-semibold capitalize">{peakMonth}</p>
                   </>
                 ) : (
                   <>
@@ -600,17 +658,15 @@ export function RevenueSimulator() {
                 ? `Prix médian de ${market!.cell.sample} logements comparables actifs dans cet arrondissement sur Airbnb, ajusté au secteur choisi. `
                 : market!.source === "arrondissement"
                   ? "Peu d'annonces comparables dans cet arrondissement : prix déduit des médianes parisiennes et du niveau de prix local. "
-                  : market!.source === "ville"
-                    ? `Prix médian de ${market!.cell.sample} logements comparables actifs dans le secteur ${market!.label}. `
-                    : "Hors Paris, estimation à partir des médianes parisiennes ajustées au niveau de prix de la ville. "}
+                  : `Prix médian de ${market!.cell.sample} logements comparables actifs dans le secteur ${market!.label}, sur ses 12 derniers relevés mensuels. `}
               Données{" "}
               <a href={MARKET_PARIS.sourceUrl} target="_blank" rel="noopener" className="underline">
                 Inside Airbnb
               </a>{" "}
-              ({MARKET_PARIS.license}), {MARKET_PARIS.snapshots.length} relevés mensuels jusqu'au{" "}
-              {new Date(MARKET_PARIS.snapshot).toLocaleDateString("fr-FR")}, actualisées chaque
-              mois. Estimation indicative et non contractuelle. Pour une résidence principale, le
-              nombre de nuits louables par an est plafonné.
+              ({MARKET_PARIS.license}), {MARKET_PARIS.snapshots.length} relevés mensuels à Paris
+              jusqu'au {new Date(MARKET_PARIS.snapshot).toLocaleDateString("fr-FR")}, actualisées
+              chaque mois. Estimation indicative et non contractuelle. Pour une résidence
+              principale, le nombre de nuits louables par an est plafonné.
             </p>
           </>
         )}

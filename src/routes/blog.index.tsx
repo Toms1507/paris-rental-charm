@@ -5,7 +5,7 @@ import { absoluteUrl, pageHead } from "@/lib/seo";
 
 const TITLE = "Blog — Conseils location courte durée à Paris | Spinelle Conciergerie";
 const DESCRIPTION =
-  "Rentabilité, réglementation des 120 jours, optimisation d'annonce Airbnb, meilleurs quartiers : nos guides pour les propriétaires qui louent en courte durée à Paris.";
+  "Rentabilité, plafond des 90 nuits, optimisation d'annonce Airbnb, meilleurs quartiers : nos guides pour les propriétaires qui louent en courte durée à Paris.";
 
 export const Route = createFileRoute("/blog/")({
   head: () =>

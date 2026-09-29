@@ -33,6 +33,20 @@ ARRONDISSEMENTS = {
 }
 MIN_SAMPLE = 15  # en dessous, médiane parisienne corrigée de l'indice de prix de l'arrondissement
 MAX_GUESTS = 10
+# Équipements du simulateur et mots-clés correspondants dans les annonces Airbnb.
+AMENITY_KEYWORDS = {
+    "clim": ["air conditioning", "central air"],
+    "ascenseur": ["elevator"],
+    "balcon": ["patio or balcony", "balcony", "terrace"],
+    "parking": ["parking"],
+    "jardin": ["backyard", "garden"],
+    "vue": ["view"],
+}
+# Plafonds prudents : on ne retient que les effets positifs, et jamais au-delà de ces valeurs.
+MAX_AMENITY_OCC = 1.08
+# Nombre minimal de logements comparables pour retenir un effet (sinon : aucun ajustement).
+MIN_EFFECT_SAMPLE = 100
+MAX_AMENITY_PRICE = 1.12
 # Autres villes suivies par Inside Airbnb : (identifiant, nom affiché, chemin dans les URL).
 OTHER_CITIES = [
     ("lyon", "Lyon", "auvergne-rhone-alpes/lyon"),
@@ -43,23 +57,34 @@ OTHER_CITIES = [
 
 # --- Découverte des relevés -------------------------------------------------------------------
 
-def exists(date):
+def exists(date, url=BASE):
     try:
-        req = urllib.request.Request(BASE.format(date=date), method="HEAD")
+        req = urllib.request.Request(url.format(date=date), method="HEAD")
         return urllib.request.urlopen(req, timeout=20).status == 200
     except Exception:
         return False
 
 
-def find_snapshots(days_back=430):
+def find_snapshots(days_back=430, url=BASE):
     today = datetime.date.today()
     dates = [(today - datetime.timedelta(days=i)).isoformat() for i in range(days_back)]
     with concurrent.futures.ThreadPoolExecutor(32) as pool:
-        found = [d for d, ok in zip(dates, pool.map(exists, dates)) if ok]
+        found = [d for d, ok in zip(dates, pool.map(lambda d: exists(d, url), dates)) if ok]
     return sorted(found)
 
 
 # --- Lecture d'un relevé ----------------------------------------------------------------------
+
+def parse_baths(row):
+    """Nombre de salles de bain : champ numérique, sinon texte (« 1.5 baths », « Half-bath »)."""
+    if row.get("bathrooms"):
+        return float(row["bathrooms"])
+    text = (row.get("bathrooms_text") or "").lower()
+    m = re.match(r"([0-9]+(?:\.[0-9]+)?)", text)
+    if m:
+        return float(m.group(1))
+    return 0.5 if "half" in text else None
+
 
 def bucket(row):
     """0 = studio, 1 = une chambre, 2 = deux chambres, 3 = trois chambres ou plus."""
@@ -88,7 +113,19 @@ def load(date, url=BASE, paris=True):
         arr = ARRONDISSEMENTS.get(row["neighbourhood_cleansed"]) if paris else 0
         if paris and not arr:
             continue
+        try:
+            listed = [a.lower() for a in json.loads(row.get("amenities") or "[]")]
+        except ValueError:
+            listed = []
+        kind = row.get("property_type", "").lower()
         rows.append({
+            "kind": "loft" if "loft" in kind
+            else "maison" if any(w in kind for w in ("home", "house", "townhouse", "villa", "cottage"))
+            else "appartement",
+            "baths": parse_baths(row),
+            "rooms": int(float(row["bedrooms"])) if row.get("bedrooms") else 0,
+            "amenities": {k for k, words in AMENITY_KEYWORDS.items()
+                          if any(w in a for a in listed for w in words)},
             "arr": arr,
             "area": row["neighbourhood_cleansed"],
             "lat": float(row["latitude"]),
@@ -109,6 +146,27 @@ def load(date, url=BASE, paris=True):
 def quantile(values, q):
     values = sorted(values)
     return values[min(len(values) - 1, int(len(values) * q))]
+
+
+def validate(out):
+    """Refuse d'écrire des données incohérentes : le site garde alors les précédentes."""
+    problems = []
+    if out["listings"] < 5000:
+        problems.append(f"trop peu d'annonces ({out['listings']})")
+    if len(out["arrondissements"]) != 20:
+        problems.append("arrondissements manquants")
+    prices = [out["paris"][b]["price"] for b in range(4)]
+    if prices != sorted(prices) or not 40 <= prices[0] <= 600:
+        problems.append(f"prix médians incohérents {prices}")
+    for arr, a in out["arrondissements"].items():
+        for b, cell in a["buckets"].items():
+            if not 30 <= cell["price"] <= 2000 or not 0 < cell["occupancyTop"] <= 1:
+                problems.append(f"arrondissement {arr}, tranche {b} : {cell}")
+    for m, season in out["seasonality"].items():
+        if not 0.5 <= season["price"] <= 1.6 or not 0.5 <= season["occupancy"] <= 1.6:
+            problems.append(f"saisonnalité du mois {m} : {season}")
+    if problems:
+        sys.exit("Données refusées :\n- " + "\n- ".join(problems))
 
 
 def main():
@@ -195,11 +253,17 @@ def main():
                 return "nord" if dy > 0 else "sud"
             return "est" if dx > 0 else "ouest"
 
+        now_arr = [r for r in current if r["arr"] == arr]
+        arr_top = quantile([r["occ"] for r in now_arr], 0.75) or 0.01
         sectors = {}
         for name in ("nord", "sud", "est", "ouest"):
             ratios = [r["price"] / paris_price[r["bucket"]] for r in mine if sector(r) == name]
+            occ = [r["occ"] for r in now_arr if sector(r) == name]
             sectors[name] = {
                 "index": round(statistics.median(ratios) / arr_ratio, 3) if len(ratios) >= 40 else 1,
+                # Occupation du secteur (haut de fourchette) rapportée à celle de l'arrondissement.
+                "occupancyIndex": round(min(1.1, max(0.9, quantile(occ, 0.75) / arr_top)), 3)
+                if len(occ) >= 40 else 1,
                 "sample": len(ratios),
             }
         arrondissements[arr] = {"priceIndex": round(index, 3), "priceTrend": trend,
@@ -216,6 +280,69 @@ def main():
             if len(prices) >= 200:
                 ratios[g] = round(statistics.median(prices) / paris_price[b], 3)
         capacity[b] = ratios
+
+    # 3 bis) Effet de chaque équipement sur l'occupation et le prix, mesuré à arrondissement et
+    #    taille égaux (médiane des écarts par case), puis borné : effets positifs uniquement.
+    cells = defaultdict(list)
+    for r in current:
+        cells[(r["arr"], r["bucket"])].append(r)
+    amenity_effects = {}
+    for key in AMENITY_KEYWORDS:
+        occ_r, price_r = [], []
+        for rows in cells.values():
+            yes = [r for r in rows if key in r["amenities"]]
+            no = [r for r in rows if key not in r["amenities"]]
+            if len(yes) >= 15 and len(no) >= 15:
+                occ_r.append(statistics.median(r["occ"] for r in yes)
+                             / max(0.01, statistics.median(r["occ"] for r in no)))
+                price_r.append(statistics.median(r["price"] for r in yes)
+                               / statistics.median(r["price"] for r in no))
+        amenity_effects[key] = {
+            "occupancy": round(min(MAX_AMENITY_OCC, max(1, statistics.median(occ_r))), 3) if occ_r else 1,
+            "price": round(min(MAX_AMENITY_PRICE, max(1, statistics.median(price_r))), 3) if price_r else 1,
+        }
+
+    # 3 ter) Type de bien, salles de bain et nombre de chambres au-delà de 3, mesurés de la même
+    #    façon (prix et occupation médians, à arrondissement et taille égaux).
+    def controlled(select_yes, select_no, groups):
+        occ_r, price_r, n = [], [], 0
+        for rows in groups:
+            yes = [r for r in rows if select_yes(r)]
+            no = [r for r in rows if select_no(r)]
+            if len(yes) >= 10 and len(no) >= 10:
+                n += len(yes)
+                occ_r.append(statistics.median(r["occ"] for r in yes)
+                             / max(0.01, statistics.median(r["occ"] for r in no)))
+                price_r.append(statistics.median(r["price"] for r in yes)
+                               / statistics.median(r["price"] for r in no))
+        if not price_r or n < MIN_EFFECT_SAMPLE:
+            return {"price": 1, "occupancy": 1, "sample": n}
+        return {"price": round(statistics.median(price_r), 3),
+                "occupancy": round(min(1.1, max(0.9, statistics.median(occ_r))), 3), "sample": n}
+
+    groups = list(cells.values())
+    property_kinds = {
+        kind: controlled(lambda r, k=kind: r["kind"] == k, lambda r: r["kind"] == "appartement", groups)
+        for kind in ("loft", "maison")
+    }
+    # Salles de bain : comparées aussi à capacité d'accueil égale, pour ne pas compter deux fois
+    # l'effet du nombre de voyageurs (déjà mesuré à part).
+    by_guests = defaultdict(list)
+    for r in current:
+        by_guests[(r["arr"], r["bucket"], r["guests"])].append(r)
+    bathrooms = {
+        "2": controlled(lambda r: r["baths"] is not None and r["baths"] >= 2,
+                        lambda r: r["baths"] is not None and r["baths"] < 2, list(by_guests.values())),
+    }
+    # Au-delà de 3 chambres : comparaison aux 3 chambres du même arrondissement.
+    big = defaultdict(list)
+    for r in current:
+        if r["rooms"] >= 3:
+            big[r["arr"]].append(r)
+    extra_bedrooms = {
+        "4": controlled(lambda r: r["rooms"] == 4, lambda r: r["rooms"] == 3, list(big.values())),
+        "5": controlled(lambda r: r["rooms"] >= 5, lambda r: r["rooms"] == 3, list(big.values())),
+    }
 
     # 4) Saisonnalité mois par mois : prix médian (relevés avec prix) et part du calendrier
     #    réservée à 30 jours (tous les relevés).
@@ -260,35 +387,61 @@ def main():
                                - statistics.median(r["occ"] for r in prev_rows), 3),
         }
 
-    # 6) Autres villes françaises publiées par Inside Airbnb, pour les biens hors zone.
+    # 6) Autres villes françaises publiées par Inside Airbnb, pour les biens hors zone : même
+    #    méthode que Paris (12 derniers relevés, saisonnalité propre à chaque ville).
     cities = {}
-    page = urllib.request.urlopen("https://insideairbnb.com/get-the-data/", timeout=60).read().decode()
     for slug, label, path in OTHER_CITIES:
-        found = sorted(set(re.findall(
-            r"https://data\.insideairbnb\.com/france/" + re.escape(path) + r"/(\d{4}-\d{2}-\d{2})/data/listings\.csv\.gz",
-            page)))
+        url = "https://data.insideairbnb.com/france/" + urllib.parse.quote(path) + "/{date}/data/listings.csv.gz"
+        found = find_snapshots(url=url)
         if not found:
             continue
-        date = found[-1]
-        url = "https://data.insideairbnb.com/france/" + urllib.parse.quote(path) + "/{date}/data/listings.csv.gz"
-        rows = [r for r in load(date, url, paris=False) if r["price"] is not None]
-        if len(rows) < 200:
+        last = datetime.date.fromisoformat(found[-1])
+        months = {}
+        for d in found:
+            dd = datetime.date.fromisoformat(d)
+            if (last - dd).days < 360:
+                months[(dd.year, dd.month)] = d
+        with concurrent.futures.ThreadPoolExecutor(4) as pool:
+            city_all = dict(zip(sorted(months.values()),
+                                pool.map(lambda d: load(d, url, paris=False), sorted(months.values()))))
+        city_priced = {d: [r for r in rows if r["price"] is not None] for d, rows in city_all.items()}
+        city_priced = {d: rows for d, rows in city_priced.items() if len(rows) >= 200}
+        if not city_priced:
             continue
-        overall = statistics.median(r["price"] for r in rows)
+        city_latest = max(city_priced)
+        rows_now = city_priced[city_latest]
+        city_pool = [r for rows in city_priced.values() for r in rows]
+        city_price = {b: statistics.median([r["price"] for r in city_pool if r["bucket"] == b] or [0])
+                      for b in range(4)}
         buckets = {}
         for b in range(4):
-            mine = [r for r in rows if r["bucket"] == b]
-            if len(mine) >= MIN_SAMPLE:
+            mine = [r for r in rows_now if r["bucket"] == b]
+            if len(mine) >= MIN_SAMPLE and city_price[b]:
                 occ, top = occ_stats(mine)
-                buckets[b] = {"price": round(statistics.median(r["price"] for r in mine)),
-                              "occupancy": occ, "occupancyTop": top, "sample": len(mine)}
-            else:  # tranche trop rare : prix parisien ramené au niveau de la ville
-                ratio = overall / statistics.median(r["price"] for r in pooled)
-                buckets[b] = {**paris[b], "price": round(paris[b]["price"] * ratio),
-                              "sample": len(mine), "estimated": True}
-        areas = sorted({r["area"] for r in rows if r["area"]})
-        cities[slug] = {"label": label, "snapshot": date, "listings": len(rows),
-                        "areas": areas, "buckets": buckets}
+                buckets[b] = {"price": round(city_price[b]), "occupancy": occ,
+                              "occupancyTop": top, "sample": len(mine)}
+            else:
+                buckets[b] = None
+        if any(v is None for v in buckets.values()):
+            # Tranche trop rare dans cette ville : pas d'estimation automatique pour cette taille.
+            buckets = {b: v for b, v in buckets.items() if v is not None}
+        c_price = {datetime.date.fromisoformat(d).month: statistics.median(
+            [r["price"] / city_price[r["bucket"]] for r in rows if city_price[r["bucket"]]])
+            for d, rows in city_priced.items()}
+        c_occ = {datetime.date.fromisoformat(d).month: statistics.mean(r["booked30"] for r in rows)
+                 for d, rows in city_all.items() if rows}
+        c_price, c_occ = fill(c_price), fill(c_occ)
+        mp, mo = statistics.mean(c_price.values()), statistics.mean(c_occ.values())
+        cities[slug] = {
+            "label": label,
+            "snapshot": city_latest,
+            "snapshots": len(city_priced),
+            "listings": len(rows_now),
+            "areas": sorted({r["area"] for r in rows_now if r["area"]}),
+            "buckets": buckets,
+            "seasonality": {m: {"price": round(c_price[m] / mp, 3), "occupancy": round(c_occ[m] / mo, 3)}
+                            for m in range(1, 13)},
+        }
 
     out = {
         "source": "Inside Airbnb",
@@ -301,10 +454,15 @@ def main():
         "paris": paris,
         "parisTrend": paris_trend,
         "capacity": capacity,
+        "amenities": amenity_effects,
+        "propertyKinds": property_kinds,
+        "bathrooms": bathrooms,
+        "extraBedrooms": extra_bedrooms,
         "seasonality": seasonality,
         "arrondissements": arrondissements,
         "cities": cities,
     }
+    validate(out)
     with open(OUTPUT, "w", encoding="utf-8") as fh:
         fh.write("// Fichier généré par scripts/build-market-data.py — ne pas modifier à la main.\n")
         fh.write("// Source : Inside Airbnb (CC BY 4.0), logements entiers actifs à Paris.\n\n")

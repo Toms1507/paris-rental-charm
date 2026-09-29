@@ -1,4 +1,5 @@
 import { buildBarometre } from "@/content/barometre";
+import { FACTS } from "@/content/market-facts";
 
 export const SITE = {
   name: "Spinelle Conciergerie",
@@ -52,7 +53,7 @@ export const SERVICES = [
   },
   {
     title: "Conformité et déclarations",
-    text: "Numéro d'enregistrement en mairie, plafond des 120 jours, taxe de séjour, assurance : on s'occupe des démarches avec vous.",
+    text: "Numéro d'enregistrement en mairie, plafond des 90 nuits à Paris, taxe de séjour, assurance : on s'occupe des démarches avec vous.",
   },
 ];
 
@@ -106,15 +107,15 @@ export const FAQ = [
   },
   {
     q: "Combien puis-je gagner avec mon logement en location courte durée ?",
-    a: "Cela dépend du quartier, de la taille du logement, de sa capacité d'accueil et du nombre de nuits louées. D'après les données Inside Airbnb de juin 2026, le prix médian d'une nuit dans un logement entier actif à Paris est d'environ 150 € pour un studio, 200 € pour un logement d'une chambre et 340 € pour deux chambres. Utilisez notre simulateur de revenus pour une première estimation, puis demandez un audit gratuit : nous vous répondons sous 24 h avec une projection personnalisée.",
+    a: `Cela dépend du quartier, de la taille du logement, de sa capacité d'accueil et du nombre de nuits louées. D'après les données Inside Airbnb (${FACTS.period}), le prix médian d'une nuit dans un logement entier actif à Paris est de ${FACTS.price.studio} pour un studio, ${FACTS.price.oneBedroom} pour un logement d'une chambre et ${FACTS.price.twoBedrooms} pour deux chambres. Utilisez notre simulateur de revenus pour une première estimation, puis demandez un audit gratuit\u00a0: nous vous répondons sous 24\u00a0h avec une projection personnalisée.`,
   },
   {
     q: "Garantissez-vous un taux d'occupation ?",
     a: "Non, et nous nous méfions des conciergeries qui le font : l'occupation dépend de la saison, du quartier et du marché. Notre engagement est de tout mettre en œuvre pour la maximiser : annonce soignée, photos professionnelles, prix ajustés chaque jour, réponses rapides aux voyageurs et logement impeccable pour obtenir d'excellents avis.",
   },
   {
-    q: "La limite des 120 jours s'applique‑t‑elle à mon bien ?",
-    a: "Elle concerne les résidences principales à Paris et dans plusieurs communes de la métropole. Pour une résidence secondaire, un changement d'usage est nécessaire. Nous étudions votre situation et vous indiquons le cadre légal applicable avant toute mise en ligne.",
+    q: "Le plafond de 90 nuits par an s'applique‑t‑il à mon bien ?",
+    a: "Il concerne les résidences principales : depuis le 1er janvier 2025, Paris limite leur location en meublé de tourisme à 90 nuits par an (le plafond national reste de 120 nuits dans les communes qui ne l'ont pas abaissé). Pour une résidence secondaire, un changement d'usage est nécessaire. Nous étudions votre situation et vous indiquons le cadre légal applicable avant toute mise en ligne.",
   },
   {
     q: "Sur quelles plateformes mon logement sera‑t‑il publié ?",
@@ -180,20 +181,20 @@ const ARTICLES: BlogPost[] = [
       {
         heading: "Combien rapporte un logement en courte durée à Paris ?",
         paragraphs: [
-          "Le revenu d'une location courte durée dépend de deux chiffres : le prix moyen par nuit et le nombre de nuits louées. D'après les données publiées par Inside Airbnb en juin 2026 sur plus de 24 000 logements entiers actifs à Paris, voici les prix médians constatés par nuit :",
+          `Le revenu d'une location courte durée dépend de deux chiffres\u00a0: le prix moyen par nuit et le nombre de nuits louées. D'après les données publiées par Inside Airbnb (${FACTS.period}, ${FACTS.listings} logements entiers actifs à Paris), voici les prix médians constatés par nuit\u00a0:`,
           "Trois facteurs expliquent la majeure partie de l'écart entre deux biens comparables : la qualité de l'annonce, la réactivité aux demandes de réservation et la finesse de la tarification jour par jour. Notre simulateur de revenus reprend ces données quartier par quartier.",
         ],
         bullets: [
-          "Studio : environ 150 € la nuit",
-          "Une chambre : environ 200 € la nuit",
-          "Deux chambres : environ 340 € la nuit",
-          "Trois chambres et plus : environ 530 € la nuit",
+          `Studio\u00a0: ${FACTS.price.studio} la nuit`,
+          `Une chambre\u00a0: ${FACTS.price.oneBedroom} la nuit`,
+          `Deux chambres\u00a0: ${FACTS.price.twoBedrooms} la nuit`,
+          `Trois chambres et plus\u00a0: ${FACTS.price.threeBedrooms} la nuit`,
         ],
       },
       {
         heading: "Le taux d'occupation, nerf de la guerre",
         paragraphs: [
-          "Les écarts d'occupation entre annonces sont considérables : à Paris, la moitié des logements entiers actifs sont loués moins de 30 à 45 % de l'année, tandis que les annonces les plus performantes dépassent 60 %. Un temps de réponse trop lent, des prix figés toute l'année et des photos médiocres expliquent souvent ce retard.",
+          `Les écarts d'occupation entre annonces sont considérables\u00a0: à Paris, la moitié des logements entiers actifs sont loués moins de ${FACTS.occupancyMedianRange} de l'année, tandis que les annonces les plus performantes dépassent ${FACTS.occupancyTop}. Un temps de réponse trop lent, des prix figés toute l'année et des photos médiocres expliquent souvent ce retard.`,
           "Aucune conciergerie sérieuse ne peut garantir un taux d'occupation : il dépend de la saison, du quartier et du marché. Notre travail consiste à mettre toutes les chances de votre côté pour le maximiser.",
           "Chaque heure de retard sur une demande de réservation fait baisser la probabilité de conversion. C'est la raison pour laquelle nous répondons en moins d'une heure, sept jours sur sept.",
         ],
@@ -213,10 +214,10 @@ const ARTICLES: BlogPost[] = [
     ],
   },
   {
-    slug: "regles-airbnb-paris-120-jours",
-    title: "Règles Airbnb à Paris : 120 jours, enregistrement, taxe de séjour",
+    slug: "regles-airbnb-paris-90-jours",
+    title: "Règles Airbnb à Paris : 90 nuits, enregistrement, taxe de séjour",
     description:
-      "Tout ce qu'un propriétaire doit savoir avant de louer en courte durée à Paris : numéro d'enregistrement, limite des 120 jours, changement d'usage et taxe de séjour.",
+      "Tout ce qu'un propriétaire doit savoir avant de louer en courte durée à Paris : numéro d'enregistrement, plafond de 90 nuits, changement d'usage et taxe de séjour.",
     date: "2026-08-22",
     readingTime: "6 min",
     sections: [
@@ -227,9 +228,9 @@ const ARTICLES: BlogPost[] = [
         ],
       },
       {
-        heading: "La limite des 120 nuits pour une résidence principale",
+        heading: "Le plafond de 90 nuits pour une résidence principale",
         paragraphs: [
-          "Si vous louez votre résidence principale, vous ne pouvez pas dépasser 120 nuits de location par année civile. Les plateformes bloquent automatiquement le calendrier au-delà de ce seuil.",
+          "Depuis le 1er janvier 2025, une résidence principale ne peut plus être louée plus de 90 nuits par année civile à Paris. La loi du 19 novembre 2024, dite loi Le Meur, a permis aux communes d'abaisser le plafond national de 120 nuits, et Paris l'a fait. Les plateformes bloquent le calendrier au-delà de ce seuil.",
           "Pour une résidence secondaire, la location courte durée suppose un changement d'usage, avec compensation dans certains arrondissements. C'est un point à valider avant tout investissement.",
         ],
       },
@@ -323,26 +324,26 @@ const ARTICLES: BlogPost[] = [
     slug: "meilleurs-quartiers-airbnb-paris",
     title: "Les meilleurs quartiers de Paris pour louer en courte durée",
     description:
-      "Marais, Montmartre, Batignolles, Bastille ou proche banlieue : où votre logement se loue le mieux et à quel prix moyen par nuit.",
+      "Arrondissements les plus chers, les plus accessibles et les plus loués : où votre logement se loue le mieux, d'après les données réelles du marché parisien.",
     date: "2026-06-18",
     readingTime: "6 min",
     sections: [
       {
-        heading: "Les valeurs sûres du centre",
+        heading: "Les arrondissements les plus chers",
         paragraphs: [
-          "Le Marais (3e et 4e), Saint-Germain-des-Prés (6e) et Le Louvre (1er) affichent les prix par nuit les plus élevés et une occupation solide toute l'année, portée par la clientèle internationale. Les surfaces y sont petites, ce qui convient bien aux couples.",
+          `D'après les données Inside Airbnb (${FACTS.period}), à taille de logement égale, les arrondissements où le prix par nuit est le plus élevé sont le ${FACTS.mostExpensive}. Le centre attire toute l'année une clientèle internationale.`,
         ],
       },
       {
-        heading: "Les quartiers en forte demande",
+        heading: "Prix accessibles et forte occupation",
         paragraphs: [
-          "Montmartre (18e), Bastille (11e), Batignolles (17e) et Canal Saint-Martin (10e) combinent une demande très forte et un prix d'achat plus accessible. C'est souvent le meilleur rapport entre investissement et revenus.",
+          `Les prix les plus accessibles se trouvent dans le ${FACTS.mostAffordable}, et les logements d'une chambre les plus loués sont dans le ${FACTS.bestOccupancy}. Un prix par nuit plus bas n'empêche pas une bonne rentabilité : tout dépend du taux d'occupation atteint.`,
         ],
       },
       {
         heading: "La proche banlieue, sous-estimée",
         paragraphs: [
-          "Boulogne-Billancourt, Neuilly-sur-Seine, Levallois-Perret, Montreuil, Vincennes et Saint-Ouen profitent des voyageurs d'affaires, des salons de la Porte de Versailles et des grands événements. À dix minutes de métro du centre, la demande y est soutenue et la concurrence plus faible.",
+          "Boulogne-Billancourt, Neuilly-sur-Seine, Levallois-Perret, Montreuil, Vincennes et Saint-Ouen profitent de la proximité de Paris, des salons de la Porte de Versailles et des grands événements. Aucune donnée publique ne couvre ces communes : nous réalisons donc une étude au cas par cas, à partir des annonces comparables.",
         ],
       },
       {

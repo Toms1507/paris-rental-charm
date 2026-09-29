@@ -91,6 +91,63 @@ export const MARKET_PARIS = {
       "10": 1.347
     }
   },
+  "amenities": {
+    "clim": {
+      "occupancy": 1.08,
+      "price": 1.12
+    },
+    "ascenseur": {
+      "occupancy": 1,
+      "price": 1.098
+    },
+    "balcon": {
+      "occupancy": 1,
+      "price": 1.12
+    },
+    "parking": {
+      "occupancy": 1.08,
+      "price": 1.037
+    },
+    "jardin": {
+      "occupancy": 1.04,
+      "price": 1.039
+    },
+    "vue": {
+      "occupancy": 1,
+      "price": 1.098
+    }
+  },
+  "propertyKinds": {
+    "loft": {
+      "price": 1,
+      "occupancy": 1,
+      "sample": 79
+    },
+    "maison": {
+      "price": 1,
+      "occupancy": 1,
+      "sample": 11
+    }
+  },
+  "bathrooms": {
+    "2": {
+      "price": 1.273,
+      "occupancy": 1.1,
+      "sample": 1538
+    }
+  },
+  "extraBedrooms": {
+    "4": {
+      "price": 1.299,
+      "occupancy": 1.048,
+      "sample": 367
+    },
+    "5": {
+      "price": 1,
+      "occupancy": 1,
+      "sample": 16
+    }
+  },
   "seasonality": {
     "1": {
       "price": 0.929,
@@ -148,18 +205,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.943,
+          "occupancyIndex": 1.0,
           "sample": 528
         },
         "sud": {
           "index": 1.031,
+          "occupancyIndex": 1.0,
           "sample": 1720
         },
         "est": {
           "index": 0.915,
+          "occupancyIndex": 0.98,
           "sample": 1897
         },
         "ouest": {
           "index": 1.071,
+          "occupancyIndex": 1.0,
           "sample": 2632
         }
       },
@@ -196,18 +257,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.952,
+          "occupancyIndex": 1.0,
           "sample": 1532
         },
         "sud": {
           "index": 0.972,
+          "occupancyIndex": 1.0,
           "sample": 2838
         },
         "est": {
           "index": 0.977,
+          "occupancyIndex": 1.0,
           "sample": 3190
         },
         "ouest": {
           "index": 1.067,
+          "occupancyIndex": 1.0,
           "sample": 3834
         }
       },
@@ -244,18 +309,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.943,
+          "occupancyIndex": 1.0,
           "sample": 3498
         },
         "sud": {
           "index": 1.085,
+          "occupancyIndex": 1.0,
           "sample": 2632
         },
         "est": {
           "index": 1.016,
+          "occupancyIndex": 1.0,
           "sample": 3197
         },
         "ouest": {
           "index": 0.987,
+          "occupancyIndex": 1.0,
           "sample": 3457
         }
       },
@@ -292,18 +361,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 1.029,
+          "occupancyIndex": 1.0,
           "sample": 2129
         },
         "sud": {
           "index": 1.03,
+          "occupancyIndex": 0.9,
           "sample": 1405
         },
         "est": {
           "index": 0.969,
+          "occupancyIndex": 1.0,
           "sample": 2993
         },
         "ouest": {
           "index": 1.012,
+          "occupancyIndex": 1.0,
           "sample": 1820
         }
       },
@@ -340,18 +413,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 1.144,
+          "occupancyIndex": 1.062,
           "sample": 3002
         },
         "sud": {
           "index": 0.892,
+          "occupancyIndex": 0.908,
           "sample": 2213
         },
         "est": {
           "index": 0.942,
+          "occupancyIndex": 1.0,
           "sample": 1593
         },
         "ouest": {
           "index": 1.0,
+          "occupancyIndex": 0.954,
           "sample": 1109
         }
       },
@@ -388,18 +465,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 1.045,
+          "occupancyIndex": 1.0,
           "sample": 1782
         },
         "sud": {
           "index": 0.949,
+          "occupancyIndex": 0.9,
           "sample": 1268
         },
         "est": {
           "index": 1.073,
+          "occupancyIndex": 1.062,
           "sample": 1939
         },
         "ouest": {
           "index": 0.939,
+          "occupancyIndex": 1.062,
           "sample": 1985
         }
       },
@@ -436,18 +517,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.986,
+          "occupancyIndex": 1.0,
           "sample": 1119
         },
         "sud": {
           "index": 0.915,
+          "occupancyIndex": 1.0,
           "sample": 1146
         },
         "est": {
           "index": 1.052,
+          "occupancyIndex": 0.98,
           "sample": 1928
         },
         "ouest": {
           "index": 0.996,
+          "occupancyIndex": 1.0,
           "sample": 2270
         }
       },
@@ -484,18 +569,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.778,
+          "occupancyIndex": 1.0,
           "sample": 1136
         },
         "sud": {
           "index": 1.089,
+          "occupancyIndex": 1.0,
           "sample": 1021
         },
         "est": {
           "index": 0.979,
+          "occupancyIndex": 1.0,
           "sample": 2931
         },
         "ouest": {
           "index": 1.085,
+          "occupancyIndex": 1.0,
           "sample": 2924
         }
       },
@@ -532,18 +621,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.966,
+          "occupancyIndex": 0.98,
           "sample": 1647
         },
         "sud": {
           "index": 1.097,
+          "occupancyIndex": 1.0,
           "sample": 2211
         },
         "est": {
           "index": 0.896,
+          "occupancyIndex": 1.0,
           "sample": 2665
         },
         "ouest": {
           "index": 1.062,
+          "occupancyIndex": 1.0,
           "sample": 3393
         }
       },
@@ -580,18 +673,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.901,
+          "occupancyIndex": 0.916,
           "sample": 3921
         },
         "sud": {
           "index": 1.099,
+          "occupancyIndex": 1.02,
           "sample": 2429
         },
         "est": {
           "index": 0.961,
+          "occupancyIndex": 0.9,
           "sample": 3709
         },
         "ouest": {
           "index": 1.078,
+          "occupancyIndex": 1.02,
           "sample": 4393
         }
       },
@@ -628,18 +725,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.948,
+          "occupancyIndex": 0.954,
           "sample": 6100
         },
         "sud": {
           "index": 1.034,
+          "occupancyIndex": 1.062,
           "sample": 5165
         },
         "est": {
           "index": 0.939,
+          "occupancyIndex": 0.954,
           "sample": 3869
         },
         "ouest": {
           "index": 1.181,
+          "occupancyIndex": 0.996,
           "sample": 2962
         }
       },
@@ -676,18 +777,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 1.055,
+          "occupancyIndex": 0.916,
           "sample": 427
         },
         "sud": {
           "index": 0.915,
+          "occupancyIndex": 0.956,
           "sample": 1550
         },
         "est": {
           "index": 0.929,
+          "occupancyIndex": 0.9,
           "sample": 2096
         },
         "ouest": {
           "index": 1.097,
+          "occupancyIndex": 1.02,
           "sample": 3322
         }
       },
@@ -724,18 +829,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 1.092,
+          "occupancyIndex": 0.954,
           "sample": 1557
         },
         "sud": {
           "index": 0.928,
+          "occupancyIndex": 0.954,
           "sample": 1048
         },
         "est": {
           "index": 0.982,
+          "occupancyIndex": 1.1,
           "sample": 1490
         },
         "ouest": {
           "index": 0.976,
+          "occupancyIndex": 1.096,
           "sample": 1490
         }
       },
@@ -772,18 +881,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 1.129,
+          "occupancyIndex": 0.958,
           "sample": 1846
         },
         "sud": {
           "index": 0.933,
+          "occupancyIndex": 1.0,
           "sample": 1465
         },
         "est": {
           "index": 0.981,
+          "occupancyIndex": 0.9,
           "sample": 1522
         },
         "ouest": {
           "index": 0.931,
+          "occupancyIndex": 1.067,
           "sample": 1641
         }
       },
@@ -820,18 +933,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 1.171,
+          "occupancyIndex": 1.0,
           "sample": 4600
         },
         "sud": {
           "index": 0.862,
+          "occupancyIndex": 1.0,
           "sample": 4121
         },
         "est": {
           "index": 0.997,
+          "occupancyIndex": 1.0,
           "sample": 4062
         },
         "ouest": {
           "index": 0.997,
+          "occupancyIndex": 0.9,
           "sample": 3186
         }
       },
@@ -868,18 +985,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 1.075,
+          "occupancyIndex": 1.0,
           "sample": 3285
         },
         "sud": {
           "index": 0.873,
+          "occupancyIndex": 0.908,
           "sample": 4189
         },
         "est": {
           "index": 1.193,
+          "occupancyIndex": 1.062,
           "sample": 2277
         },
         "ouest": {
           "index": 0.943,
+          "occupancyIndex": 0.9,
           "sample": 1229
         }
       },
@@ -916,18 +1037,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.849,
+          "occupancyIndex": 1.0,
           "sample": 2189
         },
         "sud": {
           "index": 1.066,
+          "occupancyIndex": 1,
           "sample": 418
         },
         "est": {
           "index": 0.916,
+          "occupancyIndex": 0.9,
           "sample": 3414
         },
         "ouest": {
           "index": 1.123,
+          "occupancyIndex": 1.0,
           "sample": 5110
         }
       },
@@ -964,18 +1089,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.939,
+          "occupancyIndex": 1.0,
           "sample": 3995
         },
         "sud": {
           "index": 1.171,
+          "occupancyIndex": 1.096,
           "sample": 3937
         },
         "est": {
           "index": 0.901,
+          "occupancyIndex": 0.954,
           "sample": 6316
         },
         "ouest": {
           "index": 1.098,
+          "occupancyIndex": 1.096,
           "sample": 5018
         }
       },
@@ -1012,18 +1141,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.968,
+          "occupancyIndex": 1.1,
           "sample": 2592
         },
         "sud": {
           "index": 1.066,
+          "occupancyIndex": 0.9,
           "sample": 2095
         },
         "est": {
           "index": 0.999,
+          "occupancyIndex": 1.1,
           "sample": 2134
         },
         "ouest": {
           "index": 0.986,
+          "occupancyIndex": 1.0,
           "sample": 1591
         }
       },
@@ -1060,18 +1193,22 @@ export const MARKET_PARIS = {
       "sectors": {
         "nord": {
           "index": 0.986,
+          "occupancyIndex": 0.9,
           "sample": 1771
         },
         "sud": {
           "index": 1.0,
+          "occupancyIndex": 1.1,
           "sample": 3244
         },
         "est": {
           "index": 0.96,
+          "occupancyIndex": 1.0,
           "sample": 1132
         },
         "ouest": {
           "index": 1.034,
+          "occupancyIndex": 0.909,
           "sample": 2567
         }
       },
@@ -1106,8 +1243,9 @@ export const MARKET_PARIS = {
   "cities": {
     "lyon": {
       "label": "Lyon",
-      "snapshot": "2026-06-22",
-      "listings": 3048,
+      "snapshot": "2026-09-17",
+      "snapshots": 9,
+      "listings": 2747,
       "areas": [
         "1er Arrondissement",
         "2e Arrondissement",
@@ -1121,35 +1259,86 @@ export const MARKET_PARIS = {
       ],
       "buckets": {
         "0": {
-          "price": 88,
-          "occupancy": 0.345,
-          "occupancyTop": 0.658,
-          "sample": 847
+          "price": 83,
+          "occupancy": 0.362,
+          "occupancyTop": 0.674,
+          "sample": 782
         },
         "1": {
-          "price": 112,
-          "occupancy": 0.279,
-          "occupancyTop": 0.559,
-          "sample": 1343
+          "price": 106,
+          "occupancy": 0.312,
+          "occupancyTop": 0.592,
+          "sample": 1213
         },
         "2": {
-          "price": 164,
-          "occupancy": 0.263,
-          "occupancyTop": 0.477,
-          "sample": 587
+          "price": 154,
+          "occupancy": 0.279,
+          "occupancyTop": 0.493,
+          "sample": 507
         },
         "3": {
-          "price": 261,
+          "price": 244,
           "occupancy": 0.214,
-          "occupancyTop": 0.427,
-          "sample": 271
+          "occupancyTop": 0.444,
+          "sample": 245
+        }
+      },
+      "seasonality": {
+        "1": {
+          "price": 0.933,
+          "occupancy": 0.908
+        },
+        "2": {
+          "price": 1.019,
+          "occupancy": 0.917
+        },
+        "3": {
+          "price": 1.104,
+          "occupancy": 0.98
+        },
+        "4": {
+          "price": 1.103,
+          "occupancy": 0.976
+        },
+        "5": {
+          "price": 1.111,
+          "occupancy": 1.023
+        },
+        "6": {
+          "price": 1.084,
+          "occupancy": 0.989
+        },
+        "7": {
+          "price": 1.055,
+          "occupancy": 0.83
+        },
+        "8": {
+          "price": 1.076,
+          "occupancy": 1.081
+        },
+        "9": {
+          "price": 1.142,
+          "occupancy": 1.206
+        },
+        "10": {
+          "price": 0.764,
+          "occupancy": 1.055
+        },
+        "11": {
+          "price": 0.762,
+          "occupancy": 1.104
+        },
+        "12": {
+          "price": 0.848,
+          "occupancy": 0.93
         }
       }
     },
     "bordeaux": {
       "label": "Bordeaux",
-      "snapshot": "2026-06-22",
-      "listings": 3985,
+      "snapshot": "2026-09-17",
+      "snapshots": 9,
+      "listings": 3633,
       "areas": [
         "3M-Bourgailh",
         "Ambars-et-Lagrave",
@@ -1216,35 +1405,86 @@ export const MARKET_PARIS = {
       ],
       "buckets": {
         "0": {
-          "price": 79,
+          "price": 74,
           "occupancy": 0.279,
-          "occupancyTop": 0.526,
-          "sample": 838
+          "occupancyTop": 0.559,
+          "sample": 773
         },
         "1": {
-          "price": 103,
+          "price": 95,
           "occupancy": 0.23,
-          "occupancyTop": 0.46,
-          "sample": 1534
+          "occupancyTop": 0.477,
+          "sample": 1396
         },
         "2": {
-          "price": 151,
-          "occupancy": 0.214,
-          "occupancyTop": 0.395,
-          "sample": 831
+          "price": 138,
+          "occupancy": 0.197,
+          "occupancyTop": 0.411,
+          "sample": 775
         },
         "3": {
-          "price": 266,
-          "occupancy": 0.132,
-          "occupancyTop": 0.263,
-          "sample": 782
+          "price": 247,
+          "occupancy": 0.148,
+          "occupancyTop": 0.279,
+          "sample": 689
+        }
+      },
+      "seasonality": {
+        "1": {
+          "price": 0.913,
+          "occupancy": 0.904
+        },
+        "2": {
+          "price": 0.987,
+          "occupancy": 0.908
+        },
+        "3": {
+          "price": 1.061,
+          "occupancy": 0.952
+        },
+        "4": {
+          "price": 1.102,
+          "occupancy": 1.005
+        },
+        "5": {
+          "price": 1.106,
+          "occupancy": 1.058
+        },
+        "6": {
+          "price": 1.106,
+          "occupancy": 1.013
+        },
+        "7": {
+          "price": 1.106,
+          "occupancy": 1.006
+        },
+        "8": {
+          "price": 1.118,
+          "occupancy": 1.081
+        },
+        "9": {
+          "price": 1.124,
+          "occupancy": 1.125
+        },
+        "10": {
+          "price": 0.773,
+          "occupancy": 0.987
+        },
+        "11": {
+          "price": 0.766,
+          "occupancy": 0.992
+        },
+        "12": {
+          "price": 0.84,
+          "occupancy": 0.969
         }
       }
     },
     "pays-basque": {
       "label": "Pays basque",
-      "snapshot": "2026-06-23",
-      "listings": 4784,
+      "snapshot": "2026-08-27",
+      "snapshots": 9,
+      "listings": 4478,
       "areas": [
         "Ahaxe-Alciette-Bascassan",
         "Ahetze",
@@ -1268,6 +1508,7 @@ export const MARKET_PARIS = {
         "Arraute-Charritte",
         "Ascain",
         "Ascarat",
+        "Aussurucq",
         "Ayherre",
         "AÃ¯cirits-Camou-Suhast",
         "Banca",
@@ -1292,7 +1533,6 @@ export const MARKET_PARIS = {
         "Ciboure",
         "Domezain-Berraute",
         "Espelette",
-        "EspÃ¨s-Undurein",
         "EstÃ©renÃ§uby",
         "Gabat",
         "Gamarthe",
@@ -1320,6 +1560,7 @@ export const MARKET_PARIS = {
         "Juxue",
         "L'HÃ´pital-Saint-Blaise",
         "La Bastide-Clairence",
+        "Labets-Biscay",
         "Lacarre",
         "Laguinge-Restoue",
         "Lahonce",
@@ -1332,10 +1573,12 @@ export const MARKET_PARIS = {
         "Licq-AthÃ©rey",
         "Louhossoa",
         "Macaye",
+        "Masparraute",
         "MaulÃ©on-Licharre",
         "Mendionde",
         "Menditte",
         "Mendive",
+        "Moncayolle-Larrory-Mendibieu",
         "Montory",
         "Mouguerre",
         "Musculdy",
@@ -1359,13 +1602,11 @@ export const MARKET_PARIS = {
         "Sainte-EngrÃ¢ce",
         "Sames",
         "Sare",
-        "Sauguis-Saint-Ãtienne",
         "SouraÃ¯de",
         "Suhescun",
         "Tardets-Sorholus",
         "Trois-Villes",
         "Uhart-Cize",
-        "Uhart-Mixe",
         "Urcuit",
         "Urepel",
         "Urrugne",
@@ -1376,28 +1617,78 @@ export const MARKET_PARIS = {
       ],
       "buckets": {
         "0": {
-          "price": 106,
-          "occupancy": 0.178,
+          "price": 95,
+          "occupancy": 0.181,
           "occupancyTop": 0.312,
-          "sample": 870
+          "sample": 779
         },
         "1": {
-          "price": 120,
-          "occupancy": 0.164,
+          "price": 104,
+          "occupancy": 0.181,
           "occupancyTop": 0.296,
-          "sample": 1670
+          "sample": 1530
         },
         "2": {
-          "price": 158,
+          "price": 137,
           "occupancy": 0.153,
           "occupancyTop": 0.263,
-          "sample": 1201
+          "sample": 1154
         },
         "3": {
-          "price": 315,
+          "price": 265,
           "occupancy": 0.115,
-          "occupancyTop": 0.192,
-          "sample": 1043
+          "occupancyTop": 0.197,
+          "sample": 1015
+        }
+      },
+      "seasonality": {
+        "1": {
+          "price": 0.926,
+          "occupancy": 0.926
+        },
+        "2": {
+          "price": 1.001,
+          "occupancy": 0.894
+        },
+        "3": {
+          "price": 1.076,
+          "occupancy": 1.043
+        },
+        "4": {
+          "price": 1.095,
+          "occupancy": 0.995
+        },
+        "5": {
+          "price": 1.106,
+          "occupancy": 0.961
+        },
+        "6": {
+          "price": 1.163,
+          "occupancy": 1.069
+        },
+        "7": {
+          "price": 1.247,
+          "occupancy": 1.325
+        },
+        "8": {
+          "price": 1.143,
+          "occupancy": 1.012
+        },
+        "9": {
+          "price": 0.818,
+          "occupancy": 0.97
+        },
+        "10": {
+          "price": 0.799,
+          "occupancy": 0.866
+        },
+        "11": {
+          "price": 0.776,
+          "occupancy": 0.933
+        },
+        "12": {
+          "price": 0.851,
+          "occupancy": 1.005
         }
       }
     }

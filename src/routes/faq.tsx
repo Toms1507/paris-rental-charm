@@ -5,7 +5,7 @@ import { pageHead } from "@/lib/seo";
 
 const TITLE = "FAQ conciergerie Airbnb Paris — Spinelle Conciergerie";
 const DESCRIPTION =
-  "Commission, revenus, limite des 120 jours, plateformes, ménage, assurance : les réponses aux questions les plus fréquentes des propriétaires parisiens.";
+  "Commission, revenus, plafond des 90 nuits, plateformes, ménage, assurance : les réponses aux questions les plus fréquentes des propriétaires parisiens.";
 
 export const Route = createFileRoute("/faq")({
   head: () =>
