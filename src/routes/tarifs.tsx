@@ -53,7 +53,7 @@ function TarifsPage() {
   return (
     <>
       <section className="border-b border-border bg-[var(--sand)] py-16">
-        <div className="container-page [&>*]:max-w-3xl">
+        <div data-reveal="up" className="container-page [&>*]:max-w-3xl">
           <p className="eyebrow">Tarifs</p>
           <h1 className="mt-4 text-4xl sm:text-5xl">Un tarif simple, sans surprise</h1>
           <p className="mt-5 text-muted-foreground">

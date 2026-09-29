@@ -252,3 +252,87 @@
     transform: translateX(-50%);
   }
 }
+
+/*
+ * Apparitions au défilement (inspirées de Bruxelles Conciergerie).
+ * Un élément marqué data-reveal="up|down|left|right|zoom" est masqué puis glisse en place
+ * quand il entre dans l'écran. La classe js-reveal n'est posée qu'avec JavaScript actif :
+ * sans JavaScript, tout reste visible. --reveal-delay décale les éléments d'un même groupe.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-reveal [data-reveal] {
+    opacity: 0;
+    /* Le survol (translate, ombre, bordure, fond) garde sa propre durée, sans le délai d'apparition. */
+    transition:
+      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      translate 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease,
+      border-color 0.35s ease,
+      background-color 0.35s ease;
+    will-change: opacity, transform;
+  }
+  html.js-reveal [data-reveal="up"] {
+    transform: translateY(48px);
+  }
+  html.js-reveal [data-reveal="down"] {
+    transform: translateY(-32px);
+  }
+  html.js-reveal [data-reveal="left"] {
+    transform: translateX(-64px);
+  }
+  html.js-reveal [data-reveal="right"] {
+    transform: translateX(64px);
+  }
+  html.js-reveal [data-reveal="zoom"] {
+    transform: scale(0.94);
+  }
+  html.js-reveal [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Cartes : légère élévation au survol */
+@utility card-hover {
+  /* translate (et non transform) : ne se mélange pas avec l'animation d'apparition. */
+  transition:
+    translate 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  &:hover {
+    translate: 0 -6px;
+    box-shadow: 0 24px 48px -28px oklch(0.23 0.04 258 / 35%);
+    border-color: oklch(0.37 0.085 258 / 35%);
+  }
+}
+
+/* Résultat du simulateur : fondu vers le haut à chaque nouvelle estimation */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility animate-fade-up {
+  animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hero : la photo se resserre doucement au chargement */
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-zoom {
+    animation: hero-zoom 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}

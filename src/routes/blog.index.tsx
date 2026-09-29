@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { POSTS, SITE } from "@/content/site";
+import { stagger } from "@/lib/reveal";
 import { absoluteUrl, pageHead } from "@/lib/seo";
 
 const TITLE = "Blog — Conseils location courte durée à Paris | Spinelle Conciergerie";
@@ -36,7 +37,7 @@ function BlogIndex() {
   return (
     <>
       <section className="border-b border-border bg-[var(--sand)] py-16">
-        <div className="container-page [&>*]:max-w-3xl">
+        <div data-reveal="up" className="container-page [&>*]:max-w-3xl">
           <p className="eyebrow">Blog</p>
           <h1 className="mt-4 text-4xl sm:text-5xl">Guides pour louer en courte durée à Paris</h1>
           <p className="mt-5 text-muted-foreground">
@@ -52,6 +53,8 @@ function BlogIndex() {
           {POSTS.map((p, i) => (
             <Link
               key={p.slug}
+              data-reveal="up"
+              style={stagger(i % 2)}
               to="/blog/$slug"
               params={{ slug: p.slug }}
               className={`rounded-2xl border border-border p-7 transition-colors hover:border-primary ${

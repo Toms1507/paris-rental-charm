@@ -32,7 +32,7 @@ function FaqPage() {
   return (
     <>
       <section className="border-b border-border bg-[var(--sand)] py-16">
-        <div className="container-page [&>*]:max-w-3xl">
+        <div data-reveal="up" className="container-page [&>*]:max-w-3xl">
           <p className="eyebrow">Questions fréquentes</p>
           <h1 className="mt-4 text-4xl sm:text-5xl">Vos questions, nos réponses</h1>
         </div>

@@ -32,6 +32,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { CITIES, FAQ, REVIEWS } from "@/content/site";
+import { stagger } from "@/lib/reveal";
 import { pageHead } from "@/lib/seo";
 
 const TITLE = "Conciergerie Airbnb Paris – Gestion location courte durée | Spinelle";
@@ -99,7 +100,12 @@ const PROMISES = [
 // Bandeau continu qui défile de droite à gauche. La liste est doublée pour boucler sans saut.
 function BenefitsMarquee() {
   return (
-    <div className="marquee mt-14 w-full" aria-label="Nos engagements">
+    <div
+      data-reveal="up"
+      style={stagger(4, 150)}
+      className="marquee mt-14 w-full"
+      aria-label="Nos engagements"
+    >
       <ul className="marquee-track">
         {[...HERO_BENEFITS, ...HERO_BENEFITS].map((b, i) => (
           <li
@@ -130,24 +136,38 @@ function HomePage() {
           height={1280}
           fetchPriority="high"
           decoding="async"
-          className="absolute inset-0 -z-20 size-full object-cover"
+          className="hero-zoom absolute inset-0 -z-20 size-full object-cover"
         />
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgb(0_0_0/0.72)_0%,rgb(0_0_0/0.55)_55%,rgb(0_0_0/0.4)_100%)]"
         />
         <div className="container-page flex w-full flex-col items-center py-20 text-center lg:py-28">
-          <p className="eyebrow !text-white/85">Conciergerie Airbnb — Paris et alentours</p>
-          <h1 className="mt-5 text-4xl leading-[1.08] text-white sm:text-5xl lg:text-[3.75rem]">
+          <p data-reveal="down" className="eyebrow !text-white/85">
+            Conciergerie Airbnb — Paris et alentours
+          </p>
+          <h1
+            data-reveal="up"
+            style={stagger(1, 150)}
+            className="mt-5 text-4xl leading-[1.08] text-white sm:text-5xl lg:text-[3.75rem]"
+          >
             Profitez de votre temps,
             <br />
             <span className="text-[oklch(0.82_0.07_235)]">on s'occupe de vos voyageurs.</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-base text-white/85 sm:text-lg">
+          <p
+            data-reveal="up"
+            style={stagger(2, 150)}
+            className="mt-6 max-w-2xl text-base text-white/85 sm:text-lg"
+          >
             Spinelle Conciergerie gère votre location courte durée de A&nbsp;à&nbsp;Z et maximise
             vos revenus, à Paris, en proche banlieue et même partout ailleurs en France.
           </p>
-          <div className="mt-9 flex flex-wrap justify-center gap-3">
+          <div
+            data-reveal="up"
+            style={stagger(3, 150)}
+            className="mt-9 flex flex-wrap justify-center gap-3"
+          >
             <a href="#estimation" className="btn-primary">
               Audit gratuit de mon bien <ArrowRight className="size-4" />
             </a>
@@ -164,13 +184,18 @@ function HomePage() {
 
       {/* Piliers */}
       <section className="container-page py-20">
-        <div className="mx-auto max-w-2xl text-center">
+        <div data-reveal="up" className="mx-auto max-w-2xl text-center">
           <p className="eyebrow">Pourquoi nous confier votre bien</p>
           <h2 className="mt-3 text-3xl sm:text-4xl">Louer en courte durée, sans les contraintes</h2>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {PILLARS.map((p) => (
-            <article key={p.title} className="rounded-2xl border border-border p-7 text-center">
+          {PILLARS.map((p, i) => (
+            <article
+              key={p.title}
+              data-reveal="up"
+              style={stagger(i)}
+              className="card-hover rounded-2xl border border-border bg-background p-7 text-center"
+            >
               <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-[var(--sand)]">
                 <p.icon className="size-5 text-primary" />
               </span>
@@ -184,7 +209,7 @@ function HomePage() {
       {/* Simulateur */}
       <section id="simulateur" className="scroll-mt-24 bg-[var(--sand)] py-20">
         <div className="container-page">
-          <div className="mx-auto max-w-2xl text-center">
+          <div data-reveal="up" className="mx-auto max-w-2xl text-center">
             <p className="eyebrow">Simulateur de revenus</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">
               Combien peut rapporter votre logement&nbsp;?
@@ -194,7 +219,7 @@ function HomePage() {
               estimation de vos revenus nets en location courte durée.
             </p>
           </div>
-          <div className="mt-12">
+          <div data-reveal="zoom" className="mt-12">
             <RevenueSimulator />
           </div>
         </div>
@@ -202,7 +227,7 @@ function HomePage() {
 
       {/* Services */}
       <section className="container-page py-20">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div data-reveal="up" className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
             <p className="eyebrow">Nos services</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">On s'occupe de tout</h2>
@@ -223,14 +248,18 @@ function HomePage() {
       {/* Comment ça marche */}
       <section className="bg-[var(--ink)] py-20 text-white">
         <div className="container-page">
-          <div className="mx-auto max-w-2xl text-center">
+          <div data-reveal="up" className="mx-auto max-w-2xl text-center">
             <p className="eyebrow">Comment ça marche</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">Trois étapes pour louer l'esprit libre</h2>
           </div>
           <ol className="mt-12 grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
             {HOW_IT_WORKS.map((step, i) => (
               <li key={step.title} className="contents">
-                <div className="rounded-2xl border border-white/15 bg-white/5 p-7">
+                <div
+                  data-reveal="up"
+                  style={stagger(i, 180)}
+                  className="rounded-2xl border border-white/15 bg-white/5 p-7 transition-colors hover:bg-white/10"
+                >
                   <div className="flex items-center gap-3">
                     <span className="flex size-10 items-center justify-center rounded-full bg-primary font-semibold">
                       {i + 1}
@@ -241,7 +270,12 @@ function HomePage() {
                   <p className="mt-3 text-[0.95rem] leading-relaxed text-white/75">{step.text}</p>
                 </div>
                 {i < HOW_IT_WORKS.length - 1 && (
-                  <div aria-hidden className="flex items-center justify-center text-primary">
+                  <div
+                    aria-hidden
+                    data-reveal="left"
+                    style={stagger(i + 1, 180)}
+                    className="flex items-center justify-center text-[oklch(0.82_0.07_235)]"
+                  >
                     <ArrowRight className="hidden size-6 lg:block" />
                     <ArrowDown className="size-6 lg:hidden" />
                   </div>
@@ -249,7 +283,7 @@ function HomePage() {
               </li>
             ))}
           </ol>
-          <div className="mt-12 text-center">
+          <div data-reveal="up" className="mt-12 text-center">
             <a href="#estimation" className="btn-primary">
               Je me lance
             </a>
@@ -259,7 +293,7 @@ function HomePage() {
 
       {/* Qui sommes-nous */}
       <section className="container-page grid items-center gap-12 py-20 lg:grid-cols-2">
-        <div className="grid grid-cols-2 gap-4">
+        <div data-reveal="left" className="grid grid-cols-2 gap-4">
           <img
             src={roomImage}
             alt="Chambre parisienne préparée avec du linge hôtelier pour des voyageurs"
@@ -277,7 +311,7 @@ function HomePage() {
             className="mt-12 aspect-[3/4] h-full w-full rounded-2xl object-cover"
           />
         </div>
-        <div>
+        <div data-reveal="right">
           <p className="eyebrow">Qui sommes-nous</p>
           <h2 className="mt-3 text-3xl sm:text-4xl">
             Une conciergerie parisienne, à taille humaine
@@ -320,7 +354,7 @@ function HomePage() {
       {/* FAQ */}
       <section className="bg-[var(--sand)] py-20">
         <div className="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <div>
+          <div data-reveal="left">
             <p className="eyebrow">FAQ</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">Vos questions, nos réponses</h2>
             <p className="mt-4 text-muted-foreground">
@@ -331,10 +365,12 @@ function HomePage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {FAQ.slice(0, 6).map((item) => (
+            {FAQ.slice(0, 6).map((item, i) => (
               <details
                 key={item.q}
-                className="group rounded-xl border border-border bg-background px-5 py-4"
+                data-reveal="up"
+                style={stagger(i, 80)}
+                className="group rounded-xl border border-border bg-background px-5 py-4 transition-colors hover:border-primary/40"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
                   {item.q}
@@ -353,7 +389,7 @@ function HomePage() {
 
       {/* Avis */}
       <section className="container-page py-20">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div data-reveal="up" className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
             <p className="eyebrow">Avis de propriétaires</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">Ils nous confient leur logement</h2>
@@ -362,11 +398,11 @@ function HomePage() {
             Tous les avis
           </Link>
         </div>
-        <Carousel opts={{ align: "start", loop: true }} className="mt-10">
+        <Carousel data-reveal="up" opts={{ align: "start", loop: true }} className="mt-10">
           <CarouselContent>
             {REVIEWS.map((r) => (
               <CarouselItem key={r.name} className="md:basis-1/2 lg:basis-1/3">
-                <article className="flex h-full flex-col rounded-2xl border border-border p-6">
+                <article className="card-hover flex h-full flex-col rounded-2xl border border-border bg-background p-6">
                   <div className="flex gap-0.5 text-primary">
                     {Array.from({ length: r.rating }).map((_, i) => (
                       <Star key={i} className="size-4 fill-current" />
@@ -390,7 +426,7 @@ function HomePage() {
       <section id="estimation" className="scroll-mt-24 pb-20">
         <div className="container-page">
           <div className="grid items-start gap-10 rounded-3xl bg-[var(--sand)] p-6 sm:p-10 lg:grid-cols-[0.9fr_1.1fr] lg:p-14">
-            <div className="lg:sticky lg:top-28">
+            <div data-reveal="left" className="lg:sticky lg:top-28">
               <p className="eyebrow">Audit gratuit</p>
               <h2 className="mt-3 text-3xl sm:text-4xl">
                 Découvrez le vrai potentiel de votre bien
@@ -413,7 +449,9 @@ function HomePage() {
                 ))}
               </ul>
             </div>
-            <LeadForm />
+            <div data-reveal="right">
+              <LeadForm />
+            </div>
           </div>
         </div>
       </section>

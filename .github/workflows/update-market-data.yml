@@ -1,10 +1,11 @@
-# Met à jour chaque mois les données du simulateur de revenus (relevés Inside Airbnb).
+# Met à jour les données du simulateur de revenus et le baromètre du blog (relevés Inside Airbnb).
+# Vérifie chaque semaine : un nouveau relevé mensuel est intégré quelques jours après sa publication.
 # Le commit n'est créé que si les données ont changé et que le site compile toujours.
 name: Mise à jour des données du simulateur
 
 on:
   schedule:
-    - cron: "0 6 22 * *" # le 22 de chaque mois, Inside Airbnb publiant vers le milieu du mois
+    - cron: "0 5 * * 1" # chaque lundi à 5 h (UTC)
   workflow_dispatch: {}
 
 permissions:
@@ -13,7 +14,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -42,5 +43,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/content/market-paris.ts
-          git commit -m "Mise à jour mensuelle des données du simulateur"
+          git commit -m "Mise à jour automatique des données du simulateur et du baromètre"
           git push

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Mail, MapPin, MessageCircle } from "lucide-react";
+import { ArrowRight, Mail, MapPin } from "lucide-react";
 import { NAV, SITE } from "@/content/site";
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 
 export function Footer() {
   return (
@@ -26,7 +27,7 @@ export function Footer() {
               rel="noopener"
               className="inline-flex items-center justify-center gap-2 rounded-[var(--radius)] border border-white/30 px-6 py-3.5 text-[0.95rem] font-semibold transition-colors hover:bg-white/10"
             >
-              <MessageCircle className="size-4" /> WhatsApp
+              <WhatsAppIcon className="size-4" /> WhatsApp
             </a>
           </div>
         </div>
@@ -69,7 +70,7 @@ export function Footer() {
                 rel="noopener"
                 className="flex items-center gap-2.5 transition-colors hover:text-white"
               >
-                <MessageCircle className="size-4 text-[oklch(0.82_0.07_235)]" />
+                <WhatsAppIcon className="size-4 text-[#25D366]" />
                 <span className="whitespace-nowrap">{SITE.phone}</span>
               </a>
             </li>

@@ -9,6 +9,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { SERVICES } from "@/content/site";
+import { stagger } from "@/lib/reveal";
 
 // Une icône par carte, dans l'ordre de SERVICES.
 const SERVICE_ICONS = [Camera, Search, TrendingUp, MessageCircle, Sparkles, Wrench, BadgeCheck];
@@ -25,7 +26,9 @@ export function ServiceGrid({ ctaHref = "#estimation" }: { ctaHref?: string }) {
         return (
           <article
             key={s.title}
-            className="rounded-2xl border border-border bg-background p-6 transition-shadow hover:shadow-[var(--shadow-soft)]"
+            data-reveal="up"
+            style={stagger(i % 3)}
+            className="card-hover rounded-2xl border border-border bg-background p-6"
           >
             <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10">
               <Icon className="size-5 text-primary" />
@@ -37,7 +40,9 @@ export function ServiceGrid({ ctaHref = "#estimation" }: { ctaHref?: string }) {
       })}
       <a
         href={ctaHref}
-        className="flex flex-col justify-between gap-6 rounded-2xl bg-primary p-7 text-primary-foreground transition-[filter] hover:brightness-95 lg:col-span-2"
+        data-reveal="up"
+        style={stagger(1)}
+        className="flex flex-col justify-between gap-6 rounded-2xl bg-primary p-7 card-hover text-primary-foreground lg:col-span-2"
       >
         <div>
           <p className="font-[family-name:var(--font-display)] text-2xl sm:text-3xl">

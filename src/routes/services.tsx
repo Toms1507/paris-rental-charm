@@ -40,7 +40,7 @@ function ServicesPage() {
   return (
     <>
       <section className="border-b border-border bg-[var(--sand)] py-16">
-        <div className="container-page [&>*]:max-w-3xl">
+        <div data-reveal="up" className="container-page [&>*]:max-w-3xl">
           <p className="eyebrow">Services</p>
           <h1 className="mt-4 text-4xl sm:text-5xl">
             Tout ce que comprend notre conciergerie Airbnb

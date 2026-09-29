@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -12,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
+import { useScrollReveal } from "@/lib/reveal";
 import { Footer } from "@/components/site/Footer";
 import { CookieConsent } from "@/components/site/CookieConsent";
 import { CITIES, SITE } from "@/content/site";
@@ -185,6 +187,14 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="fr">
       <head>
+        {/* Active les animations d'apparition seulement si JavaScript tourne. Filet de sécurité :
+            si la page ne s'initialise pas en 3 s, tout est affiché. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "document.documentElement.classList.add('js-reveal');setTimeout(function(){if(!document.documentElement.classList.contains('reveal-ready'))document.documentElement.classList.remove('js-reveal')},3000);",
+          }}
+        />
         <HeadContent />
       </head>
       <body>
@@ -197,6 +207,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  useScrollReveal(pathname);
 
   return (
     <QueryClientProvider client={queryClient}>

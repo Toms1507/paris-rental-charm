@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Clock, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Clock, Mail, MapPin } from "lucide-react";
 import { LeadForm } from "@/components/site/LeadForm";
 import { SITE } from "@/content/site";
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 import { absoluteUrl, pageHead } from "@/lib/seo";
 
 const TITLE = "Estimation gratuite de vos revenus locatifs — Spinelle Conciergerie";
@@ -47,7 +48,7 @@ function ContactPage() {
                 rel="noopener"
                 className="flex items-center gap-3 font-semibold transition-colors hover:text-primary"
               >
-                <MessageCircle className="size-4 text-primary" />
+                <WhatsAppIcon className="size-4 text-[#25D366]" />
                 <span className="whitespace-nowrap">{SITE.phone}</span>
                 <span className="text-xs font-normal text-muted-foreground">WhatsApp</span>
               </a>

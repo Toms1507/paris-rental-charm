@@ -1,3 +1,5 @@
+import { buildBarometre } from "@/content/barometre";
+
 export const SITE = {
   name: "Spinelle Conciergerie",
   tagline: "Conciergerie Airbnb à Paris et alentours",
@@ -166,7 +168,7 @@ export type BlogPost = {
   sections: { heading: string; paragraphs: string[]; bullets?: string[] }[];
 };
 
-export const POSTS: BlogPost[] = [
+const ARTICLES: BlogPost[] = [
   {
     slug: "rentabilite-location-courte-duree-paris",
     title: "Location courte durée à Paris : quelle rentabilité en 2026 ?",
@@ -567,3 +569,6 @@ export const CITIES: City[] = [
     ],
   },
 ];
+
+// Le baromètre mensuel, généré à partir des données de marché, apparaît toujours en tête du blog.
+export const POSTS: BlogPost[] = [buildBarometre(), ...ARTICLES];

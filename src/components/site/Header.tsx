@@ -2,27 +2,28 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { NAV, SITE } from "@/content/site";
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 
 export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
-      <div className="container-page flex h-18 items-center justify-between py-3">
+      <div className="mx-auto flex h-20 w-full max-w-[96rem] items-center justify-between gap-6 px-5 sm:px-8 lg:px-10">
         <Link to="/" className="flex items-baseline gap-2">
-          <span className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight">
+          <span className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight">
             Spinelle
           </span>
           <span className="eyebrow">Conciergerie</span>
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-8 lg:flex xl:gap-11">
           {NAV.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-              activeProps={{ className: "text-sm font-medium text-primary" }}
+              className="text-[0.95rem] font-medium text-muted-foreground transition-colors hover:text-primary"
+              activeProps={{ className: "text-[0.95rem] font-medium text-primary" }}
             >
               {item.label}
             </Link>
@@ -30,6 +31,16 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <a
+            href={SITE.whatsapp}
+            target="_blank"
+            rel="noopener"
+            aria-label="Nous écrire sur WhatsApp"
+            title="Nous écrire sur WhatsApp"
+            className="inline-flex size-11 items-center justify-center rounded-full border border-border text-[#25D366] transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
+          >
+            <WhatsAppIcon />
+          </a>
           <Link to="/" hash="estimation" className="btn-primary hidden sm:inline-flex">
             Audit gratuit
           </Link>
@@ -65,6 +76,14 @@ export function Header() {
             >
               Audit gratuit
             </Link>
+            <a
+              href={SITE.whatsapp}
+              target="_blank"
+              rel="noopener"
+              className="btn-outline mt-2 gap-2"
+            >
+              <WhatsAppIcon className="size-4 text-[#25D366]" /> WhatsApp
+            </a>
           </div>
         </nav>
       )}
