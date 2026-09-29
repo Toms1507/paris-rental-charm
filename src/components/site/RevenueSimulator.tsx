@@ -1,5 +1,13 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ArrowRight, ChevronDown, Minus, Plus, TrendingDown, TrendingUp } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  ChevronDown,
+  Minus,
+  Plus,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 import { CITIES } from "@/content/site";
 import { MARKET_PARIS, type MarketCell } from "@/content/market-paris";
 
@@ -490,12 +498,27 @@ export function RevenueSimulator() {
         <section className="p-6 sm:p-8">
           <p className="text-sm font-semibold">Comment est calculée l'estimation&nbsp;?</p>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Nous partons du prix médian des logements comparables de votre secteur et du taux
-            d'occupation atteint par les 25&nbsp;% d'annonces les mieux gérées, le niveau que vise
-            notre gestion. Nous ajustons ensuite selon la taille de votre bien, sa capacité
-            d'accueil, ses équipements (effets mesurés sur les annonces réelles) et la saison. Le
-            résultat réel dépend du nombre de nuits louées&nbsp;: nous ne le garantissons pas, mais
-            nous mettons tout en œuvre pour le maximiser.
+            Pour une estimation aussi précise et objective que possible, nous croisons plusieurs
+            jeux de données du marché réel de la location courte durée&nbsp;:
+          </p>
+          <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
+            {[
+              `${MARKET_PARIS.snapshots.length} relevés mensuels du marché Airbnb, soit ${MARKET_PARIS.listings.toLocaleString("fr-FR")} logements entiers actifs à Paris au dernier relevé, ainsi que Lyon, Bordeaux et le Pays basque`,
+              "Prix par nuit et taux d'occupation analysés par arrondissement, par secteur et par taille de logement",
+              "Effet réel de la capacité d'accueil, des salles de bain et de chaque équipement, mesuré en comparant des logements identiques par ailleurs",
+              "Saisonnalité calculée mois par mois, avec des données actualisées chaque semaine",
+            ].map((item) => (
+              <li key={item} className="flex gap-2.5">
+                <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Le taux d'occupation retenu est celui des 25&nbsp;% d'annonces les mieux gérées de votre
+            secteur&nbsp;: le niveau que vise notre gestion. Le résultat réel dépend du nombre de
+            nuits louées&nbsp;; nous ne le garantissons pas, mais nous mettons tout en œuvre pour le
+            maximiser.
           </p>
         </section>
       </div>
