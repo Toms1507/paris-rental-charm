@@ -72,31 +72,56 @@ export const STEPS = [
   },
 ];
 
-// Avis de vrais clients. Textes à faire valider par chaque client avant la mise en ligne.
-export const REVIEWS = [
+// Avis publics laissés par nos voyageurs sur Airbnb, reproduits à l'identique (traduction
+// automatique d'Airbnb pour les avis en langue étrangère). Photos de profil non reprises.
+export type Review = {
+  name: string;
+  from: string;
+  date: string;
+  rating: number;
+  text: string;
+  /** Langue d'origine quand l'avis a été traduit par Airbnb. */
+  language?: string;
+};
+
+export const REVIEWS: Review[] = [
   {
-    name: "Émilie",
-    place: "Appartement, Paris 1er",
-    text: "Spinelle s'occupe de tout, de l'annonce au ménage. Les voyageurs sont bien accueillis, le logement est toujours impeccable et je n'ai plus à y penser.",
+    name: "Feli",
+    from: "Augsbourg, Allemagne",
+    date: "juillet 2025",
     rating: 5,
+    text: "La communication était merveilleuse. On m'a toujours répondu très rapidement et j'ai également été accueilli personnellement. De plus, l'emplacement était 1A, on ne peut pas faire mieux. Je ne peux que le recommander à tout le monde.",
+    language: "Allemand",
   },
   {
-    name: "M. Garnier",
-    place: "Appartement, Paris 14e",
-    text: "Une équipe sérieuse et réactive. Je reçois un compte rendu clair chaque mois et je sais exactement ce qui se passe dans mon appartement.",
+    name: "Mathilde",
+    from: "Rouen, France",
+    date: "août 2025",
     rating: 5,
+    text: "Emplacement idéal en plein cœur de la ville! Tom nous a fourni de nombreux conseils pour découvrir la ville. Parfait pour un we!",
   },
   {
-    name: "Propriétaire",
-    place: "T2, La Défense",
-    text: "Mon appartement est géré de A à Z, avec une communication simple et rapide. Je recommande pour tous ceux qui n'ont pas le temps de s'en occuper.",
+    name: "Olivia",
+    from: "Bristol, Royaume-Uni",
+    date: "juin 2025",
     rating: 5,
+    text: "Hôte incroyable !\nLe logement est un peu chaud en été, mais sinon génial.",
+    language: "Anglais",
   },
   {
-    name: "Louis",
-    place: "T1, Neuilly-sur-Seine",
-    text: "Mise en ligne rapide, belles photos et un vrai suivi. Je peux compter sur l'équipe même le week-end.",
+    name: "Mathilde",
+    from: "Chanteloup-les-Vignes, France",
+    date: "juin 2025",
     rating: 5,
+    text: "Tom est un hôte hyper accueillant, gentil et sympa.\nIl est à l’écoute réactif pour répondre et disponible pour toute demande\nNous avons passé un agréable séjour dans son logement.\nJe vous le recommande vivement et fortement.\nÇa serait avec un grand plaisir de pouvoir échanger de nouveaux avec cet hôte.",
+  },
+  {
+    name: "Lovisa",
+    from: "Stockholm, Suède",
+    date: "juillet 2025",
+    rating: 5,
+    text: "Très joli petit appartement, juste à côté d'une place avec des sièges extérieurs confortables et situé au centre !",
+    language: "Suédois",
   },
 ];
 

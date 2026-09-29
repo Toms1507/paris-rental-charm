@@ -25,6 +25,7 @@ import rooftops from "@/assets/paris-rooftops.jpg";
 import { LeadForm } from "@/components/site/LeadForm";
 import { RevenueSimulator } from "@/components/site/RevenueSimulator";
 import { ServiceGrid } from "@/components/site/ServiceGrid";
+import { AirbnbLogo, ReviewCard } from "@/components/site/AirbnbReviews";
 import {
   Carousel,
   CarouselContent,
@@ -397,8 +398,13 @@ function HomePage() {
       <section className="container-page py-20">
         <div data-reveal="up" className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
-            <p className="eyebrow">Avis de propriétaires</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl">Ils nous confient leur logement</h2>
+            <p className="eyebrow flex items-center gap-2">
+              <AirbnbLogo className="h-4" /> Avis vérifiés Airbnb
+            </p>
+            <h2 className="mt-3 text-3xl sm:text-4xl">Des voyageurs satisfaits</h2>
+            <p className="mt-4 text-muted-foreground">
+              Les avis publics laissés par nos voyageurs, notés 5 étoiles sur 5.
+            </p>
           </div>
           <Link to="/avis" className="btn-outline">
             Tous les avis
@@ -407,17 +413,8 @@ function HomePage() {
         <Carousel data-reveal="up" opts={{ align: "start", loop: true }} className="mt-10">
           <CarouselContent>
             {REVIEWS.map((r) => (
-              <CarouselItem key={r.name} className="md:basis-1/2 lg:basis-1/3">
-                <article className="card-hover flex h-full flex-col rounded-2xl border border-border bg-background p-6">
-                  <div className="flex gap-0.5 text-primary">
-                    {Array.from({ length: r.rating }).map((_, i) => (
-                      <Star key={i} className="size-4 fill-current" />
-                    ))}
-                  </div>
-                  <p className="mt-4 flex-1 text-sm">« {r.text} »</p>
-                  <p className="mt-5 text-sm font-semibold">{r.name}</p>
-                  <p className="text-xs text-muted-foreground">{r.place}</p>
-                </article>
+              <CarouselItem key={r.name + r.from} className="md:basis-1/2 lg:basis-1/3">
+                <ReviewCard review={r} />
               </CarouselItem>
             ))}
           </CarouselContent>
