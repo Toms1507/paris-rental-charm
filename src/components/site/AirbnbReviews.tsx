@@ -15,12 +15,23 @@ export function ReviewCard({ review }: { review: Review }) {
   return (
     <article className="flex h-full flex-col rounded-2xl border border-border bg-background p-6">
       <div className="flex items-center gap-3.5">
-        <span
-          aria-hidden
-          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF385C]/10 text-lg font-semibold text-[#E31C5F]"
-        >
-          {review.name.charAt(0)}
-        </span>
+        {review.photo ? (
+          <img
+            src={review.photo}
+            alt={`Photo de ${review.name}`}
+            width={48}
+            height={48}
+            loading="lazy"
+            className="size-12 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF385C]/10 text-lg font-semibold text-[#E31C5F]"
+          >
+            {review.name.charAt(0)}
+          </span>
+        )}
         <div className="min-w-0 flex-1">
           <p className="font-semibold">{review.name}</p>
           <p className="text-sm text-muted-foreground">{review.from}</p>

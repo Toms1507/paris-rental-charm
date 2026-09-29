@@ -1,5 +1,9 @@
 import { buildBarometre } from "@/content/barometre";
 import { FACTS } from "@/content/market-facts";
+import feliPhoto from "@/assets/reviews/feli.jpg";
+import mathildeChanteloupPhoto from "@/assets/reviews/mathilde-chanteloup.jpg";
+import mathildeRouenPhoto from "@/assets/reviews/mathilde-rouen.jpg";
+import oliviaPhoto from "@/assets/reviews/olivia.jpg";
 
 export const SITE = {
   name: "Spinelle Conciergerie",
@@ -73,12 +77,14 @@ export const STEPS = [
 ];
 
 // Avis publics laissés par nos voyageurs sur Airbnb, reproduits à l'identique (traduction
-// automatique d'Airbnb pour les avis en langue étrangère). Photos de profil non reprises.
+// automatique d'Airbnb pour les avis en langue étrangère). Photos publiées avec leur accord.
 export type Review = {
   name: string;
   from: string;
   date: string;
   rating: number;
+  /** Photo de profil Airbnb (sinon, initiale du prénom). */
+  photo?: string;
   text: string;
   /** Langue d'origine quand l'avis a été traduit par Airbnb. */
   language?: string;
@@ -88,6 +94,7 @@ export const REVIEWS: Review[] = [
   {
     name: "Feli",
     from: "Augsbourg, Allemagne",
+    photo: feliPhoto,
     date: "juillet 2025",
     rating: 5,
     text: "La communication était merveilleuse. On m'a toujours répondu très rapidement et j'ai également été accueilli personnellement. De plus, l'emplacement était 1A, on ne peut pas faire mieux. Je ne peux que le recommander à tout le monde.",
@@ -96,6 +103,7 @@ export const REVIEWS: Review[] = [
   {
     name: "Mathilde",
     from: "Rouen, France",
+    photo: mathildeRouenPhoto,
     date: "août 2025",
     rating: 5,
     text: "Emplacement idéal en plein cœur de la ville! Tom nous a fourni de nombreux conseils pour découvrir la ville. Parfait pour un we!",
@@ -103,6 +111,7 @@ export const REVIEWS: Review[] = [
   {
     name: "Olivia",
     from: "Bristol, Royaume-Uni",
+    photo: oliviaPhoto,
     date: "juin 2025",
     rating: 5,
     text: "Hôte incroyable !\nLe logement est un peu chaud en été, mais sinon génial.",
@@ -111,6 +120,7 @@ export const REVIEWS: Review[] = [
   {
     name: "Mathilde",
     from: "Chanteloup-les-Vignes, France",
+    photo: mathildeChanteloupPhoto,
     date: "juin 2025",
     rating: 5,
     text: "Tom est un hôte hyper accueillant, gentil et sympa.\nIl est à l’écoute réactif pour répondre et disponible pour toute demande\nNous avons passé un agréable séjour dans son logement.\nJe vous le recommande vivement et fortement.\nÇa serait avec un grand plaisir de pouvoir échanger de nouveaux avec cet hôte.",
