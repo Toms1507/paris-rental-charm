@@ -6,7 +6,7 @@
 
 /*
  * Spinelle Conciergerie — design system
- * Blanc, gris très foncé, terracotta, beige clair.
+ * Blanc, bleu nuit, bleu marine, gris bleuté très clair.
  */
 
 @theme inline {
@@ -61,38 +61,38 @@
   --radius: 0.5rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.243 0 0);
-  --ink: oklch(0.243 0 0);
-  --sand: oklch(0.974 0.006 62);
+  --ink: oklch(0.23 0.04 258);
+  --sand: oklch(0.972 0.006 250);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.243 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.243 0 0);
-  --primary: oklch(0.606 0.104 40.6);
+  --primary: oklch(0.37 0.085 258);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.974 0.006 62);
+  --secondary: oklch(0.972 0.006 250);
   --secondary-foreground: oklch(0.243 0 0);
-  --muted: oklch(0.974 0.006 62);
-  --muted-foreground: oklch(0.46 0.012 60);
-  --accent: oklch(0.606 0.104 40.6);
+  --muted: oklch(0.972 0.006 250);
+  --muted-foreground: oklch(0.46 0.02 255);
+  --accent: oklch(0.37 0.085 258);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.915 0.008 62);
-  --input: oklch(0.915 0.008 62);
-  --ring: oklch(0.606 0.104 40.6);
-  --chart-1: oklch(0.606 0.104 40.6);
-  --chart-2: oklch(0.7 0.08 50);
-  --chart-3: oklch(0.78 0.05 60);
-  --chart-4: oklch(0.5 0.02 60);
+  --border: oklch(0.91 0.01 250);
+  --input: oklch(0.91 0.01 250);
+  --ring: oklch(0.37 0.085 258);
+  --chart-1: oklch(0.37 0.085 258);
+  --chart-2: oklch(0.55 0.08 250);
+  --chart-3: oklch(0.75 0.05 240);
+  --chart-4: oklch(0.5 0.03 255);
   --chart-5: oklch(0.243 0 0);
-  --sidebar: oklch(0.974 0.006 62);
+  --sidebar: oklch(0.972 0.006 250);
   --sidebar-foreground: oklch(0.243 0 0);
-  --sidebar-primary: oklch(0.606 0.104 40.6);
+  --sidebar-primary: oklch(0.37 0.085 258);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.974 0.006 62);
+  --sidebar-accent: oklch(0.972 0.006 250);
   --sidebar-accent-foreground: oklch(0.243 0 0);
-  --sidebar-border: oklch(0.915 0.008 62);
-  --sidebar-ring: oklch(0.606 0.104 40.6);
+  --sidebar-border: oklch(0.91 0.01 250);
+  --sidebar-ring: oklch(0.37 0.085 258);
 }
 
 .dark {
@@ -102,17 +102,17 @@
   --card-foreground: oklch(0.98 0 0);
   --popover: oklch(0.25 0 0);
   --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.65 0.11 40.6);
+  --primary: oklch(0.62 0.1 255);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.28 0.006 62);
   --secondary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.28 0.006 62);
   --muted-foreground: oklch(0.72 0.01 60);
-  --accent: oklch(0.65 0.11 40.6);
+  --accent: oklch(0.62 0.1 255);
   --accent-foreground: oklch(1 0 0);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --sand: oklch(0.25 0.006 62);
+  --sand: oklch(0.25 0.015 255);
   --ink: oklch(0.98 0 0);
 }
 
@@ -219,7 +219,7 @@
   transition: border-color 0.2s ease;
   &:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px oklch(0.606 0.104 40.6 / 15%);
+    box-shadow: 0 0 0 3px oklch(0.37 0.085 258 / 15%);
   }
 }
 
@@ -232,8 +232,7 @@
 @utility marquee-track {
   display: flex;
   width: max-content;
-  gap: 0.625rem;
-  animation: marquee-scroll 28s linear infinite;
+  animation: marquee-scroll 40s linear infinite;
   &:hover {
     animation-play-state: paused;
   }
@@ -249,7 +248,7 @@
     transform: translateX(0);
   }
   to {
-    /* La liste étant doublée, -50 % moins la moitié de l'écart ramène exactement au point de départ. */
-    transform: translateX(calc(-50% - 0.3125rem));
+    /* La liste étant doublée, -50 % ramène exactement au point de départ. */
+    transform: translateX(-50%);
   }
 }

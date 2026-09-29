@@ -19,29 +19,6 @@ import { submitLead } from "@/lib/leads";
 // ville aux médianes parisiennes. Hors zone : données Inside Airbnb de Lyon, Bordeaux et du Pays
 // basque ; ailleurs, étude personnalisée.
 
-const ARRONDISSEMENT_NAMES = [
-  "Louvre",
-  "Bourse",
-  "Marais nord",
-  "Marais sud – Hôtel de Ville",
-  "Panthéon",
-  "Saint-Germain",
-  "Invalides",
-  "Champs-Élysées",
-  "Opéra",
-  "Canal Saint-Martin",
-  "Bastille",
-  "Bercy",
-  "Butte-aux-Cailles",
-  "Montparnasse",
-  "Vaugirard",
-  "Passy – Trocadéro",
-  "Batignolles",
-  "Montmartre",
-  "Buttes-Chaumont",
-  "Belleville",
-];
-
 const SECTORS = [
   { id: "", label: "Tout l'arrondissement" },
   { id: "nord", label: "Nord" },
@@ -81,7 +58,8 @@ const AMENITIES = [
 
 const PLATFORM_FEE = 0.15;
 const COMMISSION = 0.2;
-const MAX_DAYS = 731;
+const NIGHTS_PER_MONTH = 30;
+const toNights = (occupancy: number) => Math.round(occupancy * NIGHTS_PER_MONTH);
 const UNLOCK_KEY = "spinelle-simulateur-contact";
 
 const euros = (n: number) =>
@@ -101,16 +79,6 @@ const normalize = (s: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
-
-const toIso = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-const fromIso = (s: string) => {
-  const [y, m, d] = s.split("-").map(Number);
-  return new Date(y!, m! - 1, d!);
-};
-const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
-const longDate = (d: Date) =>
-  d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 
 type Bucket = "0" | "1" | "2" | "3";
 type Month = keyof typeof MARKET_PARIS.seasonality;
@@ -216,7 +184,6 @@ function readContact(): Contact | null {
 }
 
 export function RevenueSimulator() {
-  const tomorrow = useMemo(() => addDays(new Date(), 1), []);
   const [location, setLocation] = useState("paris-11");
   const [sector, setSector] = useState<Sector>("");
   const [outOfZoneText, setOutOfZoneText] = useState("");
@@ -226,10 +193,8 @@ export function RevenueSimulator() {
   const [bedrooms, setBedrooms] = useState(1);
   const [bathrooms, setBathrooms] = useState(1);
   const [amenities, setAmenities] = useState<string[]>([]);
-  const [start, setStart] = useState(toIso(tomorrow));
-  const [end, setEnd] = useState(toIso(addDays(tomorrow, 364)));
-  // null = médiane du secteur (aucune promesse d'occupation) ; sinon valeur choisie au curseur.
-  const [customOccupancy, setCustomOccupancy] = useState<number | null>(null);
+  // null = médiane du secteur (aucune promesse) ; sinon nombre de nuits choisi au curseur.
+  const [customNights, setCustomNights] = useState<number | null>(null);
   const [showMonths, setShowMonths] = useState(false);
   const [contact, setContact] = useState<Contact | null>(null);
 
@@ -242,20 +207,12 @@ export function RevenueSimulator() {
     () => marketFor(location, sector, outOfZone, bucket),
     [location, sector, outOfZone, bucket],
   );
-  const occupancy = customOccupancy ?? market?.cell.occupancy ?? 0.4;
-
-  const startDate = fromIso(start);
-  const endDate = fromIso(end);
-  const totalDays = Math.round((endDate.getTime() - startDate.getTime()) / 86_400_000) + 1;
-  const periodError =
-    !start || !end || totalDays < 1
-      ? "La date de fin doit suivre la date de début."
-      : totalDays > MAX_DAYS
-        ? "La période est limitée à deux ans."
-        : null;
+  // Nuits louées par mois : choix du propriétaire, ou médiane du secteur par défaut.
+  const nightsPerMonth =
+    customNights ?? Math.round((market?.cell.occupancy ?? 0.4) * NIGHTS_PER_MONTH);
 
   const result = useMemo(() => {
-    if (!market || periodError) return null;
+    if (!market) return null;
     const type = PROPERTY_TYPES[typeIndex]!;
     const amenityBonus = AMENITIES.filter((a) => amenities.includes(a.id)).reduce(
       (sum, a) => sum + a.bonus,
@@ -272,27 +229,17 @@ export function RevenueSimulator() {
       type.factor *
       (1 + amenityBonus + extraRooms);
 
-    // Découpage de la période en mois calendaires (le premier et le dernier peuvent être partiels).
-    const segments: { date: Date; days: number }[] = [];
-    for (let d = startDate; d <= endDate; d = addDays(d, 1)) {
-      const last = segments.at(-1);
-      if (
-        last &&
-        last.date.getMonth() === d.getMonth() &&
-        last.date.getFullYear() === d.getFullYear()
-      )
-        last.days += 1;
-      else segments.push({ date: d, days: 1 });
-    }
-
-    // Chaque mois : nuits entières × prix du mois. Une nuit de plus ajoute exactement ce prix.
-    const months = segments.map(({ date, days }) => {
+    // Les 12 prochains mois : chaque mois, le nombre de nuits choisi × le prix du mois.
+    // Une nuit de plus ajoute donc exactement le prix d'une nuit.
+    const now = new Date();
+    const months = Array.from({ length: 12 }, (_, i) => {
+      const date = new Date(now.getFullYear(), now.getMonth() + 1 + i, 1);
+      const days = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
       const season = market.seasonal
         ? MARKET_PARIS.seasonality[String(date.getMonth() + 1) as Month]
-        : { price: 1, occupancy: 1 };
-      const rate = Math.min(0.97, Math.max(0.02, occupancy * season.occupancy));
+        : { price: 1 };
       const price = Math.round(base * season.price);
-      const nights = Math.round(days * rate);
+      const nights = Math.min(nightsPerMonth, days);
       return { date, days, nights, price, gross: nights * price };
     });
 
@@ -310,34 +257,19 @@ export function RevenueSimulator() {
       fees,
       commission,
       net,
-      perMonth: Math.round((net / days) * 30.44),
+      perMonth: Math.round(net / 12),
       averagePrice: nights ? Math.round(gross / nights) : 0,
     };
-    // startDate/endDate sont dérivés de start/end.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    market,
-    periodError,
-    bucket,
-    typeIndex,
-    surface,
-    guests,
-    bedrooms,
-    bathrooms,
-    amenities,
-    occupancy,
-    start,
-    end,
-  ]);
+  }, [market, bucket, typeIndex, surface, guests, bedrooms, bathrooms, amenities, nightsPerMonth]);
 
   const toggleAmenity = (id: string) =>
     setAmenities((list) => (list.includes(id) ? list.filter((a) => a !== id) : [...list, id]));
 
   const presets = market
     ? [
-        { label: "Médiane", hint: "du secteur", value: market.cell.occupancy },
-        { label: "Top 25 %", hint: "les plus louées", value: market.cell.occupancyTop },
-        { label: "Élevée", hint: "calendrier rempli", value: 0.85 },
+        { label: "Médiane", hint: "du secteur", value: toNights(market.cell.occupancy) },
+        { label: "Top 25 %", hint: "les plus louées", value: toNights(market.cell.occupancyTop) },
+        { label: "Élevée", hint: "calendrier rempli", value: 25 },
       ]
     : [];
 
@@ -352,7 +284,7 @@ export function RevenueSimulator() {
     location === OUT_OF_ZONE
       ? `Hors zone : ${outOfZoneText || "non précisé"}`
       : location.startsWith("paris-")
-        ? `Paris ${location.slice(6)}${location === "paris-1" ? "er" : "e"} – ${ARRONDISSEMENT_NAMES[Number(location.slice(6)) - 1]}${sector ? `, secteur ${sector}` : ""}`
+        ? `Paris ${location.slice(6)}${location === "paris-1" ? "er" : "e"}${sector ? `, secteur ${sector}` : ""}`
         : (SUBURBS.find((c) => c.slug === location)?.name ?? "");
 
   // Résumé envoyé avec la demande : tout ce que le prospect a saisi et le résultat obtenu.
@@ -367,8 +299,7 @@ export function RevenueSimulator() {
               .join(", ")
           : "aucun"
       }`,
-      `Période : du ${longDate(startDate)} au ${longDate(endDate)}`,
-      `Occupation choisie : ${pct(occupancy)}`,
+      `Nuits louées par mois souhaitées : ${nightsPerMonth}`,
       result
         ? `Estimation : ${euros(result.net)} net (${euros(result.gross)} brut, ${result.nights} nuits, ${euros(result.averagePrice)} / nuit)`
         : "Estimation : étude personnalisée demandée",
@@ -388,15 +319,15 @@ export function RevenueSimulator() {
                 onChange={(e) => {
                   setLocation(e.target.value);
                   setSector("");
-                  setCustomOccupancy(null);
+                  setCustomNights(null);
                 }}
                 className="field-input"
               >
                 <optgroup label="Paris">
-                  {ARRONDISSEMENT_NAMES.map((name, i) => (
-                    <option key={name} value={`paris-${i + 1}`}>
+                  {Array.from({ length: 20 }, (_, i) => (
+                    <option key={i} value={`paris-${i + 1}`}>
                       Paris {i + 1}
-                      {i === 0 ? "er" : "e"} – {name}
+                      {i === 0 ? "er" : "e"}
                     </option>
                   ))}
                 </optgroup>
@@ -433,7 +364,7 @@ export function RevenueSimulator() {
                   value={outOfZoneText}
                   onChange={(e) => {
                     setOutOfZoneText(e.target.value);
-                    setCustomOccupancy(null);
+                    setCustomNights(null);
                   }}
                   maxLength={80}
                   placeholder="Ex. Lyon, Biarritz, Bordeaux…"
@@ -462,7 +393,7 @@ export function RevenueSimulator() {
                 setSurface(t.surface);
                 setBedrooms(t.bedrooms);
                 setGuests(t.guests);
-                setCustomOccupancy(null);
+                setCustomNights(null);
               }}
               className="field-input"
             >
@@ -492,7 +423,7 @@ export function RevenueSimulator() {
               display={bedrooms === 0 ? "Studio" : String(bedrooms)}
               onChange={(v) => {
                 setBedrooms(v);
-                setCustomOccupancy(null);
+                setCustomNights(null);
               }}
               min={0}
               max={6}
@@ -531,67 +462,41 @@ export function RevenueSimulator() {
           </div>
         </Step>
 
-        <Step number="03" title="Période de location">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Du">
-              <input
-                type="date"
-                value={start}
-                min={toIso(tomorrow)}
-                onChange={(e) => {
-                  setStart(e.target.value);
-                  if (e.target.value && end < e.target.value) setEnd(e.target.value);
-                }}
-                className="field-input"
-              />
-            </Field>
-            <Field label="Au">
-              <input
-                type="date"
-                value={end}
-                min={start}
-                max={toIso(addDays(fromIso(start || toIso(tomorrow)), MAX_DAYS - 1))}
-                onChange={(e) => setEnd(e.target.value)}
-                className="field-input"
-              />
-            </Field>
-          </div>
-          <p
-            className={`mt-3 text-sm ${periodError ? "text-destructive" : "text-muted-foreground"}`}
-          >
-            {periodError ??
-              `${totalDays} nuits disponibles. Prix et remplissage suivent la saisonnalité réelle de chaque mois.`}
-          </p>
-        </Step>
-
         {market && (
-          <Step number="04" title="Taux d'occupation moyen">
+          <Step number="03" title="Nuits louées par mois">
             <div className="flex items-end justify-between gap-4">
-              <label htmlFor="occupancy" className="text-sm text-muted-foreground">
-                Part des nuits louées sur l'année, ajustée ensuite mois par mois selon la saison.
+              <label htmlFor="nights" className="text-sm text-muted-foreground">
+                Combien de nuits par mois souhaitez-vous louer votre logement&nbsp;?
               </label>
-              <span className="font-[family-name:var(--font-display)] text-3xl text-primary tabular-nums">
-                {pct(occupancy)}
+              <span className="font-[family-name:var(--font-display)] text-3xl whitespace-nowrap text-primary tabular-nums">
+                {nightsPerMonth}
+                <span className="ml-1 text-base text-muted-foreground">
+                  nuit{nightsPerMonth > 1 ? "s" : ""}
+                </span>
               </span>
             </div>
             <input
-              id="occupancy"
+              id="nights"
               type="range"
-              min={10}
-              max={95}
+              min={1}
+              max={NIGHTS_PER_MONTH}
               step={1}
-              value={Math.round(occupancy * 100)}
-              onChange={(e) => setCustomOccupancy(Number(e.target.value) / 100)}
+              value={nightsPerMonth}
+              onChange={(e) => setCustomNights(Number(e.target.value))}
               className="mt-3 w-full accent-[var(--primary)]"
             />
+            <div className="mt-1 flex justify-between text-xs text-muted-foreground tabular-nums">
+              <span>1 nuit</span>
+              <span>{NIGHTS_PER_MONTH} nuits</span>
+            </div>
             <div className="mt-4 grid grid-cols-3 gap-2">
               {presets.map((p) => {
-                const active = Math.round(occupancy * 100) === Math.round(p.value * 100);
+                const active = nightsPerMonth === p.value;
                 return (
                   <button
                     key={p.label}
                     type="button"
-                    onClick={() => setCustomOccupancy(p.value)}
+                    onClick={() => setCustomNights(p.value)}
                     className={`rounded-lg border px-3 py-2.5 text-left transition-colors ${
                       active ? "border-primary bg-primary/10" : "border-border hover:border-primary"
                     }`}
@@ -600,7 +505,7 @@ export function RevenueSimulator() {
                       {p.label}
                     </span>
                     <span className="mt-0.5 block text-lg font-semibold text-primary tabular-nums">
-                      {pct(p.value)}
+                      {p.value} nuits
                     </span>
                     <span className="block text-xs text-muted-foreground">{p.hint}</span>
                   </button>
@@ -608,9 +513,9 @@ export function RevenueSimulator() {
               })}
             </div>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-              Nous ne promettons pas de taux d'occupation&nbsp;: il dépend de la saison et du
-              marché. Notre engagement est de tout mettre en œuvre pour le maximiser grâce à une
-              gestion professionnelle.
+              Nous ne promettons pas de nombre de nuits&nbsp;: il dépend de la saison et du marché.
+              Notre engagement est de tout mettre en œuvre pour le maximiser grâce à une gestion
+              professionnelle.
             </p>
           </Step>
         )}
@@ -668,18 +573,12 @@ export function RevenueSimulator() {
               Demander une étude personnalisée <ArrowRight className="size-4" />
             </a>
           </div>
-        ) : !result ? (
-          <div className="flex flex-1 items-center justify-center text-center text-white/70">
-            Choisissez une période valide pour afficher l'estimation.
-          </div>
-        ) : (
+        ) : !result ? null : (
           <>
             <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
               Revenu net estimé
             </p>
-            <p className="mt-1 text-sm text-white/70">
-              Du {longDate(startDate)} au {longDate(endDate)}
-            </p>
+            <p className="mt-1 text-sm text-white/70">Sur les 12 prochains mois</p>
             <p
               className="mt-3 font-[family-name:var(--font-display)] text-5xl tabular-nums"
               aria-live="polite"
@@ -693,8 +592,8 @@ export function RevenueSimulator() {
             <dl className="mt-7 border-t border-white/15 text-sm">
               <Line
                 label="Nuits louées"
-                value={`${result.nights} sur ${result.days}`}
-                hint={`occupation ${pct(result.nights / result.days)}`}
+                value={`${result.nights} nuits`}
+                hint={`${nightsPerMonth} par mois`}
               />
               <Line
                 label="Prix moyen par nuit"
@@ -843,7 +742,7 @@ function ContactGate({
       }}
     >
       <span className="flex size-11 items-center justify-center rounded-full bg-white/10">
-        <Lock className="size-5 text-[oklch(0.8_0.09_45)]" />
+        <Lock className="size-5 text-[oklch(0.82_0.07_235)]" />
       </span>
       <p className="mt-5 font-[family-name:var(--font-display)] text-3xl">
         {needsStudy ? "Recevez votre étude personnalisée" : "Votre estimation est prête"}
@@ -900,7 +799,7 @@ function DarkInput({
         required
         maxLength={type === "email" ? 255 : 100}
         autoComplete={autoComplete}
-        className="mt-1.5 w-full rounded-[var(--radius)] border border-white/20 bg-white/5 px-3.5 py-2.5 text-white outline-none transition-colors placeholder:text-white/40 focus:border-[oklch(0.8_0.09_45)]"
+        className="mt-1.5 w-full rounded-[var(--radius)] border border-white/20 bg-white/5 px-3.5 py-2.5 text-white outline-none transition-colors placeholder:text-white/40 focus:border-[oklch(0.82_0.07_235)]"
       />
     </label>
   );
