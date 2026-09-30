@@ -31,7 +31,7 @@ function Confidentialite() {
             Pour traiter votre demande, nous faisons appel à des prestataires techniques qui
             n'utilisent pas vos données pour leur propre compte&nbsp;: Supabase (stockage des
             demandes), Vercel (hébergement du site), Resend (envoi de la notification par email) et
-            CallMeBot (alerte WhatsApp à notre équipe).
+            Meta (WhatsApp) pour l&apos;alerte envoyée à notre équipe.
           </p>
         </section>
         <section>
