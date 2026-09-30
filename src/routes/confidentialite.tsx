@@ -27,6 +27,12 @@ function Confidentialite() {
             informations servent uniquement à vous répondre et à vous proposer nos services. Elles
             ne sont jamais vendues ni transmises à des tiers à des fins commerciales.
           </p>
+          <p className="mt-3">
+            Pour traiter votre demande, nous faisons appel à des prestataires techniques qui
+            n'utilisent pas vos données pour leur propre compte&nbsp;: Supabase (stockage des
+            demandes), Vercel (hébergement du site), Resend (envoi de la notification par email) et
+            CallMeBot (alerte WhatsApp à notre équipe).
+          </p>
         </section>
         <section>
           <h2 className="text-2xl">Durée de conservation</h2>

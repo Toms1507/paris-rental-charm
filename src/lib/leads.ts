@@ -32,54 +32,89 @@ const notification = z.object({
 
 const escape = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
-// Envoie l'email de notification au propriétaire du site via Resend (https://resend.com).
-// Variables d'environnement côté serveur :
+type Notification = z.infer<typeof notification>;
+
+// Email de notification au propriétaire du site via Resend (https://resend.com).
 //   RESEND_API_KEY      clé API Resend (sans elle, aucun email n'est envoyé)
 //   LEAD_NOTIFY_EMAIL   destinataire (par défaut, l'email du site)
 //   LEAD_FROM_EMAIL     expéditeur vérifié dans Resend (par défaut, l'adresse de test Resend)
+async function sendEmail(data: Notification) {
+  const apiKey = process.env["RESEND_API_KEY"];
+  if (!apiKey) {
+    console.warn("RESEND_API_KEY absente : notification email non envoyée.");
+    return false;
+  }
+  const rows: [string, string | undefined][] = [
+    ["Nom", data.full_name],
+    ["Email", data.email],
+    ["Téléphone", data.phone],
+    ["Type de bien", data.property_type],
+    ["Chambres", data.bedrooms],
+    ["Surface", data.surface],
+    ["Quartier / secteur", data.district],
+    ["Ville", data.city],
+    ["Détails", data.message],
+  ];
+  const html = `
+    <h2 style="font-family:sans-serif">Nouvelle demande (${data.source})</h2>
+    <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">
+      ${rows
+        .filter(([, v]) => v)
+        .map(
+          ([k, v]) =>
+            `<tr><td style="padding:4px 12px 4px 0;color:#666;vertical-align:top">${k}</td><td style="padding:4px 0;white-space:pre-line">${escape(v!)}</td></tr>`,
+        )
+        .join("")}
+    </table>`;
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: process.env["LEAD_FROM_EMAIL"] ?? `${SITE.name} <onboarding@resend.dev>`,
+      to: [process.env["LEAD_NOTIFY_EMAIL"] ?? SITE.email],
+      reply_to: data.email,
+      subject: `${data.source === "simulateur" ? "Simulateur" : "Demande d'estimation"} : ${data.full_name}${data.city ? ` (${data.city})` : ""}`,
+      html,
+    }),
+  });
+  if (!response.ok) console.error("Échec de l'envoi Resend", await response.text());
+  return response.ok;
+}
+
+// Alerte WhatsApp au propriétaire via CallMeBot (https://www.callmebot.com), usage personnel.
+//   CALLMEBOT_APIKEY   clé reçue par WhatsApp après activation (sans elle, pas d'alerte)
+//   CALLMEBOT_PHONE    numéro WhatsApp à prévenir (par défaut, celui du site)
+// Le message reste court : le détail complet de la demande arrive par email.
+async function sendWhatsApp(data: Notification) {
+  const apiKey = process.env["CALLMEBOT_APIKEY"];
+  if (!apiKey) {
+    console.warn("CALLMEBOT_APIKEY absente : alerte WhatsApp non envoyée.");
+    return false;
+  }
+  const phone = process.env["CALLMEBOT_PHONE"] ?? SITE.phone.replace(/ /g, "");
+  const lines = [
+    "*Nouvelle demande d'audit - Spinelle*",
+    `${data.full_name}${data.city ? ` - ${data.city}` : ""}`,
+    [data.property_type, data.district].filter(Boolean).join(", "),
+    `Tel : ${data.phone}`,
+    `Détails envoyés sur ${SITE.email}`,
+  ].filter(Boolean);
+  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(lines.join("\n"))}&apikey=${encodeURIComponent(apiKey)}`;
+  const response = await fetch(url);
+  if (!response.ok) console.error("Échec de l'alerte WhatsApp", await response.text());
+  return response.ok;
+}
+
+// Prévient le propriétaire par email et par WhatsApp. Les deux canaux sont indépendants :
+// si l'un n'est pas configuré ou échoue, l'autre part quand même.
 const notifyOwner = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => notification.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env["RESEND_API_KEY"];
-    if (!apiKey) {
-      console.warn("RESEND_API_KEY absente : notification email non envoyée.");
-      return { sent: false };
-    }
-    const rows: [string, string | undefined][] = [
-      ["Nom", data.full_name],
-      ["Email", data.email],
-      ["Téléphone", data.phone],
-      ["Type de bien", data.property_type],
-      ["Chambres", data.bedrooms],
-      ["Surface", data.surface],
-      ["Quartier / secteur", data.district],
-      ["Ville", data.city],
-      ["Détails", data.message],
-    ];
-    const html = `
-      <h2 style="font-family:sans-serif">Nouvelle demande (${data.source})</h2>
-      <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">
-        ${rows
-          .filter(([, v]) => v)
-          .map(
-            ([k, v]) =>
-              `<tr><td style="padding:4px 12px 4px 0;color:#666;vertical-align:top">${k}</td><td style="padding:4px 0;white-space:pre-line">${escape(v!)}</td></tr>`,
-          )
-          .join("")}
-      </table>`;
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: process.env["LEAD_FROM_EMAIL"] ?? `${SITE.name} <onboarding@resend.dev>`,
-        to: [process.env["LEAD_NOTIFY_EMAIL"] ?? SITE.email],
-        reply_to: data.email,
-        subject: `${data.source === "simulateur" ? "Simulateur" : "Demande d'estimation"} : ${data.full_name}${data.city ? ` (${data.city})` : ""}`,
-        html,
-      }),
-    });
-    if (!response.ok) console.error("Échec de l'envoi Resend", await response.text());
-    return { sent: response.ok };
+    const [email, whatsapp] = await Promise.allSettled([sendEmail(data), sendWhatsApp(data)]);
+    return {
+      email: email.status === "fulfilled" && email.value,
+      whatsapp: whatsapp.status === "fulfilled" && whatsapp.value,
+    };
   });
 
 /** Enregistre la demande dans la base, puis prévient le propriétaire par email. */
