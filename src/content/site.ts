@@ -8,7 +8,7 @@ import oliviaPhoto from "@/assets/reviews/olivia.jpg";
 export const SITE = {
   name: "Spinelle Conciergerie",
   tagline: "Conciergerie Airbnb à Paris et alentours",
-  email: "simontom33@sfr.fr",
+  email: "contact@spinelleconciergerie.fr",
   phone: "+33 6 31 93 51 66",
   // Lien WhatsApp direct (numéro au format international, sans + ni espaces).
   whatsapp: "https://wa.me/33631935166",
