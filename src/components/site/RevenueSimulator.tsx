@@ -516,9 +516,7 @@ export function RevenueSimulator() {
           </ul>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             Le taux d'occupation retenu est celui des 25&nbsp;% d'annonces les mieux gérées de votre
-            secteur&nbsp;: le niveau que vise notre gestion. Le résultat réel dépend du nombre de
-            nuits louées&nbsp;; nous ne le garantissons pas, mais nous mettons tout en œuvre pour le
-            maximiser.
+            secteur&nbsp;: le niveau que vise notre gestion.
           </p>
         </section>
       </div>
