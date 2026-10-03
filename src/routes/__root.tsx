@@ -6,9 +6,10 @@ import {
   useRouter,
   useRouterState,
   HeadContent,
+  type ErrorComponentProps,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -44,7 +45,12 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error: caught, reset }: ErrorComponentProps) {
+  // Depuis TanStack Start 1.168.60, l'erreur reçue n'est plus forcément une instance d'Error.
+  const error = useMemo(
+    () => (caught instanceof Error ? caught : new Error(String(caught))),
+    [caught],
+  );
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -185,7 +191,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         {/* Active les animations d'apparition seulement si JavaScript tourne. Filet de sécurité :
             si la page ne s'initialise pas en 3 s, tout est affiché. */}
