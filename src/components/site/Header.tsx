@@ -10,11 +10,19 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-20 w-full max-w-[96rem] items-center justify-between gap-6 px-5 sm:px-8 lg:px-10">
-        <Link to="/" className="flex items-baseline gap-2">
-          <span className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight">
-            Spinelle
-          </span>
-          <span className="eyebrow">Conciergerie</span>
+        <Link
+          to="/"
+          className="flex shrink-0 items-center"
+          aria-label="Spinelle Conciergerie, accueil"
+        >
+          <img
+            src="/brand/logo.png"
+            alt="Spinelle Conciergerie"
+            width={1376}
+            height={452}
+            fetchPriority="high"
+            className="h-12 w-auto sm:h-14"
+          />
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex xl:gap-11">

@@ -19,7 +19,7 @@ import { Footer } from "@/components/site/Footer";
 import { CookieConsent } from "@/components/site/CookieConsent";
 import { CITIES, SITE } from "@/content/site";
 import { ADS_ID, GA_ID, gtagBootstrapScript, TRACKING_ENABLED } from "@/lib/analytics";
-import { DEFAULT_IMAGE, jsonLdScript } from "@/lib/seo";
+import { absoluteUrl, DEFAULT_IMAGE, jsonLdScript } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -121,7 +121,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      // Icônes : onglet du navigateur, résultats Google (multiples de 48 px), mobiles.
+      { rel: "icon", href: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+      { rel: "icon", href: "/brand/icon-48.png", type: "image/png", sizes: "48x48" },
+      { rel: "icon", href: "/brand/icon-192.png", type: "image/png", sizes: "192x192" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
+      { rel: "manifest", href: "/site.webmanifest" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -136,6 +141,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: SITE.name,
         url: SITE.url,
         image: DEFAULT_IMAGE,
+        // Logo lu par Google (fiche entreprise, résultats enrichis) : carré, au moins 112 px.
+        logo: {
+          "@type": "ImageObject",
+          url: absoluteUrl("/brand/logo-mark.png"),
+          width: 483,
+          height: 483,
+        },
         description:
           "Conciergerie Airbnb et Booking à Paris et alentours : gestion complète de votre location courte durée.",
         email: SITE.email,
