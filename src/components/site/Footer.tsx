@@ -36,7 +36,7 @@ export function Footer() {
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <p className="font-[family-name:var(--font-display)] text-2xl">
-            Spinelle <span className="eyebrow ml-1 !text-[oklch(0.82_0.07_235)]">Conciergerie</span>
+            Spinelle <span className="eyebrow ml-1 !text-[#98CCEB]">Conciergerie</span>
           </p>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
             Nous gérons votre location courte durée de A&nbsp;à&nbsp;Z&nbsp;: annonce, voyageurs,
@@ -79,11 +79,11 @@ export function Footer() {
                 href={`mailto:${SITE.email}`}
                 className="flex items-center gap-2.5 transition-colors hover:text-white"
               >
-                <Mail className="size-4 text-[oklch(0.82_0.07_235)]" /> {SITE.email}
+                <Mail className="size-4 text-[#98CCEB]" /> {SITE.email}
               </a>
             </li>
             <li className="flex items-center gap-2.5">
-              <MapPin className="size-4 text-[oklch(0.82_0.07_235)]" /> Paris et alentours
+              <MapPin className="size-4 text-[#98CCEB]" /> Paris et alentours
             </li>
           </ul>
         </div>

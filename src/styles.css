@@ -6,7 +6,14 @@
 
 /*
  * Spinelle Conciergerie — design system
- * Blanc, bleu nuit, bleu marine, gris bleuté très clair.
+ * Palette :
+ *   Bleu marine (principal)   #213F6C
+ *   Bleu nuit (sections)      #111D30
+ *   Bleu ciel (accents)       #98CCEB
+ *   Fond gris bleuté          #F3F6FA
+ *   Bordures                  #DCE2E8
+ *   Texte                     #202020  /  texte secondaire #515963
+ *   Blanc                     #FFFFFF
  */
 
 @theme inline {
@@ -54,66 +61,66 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --font-display: "Fraunces", Georgia, serif;
   --font-sans: "DM Sans", system-ui, sans-serif;
-  --shadow-soft: 0 1px 2px oklch(0.24 0 0 / 4%), 0 18px 40px -24px oklch(0.24 0 0 / 18%);
+  --shadow-soft: 0 1px 2px #1f1f1f0a, 0 18px 40px -24px #1f1f1f2e;
 }
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.243 0 0);
-  --ink: oklch(0.23 0.04 258);
-  --sand: oklch(0.972 0.006 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.243 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.243 0 0);
-  --primary: oklch(0.37 0.085 258);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.972 0.006 250);
-  --secondary-foreground: oklch(0.243 0 0);
-  --muted: oklch(0.972 0.006 250);
-  --muted-foreground: oklch(0.46 0.02 255);
-  --accent: oklch(0.37 0.085 258);
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.91 0.01 250);
-  --input: oklch(0.91 0.01 250);
-  --ring: oklch(0.37 0.085 258);
-  --chart-1: oklch(0.37 0.085 258);
-  --chart-2: oklch(0.55 0.08 250);
-  --chart-3: oklch(0.75 0.05 240);
-  --chart-4: oklch(0.5 0.03 255);
-  --chart-5: oklch(0.243 0 0);
-  --sidebar: oklch(0.972 0.006 250);
-  --sidebar-foreground: oklch(0.243 0 0);
-  --sidebar-primary: oklch(0.37 0.085 258);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.972 0.006 250);
-  --sidebar-accent-foreground: oklch(0.243 0 0);
-  --sidebar-border: oklch(0.91 0.01 250);
-  --sidebar-ring: oklch(0.37 0.085 258);
+  --background: #ffffff;
+  --foreground: #202020;
+  --ink: #111d30;
+  --sand: #f3f6fa;
+  --card: #ffffff;
+  --card-foreground: #202020;
+  --popover: #ffffff;
+  --popover-foreground: #202020;
+  --primary: #213f6c;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f6fa;
+  --secondary-foreground: #202020;
+  --muted: #f3f6fa;
+  --muted-foreground: #515963;
+  --accent: #213f6c;
+  --accent-foreground: #ffffff;
+  --destructive: #e7000b;
+  --destructive-foreground: #ffffff;
+  --border: #dce2e8;
+  --input: #dce2e8;
+  --ring: #213f6c;
+  --chart-1: #213f6c;
+  --chart-2: #4c759f;
+  --chart-3: #92b3cb;
+  --chart-4: #586474;
+  --chart-5: #202020;
+  --sidebar: #f3f6fa;
+  --sidebar-foreground: #202020;
+  --sidebar-primary: #213f6c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f3f6fa;
+  --sidebar-accent-foreground: #202020;
+  --sidebar-border: #dce2e8;
+  --sidebar-ring: #213f6c;
 }
 
 .dark {
-  --background: oklch(0.2 0 0);
-  --foreground: oklch(0.98 0 0);
-  --card: oklch(0.25 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.25 0 0);
-  --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.62 0.1 255);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.28 0.006 62);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.28 0.006 62);
-  --muted-foreground: oklch(0.72 0.01 60);
-  --accent: oklch(0.62 0.1 255);
-  --accent-foreground: oklch(1 0 0);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 15%);
-  --sand: oklch(0.25 0.015 255);
-  --ink: oklch(0.98 0 0);
+  --background: #161616;
+  --foreground: #f8f8f8;
+  --card: #222222;
+  --card-foreground: #f8f8f8;
+  --popover: #222222;
+  --popover-foreground: #f8f8f8;
+  --primary: #5c88c1;
+  --primary-foreground: #ffffff;
+  --secondary: #2b2826;
+  --secondary-foreground: #f8f8f8;
+  --muted: #2b2826;
+  --muted-foreground: #a9a39e;
+  --accent: #5c88c1;
+  --accent-foreground: #ffffff;
+  --border: #ffffff1f;
+  --input: #ffffff26;
+  --sand: #1d2229;
+  --ink: #f8f8f8;
 }
 
 @layer base {
@@ -219,7 +226,7 @@
   transition: border-color 0.2s ease;
   &:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px oklch(0.37 0.085 258 / 15%);
+    box-shadow: 0 0 0 3px #213f6c26;
   }
 }
 
@@ -302,8 +309,8 @@
     border-color 0.35s ease;
   &:hover {
     translate: 0 -6px;
-    box-shadow: 0 24px 48px -28px oklch(0.23 0.04 258 / 35%);
-    border-color: oklch(0.37 0.085 258 / 35%);
+    box-shadow: 0 24px 48px -28px #111d3059;
+    border-color: #213f6c59;
   }
 }
 

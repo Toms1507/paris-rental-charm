@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "author", content: SITE.name },
-      { name: "theme-color", content: "#ffffff" },
+      { name: "theme-color", content: "#213F6C" },
       { name: "format-detection", content: "telephone=no" },
       { name: "geo.region", content: "FR-75" },
       { name: "geo.placename", content: "Paris" },

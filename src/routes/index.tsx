@@ -121,7 +121,7 @@ function RotatingBenefits() {
             i === index ? "translate-y-0 opacity-100 blur-0" : "translate-y-3 opacity-0 blur-sm"
           }`}
         >
-          <b.icon className="size-6 shrink-0 text-[oklch(0.82_0.07_235)] sm:size-7" />
+          <b.icon className="size-6 shrink-0 text-[#98CCEB] sm:size-7" />
           {b.label}
         </p>
       ))}
@@ -147,7 +147,7 @@ function HomePage() {
         />
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgb(0_0_0/0.72)_0%,rgb(0_0_0/0.55)_55%,rgb(0_0_0/0.4)_100%)]"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.55)_55%,rgba(0,0,0,0.4)_100%)]"
         />
         <div className="container-page flex w-full flex-col items-center py-20 text-center lg:py-28">
           <p data-reveal="down" className="eyebrow !text-white/85">
@@ -160,7 +160,7 @@ function HomePage() {
           >
             Profitez de votre temps,
             <br />
-            <span className="text-[oklch(0.82_0.07_235)]">on s'occupe de vos voyageurs.</span>
+            <span className="text-[#98CCEB]">on s'occupe de vos voyageurs.</span>
           </h1>
           <p
             data-reveal="up"
@@ -281,7 +281,7 @@ function HomePage() {
                     aria-hidden
                     data-reveal="left"
                     style={stagger(i + 1, 180)}
-                    className="flex items-center justify-center text-[oklch(0.82_0.07_235)]"
+                    className="flex items-center justify-center text-[#98CCEB]"
                   >
                     <ArrowRight className="hidden size-6 lg:block" />
                     <ArrowDown className="size-6 lg:hidden" />
