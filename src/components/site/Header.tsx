@@ -16,13 +16,19 @@ export function Header() {
           aria-label="Spinelle Conciergerie, accueil"
         >
           <img
-            src="/brand/logo.png"
-            alt="Spinelle Conciergerie"
-            width={1376}
-            height={452}
+            src="/brand/logo-mark.png"
+            alt=""
+            width={483}
+            height={483}
             fetchPriority="high"
-            className="h-12 w-auto sm:h-14"
+            className="size-11 sm:size-12"
           />
+          <span className="ml-2.5 flex items-baseline gap-2">
+            <span className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight">
+              Spinelle
+            </span>
+            <span className="eyebrow">Conciergerie</span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex xl:gap-11">

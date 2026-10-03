@@ -35,14 +35,20 @@ export function Footer() {
 
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <img
-            src="/brand/logo-blanc.png"
-            alt="Spinelle Conciergerie"
-            width={1376}
-            height={452}
-            loading="lazy"
-            className="h-14 w-auto"
-          />
+          <p className="flex items-center gap-3">
+            <img
+              src="/brand/logo-mark.png"
+              alt=""
+              width={483}
+              height={483}
+              loading="lazy"
+              className="size-12"
+            />
+            <span className="flex items-baseline gap-2">
+              <span className="font-[family-name:var(--font-display)] text-2xl">Spinelle</span>
+              <span className="eyebrow !text-[#98CCEB]">Conciergerie</span>
+            </span>
+          </p>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
             Nous gérons votre location courte durée de A&nbsp;à&nbsp;Z&nbsp;: annonce, voyageurs,
             ménage, maintenance et conformité, à Paris, en proche banlieue et au-delà.
