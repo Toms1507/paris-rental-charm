@@ -1482,9 +1482,9 @@ export const MARKET_PARIS = {
     },
     "pays-basque": {
       "label": "Pays basque",
-      "snapshot": "2026-08-27",
+      "snapshot": "2026-09-19",
       "snapshots": 9,
-      "listings": 4478,
+      "listings": 4511,
       "areas": [
         "Ahaxe-Alciette-Bascassan",
         "Ahetze",
@@ -1508,7 +1508,6 @@ export const MARKET_PARIS = {
         "Arraute-Charritte",
         "Ascain",
         "Ascarat",
-        "Aussurucq",
         "Ayherre",
         "AÃ¯cirits-Camou-Suhast",
         "Banca",
@@ -1587,6 +1586,7 @@ export const MARKET_PARIS = {
         "OrÃ¨gue",
         "Osserain-Rivareyte",
         "OssÃ¨s",
+        "Pagolle",
         "Roquiague",
         "Saint-Esteben",
         "Saint-Jean-Pied-de-Port",
@@ -1607,6 +1607,7 @@ export const MARKET_PARIS = {
         "Tardets-Sorholus",
         "Trois-Villes",
         "Uhart-Cize",
+        "Uhart-Mixe",
         "Urcuit",
         "Urepel",
         "Urrugne",
@@ -1617,78 +1618,78 @@ export const MARKET_PARIS = {
       ],
       "buckets": {
         "0": {
-          "price": 95,
-          "occupancy": 0.181,
-          "occupancyTop": 0.312,
-          "sample": 779
+          "price": 97,
+          "occupancy": 0.197,
+          "occupancyTop": 0.329,
+          "sample": 765
         },
         "1": {
-          "price": 104,
+          "price": 109,
           "occupancy": 0.181,
-          "occupancyTop": 0.296,
-          "sample": 1530
+          "occupancyTop": 0.312,
+          "sample": 1532
         },
         "2": {
-          "price": 137,
-          "occupancy": 0.153,
-          "occupancyTop": 0.263,
-          "sample": 1154
+          "price": 142,
+          "occupancy": 0.164,
+          "occupancyTop": 0.268,
+          "sample": 1175
         },
         "3": {
-          "price": 265,
+          "price": 275,
           "occupancy": 0.115,
           "occupancyTop": 0.197,
-          "sample": 1015
+          "sample": 1039
         }
       },
       "seasonality": {
         "1": {
-          "price": 0.926,
-          "occupancy": 0.926
+          "price": 0.905,
+          "occupancy": 0.924
         },
         "2": {
-          "price": 1.001,
-          "occupancy": 0.894
+          "price": 0.979,
+          "occupancy": 0.892
         },
         "3": {
-          "price": 1.076,
-          "occupancy": 1.043
+          "price": 1.053,
+          "occupancy": 1.041
         },
         "4": {
-          "price": 1.095,
-          "occupancy": 0.995
+          "price": 1.07,
+          "occupancy": 0.993
         },
         "5": {
-          "price": 1.106,
-          "occupancy": 0.961
+          "price": 1.077,
+          "occupancy": 0.959
         },
         "6": {
-          "price": 1.163,
-          "occupancy": 1.069
+          "price": 1.13,
+          "occupancy": 1.067
         },
         "7": {
-          "price": 1.247,
-          "occupancy": 1.325
+          "price": 1.22,
+          "occupancy": 1.322
         },
         "8": {
-          "price": 1.143,
-          "occupancy": 1.012
+          "price": 1.116,
+          "occupancy": 1.009
         },
         "9": {
-          "price": 0.818,
-          "occupancy": 0.97
+          "price": 1.08,
+          "occupancy": 0.995
         },
         "10": {
-          "price": 0.799,
-          "occupancy": 0.866
+          "price": 0.782,
+          "occupancy": 0.865
         },
         "11": {
-          "price": 0.776,
-          "occupancy": 0.933
+          "price": 0.757,
+          "occupancy": 0.931
         },
         "12": {
-          "price": 0.851,
-          "occupancy": 1.005
+          "price": 0.831,
+          "occupancy": 1.002
         }
       }
     }
