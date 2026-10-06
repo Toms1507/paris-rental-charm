@@ -44,8 +44,18 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+// Copies publiques du site hébergées hors du domaine officiel (publication Lovable) : redirection
+// permanente vers le domaine principal, pour que Google n'indexe qu'une seule version du site.
+// L'aperçu de l'éditeur Lovable (preview--…, lovableproject.com) n'est pas concerné.
+const PRIMARY_ORIGIN = "https://spinelleconciergerie.fr";
+const MIRROR_HOSTS = new Set(["paris-rental-charm.lovable.app"]);
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const url = new URL(request.url);
+    if (MIRROR_HOSTS.has(url.hostname)) {
+      return Response.redirect(`${PRIMARY_ORIGIN}${url.pathname}${url.search}`, 301);
+    }
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
