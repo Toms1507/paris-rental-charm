@@ -6,7 +6,7 @@ export const Route = createFileRoute("/mentions-legales")({
   head: () =>
     pageHead({
       title: `Mentions légales | ${SITE.name}`,
-      description: `Mentions légales du site ${SITE.name}, conciergerie Airbnb à Paris et alentours.`,
+      description: `Mentions légales du site ${SITE.name}, conciergerie Airbnb à Paris : éditeur, immatriculation, hébergeur et propriété intellectuelle.`,
       path: "/mentions-legales",
       breadcrumb: [{ name: "Mentions légales", path: "/mentions-legales" }],
     }),

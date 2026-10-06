@@ -1,6 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CITIES, POSTS } from "@/content/site";
+import { MARKET_PARIS } from "@/content/market-paris";
 import { absoluteUrl } from "@/lib/seo";
+
+// Dernière révision des contenus fixes (titres, textes, mentions légales) : à mettre à jour
+// lors d'une modification de ces pages. Les pages qui affichent les données du marché prennent
+// la date du dernier relevé, actualisée automatiquement chaque semaine.
+const CONTENT_UPDATED = "2026-10-06";
+const latest = (...dates: (string | undefined)[]) =>
+  dates
+    .filter((d): d is string => Boolean(d))
+    .sort()
+    .at(-1);
+const DATA_PAGES = new Set(["/", "/faq", "/blog"]);
 
 const STATIC_PAGES = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
@@ -25,13 +37,19 @@ export const Route = createFileRoute("/sitemap.xml")({
         const urls = [
           ...STATIC_PAGES.map((p) => ({
             ...p,
-            lastmod: p.path === "/blog" ? lastPost : undefined,
+            lastmod: DATA_PAGES.has(p.path)
+              ? latest(
+                  CONTENT_UPDATED,
+                  MARKET_PARIS.snapshot,
+                  p.path === "/blog" ? lastPost : undefined,
+                )
+              : CONTENT_UPDATED,
           })),
           ...CITIES.map((c) => ({
             path: `/conciergerie-airbnb/${c.slug}`,
             priority: "0.8",
             changefreq: "monthly",
-            lastmod: undefined,
+            lastmod: CONTENT_UPDATED,
           })),
           ...POSTS.map((p) => ({
             path: `/blog/${p.slug}`,

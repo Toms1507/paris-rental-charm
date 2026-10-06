@@ -5,9 +5,9 @@ import { SITE } from "@/content/site";
 import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 import { absoluteUrl, pageHead } from "@/lib/seo";
 
-const TITLE = "Estimation gratuite de vos revenus locatifs — Spinelle Conciergerie";
+const TITLE = "Estimation gratuite de vos revenus Airbnb | Spinelle";
 const DESCRIPTION =
-  "Décrivez votre bien (type, surface, quartier, ville) et recevez sous 24 h une estimation gratuite des revenus possibles en location courte durée à Paris et alentours.";
+  "Décrivez votre bien (type, surface, quartier) et recevez sous 24 h une estimation gratuite de vos revenus en location courte durée à Paris.";
 
 export const Route = createFileRoute("/contact")({
   head: () =>

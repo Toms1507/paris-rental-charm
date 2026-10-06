@@ -1,0 +1,26 @@
+# Prévient Bing, Yandex et les moteurs compatibles IndexNow à chaque mise à jour du site,
+# pour que les pages modifiées soient explorées rapidement. Gratuit, sans compte.
+name: Signaler les mises à jour aux moteurs (IndexNow)
+
+on:
+  push:
+    branches: [main]
+  # Les commits de l'action de données ne déclenchent pas « push » : on suit donc sa fin.
+  workflow_run:
+    workflows: ["Mise à jour des données du simulateur"]
+    types: [completed]
+  workflow_dispatch: {}
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Attendre la mise en ligne par Vercel
+        run: sleep 180
+
+      - name: Envoyer toutes les URL du sitemap
+        run: |
+          URLS=$(curl -s https://spinelleconciergerie.fr/sitemap.xml | grep -o '<loc>[^<]*' | sed 's/<loc>//' | python3 -c "import sys,json;print(json.dumps([l.strip() for l in sys.stdin if l.strip()]))")
+          curl -s -o /dev/null -w "IndexNow : HTTP %{http_code}\n" -X POST https://api.indexnow.org/indexnow \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "{\"host\":\"spinelleconciergerie.fr\",\"key\":\"dcdc8ec0f2496caacce3ab1c75305554\",\"keyLocation\":\"https://spinelleconciergerie.fr/dcdc8ec0f2496caacce3ab1c75305554.txt\",\"urlList\":$URLS}"

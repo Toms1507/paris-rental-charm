@@ -3,6 +3,15 @@ import { LeadForm } from "@/components/site/LeadForm";
 import { CITIES, POSTS, SITE } from "@/content/site";
 import { absoluteUrl, DEFAULT_IMAGE, pageHead } from "@/lib/seo";
 
+// Google tronque au-delà d'environ 60 caractères pour le titre et 155 pour la description.
+const seoTitle = (title: string) =>
+  `${title} | Spinelle`.length <= 62 ? `${title} | Spinelle` : title;
+const seoDescription = (text: string) => {
+  if (text.length <= 155) return text;
+  const cut = text.slice(0, 154);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+};
+
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
     const post = POSTS.find((p) => p.slug === params.slug);
@@ -16,8 +25,8 @@ export const Route = createFileRoute("/blog/$slug")({
     const { post } = loaderData;
     const path = `/blog/${params.slug}`;
     return pageHead({
-      title: `${post.title} | ${SITE.name}`,
-      description: post.description,
+      title: seoTitle(post.title),
+      description: seoDescription(post.description),
       path,
       type: "article",
       breadcrumb: [

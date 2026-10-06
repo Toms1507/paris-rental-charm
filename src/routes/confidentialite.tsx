@@ -6,7 +6,7 @@ import { pageHead } from "@/lib/seo";
 export const Route = createFileRoute("/confidentialite")({
   head: () =>
     pageHead({
-      title: `Politique de confidentialité et cookies | ${SITE.name}`,
+      title: `Confidentialité et cookies | ${SITE.name}`,
       description: `Comment ${SITE.name} collecte, utilise et protège vos données personnelles, et quels cookies sont utilisés sur le site.`,
       path: "/confidentialite",
       breadcrumb: [{ name: "Confidentialité", path: "/confidentialite" }],

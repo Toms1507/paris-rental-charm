@@ -4,9 +4,9 @@ import { ServiceGrid } from "@/components/site/ServiceGrid";
 import { CITIES, SERVICES, SITE, STEPS } from "@/content/site";
 import { absoluteUrl, pageHead } from "@/lib/seo";
 
-const TITLE = "Services de conciergerie Airbnb à Paris — Spinelle Conciergerie";
+const TITLE = "Services de conciergerie Airbnb à Paris | Spinelle";
 const DESCRIPTION =
-  "Gestion complète de votre location courte durée à Paris : création d'annonces Airbnb et Booking, tarification dynamique, accueil des voyageurs, ménage hôtelier, linge, maintenance et conformité.";
+  "Annonces Airbnb et Booking, tarification dynamique, accueil des voyageurs, ménage hôtelier, linge et maintenance : nous gérons tout à Paris.";
 
 export const Route = createFileRoute("/services")({
   head: () =>

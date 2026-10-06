@@ -6,7 +6,7 @@ import { REVIEWS } from "@/content/site";
 import { stagger } from "@/lib/reveal";
 import { pageHead } from "@/lib/seo";
 
-const TITLE = "Avis voyageurs Airbnb — Spinelle Conciergerie, conciergerie Airbnb à Paris";
+const TITLE = "Avis voyageurs Airbnb | Spinelle Conciergerie Paris";
 const DESCRIPTION =
   "Les avis publics laissés sur Airbnb par les voyageurs accueillis dans nos logements : communication, accueil, emplacement et propreté.";
 

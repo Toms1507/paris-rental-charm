@@ -1,4 +1,4 @@
-import heroImage from "@/assets/hero-paris.jpg";
+import heroImage from "@/assets/hero-salon.jpg";
 import { SITE } from "@/content/site";
 
 export const absoluteUrl = (path: string) =>

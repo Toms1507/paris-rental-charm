@@ -3,9 +3,9 @@ import { POSTS, SITE } from "@/content/site";
 import { stagger } from "@/lib/reveal";
 import { absoluteUrl, pageHead } from "@/lib/seo";
 
-const TITLE = "Blog — Conseils location courte durée à Paris | Spinelle Conciergerie";
+const TITLE = "Blog location courte durée à Paris | Spinelle";
 const DESCRIPTION =
-  "Rentabilité, plafond des 90 nuits, optimisation d'annonce Airbnb, meilleurs quartiers : nos guides pour les propriétaires qui louent en courte durée à Paris.";
+  "Rentabilité, plafond des 90 nuits, optimisation d'annonce Airbnb, meilleurs quartiers : nos guides pour louer en courte durée à Paris.";
 
 export const Route = createFileRoute("/blog/")({
   head: () =>

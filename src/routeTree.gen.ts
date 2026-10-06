@@ -22,6 +22,7 @@ import { Route as TarifsRouteImport } from './routes/tarifs'
 import { Route as ZonesRouteImport } from './routes/zones'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as BlogReglesAirbnbParis120JoursRouteImport } from './routes/blog.regles-airbnb-paris-120-jours'
 import { Route as ConciergerieAirbnbVilleRouteImport } from './routes/conciergerie-airbnb.$ville'
 
 const IndexRoute = IndexRouteImport.update({
@@ -89,6 +90,12 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogReglesAirbnbParis120JoursRoute =
+  BlogReglesAirbnbParis120JoursRouteImport.update({
+    id: '/blog/regles-airbnb-paris-120-jours',
+    path: '/blog/regles-airbnb-paris-120-jours',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ConciergerieAirbnbVilleRoute = ConciergerieAirbnbVilleRouteImport.update({
   id: '/conciergerie-airbnb/$ville',
   path: '/conciergerie-airbnb/$ville',
@@ -108,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/tarifs': typeof TarifsRoute
   '/zones': typeof ZonesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
   '/blog/': typeof BlogIndexRoute
 }
@@ -124,6 +132,7 @@ export interface FileRoutesByTo {
   '/tarifs': typeof TarifsRoute
   '/zones': typeof ZonesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
   '/blog': typeof BlogIndexRoute
 }
@@ -141,6 +150,7 @@ export interface FileRoutesById {
   '/tarifs': typeof TarifsRoute
   '/zones': typeof ZonesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
   '/blog/': typeof BlogIndexRoute
 }
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/tarifs'
     | '/zones'
     | '/blog/$slug'
+    | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
     | '/blog/'
   fileRoutesByTo: FileRoutesByTo
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/tarifs'
     | '/zones'
     | '/blog/$slug'
+    | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
     | '/blog'
   id:
@@ -191,6 +203,7 @@ export interface FileRouteTypes {
     | '/tarifs'
     | '/zones'
     | '/blog/$slug'
+    | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
     | '/blog/'
   fileRoutesById: FileRoutesById
@@ -208,6 +221,7 @@ export interface RootRouteChildren {
   TarifsRoute: typeof TarifsRoute
   ZonesRoute: typeof ZonesRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  BlogReglesAirbnbParis120JoursRoute: typeof BlogReglesAirbnbParis120JoursRoute
   ConciergerieAirbnbVilleRoute: typeof ConciergerieAirbnbVilleRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
@@ -305,6 +319,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/regles-airbnb-paris-120-jours': {
+      id: '/blog/regles-airbnb-paris-120-jours'
+      path: '/blog/regles-airbnb-paris-120-jours'
+      fullPath: '/blog/regles-airbnb-paris-120-jours'
+      preLoaderRoute: typeof BlogReglesAirbnbParis120JoursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conciergerie-airbnb/$ville': {
       id: '/conciergerie-airbnb/$ville'
       path: '/conciergerie-airbnb/$ville'
@@ -328,6 +349,7 @@ const rootRouteChildren: RootRouteChildren = {
   TarifsRoute: TarifsRoute,
   ZonesRoute: ZonesRoute,
   BlogSlugRoute: BlogSlugRoute,
+  BlogReglesAirbnbParis120JoursRoute: BlogReglesAirbnbParis120JoursRoute,
   ConciergerieAirbnbVilleRoute: ConciergerieAirbnbVilleRoute,
   BlogIndexRoute: BlogIndexRoute,
 }

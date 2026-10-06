@@ -3,9 +3,9 @@ import rooftops from "@/assets/paris-rooftops.jpg";
 import { CITIES, ZONES } from "@/content/site";
 import { absoluteUrl, pageHead } from "@/lib/seo";
 
-const TITLE = "Conciergerie Airbnb à Paris et alentours : nos zones — Spinelle Conciergerie";
+const TITLE = "Conciergerie Airbnb à Paris et alentours | Spinelle";
 const DESCRIPTION =
-  "Nous gérons des locations courte durée dans les 20 arrondissements de Paris et en proche banlieue : Boulogne, Neuilly, Levallois, Montreuil, Vincennes, Saint-Ouen, Clichy et alentours.";
+  "Location courte durée gérée dans les 20 arrondissements de Paris et en proche banlieue : Boulogne, Neuilly, Levallois, Montreuil, Vincennes…";
 
 const ARRONDISSEMENTS = [
   "Paris 1er — Louvre",

@@ -4,9 +4,9 @@ import { LeadForm } from "@/components/site/LeadForm";
 import { CITIES, SITE } from "@/content/site";
 import { absoluteUrl, pageHead } from "@/lib/seo";
 
-const TITLE = "Tarifs conciergerie Airbnb Paris : 20 % tout compris — Spinelle Conciergerie";
+const TITLE = "Tarifs conciergerie Airbnb Paris : 20 % tout compris";
 const DESCRIPTION =
-  "Une commission unique de 20 % des revenus locatifs, sans frais de mise en place ni abonnement. Découvrez ce que comprend la gestion complète de votre location courte durée à Paris.";
+  "Commission unique de 20 % des revenus locatifs, sans frais de mise en place ni abonnement : découvrez tout ce que comprend notre gestion à Paris.";
 
 const INCLUDED = [
   "Création et optimisation des annonces Airbnb, Booking et Abritel",

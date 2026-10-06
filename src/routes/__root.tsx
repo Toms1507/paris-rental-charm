@@ -101,8 +101,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "fr_FR" },
       { property: "og:image", content: DEFAULT_IMAGE },
-      { property: "og:image:width", content: "1600" },
-      { property: "og:image:height", content: "1104" },
+      { property: "og:image:width", content: "1920" },
+      { property: "og:image:height", content: "1280" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: DEFAULT_IMAGE },
       // Vérification Google Search Console (optionnel) : VITE_GOOGLE_SITE_VERIFICATION
@@ -135,9 +135,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       jsonLdScript({
-        "@type": "LocalBusiness",
+        "@type": ["LocalBusiness", "ProfessionalService"],
         "@id": `${SITE.url}/#organization`,
         name: SITE.name,
+        legalName: "Tom Simon (EI)",
+        founder: { "@type": "Person", name: "Tom Simon" },
+        identifier: [
+          { "@type": "PropertyValue", propertyID: "SIREN", value: "108993569" },
+          { "@type": "PropertyValue", propertyID: "SIRET", value: "10899356900012" },
+        ],
+        slogan: "Profitez de votre temps, on s'occupe de vos voyageurs.",
         url: SITE.url,
         image: DEFAULT_IMAGE,
         // Logo lu par Google (fiche entreprise, résultats enrichis) : carré, au moins 112 px.
@@ -183,6 +190,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         "@id": `${SITE.url}/#website`,
         url: SITE.url,
         name: SITE.name,
+        alternateName: ["Spinelle", "Spinelle Conciergerie Paris"],
         inLanguage: "fr-FR",
         publisher: { "@id": `${SITE.url}/#organization` },
       }),
