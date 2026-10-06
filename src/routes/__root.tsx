@@ -105,15 +105,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image:height", content: "1280" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: DEFAULT_IMAGE },
-      // Vérification Google Search Console (optionnel) : VITE_GOOGLE_SITE_VERIFICATION
-      ...(import.meta.env.VITE_GOOGLE_SITE_VERIFICATION
-        ? [
-            {
-              name: "google-site-verification",
-              content: import.meta.env.VITE_GOOGLE_SITE_VERIFICATION as string,
-            },
-          ]
-        : []),
+      // Vérification de propriété Google Search Console (code public, pas un secret).
+      {
+        name: "google-site-verification",
+        content:
+          (import.meta.env.VITE_GOOGLE_SITE_VERIFICATION as string | undefined) ??
+          "l9TOjTImQpnZ77kO5q2DfLo0YOXrOsXlLQ-jxFqTYxk",
+      },
     ],
     links: [
       {
