@@ -294,7 +294,7 @@
   html.js-reveal [data-reveal="zoom"] {
     transform: scale(0.94);
   }
-  html.js-reveal [data-reveal].is-visible {
+  html.js-reveal [data-reveal][data-shown] {
     opacity: 1;
     transform: none;
   }

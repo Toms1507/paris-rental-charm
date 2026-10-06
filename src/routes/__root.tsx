@@ -4,7 +4,6 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  useRouterState,
   HeadContent,
   type ErrorComponentProps,
   Scripts,
@@ -225,8 +224,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  useScrollReveal(pathname);
+  useScrollReveal();
 
   return (
     <QueryClientProvider client={queryClient}>
