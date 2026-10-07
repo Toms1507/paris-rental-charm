@@ -68,7 +68,7 @@ export const Route = createFileRoute("/conciergerie-paris/$arrondissement")({
     const path = `/conciergerie-paris/${arr.slug}`;
     return pageHead({
       title: `Conciergerie Airbnb Paris ${arr.label} (${arr.name}) | Spinelle`,
-      description: `Conciergerie Airbnb dans le ${arr.label} arrondissement de Paris : un logement d'une chambre s'y loue ${euros(area.buckets["1"]!.price)} la nuit en moyenne. Gestion complète et estimation gratuite.`,
+      description: `Conciergerie Airbnb dans le ${arr.label} arrondissement de Paris : un logement d'une chambre s'y loue ${euros(area.buckets["1"]!.price)} la nuit (prix médian). Gestion complète et estimation gratuite.`,
       path,
       breadcrumb: [
         { name: "Zones", path: "/zones" },
