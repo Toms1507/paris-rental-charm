@@ -87,6 +87,8 @@ function ErrorComponent({ error: caught, reset }: ErrorComponentProps) {
   );
 }
 
+const ICON_VERSION = "2";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -119,13 +121,40 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       // Icônes : onglet du navigateur, résultats Google (multiples de 48 px), mobiles.
-      { rel: "icon", href: "/favicon.ico", sizes: "16x16 32x32 48x48" },
-      { rel: "icon", href: "/brand/icon-48.png", type: "image/png", sizes: "48x48" },
-      { rel: "icon", href: "/brand/icon-96.png", type: "image/png", sizes: "96x96" },
-      { rel: "icon", href: "/brand/icon-144.png", type: "image/png", sizes: "144x144" },
-      { rel: "icon", href: "/brand/icon-192.png", type: "image/png", sizes: "192x192" },
-      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
-      { rel: "manifest", href: "/site.webmanifest" },
+      // Adresses versionnées (?v=…) : obligent les navigateurs à oublier l'ancienne icône
+      // Lovable qu'ils gardaient en cache sous /favicon.ico. Changer ICON_VERSION pour forcer
+      // un nouveau téléchargement après une future modification du logo.
+      { rel: "icon", href: `/brand/favicon.ico?v=${ICON_VERSION}`, sizes: "16x16 32x32 48x48" },
+      {
+        rel: "icon",
+        href: `/brand/icon-48.png?v=${ICON_VERSION}`,
+        type: "image/png",
+        sizes: "48x48",
+      },
+      {
+        rel: "icon",
+        href: `/brand/icon-96.png?v=${ICON_VERSION}`,
+        type: "image/png",
+        sizes: "96x96",
+      },
+      {
+        rel: "icon",
+        href: `/brand/icon-144.png?v=${ICON_VERSION}`,
+        type: "image/png",
+        sizes: "144x144",
+      },
+      {
+        rel: "icon",
+        href: `/brand/icon-192.png?v=${ICON_VERSION}`,
+        type: "image/png",
+        sizes: "192x192",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: `/apple-touch-icon.png?v=${ICON_VERSION}`,
+        sizes: "180x180",
+      },
+      { rel: "manifest", href: `/site.webmanifest?v=${ICON_VERSION}` },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
