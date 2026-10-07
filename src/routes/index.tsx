@@ -39,7 +39,7 @@ import { pageHead } from "@/lib/seo";
 
 const TITLE = "Conciergerie Airbnb Paris – Gestion courte durée | Spinelle";
 const DESCRIPTION =
-  "Conciergerie Airbnb à Paris et alentours : annonces, voyageurs, ménage, linge et maintenance gérés pour vous. Simulateur et estimation gratuite.";
+  "Conciergerie Airbnb à Paris et en Île-de-France : gestion complète de votre location courte durée, tarification dynamique et ménage hôtelier. Estimation gratuite.";
 
 export const Route = createFileRoute("/")({
   head: () => pageHead({ title: TITLE, description: DESCRIPTION, path: "/" }),
