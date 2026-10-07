@@ -1,0 +1,25 @@
+# Logiciel de gestion : synchronise les calendriers, planifie les ménages, envoie les messages
+# voyageurs et, le 1er du mois, les rapports propriétaires, même quand le logiciel est fermé.
+# Nécessite le secret de dépôt PMS_CRON_SECRET (même valeur que la variable Vercel du même nom).
+name: Automatisations du logiciel de gestion
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Lancer les automatisations
+        env:
+          PMS_CRON_SECRET: ${{ secrets.PMS_CRON_SECRET }}
+        run: |
+          if [ -z "$PMS_CRON_SECRET" ]; then
+            echo "Secret PMS_CRON_SECRET absent : automatisations serveur non activées."
+            exit 0
+          fi
+          curl -sS --fail-with-body -X POST https://spinelleconciergerie.fr/api/pms/cron \
+            -H "Authorization: Bearer $PMS_CRON_SECRET" --max-time 280

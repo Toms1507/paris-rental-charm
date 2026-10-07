@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   type ErrorComponentProps,
   Scripts,
@@ -262,6 +263,18 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useScrollReveal();
+  // Logiciel de gestion, livret voyageur et portail ménage : pages d'application, sans l'habillage du site.
+  const isApp = useRouterState({
+    select: (s) => /^\/(gestion|sejour|menage)(\/|$)/.test(s.location.pathname),
+  });
+
+  if (isApp) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

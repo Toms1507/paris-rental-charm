@@ -5,12 +5,15 @@ export const Route = createFileRoute("/robots.txt")({
   server: {
     handlers: {
       GET: () =>
-        new Response(`User-agent: *\nAllow: /\n\nSitemap: ${absoluteUrl("/sitemap.xml")}\n`, {
-          headers: {
-            "content-type": "text/plain; charset=utf-8",
-            "cache-control": "public, max-age=86400",
+        new Response(
+          `User-agent: *\nAllow: /\nDisallow: /gestion\nDisallow: /sejour/\nDisallow: /menage/\nDisallow: /api/\n\nSitemap: ${absoluteUrl("/sitemap.xml")}\n`,
+          {
+            headers: {
+              "content-type": "text/plain; charset=utf-8",
+              "cache-control": "public, max-age=86400",
+            },
           },
-        }),
+        ),
     },
   },
 });

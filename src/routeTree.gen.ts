@@ -14,6 +14,7 @@ import { Route as AvisRouteImport } from './routes/avis'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as GestionRouteImport } from './routes/gestion'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ServicesRouteImport } from './routes/services'
@@ -25,6 +26,23 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BlogReglesAirbnbParis120JoursRouteImport } from './routes/blog.regles-airbnb-paris-120-jours'
 import { Route as ConciergerieAirbnbVilleRouteImport } from './routes/conciergerie-airbnb.$ville'
 import { Route as ConciergerieParisArrondissementRouteImport } from './routes/conciergerie-paris.$arrondissement'
+import { Route as GestionIndexRouteImport } from './routes/gestion.index'
+import { Route as GestionAvisRouteImport } from './routes/gestion.avis'
+import { Route as GestionCalendrierRouteImport } from './routes/gestion.calendrier'
+import { Route as GestionIncidentsRouteImport } from './routes/gestion.incidents'
+import { Route as GestionIntegrationsRouteImport } from './routes/gestion.integrations'
+import { Route as GestionMenageRouteImport } from './routes/gestion.menage'
+import { Route as GestionMessagesRouteImport } from './routes/gestion.messages'
+import { Route as GestionPrestatairesRouteImport } from './routes/gestion.prestataires'
+import { Route as GestionProprietairesRouteImport } from './routes/gestion.proprietaires'
+import { Route as GestionReservationsRouteImport } from './routes/gestion.reservations'
+import { Route as MenageTokenRouteImport } from './routes/menage.$token'
+import { Route as SejourTokenRouteImport } from './routes/sejour.$token'
+import { Route as ApiPmsCronRouteImport } from './routes/api.pms.cron'
+import { Route as GestionLogementsIndexRouteImport } from './routes/gestion.logements.index'
+import { Route as GestionLogementsIdRouteImport } from './routes/gestion.logements.$id'
+import { Route as ApiPmsCalendrierTokenRouteImport } from './routes/api.pms.calendrier.$token'
+import { Route as ApiPmsMenageTokenRouteImport } from './routes/api.pms.menage.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -49,6 +67,11 @@ const ContactRoute = ContactRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GestionRoute = GestionRouteImport.update({
+  id: '/gestion',
+  path: '/gestion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
@@ -108,6 +131,91 @@ const ConciergerieParisArrondissementRoute =
     path: '/conciergerie-paris/$arrondissement',
     getParentRoute: () => rootRouteImport,
   } as any)
+const GestionIndexRoute = GestionIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionAvisRoute = GestionAvisRouteImport.update({
+  id: '/avis',
+  path: '/avis',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionCalendrierRoute = GestionCalendrierRouteImport.update({
+  id: '/calendrier',
+  path: '/calendrier',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionIncidentsRoute = GestionIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionIntegrationsRoute = GestionIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionMenageRoute = GestionMenageRouteImport.update({
+  id: '/menage',
+  path: '/menage',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionMessagesRoute = GestionMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionPrestatairesRoute = GestionPrestatairesRouteImport.update({
+  id: '/prestataires',
+  path: '/prestataires',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionProprietairesRoute = GestionProprietairesRouteImport.update({
+  id: '/proprietaires',
+  path: '/proprietaires',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionReservationsRoute = GestionReservationsRouteImport.update({
+  id: '/reservations',
+  path: '/reservations',
+  getParentRoute: () => GestionRoute,
+} as any)
+const MenageTokenRoute = MenageTokenRouteImport.update({
+  id: '/menage/$token',
+  path: '/menage/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SejourTokenRoute = SejourTokenRouteImport.update({
+  id: '/sejour/$token',
+  path: '/sejour/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPmsCronRoute = ApiPmsCronRouteImport.update({
+  id: '/api/pms/cron',
+  path: '/api/pms/cron',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GestionLogementsIndexRoute = GestionLogementsIndexRouteImport.update({
+  id: '/logements/',
+  path: '/logements/',
+  getParentRoute: () => GestionRoute,
+} as any)
+const GestionLogementsIdRoute = GestionLogementsIdRouteImport.update({
+  id: '/logements/$id',
+  path: '/logements/$id',
+  getParentRoute: () => GestionRoute,
+} as any)
+const ApiPmsCalendrierTokenRoute = ApiPmsCalendrierTokenRouteImport.update({
+  id: '/api/pms/calendrier/$token',
+  path: '/api/pms/calendrier/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPmsMenageTokenRoute = ApiPmsMenageTokenRouteImport.update({
+  id: '/api/pms/menage/$token',
+  path: '/api/pms/menage/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -115,6 +223,7 @@ export interface FileRoutesByFullPath {
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/gestion': typeof GestionRouteWithChildren
   '/mentions-legales': typeof MentionsLegalesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
@@ -125,7 +234,24 @@ export interface FileRoutesByFullPath {
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
   '/conciergerie-paris/$arrondissement': typeof ConciergerieParisArrondissementRoute
+  '/gestion/avis': typeof GestionAvisRoute
+  '/gestion/calendrier': typeof GestionCalendrierRoute
+  '/gestion/incidents': typeof GestionIncidentsRoute
+  '/gestion/integrations': typeof GestionIntegrationsRoute
+  '/gestion/menage': typeof GestionMenageRoute
+  '/gestion/messages': typeof GestionMessagesRoute
+  '/gestion/prestataires': typeof GestionPrestatairesRoute
+  '/gestion/proprietaires': typeof GestionProprietairesRoute
+  '/gestion/reservations': typeof GestionReservationsRoute
+  '/menage/$token': typeof MenageTokenRoute
+  '/sejour/$token': typeof SejourTokenRoute
   '/blog/': typeof BlogIndexRoute
+  '/gestion/': typeof GestionIndexRoute
+  '/api/pms/cron': typeof ApiPmsCronRoute
+  '/gestion/logements/$id': typeof GestionLogementsIdRoute
+  '/gestion/logements/': typeof GestionLogementsIndexRoute
+  '/api/pms/calendrier/$token': typeof ApiPmsCalendrierTokenRoute
+  '/api/pms/menage/$token': typeof ApiPmsMenageTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -143,7 +269,24 @@ export interface FileRoutesByTo {
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
   '/conciergerie-paris/$arrondissement': typeof ConciergerieParisArrondissementRoute
+  '/gestion/avis': typeof GestionAvisRoute
+  '/gestion/calendrier': typeof GestionCalendrierRoute
+  '/gestion/incidents': typeof GestionIncidentsRoute
+  '/gestion/integrations': typeof GestionIntegrationsRoute
+  '/gestion/menage': typeof GestionMenageRoute
+  '/gestion/messages': typeof GestionMessagesRoute
+  '/gestion/prestataires': typeof GestionPrestatairesRoute
+  '/gestion/proprietaires': typeof GestionProprietairesRoute
+  '/gestion/reservations': typeof GestionReservationsRoute
+  '/menage/$token': typeof MenageTokenRoute
+  '/sejour/$token': typeof SejourTokenRoute
   '/blog': typeof BlogIndexRoute
+  '/gestion': typeof GestionIndexRoute
+  '/api/pms/cron': typeof ApiPmsCronRoute
+  '/gestion/logements/$id': typeof GestionLogementsIdRoute
+  '/gestion/logements': typeof GestionLogementsIndexRoute
+  '/api/pms/calendrier/$token': typeof ApiPmsCalendrierTokenRoute
+  '/api/pms/menage/$token': typeof ApiPmsMenageTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -152,6 +295,7 @@ export interface FileRoutesById {
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/gestion': typeof GestionRouteWithChildren
   '/mentions-legales': typeof MentionsLegalesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
@@ -162,7 +306,24 @@ export interface FileRoutesById {
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
   '/conciergerie-paris/$arrondissement': typeof ConciergerieParisArrondissementRoute
+  '/gestion/avis': typeof GestionAvisRoute
+  '/gestion/calendrier': typeof GestionCalendrierRoute
+  '/gestion/incidents': typeof GestionIncidentsRoute
+  '/gestion/integrations': typeof GestionIntegrationsRoute
+  '/gestion/menage': typeof GestionMenageRoute
+  '/gestion/messages': typeof GestionMessagesRoute
+  '/gestion/prestataires': typeof GestionPrestatairesRoute
+  '/gestion/proprietaires': typeof GestionProprietairesRoute
+  '/gestion/reservations': typeof GestionReservationsRoute
+  '/menage/$token': typeof MenageTokenRoute
+  '/sejour/$token': typeof SejourTokenRoute
   '/blog/': typeof BlogIndexRoute
+  '/gestion/': typeof GestionIndexRoute
+  '/api/pms/cron': typeof ApiPmsCronRoute
+  '/gestion/logements/$id': typeof GestionLogementsIdRoute
+  '/gestion/logements/': typeof GestionLogementsIndexRoute
+  '/api/pms/calendrier/$token': typeof ApiPmsCalendrierTokenRoute
+  '/api/pms/menage/$token': typeof ApiPmsMenageTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -172,6 +333,7 @@ export interface FileRouteTypes {
     | '/confidentialite'
     | '/contact'
     | '/faq'
+    | '/gestion'
     | '/mentions-legales'
     | '/robots.txt'
     | '/services'
@@ -182,7 +344,24 @@ export interface FileRouteTypes {
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
     | '/conciergerie-paris/$arrondissement'
+    | '/gestion/avis'
+    | '/gestion/calendrier'
+    | '/gestion/incidents'
+    | '/gestion/integrations'
+    | '/gestion/menage'
+    | '/gestion/messages'
+    | '/gestion/prestataires'
+    | '/gestion/proprietaires'
+    | '/gestion/reservations'
+    | '/menage/$token'
+    | '/sejour/$token'
     | '/blog/'
+    | '/gestion/'
+    | '/api/pms/cron'
+    | '/gestion/logements/$id'
+    | '/gestion/logements/'
+    | '/api/pms/calendrier/$token'
+    | '/api/pms/menage/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -200,7 +379,24 @@ export interface FileRouteTypes {
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
     | '/conciergerie-paris/$arrondissement'
+    | '/gestion/avis'
+    | '/gestion/calendrier'
+    | '/gestion/incidents'
+    | '/gestion/integrations'
+    | '/gestion/menage'
+    | '/gestion/messages'
+    | '/gestion/prestataires'
+    | '/gestion/proprietaires'
+    | '/gestion/reservations'
+    | '/menage/$token'
+    | '/sejour/$token'
     | '/blog'
+    | '/gestion'
+    | '/api/pms/cron'
+    | '/gestion/logements/$id'
+    | '/gestion/logements'
+    | '/api/pms/calendrier/$token'
+    | '/api/pms/menage/$token'
   id:
     | '__root__'
     | '/'
@@ -208,6 +404,7 @@ export interface FileRouteTypes {
     | '/confidentialite'
     | '/contact'
     | '/faq'
+    | '/gestion'
     | '/mentions-legales'
     | '/robots.txt'
     | '/services'
@@ -218,7 +415,24 @@ export interface FileRouteTypes {
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
     | '/conciergerie-paris/$arrondissement'
+    | '/gestion/avis'
+    | '/gestion/calendrier'
+    | '/gestion/incidents'
+    | '/gestion/integrations'
+    | '/gestion/menage'
+    | '/gestion/messages'
+    | '/gestion/prestataires'
+    | '/gestion/proprietaires'
+    | '/gestion/reservations'
+    | '/menage/$token'
+    | '/sejour/$token'
     | '/blog/'
+    | '/gestion/'
+    | '/api/pms/cron'
+    | '/gestion/logements/$id'
+    | '/gestion/logements/'
+    | '/api/pms/calendrier/$token'
+    | '/api/pms/menage/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -227,6 +441,7 @@ export interface RootRouteChildren {
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
+  GestionRoute: typeof GestionRouteWithChildren
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   ServicesRoute: typeof ServicesRoute
@@ -237,7 +452,12 @@ export interface RootRouteChildren {
   BlogReglesAirbnbParis120JoursRoute: typeof BlogReglesAirbnbParis120JoursRoute
   ConciergerieAirbnbVilleRoute: typeof ConciergerieAirbnbVilleRoute
   ConciergerieParisArrondissementRoute: typeof ConciergerieParisArrondissementRoute
+  MenageTokenRoute: typeof MenageTokenRoute
+  SejourTokenRoute: typeof SejourTokenRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ApiPmsCronRoute: typeof ApiPmsCronRoute
+  ApiPmsCalendrierTokenRoute: typeof ApiPmsCalendrierTokenRoute
+  ApiPmsMenageTokenRoute: typeof ApiPmsMenageTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -275,6 +495,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gestion': {
+      id: '/gestion'
+      path: '/gestion'
+      fullPath: '/gestion'
+      preLoaderRoute: typeof GestionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mentions-legales': {
@@ -354,8 +581,160 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConciergerieParisArrondissementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gestion/': {
+      id: '/gestion/'
+      path: '/'
+      fullPath: '/gestion/'
+      preLoaderRoute: typeof GestionIndexRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/avis': {
+      id: '/gestion/avis'
+      path: '/avis'
+      fullPath: '/gestion/avis'
+      preLoaderRoute: typeof GestionAvisRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/calendrier': {
+      id: '/gestion/calendrier'
+      path: '/calendrier'
+      fullPath: '/gestion/calendrier'
+      preLoaderRoute: typeof GestionCalendrierRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/incidents': {
+      id: '/gestion/incidents'
+      path: '/incidents'
+      fullPath: '/gestion/incidents'
+      preLoaderRoute: typeof GestionIncidentsRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/integrations': {
+      id: '/gestion/integrations'
+      path: '/integrations'
+      fullPath: '/gestion/integrations'
+      preLoaderRoute: typeof GestionIntegrationsRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/menage': {
+      id: '/gestion/menage'
+      path: '/menage'
+      fullPath: '/gestion/menage'
+      preLoaderRoute: typeof GestionMenageRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/messages': {
+      id: '/gestion/messages'
+      path: '/messages'
+      fullPath: '/gestion/messages'
+      preLoaderRoute: typeof GestionMessagesRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/prestataires': {
+      id: '/gestion/prestataires'
+      path: '/prestataires'
+      fullPath: '/gestion/prestataires'
+      preLoaderRoute: typeof GestionPrestatairesRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/proprietaires': {
+      id: '/gestion/proprietaires'
+      path: '/proprietaires'
+      fullPath: '/gestion/proprietaires'
+      preLoaderRoute: typeof GestionProprietairesRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/reservations': {
+      id: '/gestion/reservations'
+      path: '/reservations'
+      fullPath: '/gestion/reservations'
+      preLoaderRoute: typeof GestionReservationsRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/menage/$token': {
+      id: '/menage/$token'
+      path: '/menage/$token'
+      fullPath: '/menage/$token'
+      preLoaderRoute: typeof MenageTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sejour/$token': {
+      id: '/sejour/$token'
+      path: '/sejour/$token'
+      fullPath: '/sejour/$token'
+      preLoaderRoute: typeof SejourTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/pms/cron': {
+      id: '/api/pms/cron'
+      path: '/api/pms/cron'
+      fullPath: '/api/pms/cron'
+      preLoaderRoute: typeof ApiPmsCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gestion/logements/': {
+      id: '/gestion/logements/'
+      path: '/logements'
+      fullPath: '/gestion/logements/'
+      preLoaderRoute: typeof GestionLogementsIndexRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/gestion/logements/$id': {
+      id: '/gestion/logements/$id'
+      path: '/logements/$id'
+      fullPath: '/gestion/logements/$id'
+      preLoaderRoute: typeof GestionLogementsIdRouteImport
+      parentRoute: typeof GestionRoute
+    }
+    '/api/pms/calendrier/$token': {
+      id: '/api/pms/calendrier/$token'
+      path: '/api/pms/calendrier/$token'
+      fullPath: '/api/pms/calendrier/$token'
+      preLoaderRoute: typeof ApiPmsCalendrierTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/pms/menage/$token': {
+      id: '/api/pms/menage/$token'
+      path: '/api/pms/menage/$token'
+      fullPath: '/api/pms/menage/$token'
+      preLoaderRoute: typeof ApiPmsMenageTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface GestionRouteChildren {
+  GestionAvisRoute: typeof GestionAvisRoute
+  GestionCalendrierRoute: typeof GestionCalendrierRoute
+  GestionIncidentsRoute: typeof GestionIncidentsRoute
+  GestionIntegrationsRoute: typeof GestionIntegrationsRoute
+  GestionMenageRoute: typeof GestionMenageRoute
+  GestionMessagesRoute: typeof GestionMessagesRoute
+  GestionPrestatairesRoute: typeof GestionPrestatairesRoute
+  GestionProprietairesRoute: typeof GestionProprietairesRoute
+  GestionReservationsRoute: typeof GestionReservationsRoute
+  GestionIndexRoute: typeof GestionIndexRoute
+  GestionLogementsIdRoute: typeof GestionLogementsIdRoute
+  GestionLogementsIndexRoute: typeof GestionLogementsIndexRoute
+}
+
+const GestionRouteChildren: GestionRouteChildren = {
+  GestionAvisRoute: GestionAvisRoute,
+  GestionCalendrierRoute: GestionCalendrierRoute,
+  GestionIncidentsRoute: GestionIncidentsRoute,
+  GestionIntegrationsRoute: GestionIntegrationsRoute,
+  GestionMenageRoute: GestionMenageRoute,
+  GestionMessagesRoute: GestionMessagesRoute,
+  GestionPrestatairesRoute: GestionPrestatairesRoute,
+  GestionProprietairesRoute: GestionProprietairesRoute,
+  GestionReservationsRoute: GestionReservationsRoute,
+  GestionIndexRoute: GestionIndexRoute,
+  GestionLogementsIdRoute: GestionLogementsIdRoute,
+  GestionLogementsIndexRoute: GestionLogementsIndexRoute,
+}
+
+const GestionRouteWithChildren =
+  GestionRoute._addFileChildren(GestionRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -363,6 +742,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfidentialiteRoute: ConfidentialiteRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
+  GestionRoute: GestionRouteWithChildren,
   MentionsLegalesRoute: MentionsLegalesRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   ServicesRoute: ServicesRoute,
@@ -373,7 +753,12 @@ const rootRouteChildren: RootRouteChildren = {
   BlogReglesAirbnbParis120JoursRoute: BlogReglesAirbnbParis120JoursRoute,
   ConciergerieAirbnbVilleRoute: ConciergerieAirbnbVilleRoute,
   ConciergerieParisArrondissementRoute: ConciergerieParisArrondissementRoute,
+  MenageTokenRoute: MenageTokenRoute,
+  SejourTokenRoute: SejourTokenRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ApiPmsCronRoute: ApiPmsCronRoute,
+  ApiPmsCalendrierTokenRoute: ApiPmsCalendrierTokenRoute,
+  ApiPmsMenageTokenRoute: ApiPmsMenageTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
