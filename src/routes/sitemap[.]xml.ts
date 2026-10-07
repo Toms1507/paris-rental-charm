@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ARRONDISSEMENTS } from "@/content/arrondissements";
 import { CITIES, POSTS } from "@/content/site";
 import { MARKET_PARIS } from "@/content/market-paris";
 import { absoluteUrl } from "@/lib/seo";
@@ -6,7 +7,7 @@ import { absoluteUrl } from "@/lib/seo";
 // Dernière révision des contenus fixes (titres, textes, mentions légales) : à mettre à jour
 // lors d'une modification de ces pages. Les pages qui affichent les données du marché prennent
 // la date du dernier relevé, actualisée automatiquement chaque semaine.
-const CONTENT_UPDATED = "2026-10-06";
+const CONTENT_UPDATED = "2026-10-07";
 const latest = (...dates: (string | undefined)[]) =>
   dates
     .filter((d): d is string => Boolean(d))
@@ -50,6 +51,13 @@ export const Route = createFileRoute("/sitemap.xml")({
             priority: "0.8",
             changefreq: "monthly",
             lastmod: CONTENT_UPDATED,
+          })),
+          // Pages d'arrondissement : chiffres du marché, mis à jour avec les données.
+          ...ARRONDISSEMENTS.map((a) => ({
+            path: `/conciergerie-paris/${a.slug}`,
+            priority: "0.8",
+            changefreq: "weekly",
+            lastmod: latest(CONTENT_UPDATED, MARKET_PARIS.snapshot),
           })),
           ...POSTS.map((p) => ({
             path: `/blog/${p.slug}`,

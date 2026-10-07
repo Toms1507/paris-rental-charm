@@ -24,6 +24,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BlogReglesAirbnbParis120JoursRouteImport } from './routes/blog.regles-airbnb-paris-120-jours'
 import { Route as ConciergerieAirbnbVilleRouteImport } from './routes/conciergerie-airbnb.$ville'
+import { Route as ConciergerieParisArrondissementRouteImport } from './routes/conciergerie-paris.$arrondissement'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -101,6 +102,12 @@ const ConciergerieAirbnbVilleRoute = ConciergerieAirbnbVilleRouteImport.update({
   path: '/conciergerie-airbnb/$ville',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConciergerieParisArrondissementRoute =
+  ConciergerieParisArrondissementRouteImport.update({
+    id: '/conciergerie-paris/$arrondissement',
+    path: '/conciergerie-paris/$arrondissement',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
+  '/conciergerie-paris/$arrondissement': typeof ConciergerieParisArrondissementRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
@@ -134,6 +142,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
+  '/conciergerie-paris/$arrondissement': typeof ConciergerieParisArrondissementRoute
   '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
@@ -152,6 +161,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
+  '/conciergerie-paris/$arrondissement': typeof ConciergerieParisArrondissementRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
+    | '/conciergerie-paris/$arrondissement'
     | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
+    | '/conciergerie-paris/$arrondissement'
     | '/blog'
   id:
     | '__root__'
@@ -205,6 +217,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
+    | '/conciergerie-paris/$arrondissement'
     | '/blog/'
   fileRoutesById: FileRoutesById
 }
@@ -223,6 +236,7 @@ export interface RootRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
   BlogReglesAirbnbParis120JoursRoute: typeof BlogReglesAirbnbParis120JoursRoute
   ConciergerieAirbnbVilleRoute: typeof ConciergerieAirbnbVilleRoute
+  ConciergerieParisArrondissementRoute: typeof ConciergerieParisArrondissementRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
@@ -333,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConciergerieAirbnbVilleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/conciergerie-paris/$arrondissement': {
+      id: '/conciergerie-paris/$arrondissement'
+      path: '/conciergerie-paris/$arrondissement'
+      fullPath: '/conciergerie-paris/$arrondissement'
+      preLoaderRoute: typeof ConciergerieParisArrondissementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -351,6 +372,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
   BlogReglesAirbnbParis120JoursRoute: BlogReglesAirbnbParis120JoursRoute,
   ConciergerieAirbnbVilleRoute: ConciergerieAirbnbVilleRoute,
+  ConciergerieParisArrondissementRoute: ConciergerieParisArrondissementRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport

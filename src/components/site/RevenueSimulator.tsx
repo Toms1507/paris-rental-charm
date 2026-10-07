@@ -229,8 +229,11 @@ function useCountUp(target: number) {
   return value;
 }
 
-export function RevenueSimulator() {
-  const [location, setLocation] = useState("paris-11");
+/** `initialLocation` : zone présélectionnée (« paris-11 », slug de ville…), utile sur les pages locales. */
+export function RevenueSimulator({
+  initialLocation = "paris-11",
+}: { initialLocation?: string } = {}) {
+  const [location, setLocation] = useState(initialLocation);
   const [sector, setSector] = useState<Sector>("");
   const [outOfZoneText, setOutOfZoneText] = useState("");
   const [typeIndex, setTypeIndex] = useState(1);

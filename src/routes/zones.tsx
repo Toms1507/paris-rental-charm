@@ -84,9 +84,15 @@ function ZonesPage() {
       <section className="container-page py-20">
         <h2 className="text-3xl sm:text-4xl">Paris, les 20 arrondissements</h2>
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {ARRONDISSEMENTS.map((a) => (
-            <li key={a} className="rounded-lg border border-border px-4 py-3 text-sm">
-              {a}
+          {ARRONDISSEMENTS.map((a, i) => (
+            <li key={a}>
+              <Link
+                to="/conciergerie-paris/$arrondissement"
+                params={{ arrondissement: i === 0 ? "1er" : `${i + 1}e` }}
+                className="block rounded-lg border border-border px-4 py-3 text-sm transition-colors hover:border-primary hover:text-primary"
+              >
+                {a}
+              </Link>
             </li>
           ))}
         </ul>

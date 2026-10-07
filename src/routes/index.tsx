@@ -150,18 +150,22 @@ function HomePage() {
           className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.55)_55%,rgba(0,0,0,0.4)_100%)]"
         />
         <div className="container-page flex w-full flex-col items-center py-20 text-center lg:py-28">
-          <p data-reveal="down" className="eyebrow !text-white/85">
-            Conciergerie Airbnb — Paris et alentours
-          </p>
+          {/* H1 porteur du mot-clé (même rendu que le petit titre) ; le slogan reste en grand. */}
           <h1
+            data-reveal="down"
+            className="eyebrow font-[family-name:var(--font-sans)] !text-white/85"
+          >
+            Conciergerie Airbnb à Paris et alentours
+          </h1>
+          <p
             data-reveal="up"
             style={stagger(1, 150)}
-            className="mt-5 text-4xl leading-[1.08] text-white sm:text-5xl lg:text-[3.75rem]"
+            className="mt-5 font-[family-name:var(--font-display)] text-4xl leading-[1.08] font-semibold tracking-[-0.015em] text-balance text-white sm:text-5xl lg:text-[3.75rem]"
           >
             Profitez de votre temps,
             <br />
             <span className="text-[#98CCEB]">on s'occupe de vos voyageurs.</span>
-          </h1>
+          </p>
           <p
             data-reveal="up"
             style={stagger(2, 150)}
