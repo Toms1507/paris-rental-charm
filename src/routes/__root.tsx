@@ -121,6 +121,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // Icônes : onglet du navigateur, résultats Google (multiples de 48 px), mobiles.
       { rel: "icon", href: "/favicon.ico", sizes: "16x16 32x32 48x48" },
       { rel: "icon", href: "/brand/icon-48.png", type: "image/png", sizes: "48x48" },
+      { rel: "icon", href: "/brand/icon-96.png", type: "image/png", sizes: "96x96" },
+      { rel: "icon", href: "/brand/icon-144.png", type: "image/png", sizes: "144x144" },
       { rel: "icon", href: "/brand/icon-192.png", type: "image/png", sizes: "192x192" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
       { rel: "manifest", href: "/site.webmanifest" },
