@@ -499,13 +499,22 @@ CREATE POLICY "Équipe : fichiers" ON storage.objects FOR ALL TO authenticated
   WITH CHECK (bucket_id = 'pms' AND public.pms_is_staff());
 
 -- Les prestataires déposent leurs photos dans menage/<id du ménage>/… (identifiant non devinable),
--- uniquement pour un ménage du jour ou des 3 derniers jours.
+-- uniquement pour un ménage du jour ou des 3 derniers jours. La vérification passe par une
+-- fonction, car le portail public n'a pas le droit de lire la table des ménages.
+CREATE OR REPLACE FUNCTION public.pms_cleaning_upload_allowed(p_folder TEXT)
+RETURNS BOOLEAN LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.pms_cleaning_tasks t
+    WHERE t.id::text = p_folder AND t.date BETWEEN current_date - 3 AND current_date + 1
+  );
+$$;
+REVOKE ALL ON FUNCTION public.pms_cleaning_upload_allowed(TEXT) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.pms_cleaning_upload_allowed(TEXT) TO anon, authenticated;
+
+DROP POLICY IF EXISTS "Prestataires : photos de ménage" ON storage.objects;
 CREATE POLICY "Prestataires : photos de ménage" ON storage.objects FOR INSERT TO anon, authenticated
   WITH CHECK (
     bucket_id = 'pms'
     AND (storage.foldername(name))[1] = 'menage'
-    AND EXISTS (
-      SELECT 1 FROM public.pms_cleaning_tasks t
-      WHERE t.id::text = (storage.foldername(name))[2] AND t.date BETWEEN current_date - 3 AND current_date + 1
-    )
+    AND public.pms_cleaning_upload_allowed((storage.foldername(name))[2])
   );
