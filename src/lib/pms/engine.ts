@@ -89,19 +89,21 @@ export async function syncProperty(
         const existing = data.pms_reservations.find(
           (r) => r.property_id === p.id && r.external_uid === ext,
         );
-        // Un blocage qui recouvre une réservation d'une autre plateforme n'est que le reflet de
-        // notre propre calendrier exporté : on l'ignore.
-        if (
-          status === "bloquee" &&
-          data.pms_reservations.some(
-            (r) =>
-              r.property_id === p.id &&
-              r.status === "confirmee" &&
-              r.platform !== feed.platform &&
-              overlaps(r, { check_in: ev.start, check_out: ev.end }),
-          )
-        ) {
-          if (existing && existing.status === "bloquee")
+        // Reflet de notre propre calendrier exporté : un blocage qui recouvre une réservation d'une
+        // autre plateforme, ou un événement aux mêmes dates exactes (Booking exporte les dates
+        // importées en « CLOSED - Not available », comme ses propres réservations). On l'ignore.
+        const mirror = data.pms_reservations.some(
+          (r) =>
+            r.property_id === p.id &&
+            r.status === "confirmee" &&
+            r.platform !== feed.platform &&
+            r.id !== existing?.id &&
+            (status === "bloquee"
+              ? overlaps(r, { check_in: ev.start, check_out: ev.end })
+              : r.check_in === ev.start && r.check_out === ev.end && !parsed.guestName),
+        );
+        if (mirror) {
+          if (existing && existing.source === "ical" && existing.status !== "annulee")
             await ctx.store.remove("pms_reservations", existing.id);
           continue;
         }

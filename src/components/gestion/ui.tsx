@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Check, Copy } from "lucide-react";
 import {
   Dialog,
@@ -8,6 +8,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { resolveStoredFile, STORAGE_PREFIX } from "@/lib/pms/store";
 import { CONDITIONS, PLATFORMS, type Condition, type Platform } from "@/lib/pms/types";
 
 export function PageHeader({
@@ -307,3 +309,21 @@ export async function compressImage(file: File, max = 1600, quality = 0.8): Prom
 }
 
 export const num = (v: string) => (v === "" ? 0 : Number(v.replace(",", ".")) || 0);
+
+/** Photo enregistrée (lien direct, ou fichier privé signé à la volée), cliquable pour l'agrandir. */
+export function StoredImage({ src, className }: { src: string; className?: string }) {
+  const [url, setUrl] = useState<string | null>(src.startsWith(STORAGE_PREFIX) ? null : src);
+  useEffect(() => {
+    let alive = true;
+    resolveStoredFile(supabase, src).then((u) => alive && setUrl(u));
+    return () => {
+      alive = false;
+    };
+  }, [src]);
+  if (!url) return <div className={cn("animate-pulse rounded-md bg-muted", className)} />;
+  return (
+    <a href={url} target="_blank" rel="noopener">
+      <img src={url} alt="" className={className} />
+    </a>
+  );
+}

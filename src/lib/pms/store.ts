@@ -33,7 +33,32 @@ export async function loadAll(store: Store): Promise<AllData> {
 
 // ---------------------------------------------------------------- Supabase
 
-// Les tables pms_* ne figurent pas dans les types générés par Lovable : client non typé.
+/** Validité des liens signés vers les fichiers privés (10 ans). */
+const SIGNED_URL_SECONDS = 10 * 365 * 24 * 3600;
+/** Préfixe des fichiers privés enregistrés par chemin (photos déposées par les prestataires). */
+export const STORAGE_PREFIX = "storage:";
+
+const signedCache = new Map<string, Promise<string | null>>();
+
+/** Lien affichable d'un fichier : tel quel, ou lien signé pour un chemin « storage:… » (équipe connectée). */
+export function resolveStoredFile(
+  client: SupabaseClient<never> | SupabaseClient,
+  src: string,
+): Promise<string | null> {
+  if (!src.startsWith(STORAGE_PREFIX)) return Promise.resolve(src);
+  const path = src.slice(STORAGE_PREFIX.length);
+  let p = signedCache.get(path);
+  if (!p) {
+    p = (client as unknown as Untyped).storage
+      .from("pms")
+      .createSignedUrl(path, 24 * 3600)
+      .then((r) => r.data?.signedUrl ?? null);
+    signedCache.set(path, p);
+  }
+  return p;
+}
+
+// Les tables pms_* ne figurent pas dans les types générés de Supabase : client non typé.
 type Untyped = SupabaseClient;
 
 export function createSupabaseStore(client: SupabaseClient<never> | SupabaseClient): Store {
@@ -77,7 +102,9 @@ export function createSupabaseStore(client: SupabaseClient<never> | SupabaseClie
     async upload(path, file) {
       const { error } = await db.storage.from("pms").upload(path, file, { upsert: true });
       if (error) throw new Error(`Envoi du fichier : ${error.message}`);
-      return db.storage.from("pms").getPublicUrl(path).data.publicUrl;
+      // Espace de stockage privé : lien signé de longue durée (affichable dans le livret et les emails).
+      const signed = await db.storage.from("pms").createSignedUrl(path, SIGNED_URL_SECONDS);
+      return signed.data?.signedUrl ?? db.storage.from("pms").getPublicUrl(path).data.publicUrl;
     },
   };
 }
@@ -221,7 +248,9 @@ export function createSupabasePublicApi(client: SupabaseClient<never> | Supabase
         .from("pms")
         .upload(path, file, { contentType: file.type || "image/jpeg" });
       if (error) throw new Error(`Envoi de la photo : ${error.message}`);
-      return db.storage.from("pms").getPublicUrl(path).data.publicUrl;
+      // Le prestataire n'a pas le droit de lire l'espace privé : on garde le chemin, que l'équipe
+      // transforme en lien signé à l'affichage (voir resolveStoredFile).
+      return `${STORAGE_PREFIX}${path}`;
     },
   };
 }

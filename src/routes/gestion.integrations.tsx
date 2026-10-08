@@ -122,8 +122,8 @@ function IntegrationsPage() {
         >
           <ol className="list-decimal space-y-1.5 pl-5 text-sm">
             <li>
-              Ouvrez le projet dans <b>Lovable</b> et demandez : « Applique la migration{" "}
-              <code>supabase/migrations/20261007120000_logiciel_gestion.sql</code> ».
+              Dans le tableau de bord Supabase du projet, ouvrez l'éditeur SQL et exécutez le
+              fichier <code>supabase/migrations/20261007120000_logiciel_gestion.sql</code>.
             </li>
             <li>
               Rechargez cette page : le logiciel passe en mode réel et vous demande de créer votre

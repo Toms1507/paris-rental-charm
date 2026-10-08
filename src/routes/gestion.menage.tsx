@@ -12,6 +12,7 @@ import {
   PageHeader,
   Pill,
   Select,
+  StoredImage,
   TextArea,
   TextInput,
 } from "@/components/gestion/ui";
@@ -359,9 +360,11 @@ function TaskDialog({ task, onClose }: { task: CleaningTask; onClose: () => void
           {task.photos.length ? (
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {task.photos.map((src) => (
-                <a key={src} href={src} target="_blank" rel="noopener">
-                  <img src={src} alt="" className="aspect-square w-full rounded-md object-cover" />
-                </a>
+                <StoredImage
+                  key={src}
+                  src={src}
+                  className="aspect-square w-full rounded-md object-cover"
+                />
               ))}
             </div>
           ) : (

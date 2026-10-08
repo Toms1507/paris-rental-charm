@@ -490,7 +490,8 @@ GRANT EXECUTE ON FUNCTION public.pms_get_export(TEXT) TO anon, authenticated;
 
 -- ---------------------------------------------------------------- fichiers (photos de ménage, factures)
 
-INSERT INTO storage.buckets (id, name, public) VALUES ('pms', 'pms', true)
+-- Espace privé : les fichiers sont servis par liens signés.
+INSERT INTO storage.buckets (id, name, public) VALUES ('pms', 'pms', false)
   ON CONFLICT (id) DO NOTHING;
 
 CREATE POLICY "Équipe : fichiers" ON storage.objects FOR ALL TO authenticated

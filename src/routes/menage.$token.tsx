@@ -11,7 +11,7 @@ import {
   type CleanerView,
   type Condition,
 } from "@/lib/pms/types";
-import type { PublicApi } from "@/lib/pms/store";
+import { STORAGE_PREFIX, type PublicApi } from "@/lib/pms/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/menage/$token")({
@@ -138,6 +138,7 @@ function TaskCard({
   const [notes, setNotes] = useState(task.report_notes ?? "");
   const [checklist, setChecklist] = useState(task.checklist);
   const [photos, setPhotos] = useState(task.photos);
+  const [previews, setPreviews] = useState<Record<string, string>>({});
   const [condition, setCondition] = useState<Condition | null>(task.condition);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -166,8 +167,14 @@ function TaskCard({
     setError(null);
     try {
       const urls = [...photos];
-      for (const f of Array.from(files))
-        urls.push(await api.uploadCleaningPhoto(task.id, await compressImage(f)));
+      const added: Record<string, string> = {};
+      for (const f of Array.from(files)) {
+        const blob = await compressImage(f);
+        const ref = await api.uploadCleaningPhoto(task.id, blob);
+        added[ref] = URL.createObjectURL(blob);
+        urls.push(ref);
+      }
+      setPreviews((p) => ({ ...p, ...added }));
       setPhotos(urls);
       await api.cleanerUpdateTask(token, task.id, { photos: urls });
     } catch (e) {
@@ -325,11 +332,24 @@ function TaskCard({
           <div>
             <div className="mb-2 text-sm font-semibold">Photos ({photos.length})</div>
             <div className="grid grid-cols-3 gap-2">
-              {photos.map((src) => (
-                <a key={src} href={src} target="_blank" rel="noopener">
-                  <img src={src} alt="" className="aspect-square w-full rounded-lg object-cover" />
-                </a>
-              ))}
+              {photos.map((src) =>
+                // Espace privé : le prestataire voit l'aperçu de ses envois récents, sinon une vignette.
+                previews[src] || !src.startsWith(STORAGE_PREFIX) ? (
+                  <img
+                    key={src}
+                    src={previews[src] ?? src}
+                    alt=""
+                    className="aspect-square w-full rounded-lg object-cover"
+                  />
+                ) : (
+                  <div
+                    key={src}
+                    className="flex aspect-square flex-col items-center justify-center gap-1 rounded-lg bg-emerald-50 text-xs text-emerald-800"
+                  >
+                    <CheckCircle2 className="size-5" /> Photo envoyée
+                  </div>
+                ),
+              )}
               {!done && (
                 <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-border text-xs text-muted-foreground">
                   <Camera className="size-6" />

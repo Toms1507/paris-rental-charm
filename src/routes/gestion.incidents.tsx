@@ -10,6 +10,7 @@ import {
   PageHeader,
   Pill,
   Select,
+  StoredImage,
   TextArea,
   TextInput,
   Toggle,
@@ -103,7 +104,7 @@ function IncidentsPage() {
               {i.photos.length > 0 && (
                 <div className="mt-2 flex gap-1.5">
                   {i.photos.slice(0, 5).map((p) => (
-                    <img key={p} src={p} alt="" className="size-12 rounded object-cover" />
+                    <StoredImage key={p} src={p} className="size-12 rounded object-cover" />
                   ))}
                 </div>
               )}
@@ -208,9 +209,7 @@ function IncidentDialog({
           <div className="mb-1 text-sm font-medium">Photos</div>
           <div className="flex flex-wrap gap-2">
             {(i.photos ?? []).map((p) => (
-              <a key={p} href={p} target="_blank" rel="noopener">
-                <img src={p} alt="" className="size-20 rounded-md object-cover" />
-              </a>
+              <StoredImage key={p} src={p} className="size-20 rounded-md object-cover" />
             ))}
             <label className="flex size-20 cursor-pointer items-center justify-center rounded-md border border-dashed border-border text-xs text-muted-foreground">
               {uploading ? "…" : "+ Photo"}
