@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { DEFAULT_TEMPLATES } from "@/lib/pms/defaults";
 import {
   getSettings,
+  saveSettings,
   runAutomations,
   type RunContext,
   type RunSummary,
@@ -200,15 +201,21 @@ export function PmsProvider({
     [runContext, reload],
   );
 
-  // Premier lancement en mode cloud : installe les modèles de messages par défaut.
+  // Premier lancement en mode cloud : installe les modèles de messages par défaut, une seule fois
+  // (si l'équipe les supprime ensuite, ils ne reviennent pas).
+  const seeding = useRef(false);
   useEffect(() => {
-    if (mode !== "cloud" || !query.data) return;
-    if (query.data.pms_message_templates.length === 0 && query.data.pms_settings.length === 0) {
+    if (mode !== "cloud" || !query.data || seeding.current) return;
+    const d = query.data;
+    if (d.pms_message_templates.length === 0 && !getSettings(d).templates_seeded) {
+      seeding.current = true;
       (async () => {
         await store.insert("pms_message_templates", DEFAULT_TEMPLATES);
-        await store.insert("pms_settings", [{ data: {} }]);
+        await saveSettings(store, d, { templates_seeded: true });
         await reload();
-      })().catch(() => undefined);
+      })().catch(() => {
+        seeding.current = false;
+      });
     }
   }, [mode, query.data, store, reload]);
 

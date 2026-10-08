@@ -107,6 +107,7 @@ export async function fetchIcalServer(url: string): Promise<string> {
 // ---------------------------------------------------------------- Claude
 
 const MODEL = "claude-opus-5";
+const GUEST_MODEL = "claude-haiku-4-5";
 
 function client() {
   const apiKey = process.env["ANTHROPIC_API_KEY"];
@@ -151,15 +152,24 @@ Règles :
 - Ne parle jamais de paiement hors plateforme, ne demande aucune donnée bancaire, ne promets ni remboursement ni geste commercial : renvoie vers l'équipe.
 
 ${context}`;
-  const res = await ask({
-    max_tokens: 16000,
+  // Modèle économique pour l'assistant (questions pratiques, réponses courtes) : choix du
+  // propriétaire pour limiter les coûts. Variable PMS_GUEST_AI_MODEL pour en changer.
+  const c = client();
+  if (!c) return null;
+  const res = await c.messages.create({
+    model: process.env["PMS_GUEST_AI_MODEL"] ?? GUEST_MODEL,
+    max_tokens: 4000,
     system,
-    output_config: { effort: "low" },
     messages: history.slice(-16).map((t) => ({ role: t.role, content: t.content.slice(0, 4000) })),
   });
-  if (!res) return null;
   if (res.stop_reason === "refusal") return null;
-  return textOf(res.content) || null;
+  return (
+    res.content
+      .filter((b): b is Anthropic.TextBlock => b.type === "text")
+      .map((b) => b.text)
+      .join("")
+      .trim() || null
+  );
 }
 
 export type GeneratedReco = {

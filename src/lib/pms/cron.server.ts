@@ -30,14 +30,47 @@ async function serverClient(): Promise<SupabaseClient> {
   return client;
 }
 
+/** Jours de conservation des photos d'un ménage « tout est en ordre » (formule gratuite : 1 Go). */
+const KEEP_GREEN_PHOTOS_DAYS = 60;
+
+/**
+ * Libère l'espace de stockage : supprime les photos des ménages verts anciens. Les photos des
+ * ménages orange ou rouge (preuves en cas de litige) sont conservées.
+ */
+async function purgeOldPhotos(db: SupabaseClient) {
+  const limit = new Date(Date.now() - KEEP_GREEN_PHOTOS_DAYS * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
+  const { data } = await db
+    .from("pms_cleaning_tasks")
+    .select("id, photos")
+    .eq("condition", "vert")
+    .lt("date", limit)
+    .neq("photos", "[]")
+    .limit(200);
+  let removed = 0;
+  for (const t of (data ?? []) as { id: string; photos: string[] }[]) {
+    const paths = t.photos
+      .filter((p) => p.startsWith("storage:"))
+      .map((p) => p.slice("storage:".length));
+    if (paths.length) await db.storage.from("pms").remove(paths);
+    await db.from("pms_cleaning_tasks").update({ photos: [] }).eq("id", t.id);
+    removed += paths.length;
+  }
+  return removed;
+}
+
 export async function runServerAutomations(origin: string) {
-  const store = createSupabaseStore(await serverClient());
-  return runAutomations({
+  const db = await serverClient();
+  const store = createSupabaseStore(db);
+  const photosPurged = await purgeOldPhotos(db).catch(() => 0);
+  const summary = await runAutomations({
     store,
     origin,
     fetchIcal: fetchIcalServer,
     sender: { email: (to, subject, text, html) => sendEmailServer({ to, subject, text, html }) },
   });
+  return { ...summary, photosPurged };
 }
 
 /** Lecture publique d'un calendrier exporté ou d'un planning ménage (fonctions SQL par jeton). */

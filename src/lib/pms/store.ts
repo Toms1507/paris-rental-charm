@@ -208,7 +208,11 @@ export interface PublicApi {
   getCleaner(token: string): Promise<CleanerView | null>;
   cleanerUpdateTask(token: string, taskId: string, patch: Partial<CleaningTask>): Promise<void>;
   uploadCleaningPhoto(taskId: string, file: Blob): Promise<string>;
+  /** Retrouve le séjour depuis le lien fixe du logement : code de réservation, ou date d'arrivée. */
+  findStay(link: string, code: string | null, arrival: string | null): Promise<FoundStay | null>;
 }
+
+export type FoundStay = { property: string; photo_url: string | null; guest_token: string | null };
 
 export function createSupabasePublicApi(client: SupabaseClient<never> | SupabaseClient): PublicApi {
   const db = client as unknown as Untyped;
@@ -251,6 +255,15 @@ export function createSupabasePublicApi(client: SupabaseClient<never> | Supabase
       // Le prestataire n'a pas le droit de lire l'espace privé : on garde le chemin, que l'équipe
       // transforme en lien signé à l'affichage (voir resolveStoredFile).
       return `${STORAGE_PREFIX}${path}`;
+    },
+    async findStay(link, code, arrival) {
+      const { data, error } = await db.rpc("pms_find_stay", {
+        p_link: link,
+        p_code: code,
+        p_arrival: arrival,
+      });
+      if (error) throw new Error(error.message);
+      return (data as FoundStay | null) ?? null;
     },
   };
 }
@@ -447,6 +460,31 @@ export function createLocalPublicApi(store: Store): PublicApi {
     },
     async uploadCleaningPhoto(_taskId, file) {
       return store.upload("", file);
+    },
+    async findStay(link, code, arrival) {
+      const p = (await store.list("pms_properties")).find(
+        (x) => x.guest_link_token === link && x.active,
+      );
+      if (!p) return null;
+      const today = todayParis();
+      const resas = (await store.list("pms_reservations")).filter(
+        (r) => r.property_id === p.id && r.status === "confirmee",
+      );
+      const norm = (s: string) => s.replace(/\s/g, "").toUpperCase();
+      let found: (typeof resas)[number] | undefined;
+      if (code?.trim()) {
+        found = resas.find(
+          (r) =>
+            r.check_out >= addDays(today, -1) &&
+            norm(
+              String((r.raw as { reservation_code?: string } | null)?.reservation_code ?? ""),
+            ) === norm(code),
+        );
+      } else if (arrival && arrival >= addDays(today, -30) && arrival <= addDays(today, 2)) {
+        const same = resas.filter((r) => r.check_in === arrival);
+        if (same.length === 1) found = same[0];
+      }
+      return { property: p.name, photo_url: p.photo_url, guest_token: found?.guest_token ?? null };
     },
   };
 }

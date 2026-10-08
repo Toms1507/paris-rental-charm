@@ -169,7 +169,7 @@ function TaskCard({
       const urls = [...photos];
       const added: Record<string, string> = {};
       for (const f of Array.from(files)) {
-        const blob = await compressImage(f);
+        const blob = await compressImage(f, 1280, 0.72);
         const ref = await api.uploadCleaningPhoto(task.id, blob);
         added[ref] = URL.createObjectURL(blob);
         urls.push(ref);

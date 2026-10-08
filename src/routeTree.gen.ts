@@ -36,6 +36,7 @@ import { Route as GestionMessagesRouteImport } from './routes/gestion.messages'
 import { Route as GestionPrestatairesRouteImport } from './routes/gestion.prestataires'
 import { Route as GestionProprietairesRouteImport } from './routes/gestion.proprietaires'
 import { Route as GestionReservationsRouteImport } from './routes/gestion.reservations'
+import { Route as LivretLinkRouteImport } from './routes/livret.$link'
 import { Route as MenageTokenRouteImport } from './routes/menage.$token'
 import { Route as SejourTokenRouteImport } from './routes/sejour.$token'
 import { Route as ApiPmsCronRouteImport } from './routes/api.pms.cron'
@@ -181,6 +182,11 @@ const GestionReservationsRoute = GestionReservationsRouteImport.update({
   path: '/reservations',
   getParentRoute: () => GestionRoute,
 } as any)
+const LivretLinkRoute = LivretLinkRouteImport.update({
+  id: '/livret/$link',
+  path: '/livret/$link',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MenageTokenRoute = MenageTokenRouteImport.update({
   id: '/menage/$token',
   path: '/menage/$token',
@@ -243,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
   '/gestion/reservations': typeof GestionReservationsRoute
+  '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
   '/sejour/$token': typeof SejourTokenRoute
   '/blog/': typeof BlogIndexRoute
@@ -278,6 +285,7 @@ export interface FileRoutesByTo {
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
   '/gestion/reservations': typeof GestionReservationsRoute
+  '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
   '/sejour/$token': typeof SejourTokenRoute
   '/blog': typeof BlogIndexRoute
@@ -315,6 +323,7 @@ export interface FileRoutesById {
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
   '/gestion/reservations': typeof GestionReservationsRoute
+  '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
   '/sejour/$token': typeof SejourTokenRoute
   '/blog/': typeof BlogIndexRoute
@@ -353,6 +362,7 @@ export interface FileRouteTypes {
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
     | '/gestion/reservations'
+    | '/livret/$link'
     | '/menage/$token'
     | '/sejour/$token'
     | '/blog/'
@@ -388,6 +398,7 @@ export interface FileRouteTypes {
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
     | '/gestion/reservations'
+    | '/livret/$link'
     | '/menage/$token'
     | '/sejour/$token'
     | '/blog'
@@ -424,6 +435,7 @@ export interface FileRouteTypes {
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
     | '/gestion/reservations'
+    | '/livret/$link'
     | '/menage/$token'
     | '/sejour/$token'
     | '/blog/'
@@ -452,6 +464,7 @@ export interface RootRouteChildren {
   BlogReglesAirbnbParis120JoursRoute: typeof BlogReglesAirbnbParis120JoursRoute
   ConciergerieAirbnbVilleRoute: typeof ConciergerieAirbnbVilleRoute
   ConciergerieParisArrondissementRoute: typeof ConciergerieParisArrondissementRoute
+  LivretLinkRoute: typeof LivretLinkRoute
   MenageTokenRoute: typeof MenageTokenRoute
   SejourTokenRoute: typeof SejourTokenRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -651,6 +664,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GestionReservationsRouteImport
       parentRoute: typeof GestionRoute
     }
+    '/livret/$link': {
+      id: '/livret/$link'
+      path: '/livret/$link'
+      fullPath: '/livret/$link'
+      preLoaderRoute: typeof LivretLinkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/menage/$token': {
       id: '/menage/$token'
       path: '/menage/$token'
@@ -753,6 +773,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogReglesAirbnbParis120JoursRoute: BlogReglesAirbnbParis120JoursRoute,
   ConciergerieAirbnbVilleRoute: ConciergerieAirbnbVilleRoute,
   ConciergerieParisArrondissementRoute: ConciergerieParisArrondissementRoute,
+  LivretLinkRoute: LivretLinkRoute,
   MenageTokenRoute: MenageTokenRoute,
   SejourTokenRoute: SejourTokenRoute,
   BlogIndexRoute: BlogIndexRoute,

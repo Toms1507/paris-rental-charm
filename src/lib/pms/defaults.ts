@@ -88,6 +88,7 @@ const DEFAULTS: Defaults = {
     guide: {},
     ical_feeds: [],
     export_token: token(),
+    guest_link_token: token(),
     checklist: DEFAULT_CHECKLIST,
     active: true,
     created_at: now(),

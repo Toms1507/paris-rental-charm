@@ -102,6 +102,8 @@ export type Property = {
   guide: Guide;
   ical_feeds: IcalFeed[];
   export_token: string;
+  /** Lien fixe du livret, à coller dans les messages programmés des plateformes. */
+  guest_link_token: string;
   checklist: ChecklistItem[];
   active: boolean;
   created_at: string;
@@ -390,6 +392,7 @@ export type Settings = {
       >
     | undefined;
   last_run?: string | null | undefined;
+  templates_seeded?: boolean | undefined;
   last_reports_month?: string | null | undefined;
 };
 

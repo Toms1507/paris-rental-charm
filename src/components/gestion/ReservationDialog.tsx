@@ -174,6 +174,17 @@ export function ReservationDialog({
               onChange={(e) => set("guest_phone", e.target.value || null)}
             />
           </Field>
+          <Field
+            label="Code de réservation"
+            hint="Rempli automatiquement pour Airbnb. Pour Booking, saisissez le numéro : le voyageur pourra ouvrir son livret avec."
+          >
+            <TextInput
+              value={raw.reservation_code ?? ""}
+              onChange={(e) =>
+                set("raw", { ...(r.raw ?? {}), reservation_code: e.target.value.trim() || null })
+              }
+            />
+          </Field>
           <Field label="Heure d'arrivée prévue">
             <TextInput
               type="time"

@@ -124,7 +124,15 @@ export async function syncProperty(
               check_in: ev.start,
               check_out: ev.end,
               status,
-              raw,
+              // Conserve le code de réservation saisi à la main (Booking n'en fournit pas).
+              raw: {
+                ...(existing.raw ?? {}),
+                ...raw,
+                reservation_code:
+                  raw.reservation_code ??
+                  (existing.raw as { reservation_code?: string } | null)?.reservation_code ??
+                  null,
+              },
               updated_at: new Date().toISOString(),
             });
           }

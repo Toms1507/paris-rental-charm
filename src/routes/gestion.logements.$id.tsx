@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/gestion/logements/$id")({ component: PropertyPage });
 
-type Tab = "infos" | "calendriers" | "livret" | "menage" | "bonsplans";
+type Tab = "infos" | "calendriers" | "livret" | "messages" | "menage" | "bonsplans";
 
 const ARRONDISSEMENTS = [
   ...Array.from({ length: 20 }, (_, i) => `${i + 1}${i === 0 ? "er" : "e"} arrondissement`),
@@ -106,6 +106,7 @@ function PropertyPage() {
     { id: "calendriers", label: "Calendriers" },
     { id: "livret", label: "Livret d'accueil" },
     { id: "menage", label: "Check-list ménage" },
+    { id: "messages", label: "Messages plateformes" },
     { id: "bonsplans", label: "Bons plans" },
   ];
 
@@ -476,6 +477,7 @@ function PropertyPage() {
         </Panel>
       )}
 
+      {tab === "messages" && <PlatformMessages p={p} />}
       {tab === "bonsplans" && <Recommendations p={p} />}
     </div>
   );
@@ -675,6 +677,88 @@ function Calendars({
           {!p.ical_feeds.length && <Pill tone="warn">Aucune plateforme reliée</Pill>}
         </div>
       </Panel>
+    </div>
+  );
+}
+
+// Messages à programmer une fois pour toutes dans chaque plateforme (fonction gratuite des
+// plateformes). Ils contiennent le lien fixe du livret : plus rien à envoyer à la main.
+function PlatformMessages({ p }: { p: Property }) {
+  const { settings, mode } = usePms();
+  const link = `${origin()}/livret/${p.guest_link_token}`;
+  const g = p.guide ?? {};
+  const late = p.late_checkout_price ? `${p.late_checkout_price} €` : "offert";
+  const sig = settings.signature;
+  const messages: { platform: string; when: string; how: string; text: string }[] = [
+    {
+      platform: "Airbnb",
+      when: "Dès la réservation",
+      how: "Annonces → Messages → Messages programmés → Créer. Remplacez [CODE] par la variable « Code de confirmation » (menu des variables) et [PRÉNOM] par « Prénom du voyageur ».",
+      text: `Bonjour [PRÉNOM],\n\nMerci pour votre réservation ! Votre livret d'accueil personnel (accès, wifi, bons plans et assistant 24 h/24) :\n${link}?code=[CODE]\n\nLes codes d'accès y apparaîtront la veille de votre arrivée. Arrivée à partir de ${p.checkin_time}, départ avant ${p.checkout_time}.\n\nÀ très bientôt,\n${sig}\n\n—\nHi [PRÉNOM], thank you for booking! Your personal guidebook: ${link}?code=[CODE]`,
+    },
+    {
+      platform: "Airbnb",
+      when: "1 jour avant l'arrivée, 10 h",
+      how: "Même chemin. Variables [CODE] et [PRÉNOM] comme ci-dessus.",
+      text: `Bonjour [PRÉNOM],\n\nTout est prêt pour demain ! Accès, codes et wifi sont maintenant visibles dans votre livret :\n${link}?code=[CODE]\n\nArrivée à partir de ${p.checkin_time}. Une question ? L'assistant du livret répond tout de suite.\n\n${sig}`,
+    },
+    {
+      platform: "Airbnb",
+      when: "1 jour avant le départ, 18 h",
+      how: "Même chemin.",
+      text: `Bonjour [PRÉNOM],\n\nDépart demain avant ${p.checkout_time}. ${g.checkout_instructions ?? ""}\n\nEnvie de rester un peu plus ? Départ tardif possible jusqu'à ${p.late_checkout_until} selon disponibilité (${late}), à demander en un clic dans votre livret :\n${link}?code=[CODE]\n\n${sig}`,
+    },
+    {
+      platform: "Booking.com",
+      when: "Après la réservation, puis 1 jour avant l'arrivée",
+      how: "Extranet → Propriété → Préférences de messagerie → Modèles de messages → Créer, puis « Planificateur de modèles ». Le voyageur ouvre le lien et indique son numéro de réservation ou sa date d'arrivée.",
+      text: `Bonjour,\n\nMerci pour votre réservation ! Votre livret d'accueil (accès, wifi, bons plans et assistant 24 h/24) :\n${link}\n\nIndiquez simplement votre date d'arrivée pour l'ouvrir. Les codes d'accès y apparaissent la veille de votre arrivée. Arrivée à partir de ${p.checkin_time}, départ avant ${p.checkout_time}.\n\n${sig}\n\n—\nThank you for booking! Your guidebook: ${link} (enter your arrival date).`,
+    },
+    {
+      platform: "Abritel / Vrbo",
+      when: "Après la réservation, puis 1 jour avant l'arrivée",
+      how: "Messagerie → Messages programmés (ou Modèles) → Nouveau message.",
+      text: `Bonjour,\n\nMerci pour votre réservation ! Votre livret d'accueil :\n${link}\n\nIndiquez votre date d'arrivée pour l'ouvrir. Arrivée à partir de ${p.checkin_time}, départ avant ${p.checkout_time}.\n\n${sig}`,
+    },
+  ];
+  return (
+    <div className="space-y-4">
+      <Panel title="Lien fixe du livret de ce logement">
+        <p className="mb-3 text-sm text-muted-foreground">
+          Gratuit, sans channel manager : collez ces messages une fois dans les messages programmés
+          de chaque plateforme. Elles les envoient automatiquement à chaque voyageur. Avec Airbnb,
+          le code de confirmation ouvre directement le livret personnel du voyageur.
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <code className="break-all rounded bg-muted px-2 py-1 text-xs">{link}</code>
+          <CopyButton text={link} />
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener"
+            className="inline-flex items-center gap-1 text-xs text-primary underline"
+          >
+            Tester <ExternalLink className="size-3" />
+          </a>
+        </div>
+        {mode === "demo" && (
+          <p className="mt-2 text-xs text-amber-800">
+            En mode démo, le lien ne fonctionne que dans ce navigateur.
+          </p>
+        )}
+      </Panel>
+      {messages.map((m, i) => (
+        <Panel
+          key={i}
+          title={`${m.platform} · ${m.when}`}
+          actions={<CopyButton text={m.text} label="Copier le message" />}
+        >
+          <p className="mb-2 text-xs text-muted-foreground">{m.how}</p>
+          <pre className="whitespace-pre-wrap rounded-md bg-muted p-3 font-sans text-sm">
+            {m.text}
+          </pre>
+        </Panel>
+      ))}
     </div>
   );
 }
