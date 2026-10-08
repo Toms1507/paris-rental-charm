@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Bot, Check, ExternalLink, Plus, Send, X } from "lucide-react";
 import { toast } from "sonner";
-import { origin, usePms, usePropertyName } from "@/components/gestion/PmsProvider";
+import { getPublicApi, origin, usePms, usePropertyName } from "@/components/gestion/PmsProvider";
 import {
   CopyButton,
   Empty,
@@ -22,6 +22,7 @@ import { renderTemplate, VARIABLES, whatsappLink } from "@/lib/pms/templates";
 import {
   REQUEST_TYPES,
   TRIGGERS,
+  type EscalationRow,
   type GuestRequest,
   type Message,
   type MessageTemplate,
@@ -45,7 +46,11 @@ function MessagesPage() {
     { id: "a_envoyer", label: "À envoyer via la plateforme", count: toSend },
     { id: "programmes", label: "Programmés" },
     { id: "historique", label: "Envoyés" },
-    { id: "assistant", label: "Questions à l'assistant" },
+    {
+      id: "assistant",
+      label: "Questions à l'assistant",
+      count: data.pms_escalations.filter((e) => e.status === "en_attente").length,
+    },
     { id: "modeles", label: "Modèles automatiques" },
   ];
   return (
@@ -436,34 +441,131 @@ function MessageList({
 }
 
 function AssistantLog() {
-  const { data } = usePms();
+  const { data, mode, reload } = usePms();
   const propertyName = usePropertyName();
+  const escalations = [...data.pms_escalations].sort(
+    (a, b) =>
+      Number(a.status !== "en_attente") - Number(b.status !== "en_attente") ||
+      b.created_at.localeCompare(a.created_at),
+  );
   const list = data.pms_messages
     .filter((m) => m.channel === "assistant")
     .sort((a, b) => b.created_at.localeCompare(a.created_at));
-  if (!list.length)
+  if (!list.length && !escalations.length)
     return (
       <Empty>
         Les questions posées par les voyageurs à l'assistant de leur livret apparaîtront ici.
       </Empty>
     );
   return (
-    <div className="space-y-2">
-      {list.map((m) => {
-        const r = data.pms_reservations.find((x) => x.id === m.reservation_id);
-        return (
-          <div key={m.id} className="rounded-xl border border-border bg-card p-4 text-sm">
-            <div className="text-xs text-muted-foreground">
-              {r?.guest_name ?? "Voyageur"} · {propertyName(r?.property_id)} ·{" "}
-              {formatDateTime(m.created_at)}
-            </div>
-            <p className="mt-1 font-medium">❓ {m.body}</p>
-            <p className="mt-1 flex gap-1.5 text-muted-foreground">
-              <Bot className="mt-0.5 size-4 shrink-0" /> {m.subject}
-            </p>
+    <div className="space-y-5">
+      {escalations.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold">
+            Questions où l'assistant vous a demandé votre avis
+          </h3>
+          {escalations.map((e) => {
+            const r = data.pms_reservations.find((x) => x.id === e.reservation_id);
+            return (
+              <EscalationCard
+                key={e.id}
+                esc={e}
+                title={`${r?.guest_name ?? "Voyageur"} · ${propertyName(r?.property_id)}`}
+                onAnswer={async (answer, learn) => {
+                  const ok = await getPublicApi(mode).answerEscalation(e.token, answer, learn);
+                  if (ok) toast.success("Réponse envoyée : le voyageur la voit dans son livret.");
+                  await reload();
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
+      {list.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold">Réponses données directement par l'assistant</h3>
+          {list.map((m) => {
+            const r = data.pms_reservations.find((x) => x.id === m.reservation_id);
+            return (
+              <div key={m.id} className="rounded-xl border border-border bg-card p-4 text-sm">
+                <div className="text-xs text-muted-foreground">
+                  {r?.guest_name ?? "Voyageur"} · {propertyName(r?.property_id)} ·{" "}
+                  {formatDateTime(m.created_at)}
+                </div>
+                <p className="mt-1 font-medium">❓ {m.body}</p>
+                <p className="mt-1 flex gap-1.5 text-muted-foreground">
+                  <Bot className="mt-0.5 size-4 shrink-0" /> {m.subject}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EscalationCard({
+  esc,
+  title,
+  onAnswer,
+}: {
+  esc: EscalationRow;
+  title: string;
+  onAnswer: (answer: string, learn: boolean) => Promise<void>;
+}) {
+  const [text, setText] = useState(esc.final_answer ?? esc.proposed_answer ?? "");
+  const [learn, setLearn] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const pending = esc.status === "en_attente";
+  return (
+    <div
+      className={cn(
+        "rounded-xl border bg-card p-4 text-sm",
+        pending ? "border-amber-300" : "border-border",
+      )}
+    >
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="text-xs text-muted-foreground">
+          {title} · {formatDateTime(esc.created_at)}
+        </div>
+        <Pill tone={pending ? "warn" : "ok"}>
+          {pending
+            ? "En attente de votre réponse"
+            : esc.status === "valide"
+              ? "Réponse proposée validée"
+              : "Réponse modifiée"}
+        </Pill>
+      </div>
+      <p className="mt-1 font-medium">❓ {esc.question}</p>
+      {esc.reason && <p className="mt-1 text-xs text-amber-800">{esc.reason}</p>}
+      {pending ? (
+        <div className="mt-2 space-y-2">
+          <TextArea rows={4} value={text} onChange={(e) => setText(e.target.value)} />
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <Toggle
+              checked={learn}
+              onChange={setLearn}
+              label="Ajouter au livret (l'assistant saura répondre seul)"
+            />
+            <button
+              className="btn-primary inline-flex items-center gap-1.5 text-sm"
+              disabled={busy || !text.trim()}
+              onClick={async () => {
+                setBusy(true);
+                await onAnswer(text, learn);
+                setBusy(false);
+              }}
+            >
+              <Send className="size-4" /> Envoyer au voyageur
+            </button>
           </div>
-        );
-      })}
+        </div>
+      ) : (
+        <p className="mt-1 flex gap-1.5 text-muted-foreground">
+          <Check className="mt-0.5 size-4 shrink-0 text-emerald-600" /> {esc.final_answer}
+        </p>
+      )}
     </div>
   );
 }

@@ -38,6 +38,7 @@ import { Route as GestionProprietairesRouteImport } from './routes/gestion.propr
 import { Route as GestionReservationsRouteImport } from './routes/gestion.reservations'
 import { Route as LivretLinkRouteImport } from './routes/livret.$link'
 import { Route as MenageTokenRouteImport } from './routes/menage.$token'
+import { Route as ReponseTokenRouteImport } from './routes/reponse.$token'
 import { Route as SejourTokenRouteImport } from './routes/sejour.$token'
 import { Route as ApiPmsCronRouteImport } from './routes/api.pms.cron'
 import { Route as GestionLogementsIndexRouteImport } from './routes/gestion.logements.index'
@@ -192,6 +193,11 @@ const MenageTokenRoute = MenageTokenRouteImport.update({
   path: '/menage/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReponseTokenRoute = ReponseTokenRouteImport.update({
+  id: '/reponse/$token',
+  path: '/reponse/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SejourTokenRoute = SejourTokenRouteImport.update({
   id: '/sejour/$token',
   path: '/sejour/$token',
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/gestion/reservations': typeof GestionReservationsRoute
   '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
+  '/reponse/$token': typeof ReponseTokenRoute
   '/sejour/$token': typeof SejourTokenRoute
   '/blog/': typeof BlogIndexRoute
   '/gestion/': typeof GestionIndexRoute
@@ -287,6 +294,7 @@ export interface FileRoutesByTo {
   '/gestion/reservations': typeof GestionReservationsRoute
   '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
+  '/reponse/$token': typeof ReponseTokenRoute
   '/sejour/$token': typeof SejourTokenRoute
   '/blog': typeof BlogIndexRoute
   '/gestion': typeof GestionIndexRoute
@@ -325,6 +333,7 @@ export interface FileRoutesById {
   '/gestion/reservations': typeof GestionReservationsRoute
   '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
+  '/reponse/$token': typeof ReponseTokenRoute
   '/sejour/$token': typeof SejourTokenRoute
   '/blog/': typeof BlogIndexRoute
   '/gestion/': typeof GestionIndexRoute
@@ -364,6 +373,7 @@ export interface FileRouteTypes {
     | '/gestion/reservations'
     | '/livret/$link'
     | '/menage/$token'
+    | '/reponse/$token'
     | '/sejour/$token'
     | '/blog/'
     | '/gestion/'
@@ -400,6 +410,7 @@ export interface FileRouteTypes {
     | '/gestion/reservations'
     | '/livret/$link'
     | '/menage/$token'
+    | '/reponse/$token'
     | '/sejour/$token'
     | '/blog'
     | '/gestion'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/gestion/reservations'
     | '/livret/$link'
     | '/menage/$token'
+    | '/reponse/$token'
     | '/sejour/$token'
     | '/blog/'
     | '/gestion/'
@@ -466,6 +478,7 @@ export interface RootRouteChildren {
   ConciergerieParisArrondissementRoute: typeof ConciergerieParisArrondissementRoute
   LivretLinkRoute: typeof LivretLinkRoute
   MenageTokenRoute: typeof MenageTokenRoute
+  ReponseTokenRoute: typeof ReponseTokenRoute
   SejourTokenRoute: typeof SejourTokenRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPmsCronRoute: typeof ApiPmsCronRoute
@@ -678,6 +691,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MenageTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reponse/$token': {
+      id: '/reponse/$token'
+      path: '/reponse/$token'
+      fullPath: '/reponse/$token'
+      preLoaderRoute: typeof ReponseTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sejour/$token': {
       id: '/sejour/$token'
       path: '/sejour/$token'
@@ -775,6 +795,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConciergerieParisArrondissementRoute: ConciergerieParisArrondissementRoute,
   LivretLinkRoute: LivretLinkRoute,
   MenageTokenRoute: MenageTokenRoute,
+  ReponseTokenRoute: ReponseTokenRoute,
   SejourTokenRoute: SejourTokenRoute,
   BlogIndexRoute: BlogIndexRoute,
   ApiPmsCronRoute: ApiPmsCronRoute,

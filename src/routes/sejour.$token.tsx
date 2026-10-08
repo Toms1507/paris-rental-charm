@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import {
   Bot,
   CalendarClock,
@@ -24,7 +24,7 @@ import { localAnswer } from "@/lib/pms/assistant";
 import { euros, todayParis } from "@/lib/pms/dates";
 import { pmsGuestChat, pmsGuestNotify } from "@/lib/pms/functions";
 import { RECO_CATEGORIES, type GuestRequestType, type StayView } from "@/lib/pms/types";
-import type { PublicApi } from "@/lib/pms/store";
+import type { ChatEntry, PublicApi } from "@/lib/pms/store";
 import { SITE } from "@/content/site";
 import { cn } from "@/lib/utils";
 
@@ -74,6 +74,8 @@ const T = {
     tips: "Bons plans du quartier",
     trending: "Tendance",
     assistant: "Assistant 24 h/24",
+    teamAnswer: "Réponse de l'équipe",
+    waitingTeam: "⏳ L'équipe vérifie et vous répond ici très vite.",
     assistantHint:
       "Posez votre question (wifi, transports, restaurants, départ tardif…) : réponse immédiate dans votre langue.",
     placeholder: "Votre question…",
@@ -130,6 +132,8 @@ const T = {
     tips: "Local tips",
     trending: "Trending",
     assistant: "24/7 assistant",
+    teamAnswer: "Reply from our team",
+    waitingTeam: "⏳ Our team is checking and will reply here shortly.",
     assistantHint:
       "Ask anything (wifi, transport, restaurants, late check-out…): instant answer in your language.",
     placeholder: "Your question…",
@@ -355,7 +359,7 @@ function StayPage() {
           </Card>
         )}
 
-        <Chat token={token} view={view} t={t} cloud={api.mode === "cloud"} />
+        <Chat token={token} view={view} t={t} api={api} />
 
         <Card title={t.practical}>
           <div className="space-y-4">
@@ -705,42 +709,92 @@ function Feedback({
   );
 }
 
-type Turn = { role: "user" | "assistant"; content: string };
+type Turn = {
+  role: "user" | "assistant";
+  content: string;
+  kind?: "equipe" | "attente" | undefined;
+};
 
-function Chat({
-  token,
-  view,
-  t,
-  cloud,
-}: {
-  token: string;
-  view: StayView;
-  t: Dict;
-  cloud: boolean;
-}) {
+function toTurns(entries: ChatEntry[], waiting: string): Turn[] {
+  return entries.flatMap((e): Turn[] => [
+    { role: "user", content: e.question },
+    e.status === "en_attente"
+      ? { role: "assistant", content: waiting, kind: "attente" }
+      : {
+          role: "assistant",
+          content: e.answer ?? "",
+          kind: e.status === "equipe" ? "equipe" : undefined,
+        },
+  ]);
+}
+
+function Chat({ token, view, t, api }: { token: string; view: StayView; t: Dict; api: PublicApi }) {
+  const cloud = api.mode === "cloud";
   const [turns, setTurns] = useState<Turn[]>([]);
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => end.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), [turns]);
 
+  // Conversation enregistrée : réponses de l'assistant et réponses validées par l'équipe.
+  const refresh = useCallback(async () => {
+    if (!cloud) return;
+    try {
+      setTurns(toTurns(await api.getChat(token), t.waitingTeam));
+    } catch {
+      /* hors ligne : on garde l'affichage actuel */
+    }
+  }, [api, cloud, token, t.waitingTeam]);
+
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+
+  // Tant qu'une réponse de l'équipe est attendue, on vérifie toutes les 20 secondes.
+  const waiting = turns.some((x) => x.kind === "attente");
+  useEffect(() => {
+    if (!waiting) return;
+    const id = setInterval(() => void refresh(), 20_000);
+    return () => clearInterval(id);
+  }, [waiting, refresh]);
+
   async function ask(e: FormEvent) {
     e.preventDefault();
     const question = q.trim();
     if (!question || busy) return;
-    const history: Turn[] = [...turns, { role: "user", content: question }];
-    setTurns(history);
+    const history: Turn[] = [
+      ...turns.filter((x) => x.kind !== "attente"),
+      { role: "user", content: question },
+    ];
+    setTurns([...turns, { role: "user", content: question }]);
     setQ("");
     setBusy(true);
     let answer: string | null = null;
     if (cloud) {
       try {
-        answer = (await pmsGuestChat({ data: { token, history } })).answer;
+        const res = await pmsGuestChat({
+          data: { token, history: history.map(({ role, content }) => ({ role, content })) },
+        });
+        answer = res.answer;
+        if (answer) {
+          await refresh();
+          // La file d'attente n'a pas été enregistrée (limite atteinte) : on affiche quand même la réponse.
+          setTurns((cur) =>
+            cur.length && cur.at(-1)?.role === "assistant"
+              ? cur
+              : [...cur, { role: "assistant", content: answer! }],
+          );
+          setBusy(false);
+          return;
+        }
       } catch {
         answer = null;
       }
     }
-    setTurns([...history, { role: "assistant", content: answer ?? localAnswer(view, question) }]);
+    setTurns((cur) => [
+      ...cur,
+      { role: "assistant", content: answer ?? localAnswer(view, question) },
+    ]);
     setBusy(false);
   }
 
@@ -755,8 +809,15 @@ function Chat({
               className={cn(
                 "max-w-[85%] whitespace-pre-line rounded-2xl px-3 py-2 text-sm",
                 m.role === "user" ? "ml-auto bg-primary text-primary-foreground" : "bg-sand",
+                m.kind === "attente" && "italic text-muted-foreground",
+                m.kind === "equipe" && "border border-emerald-300 bg-emerald-50",
               )}
             >
+              {m.kind === "equipe" && (
+                <span className="mb-0.5 block text-[11px] font-semibold uppercase tracking-wide text-emerald-800">
+                  {t.teamAnswer}
+                </span>
+              )}
               {m.content}
             </div>
           ))}

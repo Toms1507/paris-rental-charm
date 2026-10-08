@@ -6,6 +6,7 @@ import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { SITE } from "@/content/site";
 import { stayContext } from "./assistant";
 import type { CleanerView, StayView } from "./types";
 import { REQUEST_TYPES } from "./types";
@@ -108,24 +109,59 @@ const chatInput = z.object({
 export const pmsGuestChat = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => chatInput.parse(input))
   .handler(async ({ data }) => {
-    if (!(await backend()).serverConfig().ai) return { answer: null, reason: "ia" as const };
+    const b = await backend();
+    if (!b.serverConfig().ai) return { answer: null, pending: false, reason: "ia" as const };
     if (!rateLimit(`chat:${data.token}`, 40, 3_600_000))
-      return { answer: null, reason: "limite" as const };
+      return { answer: null, pending: false, reason: "limite" as const };
     const db = anonDb();
     const { data: stay, error } = await db.rpc("pms_get_stay", { p_token: data.token });
-    if (error || !stay) return { answer: null, reason: "sejour" as const };
-    const answer = await (
-      await backend()
-    ).guestAssistant(stayContext(stay as StayView), data.history);
-    if (answer) {
-      const question = data.history.filter((h) => h.role === "user").at(-1)?.content ?? "";
+    if (error || !stay) return { answer: null, pending: false, reason: "sejour" as const };
+    const view = stay as StayView;
+    const reply = await b.guestAssistant(stayContext(view), data.history);
+    if (!reply) return { answer: null, pending: false, reason: "ia" as const };
+    const question = data.history.filter((h) => h.role === "user").at(-1)?.content ?? "";
+
+    if (reply.confident) {
       await db.rpc("pms_guest_log_chat", {
         p_token: data.token,
         p_question: question,
-        p_answer: answer,
+        p_answer: reply.answer,
       });
+      return { answer: reply.answer, pending: false, reason: null };
     }
-    return { answer, reason: answer ? null : ("ia" as const) };
+
+    // Doute : la réponse proposée part au gérant sur WhatsApp, qui la valide ou la corrige.
+    const { data: escToken } = await db.rpc("pms_guest_escalate", {
+      p_token: data.token,
+      p_question: question,
+      p_proposed: reply.answer,
+      p_reason: reply.reason,
+    });
+    if (escToken) {
+      const link = `${SITE.url}/reponse/${escToken as string}`;
+      const cut = (t: string, n: number) => (t.length > n ? `${t.slice(0, n)}…` : t);
+      await b.notifyOwnerWhatsApp(
+        [
+          `*❓ Question de ${view.reservation.guest_name ?? "un voyageur"}* (${view.property.name})`,
+          `« ${cut(question, 300)} »`,
+          "",
+          `*Réponse proposée :* ${cut(reply.answer, 400)}`,
+          reply.reason ? `_(${cut(reply.reason, 120)})_` : "",
+          "",
+          `✅ Valider ou ✏️ modifier : ${link}`,
+        ]
+          .filter((l) => l !== "")
+          .join("\n"),
+      );
+    }
+    const fr = view.reservation.language === "fr";
+    return {
+      answer: fr
+        ? "Bonne question ! Je vérifie avec l'équipe et je vous réponds ici très vite (gardez cette page ouverte ou revenez dans quelques minutes)."
+        : "Good question! I'm checking with the team and will reply here shortly (keep this page open or come back in a few minutes).",
+      pending: true,
+      reason: null,
+    };
   });
 
 /** Prévient l'équipe d'une demande voyageur (départ tardif, problème…). */

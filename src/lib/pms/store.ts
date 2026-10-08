@@ -210,7 +210,34 @@ export interface PublicApi {
   uploadCleaningPhoto(taskId: string, file: Blob): Promise<string>;
   /** Retrouve le séjour depuis le lien fixe du logement : code de réservation, ou date d'arrivée. */
   findStay(link: string, code: string | null, arrival: string | null): Promise<FoundStay | null>;
+  /** Conversation du voyageur avec l'assistant et l'équipe. */
+  getChat(token: string): Promise<ChatEntry[]>;
+  getEscalation(token: string): Promise<Escalation | null>;
+  answerEscalation(token: string, answer: string, learn: boolean): Promise<boolean>;
 }
+
+export type ChatEntry = {
+  at: string;
+  question: string;
+  answer: string | null;
+  /** ia : réponse directe de l'assistant ; en_attente : en cours de vérification ; equipe : validée. */
+  status: "ia" | "en_attente" | "equipe";
+};
+
+export type Escalation = {
+  question: string;
+  proposed_answer: string | null;
+  final_answer: string | null;
+  reason: string | null;
+  status: "en_attente" | "valide" | "modifie";
+  created_at: string;
+  answered_at: string | null;
+  guest_name: string | null;
+  check_in: string;
+  check_out: string;
+  property: string;
+  language: string;
+};
 
 export type FoundStay = { property: string; photo_url: string | null; guest_token: string | null };
 
@@ -255,6 +282,25 @@ export function createSupabasePublicApi(client: SupabaseClient<never> | Supabase
       // Le prestataire n'a pas le droit de lire l'espace privé : on garde le chemin, que l'équipe
       // transforme en lien signé à l'affichage (voir resolveStoredFile).
       return `${STORAGE_PREFIX}${path}`;
+    },
+    async getChat(token) {
+      const { data, error } = await db.rpc("pms_guest_chat", { p_token: token });
+      if (error) throw new Error(error.message);
+      return (data as ChatEntry[] | null) ?? [];
+    },
+    async getEscalation(token) {
+      const { data, error } = await db.rpc("pms_get_escalation", { p_token: token });
+      if (error) throw new Error(error.message);
+      return (data as Escalation | null) ?? null;
+    },
+    async answerEscalation(token, answer, learn) {
+      const { data, error } = await db.rpc("pms_answer_escalation", {
+        p_token: token,
+        p_answer: answer,
+        p_learn: learn,
+      });
+      if (error) throw new Error(error.message);
+      return Boolean(data);
     },
     async findStay(link, code, arrival) {
       const { data, error } = await db.rpc("pms_find_stay", {
@@ -460,6 +506,16 @@ export function createLocalPublicApi(store: Store): PublicApi {
     },
     async uploadCleaningPhoto(_taskId, file) {
       return store.upload("", file);
+    },
+    // Mode démo : pas de validation par WhatsApp (l'assistant répond avec le livret).
+    async getChat() {
+      return [];
+    },
+    async getEscalation() {
+      return null;
+    },
+    async answerEscalation() {
+      return false;
     },
     async findStay(link, code, arrival) {
       const p = (await store.list("pms_properties")).find(

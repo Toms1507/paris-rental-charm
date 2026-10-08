@@ -203,7 +203,8 @@ function Layout() {
     "/gestion/incidents": data.pms_incidents.filter((i) => i.status !== "resolu").length,
     "/gestion/messages":
       data.pms_guest_requests.filter((r) => r.status === "en_attente").length +
-      data.pms_messages.filter((m) => m.status === "a_copier" || m.status === "echec").length,
+      data.pms_messages.filter((m) => m.status === "a_copier" || m.status === "echec").length +
+      data.pms_escalations.filter((e) => e.status === "en_attente").length,
   };
 
   const nav = (

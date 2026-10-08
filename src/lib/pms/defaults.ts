@@ -243,6 +243,18 @@ const DEFAULTS: Defaults = {
     active: true,
     created_at: now(),
   }),
+  pms_escalations: () => ({
+    id: uid(),
+    reservation_id: "",
+    question: "",
+    proposed_answer: null,
+    final_answer: null,
+    reason: null,
+    status: "en_attente",
+    token: token(),
+    created_at: now(),
+    answered_at: null,
+  }),
 };
 
 export function withDefaults<T extends TableName>(table: T, row: Partial<Tables[T]>): Tables[T] {

@@ -396,6 +396,20 @@ export type Settings = {
   last_reports_month?: string | null | undefined;
 };
 
+/** Question où l'assistant avait un doute, validée ou corrigée par le gérant. */
+export type EscalationRow = {
+  id: string;
+  reservation_id: string;
+  question: string;
+  proposed_answer: string | null;
+  final_answer: string | null;
+  reason: string | null;
+  status: "en_attente" | "valide" | "modifie";
+  token: string;
+  created_at: string;
+  answered_at: string | null;
+};
+
 export type SettingsRow = { id: string; data: Partial<Settings>; updated_at: string };
 
 export type Tables = {
@@ -413,6 +427,7 @@ export type Tables = {
   pms_owner_reports: OwnerReport;
   pms_reviews: Review;
   pms_recommendations: Recommendation;
+  pms_escalations: EscalationRow;
 };
 
 export type TableName = keyof Tables;
@@ -432,6 +447,7 @@ export const TABLES = [
   "pms_owner_reports",
   "pms_reviews",
   "pms_recommendations",
+  "pms_escalations",
 ] as const satisfies readonly TableName[];
 
 // Données publiques renvoyées au livret voyageur et au portail ménage.
