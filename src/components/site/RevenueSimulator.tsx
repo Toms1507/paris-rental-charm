@@ -140,21 +140,126 @@ function matchCity(input: string): CityData | null {
 type Season = { price: number; occupancy: number };
 type Market = {
   cell: MarketCell;
-  source: "quartier" | "arrondissement" | "ville";
+  source: "quartier" | "arrondissement" | "ville" | "modele";
   trend: number | null;
   seasonality: Record<string, Season>;
   label: string;
+  /** Modèle national : prix au m² utilisé et nuitées de l'agglomération (Eurostat). */
+  model?: { m2: number; idf: boolean; nights?: { nights: number; year: string } | undefined };
 };
+
+// Modèle national : estimation pour toute commune où le prix immobilier (DVF) est connu,
+// calibré sur les zones de référence Inside Airbnb (voir scripts/national_model.py).
+type NationalModel = {
+  price: {
+    a: number;
+    b: number;
+    r2: number;
+    zones: number;
+    crossValidationError: Record<string, number>;
+  };
+  buckets: Record<Bucket, { ratio: number; occupancy: number; occupancyTop: number }>;
+  /** Occupation de Paris, appliquée aux communes d'Île-de-France. */
+  bucketsIdf?: Record<Bucket, { occupancy: number; occupancyTop: number }>;
+  seasonality: Record<string, { year: string; months: Record<string, Season> }>;
+  cityNights: Record<string, { name: string; nights: number; year: string }>;
+};
+const NATIONAL = (MARKET_PARIS as unknown as { nationalModel?: NationalModel }).nationalModel;
+/** [nom, département, prix médian au m², région NUTS 2, code commune] */
+type Commune = [string, string, number, string, string];
+const MODEL_ERROR = NATIONAL
+  ? Object.values(NATIONAL.price.crossValidationError).reduce(
+      (s, e, _, all) => s + e / all.length,
+      0,
+    )
+  : 0;
+
+// Communes de la proche banlieue proposées dans la liste (code commune INSEE).
+const SUBURB_CODES: Record<string, string> = {
+  "boulogne-billancourt": "92012",
+  "neuilly-sur-seine": "92051",
+  "levallois-perret": "92044",
+  "issy-les-moulineaux": "92040",
+  montreuil: "93048",
+  vincennes: "94080",
+  "saint-ouen": "93070",
+  clichy: "92024",
+  "saint-denis": "93066",
+};
+
+/** Liste des communes estimables, chargée seulement quand on en a besoin (fichier séparé). */
+function useCommunes(enabled: boolean) {
+  const [communes, setCommunes] = useState<Commune[] | null>(null);
+  useEffect(() => {
+    if (!enabled || communes || !NATIONAL) return;
+    let cancelled = false;
+    fetch("/data/communes-estimation.json")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: Commune[]) => !cancelled && setCommunes(list))
+      .catch(() => !cancelled && setCommunes([]));
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, communes]);
+  return communes;
+}
+
+const communeLabel = (c: Commune) => `${c[0]} (${c[1]})`;
+
+/** Retrouve la commune saisie : « Marseille 1er Arrondissement (13) » ou simplement « Lille ». */
+function findCommune(list: Commune[] | null, input: string): Commune | null {
+  if (!list) return null;
+  const m = input.match(/^(.*?)\s*\((\w{2,3})\)\s*$/);
+  const name = normalize(m ? m[1]! : input);
+  const dept = m?.[2];
+  if (name.length < 2) return null;
+  return list.find((c) => normalize(c[0]) === name && (!dept || c[1] === dept)) ?? null;
+}
+
+function modelMarket(commune: Commune, bucket: Bucket): Market | null {
+  if (!NATIONAL) return null;
+  const season = NATIONAL.seasonality[commune[3]];
+  if (!season) return null;
+  const base = Math.exp(NATIONAL.price.a + NATIONAL.price.b * Math.log(commune[2]));
+  const occupancyRef = (commune[3] === "FR10" && NATIONAL.bucketsIdf) || NATIONAL.buckets;
+  const ratio = NATIONAL.buckets[bucket].ratio;
+  const top = Math.max(
+    ...BUCKETS.slice(0, BUCKETS.indexOf(bucket) + 1).map((k) => occupancyRef[k].occupancyTop),
+  );
+  const agglo = Object.values(NATIONAL.cityNights).find((c) =>
+    normalize(commune[0]).startsWith(normalize(c.name)),
+  );
+  return {
+    cell: {
+      price: Math.round(base * ratio),
+      occupancy: occupancyRef[bucket].occupancy,
+      occupancyTop: top,
+      sample: 0,
+    },
+    source: "modele",
+    trend: null,
+    seasonality: season.months,
+    label: commune[0],
+    model: {
+      m2: commune[2],
+      idf: commune[3] === "FR10",
+      nights: agglo ? { nights: agglo.nights, year: agglo.year } : undefined,
+    },
+  };
+}
 
 function marketFor(
   location: string,
   sector: Sector,
   outOfZone: CityData | null,
   bucket: Bucket,
+  commune: Commune | null,
 ): Market | null {
   if (location === OUT_OF_ZONE) {
     const found = outOfZone?.buckets[bucket];
-    if (!outOfZone || !found || !outOfZone.seasonality) return null;
+    // Ville de référence (données réelles) en priorité, sinon modèle national.
+    if (!outOfZone || !found || !outOfZone.seasonality)
+      return commune ? modelMarket(commune, bucket) : null;
     const cell = { ...found, occupancyTop: occupancyFloor(outOfZone.buckets, bucket) };
     return {
       cell,
@@ -188,8 +293,8 @@ function marketFor(
       label: `Paris ${n}${n === 1 ? "er" : "e"}${sector ? ` (${sector})` : ""}`,
     };
   }
-  // Proche banlieue : aucune donnée publique, étude personnalisée.
-  return null;
+  // Proche banlieue : modèle national (prix immobilier de la commune).
+  return commune ? modelMarket(commune, bucket) : null;
 }
 
 // Écart de prix lié au nombre de voyageurs, mesuré sur les annonces réelles de la même tranche.
@@ -251,9 +356,22 @@ export function RevenueSimulator({
   const tooLarge = bedrooms > MAX_BEDROOMS || guests > MAX_GUESTS;
   const bucket = String(Math.min(bedrooms, 3)) as Bucket;
   const outOfZone = useMemo(() => matchCity(outOfZoneText), [outOfZoneText]);
+  const needsCommunes = location === OUT_OF_ZONE || Boolean(SUBURB_CODES[location]);
+  const communes = useCommunes(needsCommunes);
+  const commune = useMemo(() => {
+    if (!communes) return null;
+    if (SUBURB_CODES[location])
+      return communes.find((c) => c[4] === SUBURB_CODES[location]) ?? null;
+    return location === OUT_OF_ZONE ? findCommune(communes, outOfZoneText) : null;
+  }, [communes, location, outOfZoneText]);
+  const suggestions = useMemo(() => {
+    const q = normalize(outOfZoneText);
+    if (!communes || q.length < 2) return [];
+    return communes.filter((c) => normalize(c[0]).startsWith(q)).slice(0, 30);
+  }, [communes, outOfZoneText]);
   const market = useMemo(
-    () => marketFor(location, sector, outOfZone, bucket),
-    [location, sector, outOfZone, bucket],
+    () => marketFor(location, sector, outOfZone, bucket, commune),
+    [location, sector, outOfZone, bucket, commune],
   );
   const kind = PROPERTY_TYPES[typeIndex]!.kind;
   const structure = useMemo(() => {
@@ -375,7 +493,7 @@ export function RevenueSimulator({
                     </option>
                   ))}
                 </optgroup>
-                <optgroup label="Proche banlieue (étude personnalisée)">
+                <optgroup label="Proche banlieue">
                   {SUBURBS.map((c) => (
                     <option key={c.slug} value={c.slug}>
                       {c.name}
@@ -410,9 +528,15 @@ export function RevenueSimulator({
                     setOutOfZoneText(e.target.value);
                   }}
                   maxLength={80}
-                  placeholder="Ex. Lyon, Biarritz, Bordeaux…"
+                  list="communes-estimation"
+                  placeholder="Ex. Marseille, Lille, Nice, Biarritz…"
                   className="field-input"
                 />
+                <datalist id="communes-estimation">
+                  {suggestions.map((c) => (
+                    <option key={c[4]} value={communeLabel(c)} />
+                  ))}
+                </datalist>
               </Field>
             )}
           </div>
@@ -420,7 +544,11 @@ export function RevenueSimulator({
             <p className="mt-3 text-sm text-muted-foreground">
               {outOfZone
                 ? `Estimation calculée avec les données réelles du secteur ${outOfZone.label} (${outOfZone.listings.toLocaleString("fr-FR")} logements actifs).`
-                : "Pas encore de données publiques pour ce secteur : nous vous préparons une étude personnalisée."}
+                : commune
+                  ? `Estimation modélisée pour ${commune[0]} à partir des données officielles du marché (prix immobilier, saisonnalité régionale).`
+                  : communes
+                    ? "Choisissez votre commune dans la liste proposée. Si elle n'y figure pas, nous vous préparons une étude personnalisée."
+                    : "Chargement des communes…"}
             </p>
           )}
         </Step>
@@ -686,11 +814,13 @@ export function RevenueSimulator({
             </a>
 
             <p className="mt-5 text-xs leading-relaxed text-white/50">
-              {market!.source === "quartier"
-                ? `Prix médian de ${market!.cell.sample} logements comparables actifs dans cet arrondissement sur Airbnb, ajusté au secteur choisi. `
-                : market!.source === "arrondissement"
-                  ? "Peu d'annonces comparables dans cet arrondissement : prix déduit des médianes parisiennes et du niveau de prix local. "
-                  : `Prix médian de ${market!.cell.sample} logements comparables actifs dans le secteur ${market!.label}, sur ses 12 derniers relevés mensuels. `}
+              {market!.source === "modele"
+                ? `Estimation modélisée : prix déduit du prix immobilier médian de ${market!.label} (${market!.model!.m2.toLocaleString("fr-FR")} €/m², DVF) grâce à un modèle calibré sur ${NATIONAL!.price.zones} zones où les prix réels sont connus (écart moyen constaté : ±${Math.round(MODEL_ERROR * 100)} %), occupation observée ${market!.model!.idf ? "à Paris" : "à Lyon et Bordeaux"} et saisonnalité réelle de la région (Eurostat).${market!.model!.nights ? ` ${(market!.model!.nights.nights / 1e6).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} millions de nuitées réservées via Airbnb, Booking et Expedia dans l'agglomération en ${market!.model!.nights.year} (Eurostat).` : ""} `
+                : market!.source === "quartier"
+                  ? `Prix médian de ${market!.cell.sample} logements comparables actifs dans cet arrondissement sur Airbnb, ajusté au secteur choisi. `
+                  : market!.source === "arrondissement"
+                    ? "Peu d'annonces comparables dans cet arrondissement : prix déduit des médianes parisiennes et du niveau de prix local. "
+                    : `Prix médian de ${market!.cell.sample} logements comparables actifs dans le secteur ${market!.label}, sur ses 12 derniers relevés mensuels. `}
               Données{" "}
               <a href={MARKET_PARIS.sourceUrl} target="_blank" rel="noopener" className="underline">
                 Inside Airbnb

@@ -1693,5 +1693,1627 @@ export const MARKET_PARIS = {
         }
       }
     }
+  },
+  "nationalModel": {
+    "price": {
+      "a": -1.6548,
+      "b": 0.7444,
+      "r2": 0.908,
+      "residualSd": 0.115,
+      "zones": 71,
+      "crossValidationError": {
+        "Paris": 0.117,
+        "bordeaux": 0.075,
+        "lyon": 0.075,
+        "pays-basque": 0.079
+      }
+    },
+    "buckets": {
+      "0": {
+        "ratio": 0.787,
+        "occupancy": 0.321,
+        "occupancyTop": 0.617
+      },
+      "1": {
+        "ratio": 1.0,
+        "occupancy": 0.271,
+        "occupancyTop": 0.534
+      },
+      "2": {
+        "ratio": 1.447,
+        "occupancy": 0.238,
+        "occupancyTop": 0.452
+      },
+      "3": {
+        "ratio": 2.531,
+        "occupancy": 0.181,
+        "occupancyTop": 0.362
+      }
+    },
+    "priceSeasonSlope": 0.511,
+    "seasonality": {
+      "FRD1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.267,
+            "price": 0.625
+          },
+          "2": {
+            "occupancy": 0.394,
+            "price": 0.69
+          },
+          "3": {
+            "occupancy": 0.37,
+            "price": 0.678
+          },
+          "4": {
+            "occupancy": 1.064,
+            "price": 1.033
+          },
+          "5": {
+            "occupancy": 1.246,
+            "price": 1.126
+          },
+          "6": {
+            "occupancy": 1.136,
+            "price": 1.069
+          },
+          "7": {
+            "occupancy": 2.188,
+            "price": 1.607
+          },
+          "8": {
+            "occupancy": 2.639,
+            "price": 1.838
+          },
+          "9": {
+            "occupancy": 0.841,
+            "price": 0.919
+          },
+          "10": {
+            "occupancy": 0.781,
+            "price": 0.888
+          },
+          "11": {
+            "occupancy": 0.411,
+            "price": 0.699
+          },
+          "12": {
+            "occupancy": 0.665,
+            "price": 0.829
+          }
+        }
+      },
+      "FRY1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 1.61,
+            "price": 1.312
+          },
+          "2": {
+            "occupancy": 1.734,
+            "price": 1.375
+          },
+          "3": {
+            "occupancy": 1.486,
+            "price": 1.248
+          },
+          "4": {
+            "occupancy": 1.371,
+            "price": 1.19
+          },
+          "5": {
+            "occupancy": 0.626,
+            "price": 0.809
+          },
+          "6": {
+            "occupancy": 0.514,
+            "price": 0.752
+          },
+          "7": {
+            "occupancy": 1.023,
+            "price": 1.012
+          },
+          "8": {
+            "occupancy": 0.922,
+            "price": 0.96
+          },
+          "9": {
+            "occupancy": 0.266,
+            "price": 0.625
+          },
+          "10": {
+            "occupancy": 0.461,
+            "price": 0.725
+          },
+          "11": {
+            "occupancy": 0.708,
+            "price": 0.851
+          },
+          "12": {
+            "occupancy": 1.279,
+            "price": 1.143
+          }
+        }
+      },
+      "FRB0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.413,
+            "price": 0.7
+          },
+          "2": {
+            "occupancy": 0.504,
+            "price": 0.747
+          },
+          "3": {
+            "occupancy": 0.532,
+            "price": 0.761
+          },
+          "4": {
+            "occupancy": 1.137,
+            "price": 1.07
+          },
+          "5": {
+            "occupancy": 1.296,
+            "price": 1.151
+          },
+          "6": {
+            "occupancy": 1.088,
+            "price": 1.045
+          },
+          "7": {
+            "occupancy": 1.692,
+            "price": 1.354
+          },
+          "8": {
+            "occupancy": 2.022,
+            "price": 1.522
+          },
+          "9": {
+            "occupancy": 0.906,
+            "price": 0.952
+          },
+          "10": {
+            "occupancy": 0.984,
+            "price": 0.992
+          },
+          "11": {
+            "occupancy": 0.59,
+            "price": 0.79
+          },
+          "12": {
+            "occupancy": 0.835,
+            "price": 0.916
+          }
+        }
+      },
+      "FRI3": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.286,
+            "price": 0.635
+          },
+          "2": {
+            "occupancy": 0.379,
+            "price": 0.683
+          },
+          "3": {
+            "occupancy": 0.4,
+            "price": 0.693
+          },
+          "4": {
+            "occupancy": 0.969,
+            "price": 0.984
+          },
+          "5": {
+            "occupancy": 1.083,
+            "price": 1.042
+          },
+          "6": {
+            "occupancy": 0.986,
+            "price": 0.993
+          },
+          "7": {
+            "occupancy": 2.336,
+            "price": 1.683
+          },
+          "8": {
+            "occupancy": 3.125,
+            "price": 2.086
+          },
+          "9": {
+            "occupancy": 0.808,
+            "price": 0.902
+          },
+          "10": {
+            "occupancy": 0.679,
+            "price": 0.836
+          },
+          "11": {
+            "occupancy": 0.385,
+            "price": 0.686
+          },
+          "12": {
+            "occupancy": 0.566,
+            "price": 0.778
+          }
+        }
+      },
+      "FRJ2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.646,
+            "price": 0.819
+          },
+          "2": {
+            "occupancy": 1.095,
+            "price": 1.049
+          },
+          "3": {
+            "occupancy": 0.668,
+            "price": 0.83
+          },
+          "4": {
+            "occupancy": 0.724,
+            "price": 0.859
+          },
+          "5": {
+            "occupancy": 0.837,
+            "price": 0.917
+          },
+          "6": {
+            "occupancy": 0.822,
+            "price": 0.909
+          },
+          "7": {
+            "occupancy": 1.783,
+            "price": 1.4
+          },
+          "8": {
+            "occupancy": 2.504,
+            "price": 1.769
+          },
+          "9": {
+            "occupancy": 0.731,
+            "price": 0.863
+          },
+          "10": {
+            "occupancy": 0.732,
+            "price": 0.863
+          },
+          "11": {
+            "occupancy": 0.458,
+            "price": 0.723
+          },
+          "12": {
+            "occupancy": 1.0,
+            "price": 1.0
+          }
+        }
+      },
+      "FR10": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.719,
+            "price": 0.856
+          },
+          "2": {
+            "occupancy": 0.682,
+            "price": 0.838
+          },
+          "3": {
+            "occupancy": 0.829,
+            "price": 0.913
+          },
+          "4": {
+            "occupancy": 1.187,
+            "price": 1.096
+          },
+          "5": {
+            "occupancy": 1.123,
+            "price": 1.063
+          },
+          "6": {
+            "occupancy": 1.277,
+            "price": 1.142
+          },
+          "7": {
+            "occupancy": 1.234,
+            "price": 1.12
+          },
+          "8": {
+            "occupancy": 1.086,
+            "price": 1.044
+          },
+          "9": {
+            "occupancy": 1.003,
+            "price": 1.002
+          },
+          "10": {
+            "occupancy": 1.118,
+            "price": 1.06
+          },
+          "11": {
+            "occupancy": 0.777,
+            "price": 0.886
+          },
+          "12": {
+            "occupancy": 0.964,
+            "price": 0.982
+          }
+        }
+      },
+      "FRJ1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.342,
+            "price": 0.664
+          },
+          "2": {
+            "occupancy": 0.453,
+            "price": 0.72
+          },
+          "3": {
+            "occupancy": 0.374,
+            "price": 0.68
+          },
+          "4": {
+            "occupancy": 0.763,
+            "price": 0.879
+          },
+          "5": {
+            "occupancy": 0.878,
+            "price": 0.938
+          },
+          "6": {
+            "occupancy": 0.984,
+            "price": 0.992
+          },
+          "7": {
+            "occupancy": 2.404,
+            "price": 1.717
+          },
+          "8": {
+            "occupancy": 3.322,
+            "price": 2.187
+          },
+          "9": {
+            "occupancy": 0.82,
+            "price": 0.908
+          },
+          "10": {
+            "occupancy": 0.647,
+            "price": 0.82
+          },
+          "11": {
+            "occupancy": 0.343,
+            "price": 0.664
+          },
+          "12": {
+            "occupancy": 0.672,
+            "price": 0.832
+          }
+        }
+      },
+      "FRG0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.347,
+            "price": 0.666
+          },
+          "2": {
+            "occupancy": 0.41,
+            "price": 0.699
+          },
+          "3": {
+            "occupancy": 0.429,
+            "price": 0.708
+          },
+          "4": {
+            "occupancy": 0.933,
+            "price": 0.966
+          },
+          "5": {
+            "occupancy": 1.157,
+            "price": 1.08
+          },
+          "6": {
+            "occupancy": 1.127,
+            "price": 1.065
+          },
+          "7": {
+            "occupancy": 2.101,
+            "price": 1.563
+          },
+          "8": {
+            "occupancy": 2.766,
+            "price": 1.902
+          },
+          "9": {
+            "occupancy": 0.831,
+            "price": 0.914
+          },
+          "10": {
+            "occupancy": 0.791,
+            "price": 0.893
+          },
+          "11": {
+            "occupancy": 0.466,
+            "price": 0.727
+          },
+          "12": {
+            "occupancy": 0.642,
+            "price": 0.817
+          }
+        }
+      },
+      "FRC2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.551,
+            "price": 0.771
+          },
+          "2": {
+            "occupancy": 0.927,
+            "price": 0.963
+          },
+          "3": {
+            "occupancy": 0.556,
+            "price": 0.773
+          },
+          "4": {
+            "occupancy": 0.861,
+            "price": 0.929
+          },
+          "5": {
+            "occupancy": 1.056,
+            "price": 1.029
+          },
+          "6": {
+            "occupancy": 0.991,
+            "price": 0.995
+          },
+          "7": {
+            "occupancy": 1.759,
+            "price": 1.388
+          },
+          "8": {
+            "occupancy": 2.068,
+            "price": 1.546
+          },
+          "9": {
+            "occupancy": 0.784,
+            "price": 0.89
+          },
+          "10": {
+            "occupancy": 0.835,
+            "price": 0.916
+          },
+          "11": {
+            "occupancy": 0.538,
+            "price": 0.764
+          },
+          "12": {
+            "occupancy": 1.073,
+            "price": 1.037
+          }
+        }
+      },
+      "FRD2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.416,
+            "price": 0.702
+          },
+          "2": {
+            "occupancy": 0.509,
+            "price": 0.749
+          },
+          "3": {
+            "occupancy": 0.516,
+            "price": 0.753
+          },
+          "4": {
+            "occupancy": 1.069,
+            "price": 1.035
+          },
+          "5": {
+            "occupancy": 1.203,
+            "price": 1.104
+          },
+          "6": {
+            "occupancy": 1.064,
+            "price": 1.033
+          },
+          "7": {
+            "occupancy": 1.868,
+            "price": 1.444
+          },
+          "8": {
+            "occupancy": 2.227,
+            "price": 1.627
+          },
+          "9": {
+            "occupancy": 0.869,
+            "price": 0.933
+          },
+          "10": {
+            "occupancy": 0.89,
+            "price": 0.944
+          },
+          "11": {
+            "occupancy": 0.572,
+            "price": 0.781
+          },
+          "12": {
+            "occupancy": 0.797,
+            "price": 0.896
+          }
+        }
+      },
+      "FRF3": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.649,
+            "price": 0.821
+          },
+          "2": {
+            "occupancy": 0.962,
+            "price": 0.981
+          },
+          "3": {
+            "occupancy": 0.552,
+            "price": 0.771
+          },
+          "4": {
+            "occupancy": 0.966,
+            "price": 0.983
+          },
+          "5": {
+            "occupancy": 1.041,
+            "price": 1.021
+          },
+          "6": {
+            "occupancy": 0.991,
+            "price": 0.995
+          },
+          "7": {
+            "occupancy": 1.442,
+            "price": 1.226
+          },
+          "8": {
+            "occupancy": 1.749,
+            "price": 1.383
+          },
+          "9": {
+            "occupancy": 0.796,
+            "price": 0.896
+          },
+          "10": {
+            "occupancy": 0.91,
+            "price": 0.954
+          },
+          "11": {
+            "occupancy": 0.581,
+            "price": 0.786
+          },
+          "12": {
+            "occupancy": 1.361,
+            "price": 1.184
+          }
+        }
+      },
+      "FRE2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.444,
+            "price": 0.716
+          },
+          "2": {
+            "occupancy": 0.532,
+            "price": 0.761
+          },
+          "3": {
+            "occupancy": 0.536,
+            "price": 0.763
+          },
+          "4": {
+            "occupancy": 1.188,
+            "price": 1.096
+          },
+          "5": {
+            "occupancy": 1.249,
+            "price": 1.127
+          },
+          "6": {
+            "occupancy": 1.11,
+            "price": 1.056
+          },
+          "7": {
+            "occupancy": 1.645,
+            "price": 1.33
+          },
+          "8": {
+            "occupancy": 1.934,
+            "price": 1.477
+          },
+          "9": {
+            "occupancy": 0.914,
+            "price": 0.956
+          },
+          "10": {
+            "occupancy": 0.944,
+            "price": 0.971
+          },
+          "11": {
+            "occupancy": 0.596,
+            "price": 0.794
+          },
+          "12": {
+            "occupancy": 0.906,
+            "price": 0.952
+          }
+        }
+      },
+      "FRE1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.48,
+            "price": 0.734
+          },
+          "2": {
+            "occupancy": 0.61,
+            "price": 0.801
+          },
+          "3": {
+            "occupancy": 0.625,
+            "price": 0.808
+          },
+          "4": {
+            "occupancy": 1.131,
+            "price": 1.067
+          },
+          "5": {
+            "occupancy": 1.171,
+            "price": 1.087
+          },
+          "6": {
+            "occupancy": 1.014,
+            "price": 1.007
+          },
+          "7": {
+            "occupancy": 1.679,
+            "price": 1.347
+          },
+          "8": {
+            "occupancy": 1.884,
+            "price": 1.452
+          },
+          "9": {
+            "occupancy": 0.894,
+            "price": 0.946
+          },
+          "10": {
+            "occupancy": 0.949,
+            "price": 0.974
+          },
+          "11": {
+            "occupancy": 0.646,
+            "price": 0.819
+          },
+          "12": {
+            "occupancy": 0.916,
+            "price": 0.957
+          }
+        }
+      },
+      "FRF2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.47,
+            "price": 0.729
+          },
+          "2": {
+            "occupancy": 0.531,
+            "price": 0.76
+          },
+          "3": {
+            "occupancy": 0.571,
+            "price": 0.781
+          },
+          "4": {
+            "occupancy": 1.035,
+            "price": 1.018
+          },
+          "5": {
+            "occupancy": 1.247,
+            "price": 1.126
+          },
+          "6": {
+            "occupancy": 1.132,
+            "price": 1.067
+          },
+          "7": {
+            "occupancy": 1.552,
+            "price": 1.282
+          },
+          "8": {
+            "occupancy": 1.692,
+            "price": 1.354
+          },
+          "9": {
+            "occupancy": 1.012,
+            "price": 1.006
+          },
+          "10": {
+            "occupancy": 1.071,
+            "price": 1.036
+          },
+          "11": {
+            "occupancy": 0.698,
+            "price": 0.846
+          },
+          "12": {
+            "occupancy": 0.989,
+            "price": 0.994
+          }
+        }
+      },
+      "FRY2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 1.515,
+            "price": 1.263
+          },
+          "2": {
+            "occupancy": 1.703,
+            "price": 1.359
+          },
+          "3": {
+            "occupancy": 1.396,
+            "price": 1.202
+          },
+          "4": {
+            "occupancy": 1.325,
+            "price": 1.166
+          },
+          "5": {
+            "occupancy": 0.603,
+            "price": 0.797
+          },
+          "6": {
+            "occupancy": 0.442,
+            "price": 0.715
+          },
+          "7": {
+            "occupancy": 1.1,
+            "price": 1.051
+          },
+          "8": {
+            "occupancy": 1.061,
+            "price": 1.031
+          },
+          "9": {
+            "occupancy": 0.282,
+            "price": 0.633
+          },
+          "10": {
+            "occupancy": 0.559,
+            "price": 0.775
+          },
+          "11": {
+            "occupancy": 0.704,
+            "price": 0.849
+          },
+          "12": {
+            "occupancy": 1.31,
+            "price": 1.158
+          }
+        }
+      },
+      "FRY4": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.913,
+            "price": 0.956
+          },
+          "2": {
+            "occupancy": 0.758,
+            "price": 0.876
+          },
+          "3": {
+            "occupancy": 0.738,
+            "price": 0.866
+          },
+          "4": {
+            "occupancy": 0.882,
+            "price": 0.94
+          },
+          "5": {
+            "occupancy": 0.87,
+            "price": 0.934
+          },
+          "6": {
+            "occupancy": 0.609,
+            "price": 0.8
+          },
+          "7": {
+            "occupancy": 1.245,
+            "price": 1.125
+          },
+          "8": {
+            "occupancy": 1.149,
+            "price": 1.076
+          },
+          "9": {
+            "occupancy": 0.957,
+            "price": 0.978
+          },
+          "10": {
+            "occupancy": 1.424,
+            "price": 1.217
+          },
+          "11": {
+            "occupancy": 1.304,
+            "price": 1.155
+          },
+          "12": {
+            "occupancy": 1.15,
+            "price": 1.077
+          }
+        }
+      },
+      "FRI2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.394,
+            "price": 0.69
+          },
+          "2": {
+            "occupancy": 0.492,
+            "price": 0.74
+          },
+          "3": {
+            "occupancy": 0.519,
+            "price": 0.754
+          },
+          "4": {
+            "occupancy": 0.861,
+            "price": 0.929
+          },
+          "5": {
+            "occupancy": 1.084,
+            "price": 1.043
+          },
+          "6": {
+            "occupancy": 0.988,
+            "price": 0.994
+          },
+          "7": {
+            "occupancy": 1.969,
+            "price": 1.495
+          },
+          "8": {
+            "occupancy": 2.676,
+            "price": 1.856
+          },
+          "9": {
+            "occupancy": 0.85,
+            "price": 0.923
+          },
+          "10": {
+            "occupancy": 0.831,
+            "price": 0.914
+          },
+          "11": {
+            "occupancy": 0.547,
+            "price": 0.769
+          },
+          "12": {
+            "occupancy": 0.789,
+            "price": 0.892
+          }
+        }
+      },
+      "FRK1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.547,
+            "price": 0.769
+          },
+          "2": {
+            "occupancy": 1.09,
+            "price": 1.046
+          },
+          "3": {
+            "occupancy": 0.52,
+            "price": 0.755
+          },
+          "4": {
+            "occupancy": 0.848,
+            "price": 0.922
+          },
+          "5": {
+            "occupancy": 1.046,
+            "price": 1.024
+          },
+          "6": {
+            "occupancy": 0.839,
+            "price": 0.918
+          },
+          "7": {
+            "occupancy": 1.758,
+            "price": 1.387
+          },
+          "8": {
+            "occupancy": 2.45,
+            "price": 1.741
+          },
+          "9": {
+            "occupancy": 0.711,
+            "price": 0.852
+          },
+          "10": {
+            "occupancy": 0.768,
+            "price": 0.881
+          },
+          "11": {
+            "occupancy": 0.452,
+            "price": 0.72
+          },
+          "12": {
+            "occupancy": 0.972,
+            "price": 0.986
+          }
+        }
+      },
+      "FRM0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.041,
+            "price": 0.51
+          },
+          "2": {
+            "occupancy": 0.056,
+            "price": 0.518
+          },
+          "3": {
+            "occupancy": 0.069,
+            "price": 0.524
+          },
+          "4": {
+            "occupancy": 0.625,
+            "price": 0.808
+          },
+          "5": {
+            "occupancy": 0.84,
+            "price": 0.918
+          },
+          "6": {
+            "occupancy": 1.574,
+            "price": 1.293
+          },
+          "7": {
+            "occupancy": 2.952,
+            "price": 1.997
+          },
+          "8": {
+            "occupancy": 3.48,
+            "price": 2.267
+          },
+          "9": {
+            "occupancy": 1.489,
+            "price": 1.25
+          },
+          "10": {
+            "occupancy": 0.715,
+            "price": 0.854
+          },
+          "11": {
+            "occupancy": 0.068,
+            "price": 0.524
+          },
+          "12": {
+            "occupancy": 0.091,
+            "price": 0.536
+          }
+        }
+      },
+      "FRH0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.279,
+            "price": 0.632
+          },
+          "2": {
+            "occupancy": 0.367,
+            "price": 0.677
+          },
+          "3": {
+            "occupancy": 0.37,
+            "price": 0.678
+          },
+          "4": {
+            "occupancy": 0.95,
+            "price": 0.974
+          },
+          "5": {
+            "occupancy": 1.087,
+            "price": 1.044
+          },
+          "6": {
+            "occupancy": 1.06,
+            "price": 1.031
+          },
+          "7": {
+            "occupancy": 2.28,
+            "price": 1.654
+          },
+          "8": {
+            "occupancy": 3.018,
+            "price": 2.031
+          },
+          "9": {
+            "occupancy": 0.908,
+            "price": 0.953
+          },
+          "10": {
+            "occupancy": 0.712,
+            "price": 0.853
+          },
+          "11": {
+            "occupancy": 0.36,
+            "price": 0.673
+          },
+          "12": {
+            "occupancy": 0.61,
+            "price": 0.801
+          }
+        }
+      },
+      "FRL0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.359,
+            "price": 0.672
+          },
+          "2": {
+            "occupancy": 0.549,
+            "price": 0.77
+          },
+          "3": {
+            "occupancy": 0.451,
+            "price": 0.719
+          },
+          "4": {
+            "occupancy": 0.806,
+            "price": 0.901
+          },
+          "5": {
+            "occupancy": 0.998,
+            "price": 0.999
+          },
+          "6": {
+            "occupancy": 1.275,
+            "price": 1.141
+          },
+          "7": {
+            "occupancy": 2.296,
+            "price": 1.662
+          },
+          "8": {
+            "occupancy": 2.718,
+            "price": 1.878
+          },
+          "9": {
+            "occupancy": 1.027,
+            "price": 1.014
+          },
+          "10": {
+            "occupancy": 0.692,
+            "price": 0.843
+          },
+          "11": {
+            "occupancy": 0.293,
+            "price": 0.639
+          },
+          "12": {
+            "occupancy": 0.537,
+            "price": 0.763
+          }
+        }
+      },
+      "FRI1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.27,
+            "price": 0.627
+          },
+          "2": {
+            "occupancy": 0.339,
+            "price": 0.662
+          },
+          "3": {
+            "occupancy": 0.351,
+            "price": 0.668
+          },
+          "4": {
+            "occupancy": 0.786,
+            "price": 0.891
+          },
+          "5": {
+            "occupancy": 0.95,
+            "price": 0.974
+          },
+          "6": {
+            "occupancy": 1.008,
+            "price": 1.004
+          },
+          "7": {
+            "occupancy": 2.502,
+            "price": 1.768
+          },
+          "8": {
+            "occupancy": 3.401,
+            "price": 2.227
+          },
+          "9": {
+            "occupancy": 0.877,
+            "price": 0.937
+          },
+          "10": {
+            "occupancy": 0.633,
+            "price": 0.812
+          },
+          "11": {
+            "occupancy": 0.338,
+            "price": 0.662
+          },
+          "12": {
+            "occupancy": 0.546,
+            "price": 0.768
+          }
+        }
+      },
+      "FRY3": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.73,
+            "price": 0.862
+          },
+          "2": {
+            "occupancy": 0.957,
+            "price": 0.978
+          },
+          "3": {
+            "occupancy": 0.987,
+            "price": 0.993
+          },
+          "4": {
+            "occupancy": 0.891,
+            "price": 0.944
+          },
+          "5": {
+            "occupancy": 0.789,
+            "price": 0.892
+          },
+          "6": {
+            "occupancy": 0.749,
+            "price": 0.872
+          },
+          "7": {
+            "occupancy": 1.197,
+            "price": 1.101
+          },
+          "8": {
+            "occupancy": 1.489,
+            "price": 1.25
+          },
+          "9": {
+            "occupancy": 0.924,
+            "price": 0.961
+          },
+          "10": {
+            "occupancy": 1.254,
+            "price": 1.13
+          },
+          "11": {
+            "occupancy": 1.018,
+            "price": 1.009
+          },
+          "12": {
+            "occupancy": 1.014,
+            "price": 1.007
+          }
+        }
+      },
+      "FRK2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 1.138,
+            "price": 1.071
+          },
+          "2": {
+            "occupancy": 1.679,
+            "price": 1.347
+          },
+          "3": {
+            "occupancy": 1.097,
+            "price": 1.05
+          },
+          "4": {
+            "occupancy": 0.72,
+            "price": 0.857
+          },
+          "5": {
+            "occupancy": 0.643,
+            "price": 0.818
+          },
+          "6": {
+            "occupancy": 0.761,
+            "price": 0.878
+          },
+          "7": {
+            "occupancy": 1.422,
+            "price": 1.216
+          },
+          "8": {
+            "occupancy": 1.761,
+            "price": 1.389
+          },
+          "9": {
+            "occupancy": 0.603,
+            "price": 0.797
+          },
+          "10": {
+            "occupancy": 0.534,
+            "price": 0.762
+          },
+          "11": {
+            "occupancy": 0.395,
+            "price": 0.691
+          },
+          "12": {
+            "occupancy": 1.247,
+            "price": 1.126
+          }
+        }
+      },
+      "FRY5": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.62,
+            "price": 0.806
+          },
+          "2": {
+            "occupancy": 0.7,
+            "price": 0.847
+          },
+          "3": {
+            "occupancy": 0.669,
+            "price": 0.831
+          },
+          "4": {
+            "occupancy": 0.927,
+            "price": 0.963
+          },
+          "5": {
+            "occupancy": 1.065,
+            "price": 1.033
+          },
+          "6": {
+            "occupancy": 0.919,
+            "price": 0.959
+          },
+          "7": {
+            "occupancy": 1.044,
+            "price": 1.022
+          },
+          "8": {
+            "occupancy": 1.214,
+            "price": 1.109
+          },
+          "9": {
+            "occupancy": 1.046,
+            "price": 1.024
+          },
+          "10": {
+            "occupancy": 1.255,
+            "price": 1.13
+          },
+          "11": {
+            "occupancy": 1.353,
+            "price": 1.18
+          },
+          "12": {
+            "occupancy": 1.187,
+            "price": 1.096
+          }
+        }
+      },
+      "FRC1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.464,
+            "price": 0.726
+          },
+          "2": {
+            "occupancy": 0.522,
+            "price": 0.756
+          },
+          "3": {
+            "occupancy": 0.537,
+            "price": 0.763
+          },
+          "4": {
+            "occupancy": 0.982,
+            "price": 0.991
+          },
+          "5": {
+            "occupancy": 1.245,
+            "price": 1.125
+          },
+          "6": {
+            "occupancy": 1.108,
+            "price": 1.055
+          },
+          "7": {
+            "occupancy": 1.727,
+            "price": 1.371
+          },
+          "8": {
+            "occupancy": 1.956,
+            "price": 1.489
+          },
+          "9": {
+            "occupancy": 0.993,
+            "price": 0.996
+          },
+          "10": {
+            "occupancy": 0.954,
+            "price": 0.976
+          },
+          "11": {
+            "occupancy": 0.656,
+            "price": 0.824
+          },
+          "12": {
+            "occupancy": 0.856,
+            "price": 0.926
+          }
+        }
+      },
+      "FRF1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.421,
+            "price": 0.704
+          },
+          "2": {
+            "occupancy": 0.449,
+            "price": 0.718
+          },
+          "3": {
+            "occupancy": 0.472,
+            "price": 0.73
+          },
+          "4": {
+            "occupancy": 1.004,
+            "price": 1.002
+          },
+          "5": {
+            "occupancy": 1.029,
+            "price": 1.015
+          },
+          "6": {
+            "occupancy": 0.995,
+            "price": 0.997
+          },
+          "7": {
+            "occupancy": 1.357,
+            "price": 1.182
+          },
+          "8": {
+            "occupancy": 1.542,
+            "price": 1.277
+          },
+          "9": {
+            "occupancy": 0.859,
+            "price": 0.928
+          },
+          "10": {
+            "occupancy": 1.022,
+            "price": 1.011
+          },
+          "11": {
+            "occupancy": 0.782,
+            "price": 0.889
+          },
+          "12": {
+            "occupancy": 2.068,
+            "price": 1.546
+          }
+        }
+      }
+    },
+    "cityNights": {
+      "paris": {
+        "name": "Paris",
+        "nights": 26299564,
+        "year": "2025"
+      },
+      "lyon": {
+        "name": "Lyon",
+        "nights": 2475930,
+        "year": "2025"
+      },
+      "lille": {
+        "name": "Lille",
+        "nights": 1373994,
+        "year": "2025"
+      },
+      "marseille": {
+        "name": "Marseille",
+        "nights": 3026253,
+        "year": "2025"
+      },
+      "bordeaux": {
+        "name": "Bordeaux",
+        "nights": 1659485,
+        "year": "2025"
+      },
+      "toulouse": {
+        "name": "Toulouse",
+        "nights": 1588676,
+        "year": "2025"
+      },
+      "nantes": {
+        "name": "Nantes",
+        "nights": 703098,
+        "year": "2025"
+      },
+      "nice": {
+        "name": "Nice",
+        "nights": 8697965,
+        "year": "2025"
+      },
+      "strasbourg": {
+        "name": "Strasbourg",
+        "nights": 1362649,
+        "year": "2025"
+      },
+      "rouen": {
+        "name": "Rouen",
+        "nights": 665611,
+        "year": "2025"
+      },
+      "montpellier": {
+        "name": "Montpellier",
+        "nights": 1107916,
+        "year": "2025"
+      },
+      "grenoble": {
+        "name": "Grenoble",
+        "nights": 553581,
+        "year": "2025"
+      },
+      "tours": {
+        "name": "Tours",
+        "nights": 533447,
+        "year": "2025"
+      },
+      "toulon": {
+        "name": "Toulon",
+        "nights": 1363444,
+        "year": "2025"
+      },
+      "rennes": {
+        "name": "Rennes",
+        "nights": 436548,
+        "year": "2025"
+      },
+      "reims": {
+        "name": "Reims",
+        "nights": 748972,
+        "year": "2025"
+      },
+      "orleans": {
+        "name": "Orléans",
+        "nights": 425236,
+        "year": "2025"
+      },
+      "nancy": {
+        "name": "Nancy",
+        "nights": 414619,
+        "year": "2025"
+      },
+      "dijon": {
+        "name": "Dijon",
+        "nights": 665837,
+        "year": "2025"
+      },
+      "aix en provence": {
+        "name": "Aix-en-Provence",
+        "nights": 698324,
+        "year": "2025"
+      },
+      "annecy": {
+        "name": "Annecy",
+        "nights": 1197553,
+        "year": "2025"
+      },
+      "bayonne": {
+        "name": "Bayonne",
+        "nights": 793464,
+        "year": "2025"
+      },
+      "avignon": {
+        "name": "Avignon",
+        "nights": 675687,
+        "year": "2025"
+      },
+      "frejus": {
+        "name": "Fréjus",
+        "nights": 1128922,
+        "year": "2025"
+      },
+      "la rochelle": {
+        "name": "La Rochelle",
+        "nights": 822599,
+        "year": "2025"
+      },
+      "colmar": {
+        "name": "Colmar",
+        "nights": 762029,
+        "year": "2025"
+      }
+    },
+    "communes": 3280,
+    "bucketsIdf": {
+      "0": {
+        "occupancy": 0.485,
+        "occupancyTop": 0.699
+      },
+      "1": {
+        "occupancy": 0.342,
+        "occupancyTop": 0.627
+      },
+      "2": {
+        "occupancy": 0.37,
+        "occupancyTop": 0.699
+      },
+      "3": {
+        "occupancy": 0.342,
+        "occupancyTop": 0.699
+      }
+    }
   }
 } as const;

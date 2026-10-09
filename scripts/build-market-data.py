@@ -55,6 +55,28 @@ OTHER_CITIES = [
 ]
 
 
+# Quartier Inside Airbnb -> code commune DVF, pour calibrer le modèle national.
+def _lyon(area, by_name):
+    m = re.match(r"(\d+)", area)
+    return str(69380 + int(m.group(1))) if m else None
+
+
+def _by_name(dept, fallback=None):
+    def code(area, by_name):
+        import national_model
+        found = by_name.get((national_model.norm(area), dept))
+        return found[0] if found else fallback
+    return code
+
+
+AREA_CODES = {
+    "lyon": _lyon,
+    "bordeaux": _by_name("33", fallback="33063"),  # quartiers de Bordeaux -> commune de Bordeaux
+    "pays-basque": _by_name("64"),
+}
+COMMUNES_OUTPUT = "public/data/communes-estimation.json"
+
+
 # --- Découverte des relevés -------------------------------------------------------------------
 
 def exists(date, url=BASE):
@@ -390,6 +412,7 @@ def main():
     # 6) Autres villes françaises publiées par Inside Airbnb, pour les biens hors zone : même
     #    méthode que Paris (12 derniers relevés, saisonnalité propre à chaque ville).
     cities = {}
+    calib = {}  # annonces des villes de référence, pour le modèle national
     for slug, label, path in OTHER_CITIES:
         url = "https://data.insideairbnb.com/france/" + urllib.parse.quote(path) + "/{date}/data/listings.csv.gz"
         found = find_snapshots(url=url)
@@ -432,6 +455,7 @@ def main():
                  for d, rows in city_all.items() if rows}
         c_price, c_occ = fill(c_price), fill(c_occ)
         mp, mo = statistics.mean(c_price.values()), statistics.mean(c_occ.values())
+        calib[slug] = {"rows": city_pool, "now": rows_now, "area_code": AREA_CODES[slug]}
         cities[slug] = {
             "label": label,
             "snapshot": city_latest,
@@ -442,6 +466,17 @@ def main():
             "seasonality": {m: {"price": round(c_price[m] / mp, 3), "occupancy": round(c_occ[m] / mo, 3)}
                             for m in range(1, 13)},
         }
+
+    # 7) Modèle national (communes sans données Inside Airbnb) : prix DVF + Eurostat.
+    import national_model
+    paris_arr = {
+        arr: (a["buckets"][1]["price"], a["buckets"][1]["sample"])
+        for arr, a in arrondissements.items() if not a["buckets"][1].get("estimated")
+    }
+    national, communes = national_model.build(paris_arr, calib, seasonality, cities, paris)
+    with open(COMMUNES_OUTPUT, "w", encoding="utf-8") as fh:
+        json.dump(communes, fh, ensure_ascii=False, separators=(",", ":"))
+    print(f"  {COMMUNES_OUTPUT} : {len(communes)} communes estimables", file=sys.stderr)
 
     out = {
         "source": "Inside Airbnb",
@@ -461,6 +496,7 @@ def main():
         "seasonality": seasonality,
         "arrondissements": arrondissements,
         "cities": cities,
+        "nationalModel": national,
     }
     validate(out)
     with open(OUTPUT, "w", encoding="utf-8") as fh:
