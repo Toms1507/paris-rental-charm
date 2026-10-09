@@ -28,6 +28,9 @@ from collections import defaultdict
 
 DVF_URL = "https://data-pipeline-open.s3.sbg.io.cloud.ovh.net/dvf/stats_whole_period.csv"
 EUROSTAT = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/"
+# Noms officiels accentués (le fichier DVF les donne sans accents).
+GEO_COMMUNES = ("https://geo.api.gouv.fr/communes?fields=code,nom&format=json"
+                "&type=commune-actuelle,arrondissement-municipal")
 MIN_SALES = 30  # communes avec au moins 30 ventes d'appartements : prix au m² fiable
 
 # Département -> région NUTS 2 (découpage utilisé par Eurostat).
@@ -86,6 +89,15 @@ def load_dvf():
         }
     print(f"  DVF : {len(communes)} communes avec au moins {MIN_SALES} ventes", file=sys.stderr)
     return communes
+
+
+def official_names():
+    """Code commune → nom officiel ; vide si le service est indisponible (on garde alors DVF)."""
+    try:
+        return {c["code"]: c["nom"] for c in json.loads(fetch(GEO_COMMUNES))}
+    except Exception as e:  # noqa: BLE001
+        print(f"  geo.api.gouv.fr indisponible ({e}) : noms DVF conservés", file=sys.stderr)
+        return {}
 
 
 def eurostat(dataset, query):
@@ -252,10 +264,11 @@ def build(paris_arr, calib, paris_season, cities, paris):
 
     # 5) Communes estimables : prix au m² connu et région avec saisonnalité
     communes = []
+    names = official_names()
     for code, c in dvf.items():
         region = NUTS2.get(c["dept"])
         if region in seasonality:
-            communes.append([c["name"], c["dept"], round(c["m2"]), region, code])
+            communes.append([names.get(code, c["name"]), c["dept"], round(c["m2"]), region, code])
     communes.sort(key=lambda x: (norm(x[0]), x[1]))
 
     model = {
