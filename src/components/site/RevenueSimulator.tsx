@@ -71,6 +71,11 @@ const AMENITY_EFFECTS = EFFECTS.amenities ?? {};
 // Taux d'occupation maximal retenu, même en haute saison : un logement n'est jamais plein à 100 %.
 const MAX_OCCUPANCY = 0.92;
 
+// Objectif de gestion : 10 % au-dessus du taux des 25 % d'annonces les mieux gérées du secteur,
+// plafonné à 85 % en moyenne sur l'année (un logement n'est jamais loué tous les soirs).
+const MANAGEMENT_UPLIFT = 1.1;
+const MAX_ANNUAL_OCCUPANCY = 0.85;
+
 const PLATFORM_FEE = 0.15;
 const COMMISSION = 0.2;
 
@@ -272,11 +277,14 @@ export function RevenueSimulator({
   );
   const amenityPrice = chosen.reduce((p, e) => p * e.price, 1);
   const amenityOccupancy = chosen.reduce((p, e) => p * e.occupancy, 1);
-  // Occupation visée : niveau des 25 % d'annonces les mieux gérées du secteur (gestion
-  // professionnelle), ajusté aux équipements du bien et plafonné.
+  // Occupation visée : niveau des 25 % d'annonces les mieux gérées du secteur, relevé de
+  // l'objectif de gestion, ajusté aux équipements du bien et plafonné.
   const occupancy = Math.min(
-    MAX_OCCUPANCY,
-    (market?.cell.occupancyTop ?? 0.6) * structure.occupancy * Math.min(1.15, amenityOccupancy),
+    MAX_ANNUAL_OCCUPANCY,
+    (market?.cell.occupancyTop ?? 0.6) *
+      MANAGEMENT_UPLIFT *
+      structure.occupancy *
+      Math.min(1.15, amenityOccupancy),
   );
 
   const result = useMemo(() => {
@@ -518,8 +526,8 @@ export function RevenueSimulator({
             ))}
           </ul>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Le taux d'occupation retenu est celui des 25&nbsp;% d'annonces les mieux gérées de votre
-            secteur&nbsp;: le niveau que vise notre gestion.
+            Le taux d'occupation visé se situe 10&nbsp;% au-dessus de celui des 25&nbsp;% d'annonces
+            les mieux gérées de votre secteur&nbsp;: c'est l'objectif de notre gestion.
           </p>
         </section>
       </div>
