@@ -71,7 +71,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-xl border border-border bg-background p-6 shadow-[var(--shadow-soft)] sm:p-8"
+      className="rounded-xl border border-border bg-background p-5 shadow-[var(--shadow-soft)] sm:p-8"
     >
       <p className="eyebrow">Estimation gratuite en 1 minute</p>
       <h3 className="mt-2 text-2xl">Parlez-nous de votre bien</h3>

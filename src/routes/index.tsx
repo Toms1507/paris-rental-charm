@@ -117,11 +117,11 @@ function RotatingBenefits() {
         <p
           key={b.label}
           aria-hidden={i !== index}
-          className={`absolute inset-0 flex items-center justify-center gap-3 font-[family-name:var(--font-display)] text-2xl whitespace-nowrap text-white transition-all duration-1000 ease-out sm:text-3xl ${
+          className={`absolute inset-0 flex items-center justify-center gap-3 font-[family-name:var(--font-display)] text-[1.35rem] whitespace-nowrap text-white transition-all duration-1000 ease-out sm:text-3xl ${
             i === index ? "translate-y-0 opacity-100 blur-0" : "translate-y-3 opacity-0 blur-sm"
           }`}
         >
-          <b.icon className="size-6 shrink-0 text-[#98CCEB] sm:size-7" />
+          <b.icon className="size-5 shrink-0 text-[#98CCEB] sm:size-7" />
           {b.label}
         </p>
       ))}
@@ -177,7 +177,7 @@ function HomePage() {
           <div
             data-reveal="up"
             style={stagger(3, 150)}
-            className="mt-9 flex flex-wrap justify-center gap-3"
+            className="mt-9 flex w-full max-w-xs flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center"
           >
             <a href="#estimation" className="btn-primary">
               Audit gratuit de mon bien <ArrowRight className="size-4" />
@@ -238,7 +238,10 @@ function HomePage() {
 
       {/* Services */}
       <section className="container-page py-20">
-        <div data-reveal="up" className="flex flex-wrap items-end justify-between gap-4">
+        <div
+          data-reveal="up"
+          className="flex flex-col items-center gap-6 text-center sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-4 sm:text-left"
+        >
           <div className="max-w-2xl">
             <p className="eyebrow">Nos services</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">On s'occupe de tout</h2>
@@ -260,7 +263,7 @@ function HomePage() {
       <section className="bg-[var(--ink)] py-20 text-white">
         <div className="container-page">
           <div data-reveal="up" className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow">Comment ça marche</p>
+            <p className="eyebrow !text-[#98CCEB]">Comment ça marche</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">Trois étapes pour louer l'esprit libre</h2>
           </div>
           <ol className="mt-12 grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
@@ -304,14 +307,14 @@ function HomePage() {
 
       {/* Qui sommes-nous */}
       <section className="container-page grid items-center gap-12 py-20 lg:grid-cols-2">
-        <div data-reveal="left" className="grid grid-cols-2 gap-4">
+        <div data-reveal="left" className="grid grid-cols-2 items-start gap-4">
           <img
             src={roomImage}
             alt="Chambre parisienne préparée avec du linge hôtelier pour des voyageurs"
             loading="lazy"
             width={1200}
             height={912}
-            className="aspect-[3/4] h-full w-full rounded-2xl object-cover"
+            className="aspect-[3/4] w-full rounded-2xl object-cover"
           />
           <img
             src={rooftops}
@@ -319,7 +322,7 @@ function HomePage() {
             loading="lazy"
             width={1200}
             height={800}
-            className="mt-12 aspect-[3/4] h-full w-full rounded-2xl object-cover"
+            className="mt-12 aspect-[3/4] w-full rounded-2xl object-cover"
           />
         </div>
         <div data-reveal="right">
@@ -365,7 +368,7 @@ function HomePage() {
       {/* FAQ */}
       <section className="bg-[var(--sand)] py-20">
         <div className="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <div data-reveal="left">
+          <div data-reveal="left" className="text-center lg:text-left">
             <p className="eyebrow">FAQ</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">Vos questions, nos réponses</h2>
             <p className="mt-4 text-muted-foreground">
@@ -400,9 +403,12 @@ function HomePage() {
 
       {/* Avis */}
       <section className="container-page py-20">
-        <div data-reveal="up" className="flex flex-wrap items-end justify-between gap-4">
+        <div
+          data-reveal="up"
+          className="flex flex-col items-center gap-6 text-center sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-4 sm:text-left"
+        >
           <div className="max-w-2xl">
-            <p className="eyebrow flex items-center gap-2">
+            <p className="eyebrow flex items-center justify-center gap-2 sm:justify-start">
               <AirbnbLogo className="h-4" /> Avis vérifiés Airbnb
             </p>
             <h2 className="mt-3 text-3xl sm:text-4xl">Des voyageurs satisfaits</h2>
@@ -422,7 +428,7 @@ function HomePage() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="mt-6 flex justify-end gap-2">
+          <div className="mt-6 flex justify-center gap-2 sm:justify-end">
             <CarouselPrevious className="static translate-y-0" />
             <CarouselNext className="static translate-y-0" />
           </div>
@@ -432,7 +438,7 @@ function HomePage() {
       {/* Audit gratuit */}
       <section id="estimation" className="scroll-mt-24 pb-20">
         <div className="container-page">
-          <div className="grid items-start gap-10 rounded-3xl bg-[var(--sand)] p-6 sm:p-10 lg:grid-cols-[0.9fr_1.1fr] lg:p-14">
+          <div className="grid items-start gap-10 rounded-3xl bg-[var(--sand)] px-5 py-12 max-sm:-mx-5 max-sm:rounded-none sm:p-10 lg:grid-cols-[0.9fr_1.1fr] lg:p-14">
             <div data-reveal="left" className="lg:sticky lg:top-28">
               <p className="eyebrow">Audit gratuit</p>
               <h2 className="mt-3 text-3xl sm:text-4xl">

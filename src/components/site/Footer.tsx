@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="mt-24 bg-[var(--ink)] text-white">
       {/* Bandeau d'appel */}
       <div className="container-page border-b border-white/10 py-14">
-        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+        <div className="flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
           <div>
             <p className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
               Prêt à louer l'esprit libre&nbsp;?
@@ -17,7 +17,7 @@ export function Footer() {
               Recevez sous 24&nbsp;h une estimation gratuite et sans engagement.
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex w-full max-w-xs flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:flex-wrap">
             <Link to="/" hash="estimation" className="btn-primary">
               Audit gratuit <ArrowRight className="size-4" />
             </Link>

@@ -9,10 +9,10 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-20 w-full max-w-[96rem] items-center justify-between gap-6 px-5 sm:px-8 lg:px-10">
+      <div className="mx-auto flex h-16 w-full max-w-[96rem] items-center justify-between gap-3 px-5 sm:h-20 sm:gap-6 sm:px-8 lg:px-10">
         <Link
           to="/"
-          className="flex shrink-0 items-center"
+          className="flex min-w-0 shrink items-center"
           aria-label="Spinelle Conciergerie, accueil"
         >
           <img
@@ -21,13 +21,15 @@ export function Header() {
             width={483}
             height={483}
             fetchPriority="high"
-            className="size-11 sm:size-12"
+            className="size-10 shrink-0 sm:size-12"
           />
-          <span className="ml-2.5 flex items-baseline gap-2">
-            <span className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight">
+          <span className="ml-2 flex min-w-0 items-baseline gap-1.5 sm:ml-2.5 sm:gap-2">
+            <span className="font-[family-name:var(--font-display)] text-[1.4rem] font-semibold tracking-tight sm:text-2xl">
               Spinelle
             </span>
-            <span className="eyebrow">Conciergerie</span>
+            <span className="eyebrow max-[359px]:hidden max-sm:!text-[0.6rem] max-sm:!tracking-[0.14em]">
+              Conciergerie
+            </span>
           </span>
         </Link>
 
@@ -44,14 +46,14 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <a
             href={SITE.whatsapp}
             target="_blank"
             rel="noopener"
             aria-label="Nous écrire sur WhatsApp"
             title="Nous écrire sur WhatsApp"
-            className="inline-flex size-11 items-center justify-center rounded-full border border-border text-[#25D366] transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
+            className="inline-flex size-10 items-center justify-center rounded-full border sm:size-11 border-border text-[#25D366] transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
           >
             <WhatsAppIcon />
           </a>
