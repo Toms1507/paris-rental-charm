@@ -13,6 +13,9 @@ export const SITE = {
   // Lien WhatsApp direct (numéro au format international, sans + ni espaces).
   whatsapp: "https://wa.me/33631935166",
   zone: "Paris et alentours",
+  // Profils officiels de l'entreprise (fiche Google, réseaux sociaux, annuaires) : reliés au
+  // site dans les données structurées, ils aident Google et les IA à identifier l'entreprise.
+  profiles: [] as string[],
   // Domaine définitif du site : à remplacer (ou définir VITE_SITE_URL) dès que le nom de domaine est acheté.
   // Il sert aux URL canoniques, au sitemap et aux images de partage.
   url:
@@ -205,6 +208,86 @@ export type BlogPost = {
 };
 
 const ARTICLES: BlogPost[] = [
+  {
+    slug: "choisir-conciergerie-airbnb-paris",
+    title: "Comment choisir sa conciergerie Airbnb à Paris : les 8 critères qui comptent",
+    description:
+      "Commission, frais cachés, promesses d'occupation, ménage, conformité légale : la méthode pour comparer les conciergeries Airbnb à Paris et éviter les mauvaises surprises.",
+    date: "2026-10-16",
+    readingTime: "8 min",
+    sections: [
+      {
+        heading: "1. Une tarification lisible, sans frais cachés",
+        paragraphs: [
+          "La plupart des conciergeries se rémunèrent par une commission sur les revenus locatifs. Le pourcentage seul ne suffit pas à comparer : vérifiez ce qu'il couvre réellement (ménage, linge, consommables, photos, gestion des voyageurs) et ce qui est facturé en plus.",
+          "Méfiez-vous des frais de mise en place, des abonnements mensuels et des forfaits facturés même quand le logement n'est pas loué. Chez Spinelle Conciergerie, la commission est de 20\u00a0% des revenus encaissés, tout compris\u00a0: aucun frais si votre logement n'est pas loué.",
+        ],
+        bullets: [
+          "Sur quelle base la commission est-elle calculée (revenus encaissés, frais de ménage inclus ou non) ?",
+          "Le ménage et le linge sont-ils inclus ou refacturés au voyageur, voire au propriétaire ?",
+          "Existe-t-il des frais d'entrée, de sortie ou un abonnement ?",
+        ],
+      },
+      {
+        heading: "2. Aucune promesse d'occupation garantie",
+        paragraphs: [
+          "Le taux d'occupation dépend de la saison, du quartier, de la concurrence et de la réglementation. Une conciergerie qui garantit un chiffre précis soit le compensera par des prix trop bas, soit ne pourra pas tenir sa promesse. Demandez plutôt comment elle compte maximiser l'occupation : réactivité, qualité de l'annonce, tarification quotidienne.",
+          "Pour vous faire une idée objective du potentiel de votre logement, notre simulateur s'appuie sur les données réelles du marché, quartier par quartier, et sur les prix réellement payés par les voyageurs.",
+        ],
+      },
+      {
+        heading: "3. Une équipe réellement présente sur place",
+        paragraphs: [
+          "Arrivée tardive, clé perdue, fuite d'eau un dimanche : la location courte durée exige de pouvoir intervenir vite. Vérifiez qui se déplace, dans quel délai, et si l'équipe connaît votre quartier. Une conciergerie locale, à taille humaine, est souvent plus réactive qu'un réseau national.",
+        ],
+      },
+      {
+        heading: "4. Le ménage et le linge, clés des bons avis",
+        paragraphs: [
+          "La propreté est l'un des critères les plus commentés par les voyageurs, et les avis pèsent sur le classement de votre annonce. Demandez qui fait le ménage (équipe interne ou sous-traitance), selon quel protocole, avec quel contrôle après chaque départ, et qui fournit et blanchit le linge.",
+        ],
+      },
+      {
+        heading: "5. Une tarification ajustée chaque jour",
+        paragraphs: [
+          "Salons, concerts, vacances scolaires, ponts : la demande parisienne varie en permanence. Un prix fixe laisse de l'argent sur la table en haute saison et fait perdre des réservations en période creuse. Demandez à quelle fréquence les prix sont revus et sur quelles données.",
+        ],
+      },
+      {
+        heading: "6. La transparence sur vos revenus",
+        paragraphs: [
+          "Vous devez savoir à tout moment combien votre logement a rapporté : nuits louées, prix moyen, commission, montant versé. Exigez un récapitulatif mensuel clair et un accès à votre calendrier.",
+        ],
+      },
+      {
+        heading: "7. La maîtrise du cadre légal parisien",
+        paragraphs: [
+          "À Paris, la location d'une résidence principale en meublé de tourisme est plafonnée à 90 nuits par an depuis le 1er janvier 2025, le numéro d'enregistrement est obligatoire et une résidence secondaire nécessite un changement d'usage. Une conciergerie sérieuse vérifie votre situation avant toute mise en ligne et gère la taxe de séjour avec vous.",
+        ],
+      },
+      {
+        heading: "8. Un contrat sans engagement de durée",
+        paragraphs: [
+          "Un mandat de gestion doit pouvoir être résilié simplement. Regardez la durée minimale, le préavis et les conditions de sortie : une conciergerie confiante dans la qualité de son travail n'a pas besoin de vous retenir par contrat.",
+        ],
+      },
+      {
+        heading: "Les questions à poser avant de signer",
+        paragraphs: [
+          "Comparez au moins deux ou trois conciergeries avec la même grille. Spinelle Conciergerie répond à toutes ces questions par écrit lors de l'audit gratuit de votre logement, sous 24\u00a0h et sans engagement.",
+        ],
+        bullets: [
+          "Que comprend exactement la commission, et que paierai-je en plus ?",
+          "Qui intervient en cas d'urgence, et en combien de temps ?",
+          "Qui fait le ménage, et comment est-il contrôlé ?",
+          "À quelle fréquence les prix sont-ils ajustés ?",
+          "Comment suivrai-je mes revenus chaque mois ?",
+          "Mon logement est-il en règle pour la location courte durée à Paris ?",
+          "Comment résilier le contrat, et avec quel préavis ?",
+        ],
+      },
+    ],
+  },
   {
     slug: "rentabilite-location-courte-duree-paris",
     title: "Location courte durée à Paris : quelle rentabilité en 2026 ?",

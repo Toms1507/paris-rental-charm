@@ -15,6 +15,7 @@ import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GestionRouteImport } from './routes/gestion'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ServicesRouteImport } from './routes/services'
@@ -74,6 +75,11 @@ const FaqRoute = FaqRouteImport.update({
 const GestionRoute = GestionRouteImport.update({
   id: '/gestion',
   path: '/gestion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
@@ -236,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/gestion': typeof GestionRouteWithChildren
+  '/llms.txt': typeof LlmsDottxtRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
@@ -273,6 +280,7 @@ export interface FileRoutesByTo {
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/gestion': typeof GestionRouteWithChildren
+  '/llms.txt': typeof LlmsDottxtRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
@@ -352,6 +361,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/faq'
     | '/gestion'
+    | '/llms.txt'
     | '/mentions-legales'
     | '/robots.txt'
     | '/services'
@@ -389,6 +399,7 @@ export interface FileRouteTypes {
     | '/confidentialite'
     | '/contact'
     | '/faq'
+    | '/llms.txt'
     | '/mentions-legales'
     | '/robots.txt'
     | '/services'
@@ -427,6 +438,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/faq'
     | '/gestion'
+    | '/llms.txt'
     | '/mentions-legales'
     | '/robots.txt'
     | '/services'
@@ -466,6 +478,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
   GestionRoute: typeof GestionRouteWithChildren
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   ServicesRoute: typeof ServicesRoute
@@ -528,6 +541,13 @@ declare module '@tanstack/react-router' {
       path: '/gestion'
       fullPath: '/gestion'
       preLoaderRoute: typeof GestionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mentions-legales': {
@@ -783,6 +803,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
   GestionRoute: GestionRouteWithChildren,
+  LlmsDottxtRoute: LlmsDottxtRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   ServicesRoute: ServicesRoute,

@@ -42,7 +42,23 @@ const DESCRIPTION =
   "Conciergerie Airbnb à Paris et en Île-de-France : gestion complète de votre location courte durée, tarification dynamique et ménage hôtelier. Estimation gratuite.";
 
 export const Route = createFileRoute("/")({
-  head: () => pageHead({ title: TITLE, description: DESCRIPTION, path: "/" }),
+  head: () =>
+    pageHead({
+      title: TITLE,
+      description: DESCRIPTION,
+      path: "/",
+      // Questions affichées sur la page d'accueil : lues par Google et les assistants IA.
+      jsonLd: [
+        {
+          "@type": "FAQPage",
+          mainEntity: FAQ.slice(0, 6).map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+          })),
+        },
+      ],
+    }),
   component: HomePage,
 });
 

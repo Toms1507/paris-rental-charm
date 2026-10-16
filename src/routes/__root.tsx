@@ -175,6 +175,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           { "@type": "PropertyValue", propertyID: "SIRET", value: "10899356900012" },
         ],
         slogan: "Profitez de votre temps, on s'occupe de vos voyageurs.",
+        ...(SITE.profiles.length ? { sameAs: SITE.profiles } : {}),
         url: SITE.url,
         image: DEFAULT_IMAGE,
         // Logo lu par Google (fiche entreprise, résultats enrichis) : carré, au moins 112 px.
