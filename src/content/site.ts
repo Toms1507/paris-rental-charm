@@ -142,7 +142,7 @@ export const FAQ = [
   },
   {
     q: "Combien puis-je gagner avec mon logement en location courte durée ?",
-    a: `Cela dépend du quartier, de la taille du logement, de sa capacité d'accueil et du nombre de nuits louées. D'après les données Inside Airbnb (${FACTS.period}), le prix médian d'une nuit dans un logement entier actif à Paris est de ${FACTS.price.studio} pour un studio, ${FACTS.price.oneBedroom} pour un logement d'une chambre et ${FACTS.price.twoBedrooms} pour deux chambres. Utilisez notre simulateur de revenus pour une première estimation, puis demandez un audit gratuit\u00a0: nous vous répondons sous 24\u00a0h avec une projection personnalisée.`,
+    a: `Cela dépend du quartier, de la taille du logement, de sa capacité d'accueil et du nombre de nuits louées. D'après les données Inside Airbnb (${FACTS.period}), ramenées aux prix réellement payés par les voyageurs (AirROI), le prix médian d'une nuit dans un logement entier actif à Paris est de ${FACTS.price.studio} pour un studio, ${FACTS.price.oneBedroom} pour un logement d'une chambre et ${FACTS.price.twoBedrooms} pour deux chambres. Utilisez notre simulateur de revenus pour une première estimation, puis demandez un audit gratuit\u00a0: nous vous répondons sous 24\u00a0h avec une projection personnalisée.`,
   },
   {
     q: "Garantissez-vous un taux d'occupation ?",
@@ -216,7 +216,7 @@ const ARTICLES: BlogPost[] = [
       {
         heading: "Combien rapporte un logement en courte durée à Paris ?",
         paragraphs: [
-          `Le revenu d'une location courte durée dépend de deux chiffres\u00a0: le prix moyen par nuit et le nombre de nuits louées. D'après les données publiées par Inside Airbnb (${FACTS.period}, ${FACTS.listings} logements entiers actifs à Paris), voici les prix médians constatés par nuit\u00a0:`,
+          `Le revenu d'une location courte durée dépend de deux chiffres\u00a0: le prix moyen par nuit et le nombre de nuits louées. D'après les données publiées par Inside Airbnb (${FACTS.period}, ${FACTS.listings} logements entiers actifs à Paris), ramenées aux prix réellement payés par les voyageurs (AirROI), voici les prix médians par nuit\u00a0:`,
           "Trois facteurs expliquent la majeure partie de l'écart entre deux biens comparables : la qualité de l'annonce, la réactivité aux demandes de réservation et la finesse de la tarification jour par jour. Notre simulateur de revenus reprend ces données quartier par quartier.",
         ],
         bullets: [

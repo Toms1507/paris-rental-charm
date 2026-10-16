@@ -42,6 +42,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/content/market-paris.ts public/data/communes-estimation.json
+          git add src/content/market-paris.ts public/data/communes-estimation.json scripts/benchmarks-cache.json
           git commit -m "Mise à jour automatique des données du simulateur et du baromètre"
           git push

@@ -191,12 +191,58 @@ def occupancy_references(cities, paris):
     return urban, idf
 
 
-def build(paris_arr, calib, paris_season, cities, paris):
+def anchor_markets(bench, skip, names, dvf, a, b, r1):
+    """Villes repères AirROI : prix d'un logement d'une chambre réellement facturé et occupation
+    rapportée à la ville de référence (Paris en Île-de-France, Lyon et Bordeaux ailleurs).
+    Renvoie (repères, code commune -> repère)."""
+    def ref(keys):
+        found = [bench[k] for k in keys if k in bench]
+        return ({"occupancy": statistics.mean(x["occupancy"] for x in found),
+                 "occupancyTop": statistics.mean(x["occupancyTop"] for x in found)} if found else None)
+
+    refs = {"idf": ref(["paris"]), "urban": ref(URBAN_REFERENCES)}
+    anchors, anchor_of = {}, {}
+    for slug, m in bench.items():
+        if slug in skip:
+            continue
+        key = norm(m["name"])
+        codes = [code for code, name in names.items()
+                 if code.startswith(m["dept"]) and (norm(name) == key or (
+                     norm(name).startswith(key + " ") and "arrondissement" in norm(name)))]
+        # Ville à arrondissements : on garde les arrondissements (prix DVF propres), pas la commune.
+        if len(codes) > 1:
+            codes = [c for c in codes if "arrondissement" in norm(names[c])]
+        reference = refs["idf" if NUTS2.get(m["dept"]) == "FR10" else "urban"]
+        if not codes or not reference:
+            continue
+        priced = [(dvf[c]["m2"], dvf[c]["sales"]) for c in codes if c in dvf]
+        m2 = (math.exp(sum(w * math.log(v) for v, w in priced) / sum(w for _, w in priced))
+              if priced else 0)
+        anchors[slug] = {
+            "name": m["name"],
+            "price": round(m["adr"] * r1, 1),
+            "m2": round(m2),
+            "occupancy": round(m["occupancy"] / reference["occupancy"], 3),
+            "occupancyTop": round(m["occupancyTop"] / reference["occupancyTop"], 3),
+            "listings": m["listings"],
+            "period": m["period"],
+            "modelPrice": round(math.exp(a + b * math.log(m2)), 1) if m2 else None,
+            # Saisonnalité propre à la ville (AirROI) : plus juste que celle de la région.
+            **({"seasonality": m["seasonality"]} if m.get("seasonality") else {}),
+        }
+        for c in codes:
+            anchor_of[c] = slug
+    return anchors, anchor_of
+
+
+def build(paris_arr, calib, paris_season, cities, paris, bench=None, r1=1.0):
     """
     paris_arr   : {numéro d'arrondissement: (prix médian 1 chambre, nb d'annonces)}
     calib       : {ville: {"rows": annonces des 12 relevés, "now": dernier relevé,
                            "dept": "69", "area_code": fonction quartier -> code commune}}
     paris_season: saisonnalité parisienne {mois: {"price", "occupancy"}} (pour l'effet prix)
+    bench       : repères AirROI (scripts/benchmarks.py) ; r1 : prix d'une chambre / prix médian
+                  toutes annonces, mesuré dans les villes de référence
     """
     dvf = load_dvf()
     by_name = defaultdict(list)
@@ -263,12 +309,23 @@ def build(paris_arr, calib, paris_season, cities, paris):
     }
 
     # 5) Communes estimables : prix au m² connu et région avec saisonnalité
-    communes = []
     names = official_names()
+    anchors, anchor_of = anchor_markets(bench or {}, {"paris", *calib}, names, dvf, a, b, r1)
+    checks = [abs(x["modelPrice"] / x["price"] - 1) for x in anchors.values() if x["modelPrice"]]
+    anchor_error = round(statistics.median(checks), 3) if checks else None
+    print(f"  Repères AirROI : {len(anchors)} villes, écart médian du modèle seul {anchor_error}",
+          file=sys.stderr)
+    communes = []
     for code, c in dvf.items():
         region = NUTS2.get(c["dept"])
         if region in seasonality:
-            communes.append([names.get(code, c["name"]), c["dept"], round(c["m2"]), region, code])
+            communes.append([names.get(code, c["name"]), c["dept"], round(c["m2"]), region, code,
+                             *([anchor_of[code]] if code in anchor_of else [])])
+    # Communes sans prix DVF (Alsace-Moselle) mais avec un repère AirROI : prix du repère.
+    for code, slug in anchor_of.items():
+        dept = code[:2]
+        if code not in dvf and NUTS2.get(dept) in seasonality:
+            communes.append([names[code], dept, 0, NUTS2[dept], code, slug])
     communes.sort(key=lambda x: (norm(x[0]), x[1]))
 
     model = {
@@ -279,6 +336,8 @@ def build(paris_arr, calib, paris_season, cities, paris):
         "priceSeasonSlope": slope,
         "seasonality": seasonality,
         "cityNights": city_nights(),
+        "anchors": anchors,
+        "anchorError": anchor_error,
         "communes": len(communes),
     }
     return model, communes

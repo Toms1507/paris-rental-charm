@@ -17,7 +17,9 @@ import json
 import re
 import statistics
 import sys
+import time
 import urllib.parse
+import urllib.error
 import urllib.request
 from collections import defaultdict
 
@@ -75,16 +77,31 @@ AREA_CODES = {
     "pays-basque": _by_name("64"),
 }
 COMMUNES_OUTPUT = "public/data/communes-estimation.json"
+# Séjours d'un mois minimum (bail mobilité, tarif mensuel remisé) : autre produit que la location
+# courte durée, exclus des statistiques.
+MONTHLY_STAY = 28
+# Saisonnalité des prix : seuls les devis pour un séjour proche (≤ 45 jours) sont rattachés au mois
+# du séjour ; les devis lointains portent des tarifs de base, avant les baisses de dernière minute.
+MAX_QUOTE_LEAD = 45
+# Prix de toutes les annonces actives (tous types, au moins un avis sur 12 mois), par relevé :
+# même périmètre que les repères AirROI, pour mesurer l'écart prix affiché / prix facturé.
+MARKET_PRICES = {}
 
 
 # --- Découverte des relevés -------------------------------------------------------------------
 
 def exists(date, url=BASE):
-    try:
-        req = urllib.request.Request(url.format(date=date), method="HEAD")
-        return urllib.request.urlopen(req, timeout=20).status == 200
-    except Exception:
-        return False
+    """Le relevé existe-t-il ? Trois essais : un délai réseau ne doit pas faire manquer un relevé."""
+    for _ in range(3):
+        try:
+            req = urllib.request.Request(url.format(date=date), method="HEAD")
+            return urllib.request.urlopen(req, timeout=30).status == 200
+        except urllib.error.HTTPError as e:
+            if e.code in (403, 404):
+                return False
+        except Exception:
+            pass
+    return False
 
 
 def find_snapshots(days_back=430, url=BASE):
@@ -96,6 +113,17 @@ def find_snapshots(days_back=430, url=BASE):
 
 
 # --- Lecture d'un relevé ----------------------------------------------------------------------
+
+def download(url, attempts=3):
+    """Téléchargement avec nouvel essai en cas de coupure réseau."""
+    for i in range(attempts):
+        try:
+            return urllib.request.urlopen(url, timeout=300).read()
+        except (OSError, urllib.error.URLError):
+            if i == attempts - 1:
+                raise
+            time.sleep(10 * (i + 1))
+
 
 def parse_baths(row):
     """Nombre de salles de bain : champ numérique, sinon texte (« 1.5 baths », « Half-bath »)."""
@@ -119,17 +147,24 @@ def bucket(row):
 
 
 def load(date, url=BASE, paris=True):
-    """Logements entiers actifs (au moins 3 avis sur 12 mois). Le prix vaut None s'il manque
-    (certains relevés sont publiés sans prix : ils servent alors seulement au remplissage)."""
-    raw = urllib.request.urlopen(url.format(date=date), timeout=300).read()
+    """Logements entiers actifs (au moins 3 avis sur 12 mois) loués à la nuit. Le prix vaut None
+    s'il manque (certains relevés sont publiés sans prix : ils servent alors au remplissage).
+    « month » : mois du séjour sur lequel porte le prix relevé (devis Airbnb), sinon du relevé ;
+    None pour un devis lointain (écarté de la saisonnalité)."""
+    scraped = datetime.date.fromisoformat(date)
+    raw = download(url.format(date=date))
     text = io.TextIOWrapper(gzip.GzipFile(fileobj=io.BytesIO(raw)), encoding="utf-8")
-    rows = []
+    rows, market = [], []
     for row in csv.DictReader(text):
+        price = float(row["price"].replace("$", "").replace(",", "")) if row["price"] else None
+        if price is not None and int(row["number_of_reviews_ltm"] or 0) >= 1 and 15 <= price <= 5000:
+            market.append(price)
         if row["room_type"] != "Entire home/apt":
             continue
         if int(row["number_of_reviews_ltm"] or 0) < 3:
             continue
-        price = float(row["price"].replace("$", "").replace(",", "")) if row["price"] else None
+        if int(float(row.get("minimum_nights") or 1)) >= MONTHLY_STAY:
+            continue
         if price is not None and not 30 <= price <= 1500:
             continue
         arr = ARRONDISSEMENTS.get(row["neighbourhood_cleansed"]) if paris else 0
@@ -140,6 +175,10 @@ def load(date, url=BASE, paris=True):
         except ValueError:
             listed = []
         kind = row.get("property_type", "").lower()
+        try:
+            stay = datetime.date.fromisoformat(row.get("price_quote_checkin_date") or "")
+        except ValueError:
+            stay = None
         rows.append({
             "kind": "loft" if "loft" in kind
             else "maison" if any(w in kind for w in ("home", "house", "townhouse", "villa", "cottage"))
@@ -155,15 +194,53 @@ def load(date, url=BASE, paris=True):
             "bucket": bucket(row),
             "guests": min(int(row["accommodates"] or 2), MAX_GUESTS),
             "price": price,
+            "month": scraped.month if stay is None
+            else stay.month if (stay - scraped).days <= MAX_QUOTE_LEAD else None,
             "occ": int(row.get("estimated_occupancy_l365d") or 0) / 365,
             "booked30": 1 - int(row["availability_30"] or 0) / 30,
         })
+    MARKET_PRICES[(url, date)] = market
     priced = sum(1 for r in rows if r["price"] is not None)
     print(f"  {date} : {len(rows)} logements actifs, dont {priced} avec prix", file=sys.stderr)
     return rows
 
 
 # --- Statistiques -----------------------------------------------------------------------------
+
+def realization(bench, url, dates, label):
+    """Rapport prix réellement facturé (AirROI) / prix affiché (Inside Airbnb), même périmètre :
+    toutes les annonces actives, médiane sur 12 mois. None si le repère manque ou est aberrant."""
+    prices = [p for d in dates for p in MARKET_PRICES.get((url, d), [])]
+    if not bench or len(prices) < 500:
+        return None, None
+    listed = statistics.median(prices)
+    factor = bench["adr"] / listed
+    print(f"  {label} : prix affiché médian {listed:.0f} €, facturé {bench['adr']:.0f} € (AirROI) "
+          f"-> facteur {factor:.3f}", file=sys.stderr)
+    if not 0.6 <= factor <= 1.4:
+        print(f"  {label} : facteur hors limites, ignoré", file=sys.stderr)
+        return None, listed
+    return factor, listed
+
+
+def rescale(row_lists, factor):
+    """Applique le facteur une seule fois à chaque annonce (les listes partagent des annonces)."""
+    seen = set()
+    for rows in row_lists:
+        for row in rows:
+            if id(row) not in seen and row["price"] is not None:
+                seen.add(id(row))
+                row["price"] *= factor
+
+
+def by_stay_month(rows, ref, minimum):
+    """Prix relatif médian par mois de séjour (mois sans assez d'annonces : interpolés)."""
+    groups = defaultdict(list)
+    for row in rows:
+        if ref[row["bucket"]] and row["month"]:
+            groups[row["month"]].append(row["price"] / ref[row["bucket"]])
+    return {m: statistics.median(v) for m, v in groups.items() if len(v) >= minimum}
+
 
 def quantile(values, q):
     values = sorted(values)
@@ -227,6 +304,16 @@ def main():
             previous, prev_rows = d, rows
             break
     print(f"Prix : {sorted(data)} ; remplissage : {year} ; tendance vs {previous}", file=sys.stderr)
+
+    # 0) Prix affichés -> prix réellement facturés (repère AirROI, voir scripts/benchmarks.py).
+    import benchmarks
+    bench = benchmarks.load()
+    paris_factor, paris_listed = realization(bench.get("paris"), BASE, list(data), "Paris")
+    rescale(list(data.values()) + [prev_rows], paris_factor or 1)
+    correction = {}
+    if paris_factor:
+        correction["paris"] = {"factor": round(paris_factor, 3), "listed": round(paris_listed),
+                               "billed": bench["paris"]["adr"], "source": "airroi"}
 
     # 1) Prix de base sur l'année : médiane de tous les relevés des 12 derniers mois.
     pooled = [r for rows in data.values() for r in rows]
@@ -368,11 +455,7 @@ def main():
 
     # 4) Saisonnalité mois par mois : prix médian (relevés avec prix) et part du calendrier
     #    réservée à 30 jours (tous les relevés).
-    price_by_month = {
-        datetime.date.fromisoformat(d).month: statistics.median(
-            [r["price"] / paris_price[r["bucket"]] for r in rows])
-        for d, rows in data.items()
-    }
+    price_by_month = by_stay_month(pooled, paris_price, 200)
     occ_by_month = {
         datetime.date.fromisoformat(d).month: statistics.mean(r["booked30"] for r in rows)
         for d, rows in all_data.items() if rows
@@ -431,6 +514,15 @@ def main():
         city_priced = {d: rows for d, rows in city_priced.items() if len(rows) >= 200}
         if not city_priced:
             continue
+        city_factor, city_listed = realization(bench.get(slug), url, list(city_priced), label)
+        if city_factor:
+            correction[slug] = {"factor": round(city_factor, 3), "listed": round(city_listed),
+                                "billed": bench[slug]["adr"], "source": "airroi"}
+        else:
+            # Pas de repère pour cette zone : écart médian constaté dans les autres villes.
+            city_factor = statistics.median([c["factor"] for c in correction.values()] or [1])
+            correction[slug] = {"factor": round(city_factor, 3), "source": "median"}
+        rescale(city_priced.values(), city_factor)
         city_latest = max(city_priced)
         rows_now = city_priced[city_latest]
         city_pool = [r for rows in city_priced.values() for r in rows]
@@ -448,9 +540,7 @@ def main():
         if any(v is None for v in buckets.values()):
             # Tranche trop rare dans cette ville : pas d'estimation automatique pour cette taille.
             buckets = {b: v for b, v in buckets.items() if v is not None}
-        c_price = {datetime.date.fromisoformat(d).month: statistics.median(
-            [r["price"] / city_price[r["bucket"]] for r in rows if city_price[r["bucket"]]])
-            for d, rows in city_priced.items()}
+        c_price = by_stay_month(city_pool, city_price, 50)
         c_occ = {datetime.date.fromisoformat(d).month: statistics.mean(r["booked30"] for r in rows)
                  for d, rows in city_all.items() if rows}
         c_price, c_occ = fill(c_price), fill(c_occ)
@@ -473,7 +563,14 @@ def main():
         arr: (a["buckets"][1]["price"], a["buckets"][1]["sample"])
         for arr, a in arrondissements.items() if not a["buckets"][1].get("estimated")
     }
-    national, communes = national_model.build(paris_arr, calib, seasonality, cities, paris)
+    # Prix d'un logement d'une chambre rapporté au prix médian de toutes les annonces (même
+    # périmètre que les repères AirROI), mesuré dans les villes de référence.
+    one_bedroom = {"paris": paris[1]["price"], **{k: c["buckets"][1]["price"]
+                                                   for k, c in cities.items() if 1 in c["buckets"]}}
+    r1 = statistics.median([p / bench[k]["adr"] for k, p in one_bedroom.items()
+                            if k in bench and correction.get(k, {}).get("source") == "airroi"] or [1])
+    national, communes = national_model.build(paris_arr, calib, seasonality, cities, paris,
+                                              bench, round(r1, 3))
     with open(COMMUNES_OUTPUT, "w", encoding="utf-8") as fh:
         json.dump(communes, fh, ensure_ascii=False, separators=(",", ":"))
     print(f"  {COMMUNES_OUTPUT} : {len(communes)} communes estimables", file=sys.stderr)
@@ -497,6 +594,7 @@ def main():
         "arrondissements": arrondissements,
         "cities": cities,
         "nationalModel": national,
+        "priceCorrection": correction,
     }
     validate(out)
     with open(OUTPUT, "w", encoding="utf-8") as fh:

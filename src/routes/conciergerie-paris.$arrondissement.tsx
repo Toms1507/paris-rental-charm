@@ -146,7 +146,8 @@ function ArrondissementPage() {
           </h2>
           <p className="mt-4 text-muted-foreground">
             Données réelles de {listings.toLocaleString("fr-FR")} logements entiers activement loués
-            sur Airbnb dans l'arrondissement (relevé de {period}, actualisé chaque mois).
+            sur Airbnb dans l'arrondissement (relevé de {period}, actualisé chaque mois), ramenées
+            aux prix réellement payés par les voyageurs.
           </p>
         </div>
 
@@ -166,7 +167,7 @@ function ArrondissementPage() {
                 <p className="mt-3 font-[family-name:var(--font-display)] text-3xl text-primary">
                   {euros(cell.price)}
                 </p>
-                <p className="text-sm text-muted-foreground">prix médian par nuit</p>
+                <p className="text-sm text-muted-foreground">prix médian payé par nuit</p>
                 <p className="mt-4 text-sm">
                   Taux d'occupation médian&nbsp;: <strong>{pct(cell.occupancy)}</strong>
                 </p>

@@ -145,7 +145,12 @@ type Market = {
   seasonality: Record<string, Season>;
   label: string;
   /** Modèle national : prix au m² utilisé et nuitées de l'agglomération (Eurostat). */
-  model?: { m2: number; idf: boolean; nights?: { nights: number; year: string } | undefined };
+  model?: {
+    m2: number;
+    idf: boolean;
+    nights?: { nights: number; year: string } | undefined;
+    anchor?: Anchor | undefined;
+  };
 };
 
 // Modèle national : estimation pour toute commune où le prix immobilier (DVF) est connu,
@@ -163,10 +168,39 @@ type NationalModel = {
   bucketsIdf?: Record<Bucket, { occupancy: number; occupancyTop: number }>;
   seasonality: Record<string, { year: string; months: Record<string, Season> }>;
   cityNights: Record<string, { name: string; nights: number; year: string }>;
+  /** Villes repères : prix réellement facturés et occupation sur 12 mois (AirROI). */
+  anchors?: Record<string, Anchor>;
+};
+type Anchor = {
+  name: string;
+  /** Prix d'un logement d'une chambre réellement facturé, en euros. */
+  price: number;
+  /** Prix immobilier médian de la ville (0 si inconnu) : répartit le prix entre ses quartiers. */
+  m2: number;
+  occupancy: number;
+  occupancyTop: number;
+  listings: number;
+  period: [string, string];
+  /** Saisonnalité propre à la ville (AirROI), à la place de celle de la région. */
+  seasonality?: Record<string, Season>;
 };
 const NATIONAL = (MARKET_PARIS as unknown as { nationalModel?: NationalModel }).nationalModel;
-/** [nom, département, prix médian au m², région NUTS 2, code commune] */
-type Commune = [string, string, number, string, string];
+/** [nom, département, prix médian au m² (0 si inconnu), région NUTS 2, code commune, repère] */
+type Commune = [string, string, number, string, string, string?];
+const monthYear = (ym: string) =>
+  new Date(Number(ym.slice(0, 4)), Number(ym.slice(5, 7)) - 1, 1).toLocaleDateString("fr-FR", {
+    month: "long",
+    year: "numeric",
+  });
+const PRICE_CORRECTION = (
+  MARKET_PARIS as unknown as {
+    priceCorrection?: Record<string, { factor: number; source: string }>;
+  }
+).priceCorrection;
+/** Nombre de villes dont les prix réellement facturés servent de repère. */
+const BENCHMARK_CITIES =
+  Object.keys(NATIONAL?.anchors ?? {}).length +
+  Object.values(PRICE_CORRECTION ?? {}).filter((c) => c.source === "airroi").length;
 const MODEL_ERROR = NATIONAL
   ? Object.values(NATIONAL.price.crossValidationError).reduce(
       (s, e, _, all) => s + e / all.length,
@@ -220,29 +254,37 @@ function modelMarket(commune: Commune, bucket: Bucket): Market | null {
   if (!NATIONAL) return null;
   const season = NATIONAL.seasonality[commune[3]];
   if (!season) return null;
-  const base = Math.exp(NATIONAL.price.a + NATIONAL.price.b * Math.log(commune[2]));
+  const anchor = commune[5] ? NATIONAL.anchors?.[commune[5]] : undefined;
+  // Ville repère : prix réellement facturé dans la ville, réparti entre ses quartiers selon le
+  // prix immobilier ; sinon, prix déduit du prix immobilier par le modèle.
+  const base = anchor
+    ? anchor.price * (anchor.m2 && commune[2] ? (commune[2] / anchor.m2) ** NATIONAL.price.b : 1)
+    : Math.exp(NATIONAL.price.a + NATIONAL.price.b * Math.log(commune[2]));
+  const occFactor = { occupancy: anchor?.occupancy ?? 1, occupancyTop: anchor?.occupancyTop ?? 1 };
   const occupancyRef = (commune[3] === "FR10" && NATIONAL.bucketsIdf) || NATIONAL.buckets;
   const ratio = NATIONAL.buckets[bucket].ratio;
-  const top = Math.max(
-    ...BUCKETS.slice(0, BUCKETS.indexOf(bucket) + 1).map((k) => occupancyRef[k].occupancyTop),
-  );
+  const top =
+    Math.max(
+      ...BUCKETS.slice(0, BUCKETS.indexOf(bucket) + 1).map((k) => occupancyRef[k].occupancyTop),
+    ) * occFactor.occupancyTop;
   const agglo = Object.values(NATIONAL.cityNights).find((c) =>
     normalize(commune[0]).startsWith(normalize(c.name)),
   );
   return {
     cell: {
       price: Math.round(base * ratio),
-      occupancy: occupancyRef[bucket].occupancy,
+      occupancy: occupancyRef[bucket].occupancy * occFactor.occupancy,
       occupancyTop: top,
       sample: 0,
     },
     source: "modele",
     trend: null,
-    seasonality: season.months,
+    seasonality: anchor?.seasonality ?? season.months,
     label: commune[0],
     model: {
       m2: commune[2],
       idf: commune[3] === "FR10",
+      anchor,
       nights: agglo ? { nights: agglo.nights, year: agglo.year } : undefined,
     },
   };
@@ -416,11 +458,20 @@ export function RevenueSimulator({
 
     // Les 12 prochains mois : occupation visée et prix, ajustés mois par mois à la saison.
     const now = new Date();
-    const months = Array.from({ length: 12 }, (_, i) => {
+    const calendar = Array.from({ length: 12 }, (_, i) => {
       const date = new Date(now.getFullYear(), now.getMonth() + 1 + i, 1);
       const days = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-      const season = market.seasonality[String(date.getMonth() + 1)] ?? NEUTRAL;
-      const price = Math.round(base * season.price);
+      return { date, days, season: market.seasonality[String(date.getMonth() + 1)] ?? NEUTRAL };
+    });
+    // Le prix de référence est un prix moyen par nuit réservée : la saisonnalité le répartit entre
+    // les mois sans le modifier sur l'année (moyenne pondérée par les nuits louées = 1).
+    const booked = (m: (typeof calendar)[number]) =>
+      m.days * Math.min(MAX_OCCUPANCY, occupancy * m.season.occupancy);
+    const priceLevel =
+      calendar.reduce((s, m) => s + booked(m) * m.season.price, 0) /
+      calendar.reduce((s, m) => s + booked(m), 0);
+    const months = calendar.map(({ date, days, season }) => {
+      const price = Math.round((base * season.price) / priceLevel);
       const nights = Math.round(days * Math.min(MAX_OCCUPANCY, occupancy * season.occupancy));
       return { date, days, nights, price, gross: nights * price };
     });
@@ -643,7 +694,8 @@ export function RevenueSimulator({
           <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
             {[
               `${MARKET_PARIS.snapshots.length} relevés mensuels du marché Airbnb, soit ${MARKET_PARIS.listings.toLocaleString("fr-FR")} logements entiers actifs à Paris au dernier relevé, ainsi que Lyon, Bordeaux et le Pays basque`,
-              "Prix par nuit et taux d'occupation analysés par arrondissement, par secteur et par taille de logement",
+              `Prix ramenés aux prix réellement payés par les voyageurs, et non aux prix affichés, grâce aux résultats réels sur 12 mois de ${BENCHMARK_CITIES} villes françaises`,
+              "Prix par nuit et taux d'occupation analysés par arrondissement, par secteur et par taille de logement, hors locations au mois",
               "Effet réel de la capacité d'accueil, des salles de bain et de chaque équipement, mesuré en comparant des logements identiques par ailleurs",
               "Saisonnalité calculée mois par mois, avec des données actualisées chaque semaine",
             ].map((item) => (
@@ -814,21 +866,32 @@ export function RevenueSimulator({
             </a>
 
             <p className="mt-5 text-xs leading-relaxed text-white/50">
-              {market!.source === "modele"
-                ? `Estimation modélisée : prix déduit du prix immobilier médian de ${market!.label} (${market!.model!.m2.toLocaleString("fr-FR")} €/m², DVF) grâce à un modèle calibré sur ${NATIONAL!.price.zones} zones où les prix réels sont connus (écart moyen constaté : ±${Math.round(MODEL_ERROR * 100)} %), occupation observée ${market!.model!.idf ? "à Paris" : "à Lyon et Bordeaux"} et saisonnalité réelle de la région (Eurostat).${market!.model!.nights ? ` ${(market!.model!.nights.nights / 1e6).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} millions de nuitées réservées via Airbnb, Booking et Expedia dans l'agglomération en ${market!.model!.nights.year} (Eurostat).` : ""} `
-                : market!.source === "quartier"
-                  ? `Prix médian de ${market!.cell.sample} logements comparables actifs dans cet arrondissement sur Airbnb, ajusté au secteur choisi. `
-                  : market!.source === "arrondissement"
-                    ? "Peu d'annonces comparables dans cet arrondissement : prix déduit des médianes parisiennes et du niveau de prix local. "
-                    : `Prix médian de ${market!.cell.sample} logements comparables actifs dans le secteur ${market!.label}, sur ses 12 derniers relevés mensuels. `}
+              {market!.source === "modele" && market!.model!.anchor
+                ? `Prix et occupation calés sur les résultats réels de ${market!.model!.anchor.listings.toLocaleString("fr-FR")} annonces à ${market!.model!.anchor.name}, de ${monthYear(market!.model!.anchor.period[0])} à ${monthYear(market!.model!.anchor.period[1])} (prix réellement payés par les voyageurs, AirROI)${market!.model!.anchor.m2 && market!.model!.m2 ? `, ajustés au quartier selon le prix immobilier (${market!.model!.m2.toLocaleString("fr-FR")} €/m², DVF)` : ""}, et saisonnalité réelle ${market!.model!.anchor.seasonality ? "de la ville" : "de la région (Eurostat)"}. `
+                : market!.source === "modele"
+                  ? `Estimation modélisée : prix déduit du prix immobilier médian de ${market!.label} (${market!.model!.m2.toLocaleString("fr-FR")} €/m², DVF) grâce à un modèle calibré sur ${NATIONAL!.price.zones} zones où les prix réels sont connus (écart moyen constaté : ±${Math.round(MODEL_ERROR * 100)} %), occupation observée ${market!.model!.idf ? "à Paris" : "à Lyon et Bordeaux"} et saisonnalité réelle de la région (Eurostat).${market!.model!.nights ? ` ${(market!.model!.nights.nights / 1e6).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} millions de nuitées réservées via Airbnb, Booking et Expedia dans l'agglomération en ${market!.model!.nights.year} (Eurostat).` : ""} `
+                  : market!.source === "quartier"
+                    ? `Prix médian de ${market!.cell.sample} logements comparables actifs dans cet arrondissement sur Airbnb, ajusté au secteur choisi. `
+                    : market!.source === "arrondissement"
+                      ? "Peu d'annonces comparables dans cet arrondissement : prix déduit des médianes parisiennes et du niveau de prix local. "
+                      : `Prix médian de ${market!.cell.sample} logements comparables actifs dans le secteur ${market!.label}, sur ses 12 derniers relevés mensuels. `}
               Données{" "}
               <a href={MARKET_PARIS.sourceUrl} target="_blank" rel="noopener" className="underline">
                 Inside Airbnb
               </a>{" "}
-              ({MARKET_PARIS.license}), {MARKET_PARIS.snapshots.length} relevés mensuels à Paris
-              jusqu'au {new Date(MARKET_PARIS.snapshot).toLocaleDateString("fr-FR")}, actualisées
-              chaque mois. Estimation indicative et non contractuelle. Pour une résidence
-              principale, le nombre de nuits louables par an est plafonné.
+              ({MARKET_PARIS.license}) ramenées aux prix réellement facturés (
+              <a
+                href="https://www.airroi.com/airbnb-data/france"
+                target="_blank"
+                rel="noopener"
+                className="underline"
+              >
+                AirROI
+              </a>
+              ), {MARKET_PARIS.snapshots.length} relevés mensuels à Paris jusqu'au{" "}
+              {new Date(MARKET_PARIS.snapshot).toLocaleDateString("fr-FR")}, actualisées chaque
+              mois. Estimation indicative et non contractuelle. Pour une résidence principale, le
+              nombre de nuits louables par an est plafonné.
             </p>
           </>
         )}

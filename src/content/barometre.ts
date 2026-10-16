@@ -42,7 +42,7 @@ export function buildBarometre(): BlogPost {
     {
       heading: `Les prix par nuit à Paris en ${period}`,
       paragraphs: [
-        `Sur les ${m.snapshots.length} derniers relevés mensuels, voici le prix médian d'une nuit dans un logement entier activement loué à Paris, selon sa taille. Ces chiffres portent sur ${m.listings.toLocaleString("fr-FR")} annonces Airbnb actives lors du dernier relevé.`,
+        `Sur les ${m.snapshots.length} derniers relevés mensuels, voici le prix médian d'une nuit dans un logement entier activement loué à Paris, selon sa taille. Ces chiffres portent sur ${m.listings.toLocaleString("fr-FR")} annonces Airbnb actives lors du dernier relevé, et sont ramenés aux prix réellement payés par les voyageurs (et non aux prix affichés) grâce aux résultats réels publiés par AirROI.`,
       ],
       bullets: BUCKETS.map((b) => `${b.label} : ${euros(m.paris[b.key].price)} la nuit`),
     },
@@ -91,7 +91,7 @@ export function buildBarometre(): BlogPost {
     heading: "Et votre logement ?",
     paragraphs: [
       "Ces médianes donnent une tendance, mais chaque logement est unique. Testez notre simulateur de revenus sur la page d'accueil, ou demandez un audit gratuit : nous vous répondons sous 24 h avec une estimation personnalisée.",
-      `Source : Inside Airbnb (licence CC BY 4.0), relevé du ${snapshot.toLocaleDateString("fr-FR")}. Article mis à jour automatiquement chaque mois.`,
+      `Sources : Inside Airbnb (licence CC BY 4.0) et AirROI (prix réellement facturés), relevé du ${snapshot.toLocaleDateString("fr-FR")}. Article mis à jour automatiquement chaque mois.`,
     ],
   });
 

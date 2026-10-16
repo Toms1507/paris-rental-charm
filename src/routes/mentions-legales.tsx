@@ -61,7 +61,9 @@ function MentionsLegales() {
           </p>
           <p className="mt-3">
             Les statistiques du marché de la location courte durée (simulateur, baromètre) sont
-            calculées à partir des données publiées par Inside Airbnb, sous licence CC BY 4.0.
+            calculées à partir des données publiées par Inside Airbnb (licence CC BY 4.0), des prix
+            réellement facturés publiés par AirROI, des prix immobiliers DVF (data.gouv.fr) et des
+            statistiques de fréquentation d'Eurostat.
           </p>
         </section>
         <section>

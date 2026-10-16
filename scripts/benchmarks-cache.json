@@ -1,0 +1,4032 @@
+{
+ "aix-en-provence": {
+  "adr": 99.6,
+  "checked": "2026-10-16",
+  "dept": "13",
+  "listings": 2342,
+  "name": "Aix-en-Provence",
+  "occupancy": 0.43,
+  "occupancyTop": 0.67,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.737,
+    "price": 0.922
+   },
+   "10": {
+    "occupancy": 1.138,
+    "price": 0.943
+   },
+   "11": {
+    "occupancy": 0.863,
+    "price": 0.924
+   },
+   "12": {
+    "occupancy": 0.829,
+    "price": 0.925
+   },
+   "2": {
+    "occupancy": 0.832,
+    "price": 0.922
+   },
+   "3": {
+    "occupancy": 0.896,
+    "price": 1.035
+   },
+   "4": {
+    "occupancy": 1.03,
+    "price": 1.06
+   },
+   "5": {
+    "occupancy": 1.088,
+    "price": 1.088
+   },
+   "6": {
+    "occupancy": 1.022,
+    "price": 1.109
+   },
+   "7": {
+    "occupancy": 1.106,
+    "price": 1.131
+   },
+   "8": {
+    "occupancy": 1.19,
+    "price": 0.98
+   },
+   "9": {
+    "occupancy": 1.27,
+    "price": 0.959
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/provence-alpes-côte-d'azur/aix-en-provence",
+  "usdPerEur": 1.1642
+ },
+ "ajaccio": {
+  "adr": 100.5,
+  "checked": "2026-10-16",
+  "dept": "2A",
+  "listings": 1381,
+  "name": "Ajaccio",
+  "occupancy": 0.34,
+  "occupancyTop": 0.54,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.597,
+    "price": 0.934
+   },
+   "10": {
+    "occupancy": 1.006,
+    "price": 0.926
+   },
+   "11": {
+    "occupancy": 0.746,
+    "price": 0.908
+   },
+   "12": {
+    "occupancy": 0.738,
+    "price": 0.917
+   },
+   "2": {
+    "occupancy": 0.675,
+    "price": 0.939
+   },
+   "3": {
+    "occupancy": 0.684,
+    "price": 0.997
+   },
+   "4": {
+    "occupancy": 0.95,
+    "price": 1.018
+   },
+   "5": {
+    "occupancy": 1.015,
+    "price": 1.049
+   },
+   "6": {
+    "occupancy": 1.122,
+    "price": 1.093
+   },
+   "7": {
+    "occupancy": 1.427,
+    "price": 1.185
+   },
+   "8": {
+    "occupancy": 1.732,
+    "price": 1.069
+   },
+   "9": {
+    "occupancy": 1.307,
+    "price": 0.965
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/corsica/ajaccio",
+  "usdPerEur": 1.1642
+ },
+ "amiens": {
+  "adr": 65.3,
+  "checked": "2026-10-16",
+  "dept": "80",
+  "listings": 799,
+  "name": "Amiens",
+  "occupancy": 0.36,
+  "occupancyTop": 0.56,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.84,
+    "price": 0.909
+   },
+   "10": {
+    "occupancy": 0.999,
+    "price": 0.971
+   },
+   "11": {
+    "occupancy": 0.972,
+    "price": 0.94
+   },
+   "12": {
+    "occupancy": 1.217,
+    "price": 0.963
+   },
+   "2": {
+    "occupancy": 0.901,
+    "price": 0.901
+   },
+   "3": {
+    "occupancy": 0.964,
+    "price": 0.994
+   },
+   "4": {
+    "occupancy": 1.0,
+    "price": 1.077
+   },
+   "5": {
+    "occupancy": 0.954,
+    "price": 1.096
+   },
+   "6": {
+    "occupancy": 0.915,
+    "price": 1.085
+   },
+   "7": {
+    "occupancy": 1.046,
+    "price": 1.123
+   },
+   "8": {
+    "occupancy": 1.177,
+    "price": 0.977
+   },
+   "9": {
+    "occupancy": 1.014,
+    "price": 0.964
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/hauts-de-france/amiens",
+  "usdPerEur": 1.1642
+ },
+ "angers": {
+  "adr": 64.4,
+  "checked": "2026-10-16",
+  "dept": "49",
+  "listings": 1157,
+  "name": "Angers",
+  "occupancy": 0.49,
+  "occupancyTop": 0.68,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.992,
+    "price": 0.945
+   },
+   "10": {
+    "occupancy": 1.16,
+    "price": 0.969
+   },
+   "11": {
+    "occupancy": 1.076,
+    "price": 0.95
+   },
+   "12": {
+    "occupancy": 1.104,
+    "price": 0.955
+   },
+   "2": {
+    "occupancy": 0.907,
+    "price": 0.925
+   },
+   "3": {
+    "occupancy": 0.935,
+    "price": 1.031
+   },
+   "4": {
+    "occupancy": 0.878,
+    "price": 1.062
+   },
+   "5": {
+    "occupancy": 0.888,
+    "price": 1.081
+   },
+   "6": {
+    "occupancy": 0.967,
+    "price": 1.09
+   },
+   "7": {
+    "occupancy": 0.982,
+    "price": 1.075
+   },
+   "8": {
+    "occupancy": 0.998,
+    "price": 0.959
+   },
+   "9": {
+    "occupancy": 1.11,
+    "price": 0.958
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/pays-de-la-loire/angers",
+  "usdPerEur": 1.1642
+ },
+ "annecy": {
+  "adr": 119.4,
+  "checked": "2026-10-16",
+  "dept": "74",
+  "listings": 3177,
+  "name": "Annecy",
+  "occupancy": 0.46,
+  "occupancyTop": 0.68,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.658,
+    "price": 0.935
+   },
+   "10": {
+    "occupancy": 1.012,
+    "price": 0.843
+   },
+   "11": {
+    "occupancy": 0.833,
+    "price": 0.826
+   },
+   "12": {
+    "occupancy": 0.957,
+    "price": 0.92
+   },
+   "2": {
+    "occupancy": 0.833,
+    "price": 0.91
+   },
+   "3": {
+    "occupancy": 0.858,
+    "price": 0.963
+   },
+   "4": {
+    "occupancy": 1.006,
+    "price": 1.03
+   },
+   "5": {
+    "occupancy": 1.08,
+    "price": 1.082
+   },
+   "6": {
+    "occupancy": 0.969,
+    "price": 1.262
+   },
+   "7": {
+    "occupancy": 1.192,
+    "price": 1.243
+   },
+   "8": {
+    "occupancy": 1.416,
+    "price": 1.108
+   },
+   "9": {
+    "occupancy": 1.185,
+    "price": 0.878
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/auvergne-rhône-alpes/annecy",
+  "usdPerEur": 1.1642
+ },
+ "antibes": {
+  "adr": 128.8,
+  "checked": "2026-10-16",
+  "dept": "06",
+  "listings": 4196,
+  "name": "Antibes",
+  "occupancy": 0.36,
+  "occupancyTop": 0.59,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.554,
+    "price": 0.902
+   },
+   "10": {
+    "occupancy": 1.021,
+    "price": 0.927
+   },
+   "11": {
+    "occupancy": 0.754,
+    "price": 0.883
+   },
+   "12": {
+    "occupancy": 0.672,
+    "price": 0.892
+   },
+   "2": {
+    "occupancy": 0.796,
+    "price": 0.908
+   },
+   "3": {
+    "occupancy": 0.75,
+    "price": 0.965
+   },
+   "4": {
+    "occupancy": 0.966,
+    "price": 1.0
+   },
+   "5": {
+    "occupancy": 1.059,
+    "price": 1.066
+   },
+   "6": {
+    "occupancy": 1.13,
+    "price": 1.13
+   },
+   "7": {
+    "occupancy": 1.376,
+    "price": 1.225
+   },
+   "8": {
+    "occupancy": 1.622,
+    "price": 1.109
+   },
+   "9": {
+    "occupancy": 1.3,
+    "price": 0.993
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/provence-alpes-côte-d'azur/antibes",
+  "usdPerEur": 1.1642
+ },
+ "arcachon": {
+  "adr": 126.3,
+  "checked": "2026-10-16",
+  "dept": "33",
+  "listings": 1726,
+  "name": "Arcachon",
+  "occupancy": 0.3,
+  "occupancyTop": 0.5,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.506,
+    "price": 0.923
+   },
+   "10": {
+    "occupancy": 0.975,
+    "price": 0.93
+   },
+   "11": {
+    "occupancy": 0.723,
+    "price": 0.897
+   },
+   "12": {
+    "occupancy": 0.691,
+    "price": 0.908
+   },
+   "2": {
+    "occupancy": 0.671,
+    "price": 0.924
+   },
+   "3": {
+    "occupancy": 0.702,
+    "price": 0.97
+   },
+   "4": {
+    "occupancy": 1.07,
+    "price": 1.005
+   },
+   "5": {
+    "occupancy": 1.029,
+    "price": 1.04
+   },
+   "6": {
+    "occupancy": 0.988,
+    "price": 1.077
+   },
+   "7": {
+    "occupancy": 1.488,
+    "price": 1.242
+   },
+   "8": {
+    "occupancy": 1.987,
+    "price": 1.112
+   },
+   "9": {
+    "occupancy": 1.17,
+    "price": 0.972
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/nouvelle-aquitaine/arcachon",
+  "usdPerEur": 1.1642
+ },
+ "avignon": {
+  "adr": 89.3,
+  "checked": "2026-10-16",
+  "dept": "84",
+  "listings": 2536,
+  "name": "Avignon",
+  "occupancy": 0.32,
+  "occupancyTop": 0.56,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.73,
+    "price": 0.905
+   },
+   "10": {
+    "occupancy": 1.153,
+    "price": 0.917
+   },
+   "11": {
+    "occupancy": 0.924,
+    "price": 0.892
+   },
+   "12": {
+    "occupancy": 0.826,
+    "price": 0.909
+   },
+   "2": {
+    "occupancy": 0.907,
+    "price": 0.899
+   },
+   "3": {
+    "occupancy": 0.881,
+    "price": 0.984
+   },
+   "4": {
+    "occupancy": 1.106,
+    "price": 1.033
+   },
+   "5": {
+    "occupancy": 1.068,
+    "price": 1.057
+   },
+   "6": {
+    "occupancy": 0.952,
+    "price": 1.094
+   },
+   "7": {
+    "occupancy": 1.071,
+    "price": 1.404
+   },
+   "8": {
+    "occupancy": 1.189,
+    "price": 0.967
+   },
+   "9": {
+    "occupancy": 1.193,
+    "price": 0.939
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/provence-alpes-côte-d'azur/avignon",
+  "usdPerEur": 1.1642
+ },
+ "bastia": {
+  "adr": 89.3,
+  "checked": "2026-10-16",
+  "dept": "2B",
+  "listings": 457,
+  "name": "Bastia",
+  "occupancy": 0.36,
+  "occupancyTop": 0.55,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.555,
+    "price": 0.912
+   },
+   "10": {
+    "occupancy": 1.089,
+    "price": 0.94
+   },
+   "11": {
+    "occupancy": 0.828,
+    "price": 0.908
+   },
+   "12": {
+    "occupancy": 0.842,
+    "price": 0.906
+   },
+   "2": {
+    "occupancy": 0.683,
+    "price": 0.913
+   },
+   "3": {
+    "occupancy": 0.796,
+    "price": 0.998
+   },
+   "4": {
+    "occupancy": 0.939,
+    "price": 1.022
+   },
+   "5": {
+    "occupancy": 1.027,
+    "price": 1.05
+   },
+   "6": {
+    "occupancy": 0.964,
+    "price": 1.104
+   },
+   "7": {
+    "occupancy": 1.321,
+    "price": 1.212
+   },
+   "8": {
+    "occupancy": 1.677,
+    "price": 1.061
+   },
+   "9": {
+    "occupancy": 1.276,
+    "price": 0.973
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/corsica/bastia",
+  "usdPerEur": 1.1642
+ },
+ "besancon": {
+  "adr": 61.0,
+  "checked": "2026-10-16",
+  "dept": "25",
+  "listings": 649,
+  "name": "Besançon",
+  "occupancy": 0.42,
+  "occupancyTop": 0.63,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.905,
+    "price": 0.955
+   },
+   "10": {
+    "occupancy": 1.156,
+    "price": 0.964
+   },
+   "11": {
+    "occupancy": 1.092,
+    "price": 0.967
+   },
+   "12": {
+    "occupancy": 1.044,
+    "price": 0.977
+   },
+   "2": {
+    "occupancy": 0.897,
+    "price": 0.949
+   },
+   "3": {
+    "occupancy": 0.839,
+    "price": 1.017
+   },
+   "4": {
+    "occupancy": 0.852,
+    "price": 1.035
+   },
+   "5": {
+    "occupancy": 0.934,
+    "price": 1.055
+   },
+   "6": {
+    "occupancy": 0.926,
+    "price": 1.054
+   },
+   "7": {
+    "occupancy": 1.038,
+    "price": 1.095
+   },
+   "8": {
+    "occupancy": 1.151,
+    "price": 0.971
+   },
+   "9": {
+    "occupancy": 1.165,
+    "price": 0.962
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/bourgogne-–-franche-comté/besançon",
+  "usdPerEur": 1.1642
+ },
+ "bordeaux": {
+  "adr": 99.6,
+  "checked": "2026-10-16",
+  "dept": "33",
+  "listings": 3452,
+  "name": "Bordeaux",
+  "occupancy": 0.44,
+  "occupancyTop": 0.68,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.785,
+    "price": 0.922
+   },
+   "10": {
+    "occupancy": 1.11,
+    "price": 0.954
+   },
+   "11": {
+    "occupancy": 0.976,
+    "price": 0.943
+   },
+   "12": {
+    "occupancy": 0.946,
+    "price": 0.944
+   },
+   "2": {
+    "occupancy": 0.832,
+    "price": 0.919
+   },
+   "3": {
+    "occupancy": 0.908,
+    "price": 1.047
+   },
+   "4": {
+    "occupancy": 1.003,
+    "price": 1.074
+   },
+   "5": {
+    "occupancy": 1.074,
+    "price": 1.094
+   },
+   "6": {
+    "occupancy": 1.039,
+    "price": 1.102
+   },
+   "7": {
+    "occupancy": 1.059,
+    "price": 1.104
+   },
+   "8": {
+    "occupancy": 1.079,
+    "price": 0.945
+   },
+   "9": {
+    "occupancy": 1.189,
+    "price": 0.952
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/nouvelle-aquitaine/bordeaux",
+  "usdPerEur": 1.1642
+ },
+ "boulogne-billancourt": {
+  "adr": 132.3,
+  "checked": "2026-10-16",
+  "dept": "92",
+  "listings": 884,
+  "name": "Boulogne-Billancourt",
+  "occupancy": 0.4,
+  "occupancyTop": 0.67,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.834,
+    "price": 0.932
+   },
+   "10": {
+    "occupancy": 1.128,
+    "price": 0.942
+   },
+   "11": {
+    "occupancy": 1.009,
+    "price": 0.938
+   },
+   "12": {
+    "occupancy": 1.032,
+    "price": 0.945
+   },
+   "2": {
+    "occupancy": 0.872,
+    "price": 0.928
+   },
+   "3": {
+    "occupancy": 0.917,
+    "price": 1.045
+   },
+   "4": {
+    "occupancy": 1.042,
+    "price": 1.064
+   },
+   "5": {
+    "occupancy": 1.148,
+    "price": 1.124
+   },
+   "6": {
+    "occupancy": 1.093,
+    "price": 1.128
+   },
+   "7": {
+    "occupancy": 0.976,
+    "price": 1.093
+   },
+   "8": {
+    "occupancy": 0.859,
+    "price": 0.927
+   },
+   "9": {
+    "occupancy": 1.089,
+    "price": 0.934
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/boulogne-billancourt",
+  "usdPerEur": 1.1642
+ },
+ "brest": {
+  "adr": 57.6,
+  "checked": "2026-10-16",
+  "dept": "29",
+  "listings": 960,
+  "name": "Brest",
+  "occupancy": 0.44,
+  "occupancyTop": 0.64,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.865,
+    "price": 0.926
+   },
+   "10": {
+    "occupancy": 1.134,
+    "price": 0.935
+   },
+   "11": {
+    "occupancy": 1.042,
+    "price": 0.925
+   },
+   "12": {
+    "occupancy": 0.968,
+    "price": 0.93
+   },
+   "2": {
+    "occupancy": 0.956,
+    "price": 0.921
+   },
+   "3": {
+    "occupancy": 0.922,
+    "price": 1.068
+   },
+   "4": {
+    "occupancy": 0.912,
+    "price": 1.073
+   },
+   "5": {
+    "occupancy": 0.83,
+    "price": 1.088
+   },
+   "6": {
+    "occupancy": 0.857,
+    "price": 1.087
+   },
+   "7": {
+    "occupancy": 1.102,
+    "price": 1.149
+   },
+   "8": {
+    "occupancy": 1.347,
+    "price": 0.969
+   },
+   "9": {
+    "occupancy": 1.064,
+    "price": 0.928
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/brittany/brest",
+  "usdPerEur": 1.1642
+ },
+ "caen": {
+  "adr": 70.4,
+  "checked": "2026-10-16",
+  "dept": "14",
+  "listings": 1009,
+  "name": "Caen",
+  "occupancy": 0.42,
+  "occupancyTop": 0.64,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.812,
+    "price": 0.924
+   },
+   "10": {
+    "occupancy": 1.136,
+    "price": 0.975
+   },
+   "11": {
+    "occupancy": 0.989,
+    "price": 0.944
+   },
+   "12": {
+    "occupancy": 0.974,
+    "price": 0.94
+   },
+   "2": {
+    "occupancy": 0.933,
+    "price": 0.926
+   },
+   "3": {
+    "occupancy": 0.902,
+    "price": 0.974
+   },
+   "4": {
+    "occupancy": 0.941,
+    "price": 1.033
+   },
+   "5": {
+    "occupancy": 0.928,
+    "price": 1.079
+   },
+   "6": {
+    "occupancy": 0.822,
+    "price": 1.083
+   },
+   "7": {
+    "occupancy": 1.069,
+    "price": 1.119
+   },
+   "8": {
+    "occupancy": 1.316,
+    "price": 1.015
+   },
+   "9": {
+    "occupancy": 1.177,
+    "price": 0.986
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/normandy/caen",
+  "usdPerEur": 1.1642
+ },
+ "cannes": {
+  "adr": 170.1,
+  "checked": "2026-10-16",
+  "dept": "06",
+  "listings": 8370,
+  "name": "Cannes",
+  "occupancy": 0.26,
+  "occupancyTop": 0.45,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.623,
+    "price": 0.845
+   },
+   "10": {
+    "occupancy": 0.896,
+    "price": 0.91
+   },
+   "11": {
+    "occupancy": 0.744,
+    "price": 0.842
+   },
+   "12": {
+    "occupancy": 0.773,
+    "price": 0.859
+   },
+   "2": {
+    "occupancy": 0.785,
+    "price": 0.87
+   },
+   "3": {
+    "occupancy": 0.703,
+    "price": 1.116
+   },
+   "4": {
+    "occupancy": 0.942,
+    "price": 0.975
+   },
+   "5": {
+    "occupancy": 1.1,
+    "price": 1.27
+   },
+   "6": {
+    "occupancy": 1.051,
+    "price": 1.214
+   },
+   "7": {
+    "occupancy": 1.388,
+    "price": 1.147
+   },
+   "8": {
+    "occupancy": 1.726,
+    "price": 1.017
+   },
+   "9": {
+    "occupancy": 1.268,
+    "price": 0.935
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/provence-alpes-côte-d'azur/cannes",
+  "usdPerEur": 1.1642
+ },
+ "clermont-ferrand": {
+  "adr": 61.8,
+  "checked": "2026-10-16",
+  "dept": "63",
+  "listings": 1076,
+  "name": "Clermont-Ferrand",
+  "occupancy": 0.36,
+  "occupancyTop": 0.58,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.83,
+    "price": 0.914
+   },
+   "10": {
+    "occupancy": 1.152,
+    "price": 0.979
+   },
+   "11": {
+    "occupancy": 1.027,
+    "price": 0.923
+   },
+   "12": {
+    "occupancy": 1.018,
+    "price": 0.92
+   },
+   "2": {
+    "occupancy": 0.981,
+    "price": 0.917
+   },
+   "3": {
+    "occupancy": 0.837,
+    "price": 1.008
+   },
+   "4": {
+    "occupancy": 0.917,
+    "price": 1.054
+   },
+   "5": {
+    "occupancy": 0.913,
+    "price": 1.117
+   },
+   "6": {
+    "occupancy": 0.856,
+    "price": 1.082
+   },
+   "7": {
+    "occupancy": 1.077,
+    "price": 1.149
+   },
+   "8": {
+    "occupancy": 1.298,
+    "price": 0.987
+   },
+   "9": {
+    "occupancy": 1.097,
+    "price": 0.949
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/auvergne-rhône-alpes/clermont-ferrand",
+  "usdPerEur": 1.1642
+ },
+ "clichy": {
+  "adr": 104.8,
+  "checked": "2026-10-16",
+  "dept": "92",
+  "listings": 589,
+  "name": "Clichy",
+  "occupancy": 0.56,
+  "occupancyTop": 0.78,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.802,
+    "price": 0.939
+   },
+   "10": {
+    "occupancy": 1.178,
+    "price": 0.966
+   },
+   "11": {
+    "occupancy": 1.047,
+    "price": 0.949
+   },
+   "12": {
+    "occupancy": 1.007,
+    "price": 0.955
+   },
+   "2": {
+    "occupancy": 0.866,
+    "price": 0.935
+   },
+   "3": {
+    "occupancy": 0.955,
+    "price": 1.034
+   },
+   "4": {
+    "occupancy": 1.03,
+    "price": 1.063
+   },
+   "5": {
+    "occupancy": 1.053,
+    "price": 1.077
+   },
+   "6": {
+    "occupancy": 1.072,
+    "price": 1.099
+   },
+   "7": {
+    "occupancy": 0.973,
+    "price": 1.083
+   },
+   "8": {
+    "occupancy": 0.874,
+    "price": 0.941
+   },
+   "9": {
+    "occupancy": 1.142,
+    "price": 0.958
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/clichy",
+  "usdPerEur": 1.1642
+ },
+ "colmar": {
+  "adr": 117.7,
+  "checked": "2026-10-16",
+  "dept": "68",
+  "listings": 1318,
+  "name": "Colmar",
+  "occupancy": 0.4,
+  "occupancyTop": 0.62,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.605,
+    "price": 0.924
+   },
+   "10": {
+    "occupancy": 1.114,
+    "price": 0.899
+   },
+   "11": {
+    "occupancy": 0.946,
+    "price": 1.038
+   },
+   "12": {
+    "occupancy": 1.535,
+    "price": 1.478
+   },
+   "2": {
+    "occupancy": 0.698,
+    "price": 0.858
+   },
+   "3": {
+    "occupancy": 0.759,
+    "price": 0.891
+   },
+   "4": {
+    "occupancy": 0.94,
+    "price": 0.958
+   },
+   "5": {
+    "occupancy": 0.991,
+    "price": 1.036
+   },
+   "6": {
+    "occupancy": 0.862,
+    "price": 1.011
+   },
+   "7": {
+    "occupancy": 1.095,
+    "price": 1.086
+   },
+   "8": {
+    "occupancy": 1.327,
+    "price": 0.93
+   },
+   "9": {
+    "occupancy": 1.129,
+    "price": 0.892
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/grand-est/colmar",
+  "usdPerEur": 1.1642
+ },
+ "courbevoie": {
+  "adr": 104.8,
+  "checked": "2026-10-16",
+  "dept": "92",
+  "listings": 477,
+  "name": "Courbevoie",
+  "occupancy": 0.45,
+  "occupancyTop": 0.71,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.836,
+    "price": 0.95
+   },
+   "10": {
+    "occupancy": 1.09,
+    "price": 0.976
+   },
+   "11": {
+    "occupancy": 1.006,
+    "price": 0.964
+   },
+   "12": {
+    "occupancy": 1.061,
+    "price": 0.972
+   },
+   "2": {
+    "occupancy": 0.911,
+    "price": 0.941
+   },
+   "3": {
+    "occupancy": 0.929,
+    "price": 1.001
+   },
+   "4": {
+    "occupancy": 1.052,
+    "price": 1.045
+   },
+   "5": {
+    "occupancy": 0.994,
+    "price": 1.062
+   },
+   "6": {
+    "occupancy": 1.092,
+    "price": 1.08
+   },
+   "7": {
+    "occupancy": 1.006,
+    "price": 1.07
+   },
+   "8": {
+    "occupancy": 0.919,
+    "price": 0.961
+   },
+   "9": {
+    "occupancy": 1.106,
+    "price": 0.977
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/courbevoie",
+  "usdPerEur": 1.1642
+ },
+ "dijon": {
+  "adr": 67.0,
+  "checked": "2026-10-16",
+  "dept": "21",
+  "listings": 1698,
+  "name": "Dijon",
+  "occupancy": 0.4,
+  "occupancyTop": 0.61,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.786,
+    "price": 0.919
+   },
+   "10": {
+    "occupancy": 1.18,
+    "price": 0.97
+   },
+   "11": {
+    "occupancy": 1.042,
+    "price": 0.941
+   },
+   "12": {
+    "occupancy": 0.992,
+    "price": 0.941
+   },
+   "2": {
+    "occupancy": 0.871,
+    "price": 0.911
+   },
+   "3": {
+    "occupancy": 0.89,
+    "price": 1.004
+   },
+   "4": {
+    "occupancy": 1.029,
+    "price": 1.068
+   },
+   "5": {
+    "occupancy": 0.992,
+    "price": 1.088
+   },
+   "6": {
+    "occupancy": 0.934,
+    "price": 1.093
+   },
+   "7": {
+    "occupancy": 1.032,
+    "price": 1.125
+   },
+   "8": {
+    "occupancy": 1.13,
+    "price": 0.975
+   },
+   "9": {
+    "occupancy": 1.121,
+    "price": 0.965
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/bourgogne-–-franche-comté/dijon",
+  "usdPerEur": 1.1642
+ },
+ "grenoble": {
+  "adr": 58.4,
+  "checked": "2026-10-16",
+  "dept": "38",
+  "listings": 1338,
+  "name": "Grenoble",
+  "occupancy": 0.41,
+  "occupancyTop": 0.63,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.947,
+    "price": 0.966
+   },
+   "10": {
+    "occupancy": 1.105,
+    "price": 0.969
+   },
+   "11": {
+    "occupancy": 1.066,
+    "price": 0.959
+   },
+   "12": {
+    "occupancy": 1.062,
+    "price": 0.982
+   },
+   "2": {
+    "occupancy": 1.072,
+    "price": 0.964
+   },
+   "3": {
+    "occupancy": 1.043,
+    "price": 1.041
+   },
+   "4": {
+    "occupancy": 0.956,
+    "price": 1.035
+   },
+   "5": {
+    "occupancy": 0.849,
+    "price": 1.043
+   },
+   "6": {
+    "occupancy": 0.854,
+    "price": 1.055
+   },
+   "7": {
+    "occupancy": 0.922,
+    "price": 1.079
+   },
+   "8": {
+    "occupancy": 0.991,
+    "price": 0.945
+   },
+   "9": {
+    "occupancy": 1.133,
+    "price": 0.961
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/auvergne-rhône-alpes/grenoble",
+  "usdPerEur": 1.1642
+ },
+ "issy-les-moulineaux": {
+  "adr": 113.4,
+  "checked": "2026-10-16",
+  "dept": "92",
+  "listings": 401,
+  "name": "Issy-les-Moulineaux",
+  "occupancy": 0.47,
+  "occupancyTop": 0.72,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.84,
+    "price": 0.961
+   },
+   "10": {
+    "occupancy": 1.188,
+    "price": 0.954
+   },
+   "11": {
+    "occupancy": 0.962,
+    "price": 0.946
+   },
+   "12": {
+    "occupancy": 0.946,
+    "price": 0.957
+   },
+   "2": {
+    "occupancy": 0.938,
+    "price": 0.961
+   },
+   "3": {
+    "occupancy": 0.903,
+    "price": 1.036
+   },
+   "4": {
+    "occupancy": 1.019,
+    "price": 1.061
+   },
+   "5": {
+    "occupancy": 1.103,
+    "price": 1.08
+   },
+   "6": {
+    "occupancy": 1.086,
+    "price": 1.088
+   },
+   "7": {
+    "occupancy": 0.995,
+    "price": 1.074
+   },
+   "8": {
+    "occupancy": 0.903,
+    "price": 0.934
+   },
+   "9": {
+    "occupancy": 1.117,
+    "price": 0.948
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/issy-les-moulineaux",
+  "usdPerEur": 1.1642
+ },
+ "ivry-sur-seine": {
+  "adr": 87.6,
+  "checked": "2026-10-16",
+  "dept": "94",
+  "listings": 485,
+  "name": "Ivry-sur-Seine",
+  "occupancy": 0.49,
+  "occupancyTop": 0.74,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.843,
+    "price": 0.954
+   },
+   "10": {
+    "occupancy": 1.116,
+    "price": 0.982
+   },
+   "11": {
+    "occupancy": 1.039,
+    "price": 0.971
+   },
+   "12": {
+    "occupancy": 1.027,
+    "price": 0.976
+   },
+   "2": {
+    "occupancy": 0.946,
+    "price": 0.942
+   },
+   "3": {
+    "occupancy": 0.974,
+    "price": 1.008
+   },
+   "4": {
+    "occupancy": 1.014,
+    "price": 1.032
+   },
+   "5": {
+    "occupancy": 0.99,
+    "price": 1.053
+   },
+   "6": {
+    "occupancy": 0.994,
+    "price": 1.083
+   },
+   "7": {
+    "occupancy": 0.989,
+    "price": 1.051
+   },
+   "8": {
+    "occupancy": 0.984,
+    "price": 0.97
+   },
+   "9": {
+    "occupancy": 1.084,
+    "price": 0.977
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/ivry-sur-seine",
+  "usdPerEur": 1.1642
+ },
+ "la-rochelle": {
+  "adr": 89.3,
+  "checked": "2026-10-16",
+  "dept": "17",
+  "listings": 2861,
+  "name": "La Rochelle",
+  "occupancy": 0.39,
+  "occupancyTop": 0.61,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.689,
+    "price": 0.923
+   },
+   "10": {
+    "occupancy": 1.052,
+    "price": 0.935
+   },
+   "11": {
+    "occupancy": 0.871,
+    "price": 0.925
+   },
+   "12": {
+    "occupancy": 0.864,
+    "price": 0.923
+   },
+   "2": {
+    "occupancy": 0.827,
+    "price": 0.923
+   },
+   "3": {
+    "occupancy": 0.83,
+    "price": 1.018
+   },
+   "4": {
+    "occupancy": 1.025,
+    "price": 1.057
+   },
+   "5": {
+    "occupancy": 1.007,
+    "price": 1.081
+   },
+   "6": {
+    "occupancy": 0.904,
+    "price": 1.088
+   },
+   "7": {
+    "occupancy": 1.209,
+    "price": 1.172
+   },
+   "8": {
+    "occupancy": 1.513,
+    "price": 1.004
+   },
+   "9": {
+    "occupancy": 1.208,
+    "price": 0.951
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/nouvelle-aquitaine/la-rochelle",
+  "usdPerEur": 1.1642
+ },
+ "le-havre": {
+  "adr": 64.4,
+  "checked": "2026-10-16",
+  "dept": "76",
+  "listings": 1110,
+  "name": "Le Havre",
+  "occupancy": 0.37,
+  "occupancyTop": 0.59,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.726,
+    "price": 0.903
+   },
+   "10": {
+    "occupancy": 1.174,
+    "price": 1.008
+   },
+   "11": {
+    "occupancy": 0.922,
+    "price": 0.922
+   },
+   "12": {
+    "occupancy": 0.87,
+    "price": 0.922
+   },
+   "2": {
+    "occupancy": 0.863,
+    "price": 0.894
+   },
+   "3": {
+    "occupancy": 0.945,
+    "price": 0.992
+   },
+   "4": {
+    "occupancy": 0.914,
+    "price": 1.056
+   },
+   "5": {
+    "occupancy": 0.917,
+    "price": 1.106
+   },
+   "6": {
+    "occupancy": 0.853,
+    "price": 1.078
+   },
+   "7": {
+    "occupancy": 1.174,
+    "price": 1.189
+   },
+   "8": {
+    "occupancy": 1.494,
+    "price": 0.996
+   },
+   "9": {
+    "occupancy": 1.147,
+    "price": 0.934
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/normandy/le-havre",
+  "usdPerEur": 1.1642
+ },
+ "le-mans": {
+  "adr": 104.8,
+  "checked": "2026-10-16",
+  "dept": "72",
+  "listings": 2116,
+  "name": "Le Mans",
+  "occupancy": 0.23,
+  "occupancyTop": 0.45,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.89,
+    "price": 0.896
+   },
+   "10": {
+    "occupancy": 0.954,
+    "price": 0.921
+   },
+   "11": {
+    "occupancy": 0.994,
+    "price": 0.901
+   },
+   "12": {
+    "occupancy": 1.064,
+    "price": 0.903
+   },
+   "2": {
+    "occupancy": 0.932,
+    "price": 0.888
+   },
+   "3": {
+    "occupancy": 0.931,
+    "price": 1.05
+   },
+   "4": {
+    "occupancy": 0.969,
+    "price": 1.123
+   },
+   "5": {
+    "occupancy": 0.973,
+    "price": 1.142
+   },
+   "6": {
+    "occupancy": 0.925,
+    "price": 1.224
+   },
+   "7": {
+    "occupancy": 1.055,
+    "price": 1.14
+   },
+   "8": {
+    "occupancy": 1.186,
+    "price": 0.902
+   },
+   "9": {
+    "occupancy": 1.127,
+    "price": 0.911
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/pays-de-la-loire/le-mans",
+  "usdPerEur": 1.1642
+ },
+ "levallois-perret": {
+  "adr": 121.1,
+  "checked": "2026-10-16",
+  "dept": "92",
+  "listings": 353,
+  "name": "Levallois-Perret",
+  "occupancy": 0.47,
+  "occupancyTop": 0.72,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.813,
+    "price": 0.946
+   },
+   "10": {
+    "occupancy": 1.14,
+    "price": 0.963
+   },
+   "11": {
+    "occupancy": 0.968,
+    "price": 0.949
+   },
+   "12": {
+    "occupancy": 0.974,
+    "price": 0.956
+   },
+   "2": {
+    "occupancy": 0.976,
+    "price": 0.941
+   },
+   "3": {
+    "occupancy": 0.971,
+    "price": 1.043
+   },
+   "4": {
+    "occupancy": 1.062,
+    "price": 1.059
+   },
+   "5": {
+    "occupancy": 1.081,
+    "price": 1.084
+   },
+   "6": {
+    "occupancy": 1.084,
+    "price": 1.097
+   },
+   "7": {
+    "occupancy": 0.972,
+    "price": 1.072
+   },
+   "8": {
+    "occupancy": 0.86,
+    "price": 0.936
+   },
+   "9": {
+    "occupancy": 1.098,
+    "price": 0.954
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/levallois-perret",
+  "usdPerEur": 1.1642
+ },
+ "lille": {
+  "adr": 87.6,
+  "checked": "2026-10-16",
+  "dept": "59",
+  "listings": 1846,
+  "name": "Lille",
+  "occupancy": 0.44,
+  "occupancyTop": 0.66,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.888,
+    "price": 0.926
+   },
+   "10": {
+    "occupancy": 1.079,
+    "price": 0.961
+   },
+   "11": {
+    "occupancy": 1.061,
+    "price": 0.954
+   },
+   "12": {
+    "occupancy": 1.096,
+    "price": 0.974
+   },
+   "2": {
+    "occupancy": 0.961,
+    "price": 0.915
+   },
+   "3": {
+    "occupancy": 1.018,
+    "price": 1.083
+   },
+   "4": {
+    "occupancy": 1.008,
+    "price": 1.065
+   },
+   "5": {
+    "occupancy": 0.949,
+    "price": 1.058
+   },
+   "6": {
+    "occupancy": 0.94,
+    "price": 1.078
+   },
+   "7": {
+    "occupancy": 0.96,
+    "price": 1.059
+   },
+   "8": {
+    "occupancy": 0.98,
+    "price": 0.933
+   },
+   "9": {
+    "occupancy": 1.059,
+    "price": 0.993
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/hauts-de-france/lille",
+  "usdPerEur": 1.1642
+ },
+ "limoges": {
+  "adr": 53.3,
+  "checked": "2026-10-16",
+  "dept": "87",
+  "listings": 659,
+  "name": "Limoges",
+  "occupancy": 0.38,
+  "occupancyTop": 0.59,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.859,
+    "price": 0.937
+   },
+   "10": {
+    "occupancy": 1.083,
+    "price": 0.947
+   },
+   "11": {
+    "occupancy": 1.026,
+    "price": 0.942
+   },
+   "12": {
+    "occupancy": 1.043,
+    "price": 0.943
+   },
+   "2": {
+    "occupancy": 1.012,
+    "price": 0.933
+   },
+   "3": {
+    "occupancy": 1.03,
+    "price": 1.033
+   },
+   "4": {
+    "occupancy": 0.985,
+    "price": 1.077
+   },
+   "5": {
+    "occupancy": 0.924,
+    "price": 1.086
+   },
+   "6": {
+    "occupancy": 0.871,
+    "price": 1.088
+   },
+   "7": {
+    "occupancy": 0.983,
+    "price": 1.117
+   },
+   "8": {
+    "occupancy": 1.096,
+    "price": 0.954
+   },
+   "9": {
+    "occupancy": 1.089,
+    "price": 0.943
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/nouvelle-aquitaine/limoges",
+  "usdPerEur": 1.1642
+ },
+ "lyon": {
+  "adr": 91.9,
+  "checked": "2026-10-16",
+  "dept": "69",
+  "listings": 4552,
+  "name": "Lyon",
+  "occupancy": 0.46,
+  "occupancyTop": 0.68,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.859,
+    "price": 0.938
+   },
+   "10": {
+    "occupancy": 1.18,
+    "price": 0.972
+   },
+   "11": {
+    "occupancy": 1.079,
+    "price": 0.973
+   },
+   "12": {
+    "occupancy": 0.993,
+    "price": 1.006
+   },
+   "2": {
+    "occupancy": 0.922,
+    "price": 0.929
+   },
+   "3": {
+    "occupancy": 0.991,
+    "price": 1.027
+   },
+   "4": {
+    "occupancy": 1.011,
+    "price": 1.056
+   },
+   "5": {
+    "occupancy": 0.967,
+    "price": 1.078
+   },
+   "6": {
+    "occupancy": 0.939,
+    "price": 1.079
+   },
+   "7": {
+    "occupancy": 0.933,
+    "price": 1.056
+   },
+   "8": {
+    "occupancy": 0.927,
+    "price": 0.924
+   },
+   "9": {
+    "occupancy": 1.198,
+    "price": 0.961
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/auvergne-rhône-alpes/lyon",
+  "usdPerEur": 1.1642
+ },
+ "marseille": {
+  "adr": 97.1,
+  "checked": "2026-10-16",
+  "dept": "13",
+  "listings": 8767,
+  "name": "Marseille",
+  "occupancy": 0.45,
+  "occupancyTop": 0.68,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.716,
+    "price": 0.908
+   },
+   "10": {
+    "occupancy": 1.099,
+    "price": 0.939
+   },
+   "11": {
+    "occupancy": 0.905,
+    "price": 0.911
+   },
+   "12": {
+    "occupancy": 0.795,
+    "price": 0.91
+   },
+   "2": {
+    "occupancy": 0.824,
+    "price": 0.906
+   },
+   "3": {
+    "occupancy": 0.876,
+    "price": 1.016
+   },
+   "4": {
+    "occupancy": 1.106,
+    "price": 1.065
+   },
+   "5": {
+    "occupancy": 1.069,
+    "price": 1.104
+   },
+   "6": {
+    "occupancy": 0.949,
+    "price": 1.128
+   },
+   "7": {
+    "occupancy": 1.156,
+    "price": 1.168
+   },
+   "8": {
+    "occupancy": 1.363,
+    "price": 0.999
+   },
+   "9": {
+    "occupancy": 1.141,
+    "price": 0.947
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/provence-alpes-côte-d'azur/marseille",
+  "usdPerEur": 1.1642
+ },
+ "menton": {
+  "adr": 123.7,
+  "checked": "2026-10-16",
+  "dept": "06",
+  "listings": 1458,
+  "name": "Menton",
+  "occupancy": 0.41,
+  "occupancyTop": 0.63,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.591,
+    "price": 0.884
+   },
+   "10": {
+    "occupancy": 1.023,
+    "price": 0.899
+   },
+   "11": {
+    "occupancy": 0.753,
+    "price": 0.868
+   },
+   "12": {
+    "occupancy": 0.649,
+    "price": 0.892
+   },
+   "2": {
+    "occupancy": 0.954,
+    "price": 0.937
+   },
+   "3": {
+    "occupancy": 0.714,
+    "price": 0.954
+   },
+   "4": {
+    "occupancy": 1.038,
+    "price": 1.021
+   },
+   "5": {
+    "occupancy": 1.036,
+    "price": 1.07
+   },
+   "6": {
+    "occupancy": 1.043,
+    "price": 1.183
+   },
+   "7": {
+    "occupancy": 1.325,
+    "price": 1.255
+   },
+   "8": {
+    "occupancy": 1.606,
+    "price": 1.072
+   },
+   "9": {
+    "occupancy": 1.267,
+    "price": 0.966
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/provence-alpes-côte-d'azur/menton",
+  "usdPerEur": 1.1642
+ },
+ "metz": {
+  "adr": 75.6,
+  "checked": "2026-10-16",
+  "dept": "57",
+  "listings": 728,
+  "name": "Metz",
+  "occupancy": 0.4,
+  "occupancyTop": 0.61,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.745,
+    "price": 0.936
+   },
+   "10": {
+    "occupancy": 1.132,
+    "price": 0.973
+   },
+   "11": {
+    "occupancy": 1.049,
+    "price": 0.962
+   },
+   "12": {
+    "occupancy": 1.238,
+    "price": 1.024
+   },
+   "2": {
+    "occupancy": 0.884,
+    "price": 0.922
+   },
+   "3": {
+    "occupancy": 0.897,
+    "price": 0.997
+   },
+   "4": {
+    "occupancy": 1.016,
+    "price": 1.037
+   },
+   "5": {
+    "occupancy": 1.009,
+    "price": 1.075
+   },
+   "6": {
+    "occupancy": 0.866,
+    "price": 1.066
+   },
+   "7": {
+    "occupancy": 0.989,
+    "price": 1.083
+   },
+   "8": {
+    "occupancy": 1.113,
+    "price": 0.97
+   },
+   "9": {
+    "occupancy": 1.063,
+    "price": 0.955
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/grand-est/metz",
+  "usdPerEur": 1.1642
+ },
+ "montpellier": {
+  "adr": 73.0,
+  "checked": "2026-10-16",
+  "dept": "34",
+  "listings": 3241,
+  "name": "Montpellier",
+  "occupancy": 0.45,
+  "occupancyTop": 0.67,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.815,
+    "price": 0.928
+   },
+   "10": {
+    "occupancy": 1.088,
+    "price": 0.952
+   },
+   "11": {
+    "occupancy": 1.037,
+    "price": 0.932
+   },
+   "12": {
+    "occupancy": 0.933,
+    "price": 0.932
+   },
+   "2": {
+    "occupancy": 0.887,
+    "price": 0.924
+   },
+   "3": {
+    "occupancy": 0.898,
+    "price": 1.024
+   },
+   "4": {
+    "occupancy": 1.013,
+    "price": 1.048
+   },
+   "5": {
+    "occupancy": 0.974,
+    "price": 1.078
+   },
+   "6": {
+    "occupancy": 0.894,
+    "price": 1.09
+   },
+   "7": {
+    "occupancy": 1.074,
+    "price": 1.133
+   },
+   "8": {
+    "occupancy": 1.253,
+    "price": 0.999
+   },
+   "9": {
+    "occupancy": 1.133,
+    "price": 0.96
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/occitania/montpellier",
+  "usdPerEur": 1.1642
+ },
+ "montreuil": {
+  "adr": 87.6,
+  "checked": "2026-10-16",
+  "dept": "93",
+  "listings": 770,
+  "name": "Montreuil",
+  "occupancy": 0.46,
+  "occupancyTop": 0.73,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.825,
+    "price": 0.946
+   },
+   "10": {
+    "occupancy": 1.128,
+    "price": 0.964
+   },
+   "11": {
+    "occupancy": 1.02,
+    "price": 0.951
+   },
+   "12": {
+    "occupancy": 1.037,
+    "price": 0.958
+   },
+   "2": {
+    "occupancy": 0.846,
+    "price": 0.941
+   },
+   "3": {
+    "occupancy": 0.927,
+    "price": 1.039
+   },
+   "4": {
+    "occupancy": 1.082,
+    "price": 1.054
+   },
+   "5": {
+    "occupancy": 1.056,
+    "price": 1.065
+   },
+   "6": {
+    "occupancy": 1.076,
+    "price": 1.088
+   },
+   "7": {
+    "occupancy": 0.989,
+    "price": 1.083
+   },
+   "8": {
+    "occupancy": 0.902,
+    "price": 0.947
+   },
+   "9": {
+    "occupancy": 1.113,
+    "price": 0.964
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/montreuil",
+  "usdPerEur": 1.1642
+ },
+ "montrouge": {
+  "adr": 108.2,
+  "checked": "2026-10-16",
+  "dept": "92",
+  "listings": 307,
+  "name": "Montrouge",
+  "occupancy": 0.57,
+  "occupancyTop": 0.77,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.797,
+    "price": 0.95
+   },
+   "10": {
+    "occupancy": 1.142,
+    "price": 0.972
+   },
+   "11": {
+    "occupancy": 1.01,
+    "price": 0.959
+   },
+   "12": {
+    "occupancy": 0.996,
+    "price": 0.968
+   },
+   "2": {
+    "occupancy": 0.918,
+    "price": 0.948
+   },
+   "3": {
+    "occupancy": 0.973,
+    "price": 1.023
+   },
+   "4": {
+    "occupancy": 1.059,
+    "price": 1.055
+   },
+   "5": {
+    "occupancy": 1.063,
+    "price": 1.065
+   },
+   "6": {
+    "occupancy": 1.088,
+    "price": 1.075
+   },
+   "7": {
+    "occupancy": 0.974,
+    "price": 1.074
+   },
+   "8": {
+    "occupancy": 0.86,
+    "price": 0.947
+   },
+   "9": {
+    "occupancy": 1.119,
+    "price": 0.964
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/montrouge",
+  "usdPerEur": 1.1642
+ },
+ "mulhouse": {
+  "adr": 68.7,
+  "checked": "2026-10-16",
+  "dept": "68",
+  "listings": 930,
+  "name": "Mulhouse",
+  "occupancy": 0.34,
+  "occupancyTop": 0.54,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.694,
+    "price": 0.919
+   },
+   "10": {
+    "occupancy": 1.083,
+    "price": 0.926
+   },
+   "11": {
+    "occupancy": 0.96,
+    "price": 0.971
+   },
+   "12": {
+    "occupancy": 1.506,
+    "price": 1.132
+   },
+   "2": {
+    "occupancy": 0.889,
+    "price": 0.89
+   },
+   "3": {
+    "occupancy": 0.902,
+    "price": 0.971
+   },
+   "4": {
+    "occupancy": 0.9,
+    "price": 1.01
+   },
+   "5": {
+    "occupancy": 0.926,
+    "price": 1.083
+   },
+   "6": {
+    "occupancy": 0.787,
+    "price": 1.072
+   },
+   "7": {
+    "occupancy": 1.026,
+    "price": 1.165
+   },
+   "8": {
+    "occupancy": 1.265,
+    "price": 0.955
+   },
+   "9": {
+    "occupancy": 1.063,
+    "price": 0.907
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/grand-est/mulhouse",
+  "usdPerEur": 1.1642
+ },
+ "nancy": {
+  "adr": 66.1,
+  "checked": "2026-10-16",
+  "dept": "54",
+  "listings": 1012,
+  "name": "Nancy",
+  "occupancy": 0.4,
+  "occupancyTop": 0.6,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.858,
+    "price": 0.942
+   },
+   "10": {
+    "occupancy": 1.105,
+    "price": 0.98
+   },
+   "11": {
+    "occupancy": 0.992,
+    "price": 0.962
+   },
+   "12": {
+    "occupancy": 1.166,
+    "price": 0.998
+   },
+   "2": {
+    "occupancy": 0.876,
+    "price": 0.926
+   },
+   "3": {
+    "occupancy": 0.916,
+    "price": 1.015
+   },
+   "4": {
+    "occupancy": 0.953,
+    "price": 1.042
+   },
+   "5": {
+    "occupancy": 0.942,
+    "price": 1.066
+   },
+   "6": {
+    "occupancy": 0.932,
+    "price": 1.077
+   },
+   "7": {
+    "occupancy": 1.009,
+    "price": 1.054
+   },
+   "8": {
+    "occupancy": 1.086,
+    "price": 0.965
+   },
+   "9": {
+    "occupancy": 1.166,
+    "price": 0.974
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/grand-est/nancy",
+  "usdPerEur": 1.1642
+ },
+ "nantes": {
+  "adr": 68.7,
+  "checked": "2026-10-16",
+  "dept": "44",
+  "listings": 2103,
+  "name": "Nantes",
+  "occupancy": 0.42,
+  "occupancyTop": 0.64,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.885,
+    "price": 0.947
+   },
+   "10": {
+    "occupancy": 1.078,
+    "price": 0.959
+   },
+   "11": {
+    "occupancy": 1.047,
+    "price": 0.944
+   },
+   "12": {
+    "occupancy": 1.052,
+    "price": 0.944
+   },
+   "2": {
+    "occupancy": 0.924,
+    "price": 0.947
+   },
+   "3": {
+    "occupancy": 0.963,
+    "price": 1.055
+   },
+   "4": {
+    "occupancy": 0.974,
+    "price": 1.065
+   },
+   "5": {
+    "occupancy": 0.921,
+    "price": 1.074
+   },
+   "6": {
+    "occupancy": 0.97,
+    "price": 1.091
+   },
+   "7": {
+    "occupancy": 1.015,
+    "price": 1.066
+   },
+   "8": {
+    "occupancy": 1.06,
+    "price": 0.955
+   },
+   "9": {
+    "occupancy": 1.111,
+    "price": 0.954
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/pays-de-la-loire/nantes",
+  "usdPerEur": 1.1642
+ },
+ "neuilly-sur-seine": {
+  "adr": 152.9,
+  "checked": "2026-10-16",
+  "dept": "92",
+  "listings": 412,
+  "name": "Neuilly-sur-Seine",
+  "occupancy": 0.47,
+  "occupancyTop": 0.71,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.927,
+    "price": 0.945
+   },
+   "10": {
+    "occupancy": 1.101,
+    "price": 0.958
+   },
+   "11": {
+    "occupancy": 0.96,
+    "price": 0.948
+   },
+   "12": {
+    "occupancy": 1.01,
+    "price": 0.963
+   },
+   "2": {
+    "occupancy": 0.925,
+    "price": 0.944
+   },
+   "3": {
+    "occupancy": 0.949,
+    "price": 1.015
+   },
+   "4": {
+    "occupancy": 1.018,
+    "price": 1.062
+   },
+   "5": {
+    "occupancy": 1.081,
+    "price": 1.072
+   },
+   "6": {
+    "occupancy": 1.061,
+    "price": 1.099
+   },
+   "7": {
+    "occupancy": 0.96,
+    "price": 1.089
+   },
+   "8": {
+    "occupancy": 0.859,
+    "price": 0.948
+   },
+   "9": {
+    "occupancy": 1.15,
+    "price": 0.957
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/neuilly-sur-seine",
+  "usdPerEur": 1.1642
+ },
+ "nice": {
+  "adr": 127.1,
+  "checked": "2026-10-16",
+  "dept": "06",
+  "listings": 9856,
+  "name": "Nice",
+  "occupancy": 0.46,
+  "occupancyTop": 0.69,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.636,
+    "price": 0.88
+   },
+   "10": {
+    "occupancy": 1.058,
+    "price": 0.936
+   },
+   "11": {
+    "occupancy": 0.75,
+    "price": 0.881
+   },
+   "12": {
+    "occupancy": 0.706,
+    "price": 0.894
+   },
+   "2": {
+    "occupancy": 0.822,
+    "price": 0.896
+   },
+   "3": {
+    "occupancy": 0.856,
+    "price": 0.939
+   },
+   "4": {
+    "occupancy": 1.042,
+    "price": 1.007
+   },
+   "5": {
+    "occupancy": 1.143,
+    "price": 1.082
+   },
+   "6": {
+    "occupancy": 1.068,
+    "price": 1.166
+   },
+   "7": {
+    "occupancy": 1.234,
+    "price": 1.219
+   },
+   "8": {
+    "occupancy": 1.399,
+    "price": 1.085
+   },
+   "9": {
+    "occupancy": 1.285,
+    "price": 1.015
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/provence-alpes-côte-d'azur/nice",
+  "usdPerEur": 1.1642
+ },
+ "nimes": {
+  "adr": 79.9,
+  "checked": "2026-10-16",
+  "dept": "30",
+  "listings": 1143,
+  "name": "Nîmes",
+  "occupancy": 0.32,
+  "occupancyTop": 0.54,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.826,
+    "price": 0.907
+   },
+   "10": {
+    "occupancy": 1.016,
+    "price": 0.919
+   },
+   "11": {
+    "occupancy": 0.915,
+    "price": 0.9
+   },
+   "12": {
+    "occupancy": 0.855,
+    "price": 0.901
+   },
+   "2": {
+    "occupancy": 0.859,
+    "price": 0.906
+   },
+   "3": {
+    "occupancy": 0.86,
+    "price": 1.025
+   },
+   "4": {
+    "occupancy": 1.008,
+    "price": 1.066
+   },
+   "5": {
+    "occupancy": 0.985,
+    "price": 1.153
+   },
+   "6": {
+    "occupancy": 0.941,
+    "price": 1.136
+   },
+   "7": {
+    "occupancy": 1.185,
+    "price": 1.174
+   },
+   "8": {
+    "occupancy": 1.429,
+    "price": 0.965
+   },
+   "9": {
+    "occupancy": 1.121,
+    "price": 0.948
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/occitania/nimes",
+  "usdPerEur": 1.1642
+ },
+ "orleans": {
+  "adr": 59.3,
+  "checked": "2026-10-16",
+  "dept": "45",
+  "listings": 955,
+  "name": "Orléans",
+  "occupancy": 0.4,
+  "occupancyTop": 0.61,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.781,
+    "price": 0.928
+   },
+   "10": {
+    "occupancy": 1.058,
+    "price": 0.963
+   },
+   "11": {
+    "occupancy": 1.009,
+    "price": 0.946
+   },
+   "12": {
+    "occupancy": 1.018,
+    "price": 0.945
+   },
+   "2": {
+    "occupancy": 0.838,
+    "price": 0.92
+   },
+   "3": {
+    "occupancy": 0.912,
+    "price": 1.005
+   },
+   "4": {
+    "occupancy": 1.004,
+    "price": 1.061
+   },
+   "5": {
+    "occupancy": 0.972,
+    "price": 1.085
+   },
+   "6": {
+    "occupancy": 1.028,
+    "price": 1.089
+   },
+   "7": {
+    "occupancy": 1.103,
+    "price": 1.107
+   },
+   "8": {
+    "occupancy": 1.178,
+    "price": 0.984
+   },
+   "9": {
+    "occupancy": 1.099,
+    "price": 0.966
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/centre-val-de-loire/orléans",
+  "usdPerEur": 1.1642
+ },
+ "pantin": {
+  "adr": 90.2,
+  "checked": "2026-10-16",
+  "dept": "93",
+  "listings": 409,
+  "name": "Pantin",
+  "occupancy": 0.5,
+  "occupancyTop": 0.76,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.865,
+    "price": 0.944
+   },
+   "10": {
+    "occupancy": 1.156,
+    "price": 0.956
+   },
+   "11": {
+    "occupancy": 1.017,
+    "price": 0.949
+   },
+   "12": {
+    "occupancy": 1.013,
+    "price": 0.951
+   },
+   "2": {
+    "occupancy": 0.878,
+    "price": 0.941
+   },
+   "3": {
+    "occupancy": 0.943,
+    "price": 1.049
+   },
+   "4": {
+    "occupancy": 1.09,
+    "price": 1.062
+   },
+   "5": {
+    "occupancy": 1.068,
+    "price": 1.076
+   },
+   "6": {
+    "occupancy": 1.054,
+    "price": 1.087
+   },
+   "7": {
+    "occupancy": 0.952,
+    "price": 1.088
+   },
+   "8": {
+    "occupancy": 0.851,
+    "price": 0.947
+   },
+   "9": {
+    "occupancy": 1.113,
+    "price": 0.949
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/pantin",
+  "usdPerEur": 1.1642
+ },
+ "paris": {
+  "adr": 163.2,
+  "checked": "2026-10-16",
+  "dept": "75",
+  "listings": 40362,
+  "name": "Paris",
+  "occupancy": 0.53,
+  "occupancyTop": 0.77,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.857,
+    "price": 0.905
+   },
+   "10": {
+    "occupancy": 1.103,
+    "price": 0.95
+   },
+   "11": {
+    "occupancy": 0.991,
+    "price": 0.917
+   },
+   "12": {
+    "occupancy": 0.968,
+    "price": 0.942
+   },
+   "2": {
+    "occupancy": 0.912,
+    "price": 0.89
+   },
+   "3": {
+    "occupancy": 0.995,
+    "price": 1.039
+   },
+   "4": {
+    "occupancy": 1.08,
+    "price": 1.096
+   },
+   "5": {
+    "occupancy": 1.079,
+    "price": 1.122
+   },
+   "6": {
+    "occupancy": 1.036,
+    "price": 1.165
+   },
+   "7": {
+    "occupancy": 0.967,
+    "price": 1.112
+   },
+   "8": {
+    "occupancy": 0.898,
+    "price": 0.911
+   },
+   "9": {
+    "occupancy": 1.113,
+    "price": 0.95
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/paris",
+  "usdPerEur": 1.1642
+ },
+ "pau": {
+  "adr": 57.6,
+  "checked": "2026-10-16",
+  "dept": "64",
+  "listings": 696,
+  "name": "Pau",
+  "occupancy": 0.38,
+  "occupancyTop": 0.59,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.831,
+    "price": 0.95
+   },
+   "10": {
+    "occupancy": 1.15,
+    "price": 0.943
+   },
+   "11": {
+    "occupancy": 1.004,
+    "price": 0.919
+   },
+   "12": {
+    "occupancy": 1.109,
+    "price": 0.938
+   },
+   "2": {
+    "occupancy": 0.928,
+    "price": 0.935
+   },
+   "3": {
+    "occupancy": 0.945,
+    "price": 1.034
+   },
+   "4": {
+    "occupancy": 0.978,
+    "price": 1.08
+   },
+   "5": {
+    "occupancy": 0.807,
+    "price": 1.087
+   },
+   "6": {
+    "occupancy": 0.807,
+    "price": 1.094
+   },
+   "7": {
+    "occupancy": 1.034,
+    "price": 1.134
+   },
+   "8": {
+    "occupancy": 1.261,
+    "price": 0.961
+   },
+   "9": {
+    "occupancy": 1.144,
+    "price": 0.926
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/nouvelle-aquitaine/pau",
+  "usdPerEur": 1.1642
+ },
+ "perpignan": {
+  "adr": 67.0,
+  "checked": "2026-10-16",
+  "dept": "66",
+  "listings": 1114,
+  "name": "Perpignan",
+  "occupancy": 0.31,
+  "occupancyTop": 0.52,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.763,
+    "price": 0.926
+   },
+   "10": {
+    "occupancy": 0.998,
+    "price": 0.933
+   },
+   "11": {
+    "occupancy": 0.957,
+    "price": 0.92
+   },
+   "12": {
+    "occupancy": 1.083,
+    "price": 0.931
+   },
+   "2": {
+    "occupancy": 0.856,
+    "price": 0.927
+   },
+   "3": {
+    "occupancy": 0.838,
+    "price": 1.029
+   },
+   "4": {
+    "occupancy": 0.886,
+    "price": 1.046
+   },
+   "5": {
+    "occupancy": 0.837,
+    "price": 1.06
+   },
+   "6": {
+    "occupancy": 0.782,
+    "price": 1.078
+   },
+   "7": {
+    "occupancy": 1.227,
+    "price": 1.169
+   },
+   "8": {
+    "occupancy": 1.671,
+    "price": 1.031
+   },
+   "9": {
+    "occupancy": 1.101,
+    "price": 0.95
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/occitania/perpignan",
+  "usdPerEur": 1.1642
+ },
+ "poitiers": {
+  "adr": 58.4,
+  "checked": "2026-10-16",
+  "dept": "86",
+  "listings": 694,
+  "name": "Poitiers",
+  "occupancy": 0.4,
+  "occupancyTop": 0.62,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.746,
+    "price": 0.933
+   },
+   "10": {
+    "occupancy": 1.18,
+    "price": 0.955
+   },
+   "11": {
+    "occupancy": 0.973,
+    "price": 0.93
+   },
+   "12": {
+    "occupancy": 0.981,
+    "price": 0.931
+   },
+   "2": {
+    "occupancy": 0.897,
+    "price": 0.936
+   },
+   "3": {
+    "occupancy": 1.01,
+    "price": 1.042
+   },
+   "4": {
+    "occupancy": 1.064,
+    "price": 1.084
+   },
+   "5": {
+    "occupancy": 0.956,
+    "price": 1.081
+   },
+   "6": {
+    "occupancy": 0.862,
+    "price": 1.091
+   },
+   "7": {
+    "occupancy": 1.045,
+    "price": 1.113
+   },
+   "8": {
+    "occupancy": 1.228,
+    "price": 0.966
+   },
+   "9": {
+    "occupancy": 1.056,
+    "price": 0.939
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/nouvelle-aquitaine/poitiers",
+  "usdPerEur": 1.1642
+ },
+ "puteaux": {
+  "adr": 120.3,
+  "checked": "2026-10-16",
+  "dept": "92",
+  "listings": 318,
+  "name": "Puteaux",
+  "occupancy": 0.47,
+  "occupancyTop": 0.73,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.863,
+    "price": 0.937
+   },
+   "10": {
+    "occupancy": 1.155,
+    "price": 0.978
+   },
+   "11": {
+    "occupancy": 1.005,
+    "price": 0.953
+   },
+   "12": {
+    "occupancy": 1.074,
+    "price": 0.963
+   },
+   "2": {
+    "occupancy": 0.967,
+    "price": 0.939
+   },
+   "3": {
+    "occupancy": 0.883,
+    "price": 1.012
+   },
+   "4": {
+    "occupancy": 0.965,
+    "price": 1.038
+   },
+   "5": {
+    "occupancy": 1.093,
+    "price": 1.067
+   },
+   "6": {
+    "occupancy": 1.093,
+    "price": 1.098
+   },
+   "7": {
+    "occupancy": 0.989,
+    "price": 1.085
+   },
+   "8": {
+    "occupancy": 0.885,
+    "price": 0.954
+   },
+   "9": {
+    "occupancy": 1.027,
+    "price": 0.976
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/puteaux",
+  "usdPerEur": 1.1642
+ },
+ "reims": {
+  "adr": 75.6,
+  "checked": "2026-10-16",
+  "dept": "51",
+  "listings": 1715,
+  "name": "Reims",
+  "occupancy": 0.37,
+  "occupancyTop": 0.56,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.725,
+    "price": 0.909
+   },
+   "10": {
+    "occupancy": 1.099,
+    "price": 0.97
+   },
+   "11": {
+    "occupancy": 0.97,
+    "price": 0.932
+   },
+   "12": {
+    "occupancy": 1.127,
+    "price": 0.958
+   },
+   "2": {
+    "occupancy": 0.813,
+    "price": 0.9
+   },
+   "3": {
+    "occupancy": 0.852,
+    "price": 0.993
+   },
+   "4": {
+    "occupancy": 1.086,
+    "price": 1.082
+   },
+   "5": {
+    "occupancy": 1.036,
+    "price": 1.107
+   },
+   "6": {
+    "occupancy": 0.911,
+    "price": 1.092
+   },
+   "7": {
+    "occupancy": 1.027,
+    "price": 1.118
+   },
+   "8": {
+    "occupancy": 1.143,
+    "price": 0.961
+   },
+   "9": {
+    "occupancy": 1.211,
+    "price": 0.977
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/grand-est/reims",
+  "usdPerEur": 1.1642
+ },
+ "rennes": {
+  "adr": 67.0,
+  "checked": "2026-10-16",
+  "dept": "35",
+  "listings": 1360,
+  "name": "Rennes",
+  "occupancy": 0.48,
+  "occupancyTop": 0.68,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.936,
+    "price": 0.938
+   },
+   "10": {
+    "occupancy": 1.206,
+    "price": 0.989
+   },
+   "11": {
+    "occupancy": 1.097,
+    "price": 0.962
+   },
+   "12": {
+    "occupancy": 1.007,
+    "price": 0.964
+   },
+   "2": {
+    "occupancy": 0.964,
+    "price": 0.932
+   },
+   "3": {
+    "occupancy": 1.005,
+    "price": 1.041
+   },
+   "4": {
+    "occupancy": 0.945,
+    "price": 1.049
+   },
+   "5": {
+    "occupancy": 0.858,
+    "price": 1.056
+   },
+   "6": {
+    "occupancy": 0.904,
+    "price": 1.069
+   },
+   "7": {
+    "occupancy": 0.949,
+    "price": 1.049
+   },
+   "8": {
+    "occupancy": 0.994,
+    "price": 0.95
+   },
+   "9": {
+    "occupancy": 1.135,
+    "price": 1.001
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/brittany/rennes",
+  "usdPerEur": 1.1642
+ },
+ "rouen": {
+  "adr": 64.4,
+  "checked": "2026-10-16",
+  "dept": "76",
+  "listings": 1430,
+  "name": "Rouen",
+  "occupancy": 0.39,
+  "occupancyTop": 0.61,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.833,
+    "price": 0.941
+   },
+   "10": {
+    "occupancy": 1.138,
+    "price": 0.972
+   },
+   "11": {
+    "occupancy": 1.008,
+    "price": 0.954
+   },
+   "12": {
+    "occupancy": 1.05,
+    "price": 0.957
+   },
+   "2": {
+    "occupancy": 0.87,
+    "price": 0.938
+   },
+   "3": {
+    "occupancy": 0.886,
+    "price": 1.018
+   },
+   "4": {
+    "occupancy": 1.032,
+    "price": 1.047
+   },
+   "5": {
+    "occupancy": 0.937,
+    "price": 1.071
+   },
+   "6": {
+    "occupancy": 0.879,
+    "price": 1.058
+   },
+   "7": {
+    "occupancy": 1.041,
+    "price": 1.095
+   },
+   "8": {
+    "occupancy": 1.203,
+    "price": 0.982
+   },
+   "9": {
+    "occupancy": 1.121,
+    "price": 0.968
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/normandy/rouen",
+  "usdPerEur": 1.1642
+ },
+ "saint-denis": {
+  "adr": 104.8,
+  "checked": "2026-10-16",
+  "dept": "93",
+  "listings": 987,
+  "name": "Saint-Denis",
+  "occupancy": 0.4,
+  "occupancyTop": 0.66,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.871,
+    "price": 0.938
+   },
+   "10": {
+    "occupancy": 1.231,
+    "price": 0.956
+   },
+   "11": {
+    "occupancy": 0.953,
+    "price": 0.947
+   },
+   "12": {
+    "occupancy": 1.04,
+    "price": 0.953
+   },
+   "2": {
+    "occupancy": 0.903,
+    "price": 0.928
+   },
+   "3": {
+    "occupancy": 0.864,
+    "price": 1.021
+   },
+   "4": {
+    "occupancy": 1.066,
+    "price": 1.039
+   },
+   "5": {
+    "occupancy": 0.956,
+    "price": 1.085
+   },
+   "6": {
+    "occupancy": 0.996,
+    "price": 1.111
+   },
+   "7": {
+    "occupancy": 0.979,
+    "price": 1.114
+   },
+   "8": {
+    "occupancy": 0.963,
+    "price": 0.956
+   },
+   "9": {
+    "occupancy": 1.177,
+    "price": 0.95
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/saint-denis",
+  "usdPerEur": 1.1642
+ },
+ "saint-etienne": {
+  "adr": 51.5,
+  "checked": "2026-10-16",
+  "dept": "42",
+  "listings": 860,
+  "name": "Saint-Étienne",
+  "occupancy": 0.35,
+  "occupancyTop": 0.58,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.984,
+    "price": 0.943
+   },
+   "10": {
+    "occupancy": 1.121,
+    "price": 0.964
+   },
+   "11": {
+    "occupancy": 1.1,
+    "price": 0.954
+   },
+   "12": {
+    "occupancy": 1.096,
+    "price": 0.953
+   },
+   "2": {
+    "occupancy": 0.988,
+    "price": 0.938
+   },
+   "3": {
+    "occupancy": 1.014,
+    "price": 1.025
+   },
+   "4": {
+    "occupancy": 0.959,
+    "price": 1.064
+   },
+   "5": {
+    "occupancy": 0.864,
+    "price": 1.082
+   },
+   "6": {
+    "occupancy": 0.856,
+    "price": 1.084
+   },
+   "7": {
+    "occupancy": 0.92,
+    "price": 1.091
+   },
+   "8": {
+    "occupancy": 0.984,
+    "price": 0.948
+   },
+   "9": {
+    "occupancy": 1.116,
+    "price": 0.954
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/auvergne-rhône-alpes/saint-étienne",
+  "usdPerEur": 1.1642
+ },
+ "saint-malo": {
+  "adr": 106.5,
+  "checked": "2026-10-16",
+  "dept": "35",
+  "listings": 1858,
+  "name": "Saint-Malo",
+  "occupancy": 0.4,
+  "occupancyTop": 0.61,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.602,
+    "price": 0.906
+   },
+   "10": {
+    "occupancy": 1.059,
+    "price": 0.94
+   },
+   "11": {
+    "occupancy": 0.773,
+    "price": 0.909
+   },
+   "12": {
+    "occupancy": 0.774,
+    "price": 0.921
+   },
+   "2": {
+    "occupancy": 0.768,
+    "price": 0.904
+   },
+   "3": {
+    "occupancy": 0.798,
+    "price": 0.978
+   },
+   "4": {
+    "occupancy": 1.034,
+    "price": 1.062
+   },
+   "5": {
+    "occupancy": 1.074,
+    "price": 1.091
+   },
+   "6": {
+    "occupancy": 0.974,
+    "price": 1.087
+   },
+   "7": {
+    "occupancy": 1.316,
+    "price": 1.196
+   },
+   "8": {
+    "occupancy": 1.658,
+    "price": 1.049
+   },
+   "9": {
+    "occupancy": 1.168,
+    "price": 0.956
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/brittany/saint-malo",
+  "usdPerEur": 1.1642
+ },
+ "saint-ouen-sur-seine": {
+  "adr": 102.2,
+  "checked": "2026-10-16",
+  "dept": "93",
+  "listings": 637,
+  "name": "Saint-Ouen-sur-Seine",
+  "occupancy": 0.57,
+  "occupancyTop": 0.76,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.84,
+    "price": 0.94
+   },
+   "10": {
+    "occupancy": 1.179,
+    "price": 0.964
+   },
+   "11": {
+    "occupancy": 1.006,
+    "price": 0.945
+   },
+   "12": {
+    "occupancy": 0.982,
+    "price": 0.957
+   },
+   "2": {
+    "occupancy": 0.93,
+    "price": 0.937
+   },
+   "3": {
+    "occupancy": 0.929,
+    "price": 1.02
+   },
+   "4": {
+    "occupancy": 1.131,
+    "price": 1.064
+   },
+   "5": {
+    "occupancy": 1.047,
+    "price": 1.079
+   },
+   "6": {
+    "occupancy": 1.027,
+    "price": 1.1
+   },
+   "7": {
+    "occupancy": 0.952,
+    "price": 1.093
+   },
+   "8": {
+    "occupancy": 0.877,
+    "price": 0.945
+   },
+   "9": {
+    "occupancy": 1.1,
+    "price": 0.957
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/saint-ouen-sur-seine",
+  "usdPerEur": 1.1642
+ },
+ "strasbourg": {
+  "adr": 104.8,
+  "checked": "2026-10-16",
+  "dept": "67",
+  "listings": 2655,
+  "name": "Strasbourg",
+  "occupancy": 0.47,
+  "occupancyTop": 0.69,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.77,
+    "price": 0.95
+   },
+   "10": {
+    "occupancy": 1.137,
+    "price": 0.941
+   },
+   "11": {
+    "occupancy": 1.015,
+    "price": 1.04
+   },
+   "12": {
+    "occupancy": 1.38,
+    "price": 1.353
+   },
+   "2": {
+    "occupancy": 0.815,
+    "price": 0.907
+   },
+   "3": {
+    "occupancy": 0.88,
+    "price": 0.947
+   },
+   "4": {
+    "occupancy": 1.024,
+    "price": 0.97
+   },
+   "5": {
+    "occupancy": 1.012,
+    "price": 1.019
+   },
+   "6": {
+    "occupancy": 0.83,
+    "price": 1.018
+   },
+   "7": {
+    "occupancy": 0.959,
+    "price": 1.023
+   },
+   "8": {
+    "occupancy": 1.088,
+    "price": 0.906
+   },
+   "9": {
+    "occupancy": 1.089,
+    "price": 0.925
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/grand-est/strasbourg",
+  "usdPerEur": 1.1642
+ },
+ "toulon": {
+  "adr": 79.0,
+  "checked": "2026-10-16",
+  "dept": "83",
+  "listings": 1833,
+  "name": "Toulon",
+  "occupancy": 0.34,
+  "occupancyTop": 0.56,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.799,
+    "price": 0.921
+   },
+   "10": {
+    "occupancy": 1.04,
+    "price": 0.941
+   },
+   "11": {
+    "occupancy": 0.93,
+    "price": 0.913
+   },
+   "12": {
+    "occupancy": 0.905,
+    "price": 0.916
+   },
+   "2": {
+    "occupancy": 0.866,
+    "price": 0.921
+   },
+   "3": {
+    "occupancy": 0.809,
+    "price": 0.998
+   },
+   "4": {
+    "occupancy": 0.928,
+    "price": 1.032
+   },
+   "5": {
+    "occupancy": 0.887,
+    "price": 1.063
+   },
+   "6": {
+    "occupancy": 0.828,
+    "price": 1.089
+   },
+   "7": {
+    "occupancy": 1.232,
+    "price": 1.187
+   },
+   "8": {
+    "occupancy": 1.636,
+    "price": 1.059
+   },
+   "9": {
+    "occupancy": 1.14,
+    "price": 0.962
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/provence-alpes-côte-d'azur/toulon",
+  "usdPerEur": 1.1642
+ },
+ "toulouse": {
+  "adr": 65.3,
+  "checked": "2026-10-16",
+  "dept": "31",
+  "listings": 3878,
+  "name": "Toulouse",
+  "occupancy": 0.46,
+  "occupancyTop": 0.68,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.864,
+    "price": 0.934
+   },
+   "10": {
+    "occupancy": 1.151,
+    "price": 0.971
+   },
+   "11": {
+    "occupancy": 1.033,
+    "price": 0.944
+   },
+   "12": {
+    "occupancy": 1.034,
+    "price": 0.95
+   },
+   "2": {
+    "occupancy": 0.964,
+    "price": 0.925
+   },
+   "3": {
+    "occupancy": 0.979,
+    "price": 1.029
+   },
+   "4": {
+    "occupancy": 1.03,
+    "price": 1.065
+   },
+   "5": {
+    "occupancy": 0.948,
+    "price": 1.076
+   },
+   "6": {
+    "occupancy": 0.882,
+    "price": 1.084
+   },
+   "7": {
+    "occupancy": 0.97,
+    "price": 1.1
+   },
+   "8": {
+    "occupancy": 1.059,
+    "price": 0.955
+   },
+   "9": {
+    "occupancy": 1.085,
+    "price": 0.967
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/occitania/toulouse",
+  "usdPerEur": 1.1642
+ },
+ "tours": {
+  "adr": 65.3,
+  "checked": "2026-10-16",
+  "dept": "37",
+  "listings": 1242,
+  "name": "Tours",
+  "occupancy": 0.39,
+  "occupancyTop": 0.61,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.796,
+    "price": 0.911
+   },
+   "10": {
+    "occupancy": 1.081,
+    "price": 0.951
+   },
+   "11": {
+    "occupancy": 0.94,
+    "price": 0.925
+   },
+   "12": {
+    "occupancy": 0.996,
+    "price": 0.932
+   },
+   "2": {
+    "occupancy": 0.875,
+    "price": 0.906
+   },
+   "3": {
+    "occupancy": 0.907,
+    "price": 1.007
+   },
+   "4": {
+    "occupancy": 1.006,
+    "price": 1.076
+   },
+   "5": {
+    "occupancy": 1.032,
+    "price": 1.108
+   },
+   "6": {
+    "occupancy": 0.955,
+    "price": 1.126
+   },
+   "7": {
+    "occupancy": 1.073,
+    "price": 1.134
+   },
+   "8": {
+    "occupancy": 1.191,
+    "price": 0.978
+   },
+   "9": {
+    "occupancy": 1.149,
+    "price": 0.946
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/centre-val-de-loire/tours",
+  "usdPerEur": 1.1642
+ },
+ "versailles": {
+  "adr": 109.1,
+  "checked": "2026-10-16",
+  "dept": "78",
+  "listings": 495,
+  "name": "Versailles",
+  "occupancy": 0.46,
+  "occupancyTop": 0.68,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.837,
+    "price": 0.99
+   },
+   "10": {
+    "occupancy": 1.142,
+    "price": 1.015
+   },
+   "11": {
+    "occupancy": 0.927,
+    "price": 1.002
+   },
+   "12": {
+    "occupancy": 0.959,
+    "price": 1.004
+   },
+   "2": {
+    "occupancy": 0.907,
+    "price": 0.986
+   },
+   "3": {
+    "occupancy": 0.892,
+    "price": 0.974
+   },
+   "4": {
+    "occupancy": 1.097,
+    "price": 0.984
+   },
+   "5": {
+    "occupancy": 1.05,
+    "price": 0.998
+   },
+   "6": {
+    "occupancy": 1.063,
+    "price": 1.012
+   },
+   "7": {
+    "occupancy": 1.04,
+    "price": 1.014
+   },
+   "8": {
+    "occupancy": 1.016,
+    "price": 1.008
+   },
+   "9": {
+    "occupancy": 1.07,
+    "price": 1.013
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/versailles",
+  "usdPerEur": 1.1642
+ },
+ "vincennes": {
+  "adr": 104.8,
+  "checked": "2026-10-16",
+  "dept": "94",
+  "listings": 330,
+  "name": "Vincennes",
+  "occupancy": 0.53,
+  "occupancyTop": 0.76,
+  "period": [
+   "2025-08",
+   "2026-07"
+  ],
+  "seasonality": {
+   "1": {
+    "occupancy": 0.85,
+    "price": 0.937
+   },
+   "10": {
+    "occupancy": 1.079,
+    "price": 0.973
+   },
+   "11": {
+    "occupancy": 1.003,
+    "price": 0.956
+   },
+   "12": {
+    "occupancy": 0.977,
+    "price": 0.966
+   },
+   "2": {
+    "occupancy": 0.846,
+    "price": 0.928
+   },
+   "3": {
+    "occupancy": 0.934,
+    "price": 1.025
+   },
+   "4": {
+    "occupancy": 1.118,
+    "price": 1.059
+   },
+   "5": {
+    "occupancy": 1.084,
+    "price": 1.065
+   },
+   "6": {
+    "occupancy": 1.11,
+    "price": 1.101
+   },
+   "7": {
+    "occupancy": 1.002,
+    "price": 1.087
+   },
+   "8": {
+    "occupancy": 0.894,
+    "price": 0.942
+   },
+   "9": {
+    "occupancy": 1.104,
+    "price": 0.961
+   }
+  },
+  "url": "https://www.airroi.com/airbnb-data/france/ile-de-france/vincennes",
+  "usdPerEur": 1.1642
+ }
+}
