@@ -668,7 +668,21 @@ function allowanceToday(settings) {
   return Math.min(settings.daily_limit, ramp);
 }
 
+// Envois uniquement aux heures de bureau, du lundi au vendredi (heure de Paris), même lors d'un
+// lancement manuel : un e-mail professionnel reçu le soir ou le week-end fait mauvaise impression.
+function officeHours() {
+  const now = parisNow();
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  return (
+    now.getDay() >= 1 && now.getDay() <= 5 && minutes >= 8 * 60 + 30 && minutes <= 18 * 60 + 30
+  );
+}
+
 async function sendBatch(settings, box) {
+  if (!officeHours()) {
+    note("Hors heures de bureau (lundi-vendredi, 8 h 30 - 18 h 30) : aucun envoi.");
+    return { sent: 0, followups: 0 };
+  }
   const hour = parisNow().getHours();
   const runsLeft = Math.max(1, RUNS_PER_DAY - (hour >= 14 ? 2 : hour >= 11 ? 1 : 0));
   const remaining = Math.max(0, allowanceToday(settings) - (await sentToday()));
