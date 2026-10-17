@@ -12,6 +12,7 @@ import {
   Menu,
   MessageSquare,
   Plug,
+  Megaphone,
   RefreshCw,
   Sparkles,
   Star,
@@ -190,6 +191,7 @@ const NAV = [
   { to: "/gestion/proprietaires", label: "Propriétaires et rapports", icon: FileText },
   { to: "/gestion/avis", label: "Avis", icon: Star },
   { to: "/gestion/prestataires", label: "Prestataires ménage", icon: Users },
+  { to: "/gestion/prospection", label: "Prospection agences", icon: Megaphone },
   { to: "/gestion/integrations", label: "Connexions et réglages", icon: Plug },
 ] as const;
 

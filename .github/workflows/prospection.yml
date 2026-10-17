@@ -1,0 +1,40 @@
+# Prospection des agences immobilières (scripts/prospection.mjs) : liste, rédaction des messages,
+# envoi des messages validés dans /gestion/prospection, relances et détection des réponses.
+# Secrets du dépôt : SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY, SMTP_PASSWORD.
+# Sans SUPABASE_SERVICE_ROLE_KEY la tâche ne fait rien ; sans SMTP_PASSWORD elle n'envoie rien.
+name: Prospection des agences
+
+on:
+  schedule:
+    # Jours ouvrés, 9 h 17, 12 h 17 et 15 h 17 à Paris en été (une heure plus tôt en hiver).
+    - cron: "17 7,10,13 * * 1-5"
+  workflow_dispatch: {}
+
+concurrency:
+  group: prospection
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prospection
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ] || [ -z "$SUPABASE_URL" ]; then
+            echo "Secrets Supabase absents : prospection non activée."
+            exit 0
+          fi
+          npm install --no-audit --no-fund --no-save @anthropic-ai/sdk @supabase/supabase-js nodemailer imapflow
+          node scripts/prospection.mjs

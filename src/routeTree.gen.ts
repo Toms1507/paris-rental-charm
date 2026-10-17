@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AvisRouteImport } from './routes/avis'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DesinscriptionRouteImport } from './routes/desinscription'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GestionRouteImport } from './routes/gestion'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
@@ -23,6 +24,7 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TarifsRouteImport } from './routes/tarifs'
 import { Route as ZonesRouteImport } from './routes/zones'
+import { Route as ApiDesinscriptionRouteImport } from './routes/api.desinscription'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BlogReglesAirbnbParis120JoursRouteImport } from './routes/blog.regles-airbnb-paris-120-jours'
@@ -37,6 +39,7 @@ import { Route as GestionMenageRouteImport } from './routes/gestion.menage'
 import { Route as GestionMessagesRouteImport } from './routes/gestion.messages'
 import { Route as GestionPrestatairesRouteImport } from './routes/gestion.prestataires'
 import { Route as GestionProprietairesRouteImport } from './routes/gestion.proprietaires'
+import { Route as GestionProspectionRouteImport } from './routes/gestion.prospection'
 import { Route as GestionReservationsRouteImport } from './routes/gestion.reservations'
 import { Route as LivretLinkRouteImport } from './routes/livret.$link'
 import { Route as MenageTokenRouteImport } from './routes/menage.$token'
@@ -66,6 +69,11 @@ const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DesinscriptionRoute = DesinscriptionRouteImport.update({
+  id: '/desinscription',
+  path: '/desinscription',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -116,6 +124,11 @@ const TarifsRoute = TarifsRouteImport.update({
 const ZonesRoute = ZonesRouteImport.update({
   id: '/zones',
   path: '/zones',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDesinscriptionRoute = ApiDesinscriptionRouteImport.update({
+  id: '/api/desinscription',
+  path: '/api/desinscription',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -190,6 +203,11 @@ const GestionProprietairesRoute = GestionProprietairesRouteImport.update({
   path: '/proprietaires',
   getParentRoute: () => GestionRoute,
 } as any)
+const GestionProspectionRoute = GestionProspectionRouteImport.update({
+  id: '/prospection',
+  path: '/prospection',
+  getParentRoute: () => GestionRoute,
+} as any)
 const GestionReservationsRoute = GestionReservationsRouteImport.update({
   id: '/reservations',
   path: '/reservations',
@@ -246,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/avis': typeof AvisRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/desinscription': typeof DesinscriptionRoute
   '/faq': typeof FaqRoute
   '/gestion': typeof GestionRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
@@ -256,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarifs': typeof TarifsRoute
   '/zones': typeof ZonesRoute
+  '/api/desinscription': typeof ApiDesinscriptionRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
@@ -268,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/gestion/messages': typeof GestionMessagesRoute
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
+  '/gestion/prospection': typeof GestionProspectionRoute
   '/gestion/reservations': typeof GestionReservationsRoute
   '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
@@ -286,6 +307,7 @@ export interface FileRoutesByTo {
   '/avis': typeof AvisRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/desinscription': typeof DesinscriptionRoute
   '/faq': typeof FaqRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/mentions-legales': typeof MentionsLegalesRoute
@@ -295,6 +317,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarifs': typeof TarifsRoute
   '/zones': typeof ZonesRoute
+  '/api/desinscription': typeof ApiDesinscriptionRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
@@ -307,6 +330,7 @@ export interface FileRoutesByTo {
   '/gestion/messages': typeof GestionMessagesRoute
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
+  '/gestion/prospection': typeof GestionProspectionRoute
   '/gestion/reservations': typeof GestionReservationsRoute
   '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
@@ -326,6 +350,7 @@ export interface FileRoutesById {
   '/avis': typeof AvisRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/desinscription': typeof DesinscriptionRoute
   '/faq': typeof FaqRoute
   '/gestion': typeof GestionRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
@@ -336,6 +361,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarifs': typeof TarifsRoute
   '/zones': typeof ZonesRoute
+  '/api/desinscription': typeof ApiDesinscriptionRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/regles-airbnb-paris-120-jours': typeof BlogReglesAirbnbParis120JoursRoute
   '/conciergerie-airbnb/$ville': typeof ConciergerieAirbnbVilleRoute
@@ -348,6 +374,7 @@ export interface FileRoutesById {
   '/gestion/messages': typeof GestionMessagesRoute
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
+  '/gestion/prospection': typeof GestionProspectionRoute
   '/gestion/reservations': typeof GestionReservationsRoute
   '/livret/$link': typeof LivretLinkRoute
   '/menage/$token': typeof MenageTokenRoute
@@ -368,6 +395,7 @@ export interface FileRouteTypes {
     | '/avis'
     | '/confidentialite'
     | '/contact'
+    | '/desinscription'
     | '/faq'
     | '/gestion'
     | '/llms.txt'
@@ -378,6 +406,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tarifs'
     | '/zones'
+    | '/api/desinscription'
     | '/blog/$slug'
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
@@ -390,6 +419,7 @@ export interface FileRouteTypes {
     | '/gestion/messages'
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
+    | '/gestion/prospection'
     | '/gestion/reservations'
     | '/livret/$link'
     | '/menage/$token'
@@ -408,6 +438,7 @@ export interface FileRouteTypes {
     | '/avis'
     | '/confidentialite'
     | '/contact'
+    | '/desinscription'
     | '/faq'
     | '/llms.txt'
     | '/mentions-legales'
@@ -417,6 +448,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tarifs'
     | '/zones'
+    | '/api/desinscription'
     | '/blog/$slug'
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
@@ -429,6 +461,7 @@ export interface FileRouteTypes {
     | '/gestion/messages'
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
+    | '/gestion/prospection'
     | '/gestion/reservations'
     | '/livret/$link'
     | '/menage/$token'
@@ -447,6 +480,7 @@ export interface FileRouteTypes {
     | '/avis'
     | '/confidentialite'
     | '/contact'
+    | '/desinscription'
     | '/faq'
     | '/gestion'
     | '/llms.txt'
@@ -457,6 +491,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tarifs'
     | '/zones'
+    | '/api/desinscription'
     | '/blog/$slug'
     | '/blog/regles-airbnb-paris-120-jours'
     | '/conciergerie-airbnb/$ville'
@@ -469,6 +504,7 @@ export interface FileRouteTypes {
     | '/gestion/messages'
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
+    | '/gestion/prospection'
     | '/gestion/reservations'
     | '/livret/$link'
     | '/menage/$token'
@@ -488,6 +524,7 @@ export interface RootRouteChildren {
   AvisRoute: typeof AvisRoute
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   ContactRoute: typeof ContactRoute
+  DesinscriptionRoute: typeof DesinscriptionRoute
   FaqRoute: typeof FaqRoute
   GestionRoute: typeof GestionRouteWithChildren
   LlmsDottxtRoute: typeof LlmsDottxtRoute
@@ -498,6 +535,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TarifsRoute: typeof TarifsRoute
   ZonesRoute: typeof ZonesRoute
+  ApiDesinscriptionRoute: typeof ApiDesinscriptionRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogReglesAirbnbParis120JoursRoute: typeof BlogReglesAirbnbParis120JoursRoute
   ConciergerieAirbnbVilleRoute: typeof ConciergerieAirbnbVilleRoute
@@ -540,6 +578,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/desinscription': {
+      id: '/desinscription'
+      path: '/desinscription'
+      fullPath: '/desinscription'
+      preLoaderRoute: typeof DesinscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -610,6 +655,13 @@ declare module '@tanstack/react-router' {
       path: '/zones'
       fullPath: '/zones'
       preLoaderRoute: typeof ZonesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/desinscription': {
+      id: '/api/desinscription'
+      path: '/api/desinscription'
+      fullPath: '/api/desinscription'
+      preLoaderRoute: typeof ApiDesinscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -710,6 +762,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GestionProprietairesRouteImport
       parentRoute: typeof GestionRoute
     }
+    '/gestion/prospection': {
+      id: '/gestion/prospection'
+      path: '/prospection'
+      fullPath: '/gestion/prospection'
+      preLoaderRoute: typeof GestionProspectionRouteImport
+      parentRoute: typeof GestionRoute
+    }
     '/gestion/reservations': {
       id: '/gestion/reservations'
       path: '/reservations'
@@ -792,6 +851,7 @@ interface GestionRouteChildren {
   GestionMessagesRoute: typeof GestionMessagesRoute
   GestionPrestatairesRoute: typeof GestionPrestatairesRoute
   GestionProprietairesRoute: typeof GestionProprietairesRoute
+  GestionProspectionRoute: typeof GestionProspectionRoute
   GestionReservationsRoute: typeof GestionReservationsRoute
   GestionIndexRoute: typeof GestionIndexRoute
   GestionLogementsIdRoute: typeof GestionLogementsIdRoute
@@ -807,6 +867,7 @@ const GestionRouteChildren: GestionRouteChildren = {
   GestionMessagesRoute: GestionMessagesRoute,
   GestionPrestatairesRoute: GestionPrestatairesRoute,
   GestionProprietairesRoute: GestionProprietairesRoute,
+  GestionProspectionRoute: GestionProspectionRoute,
   GestionReservationsRoute: GestionReservationsRoute,
   GestionIndexRoute: GestionIndexRoute,
   GestionLogementsIdRoute: GestionLogementsIdRoute,
@@ -821,6 +882,7 @@ const rootRouteChildren: RootRouteChildren = {
   AvisRoute: AvisRoute,
   ConfidentialiteRoute: ConfidentialiteRoute,
   ContactRoute: ContactRoute,
+  DesinscriptionRoute: DesinscriptionRoute,
   FaqRoute: FaqRoute,
   GestionRoute: GestionRouteWithChildren,
   LlmsDottxtRoute: LlmsDottxtRoute,
@@ -831,6 +893,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TarifsRoute: TarifsRoute,
   ZonesRoute: ZonesRoute,
+  ApiDesinscriptionRoute: ApiDesinscriptionRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogReglesAirbnbParis120JoursRoute: BlogReglesAirbnbParis120JoursRoute,
   ConciergerieAirbnbVilleRoute: ConciergerieAirbnbVilleRoute,

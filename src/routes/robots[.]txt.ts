@@ -2,7 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/seo";
 
 // Pages privées (logiciel de gestion, liens personnels) : jamais indexées.
-const PRIVATE = ["/gestion", "/sejour/", "/menage/", "/livret/", "/reponse/", "/api/"];
+const PRIVATE = [
+  "/gestion",
+  "/sejour/",
+  "/menage/",
+  "/livret/",
+  "/reponse/",
+  "/api/",
+  "/desinscription",
+];
 
 // Robots des moteurs de recherche et des assistants IA explicitement bienvenus : être cité par
 // ChatGPT, Perplexity, Claude, Gemini ou Copilot suppose qu'ils puissent lire le site.
