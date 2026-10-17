@@ -584,6 +584,8 @@ async function draftMessages(settings) {
       })
       .eq("id", p.id);
     drafted++;
+    // Deux exemples complets par passage dans le journal, pour contrôler la qualité.
+    if (drafted <= 2) note(`Exemple (${p.name}) :\nObjet : ${draft.subject}\n${draft.body}`);
   }
   return drafted;
 }
@@ -868,8 +870,21 @@ async function main() {
     note("Prospection en pause.");
   } else {
     const weekAgo = Date.now() - 7 * 86_400_000;
+    // Zones encore vides (serveurs saturés lors d'un passage précédent) : rechargées tout de suite.
+    const empty = [];
+    for (const zone of settings.zones) {
+      const { count } = await db
+        .from("prospects")
+        .select("id", { count: "exact", head: true })
+        .eq("zone", zone);
+      if (!count) empty.push(zone);
+    }
     if (!settings.last_sync_at || new Date(settings.last_sync_at).getTime() < weekAgo) {
       note(`Liste mise à jour : ${await syncAgencies(settings)} nouvelles agences`);
+    } else if (empty.length) {
+      note(
+        `Zones à charger (${empty.join(", ")}) : ${await syncAgencies({ ...settings, zones: empty })} nouvelles agences`,
+      );
     }
     const enriched = await enrich();
     note(`Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}`);
