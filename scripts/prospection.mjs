@@ -27,7 +27,7 @@ const UA = "Mozilla/5.0 (compatible; SpinelleConciergerie/1.0; +https://spinelle
 const RUNS_PER_DAY = 3; // passages programmés par jour ouvré (voir le workflow)
 const FOLLOWUP_AFTER_DAYS = 7;
 const GIVE_UP_AFTER_DAYS = 14;
-const ENRICH_PER_RUN = 60;
+const ENRICH_PER_RUN = 120;
 const DRAFT_PER_RUN = 40;
 
 const SIGNATURE = `Bien cordialement,
@@ -175,6 +175,7 @@ async function syncAgencies(settings) {
   const { data: existing } = await db.from("prospects").select("source_id");
   const known = new Set((existing || []).map((r) => r.source_id));
   let added = 0;
+  let failed = false;
   for (const key of settings.zones) {
     const zone = ZONES[key];
     if (!zone) continue;
@@ -182,7 +183,8 @@ async function syncAgencies(settings) {
     try {
       elements = await overpass(zone);
     } catch (e) {
-      note(`Zone ${key} : ${e.message}`);
+      note(`Zone ${key} : ${e.message} (nouvel essai au prochain passage)`);
+      failed = true;
       continue;
     }
     const rows = [];
@@ -212,7 +214,13 @@ async function syncAgencies(settings) {
     note(`Zone ${key} : ${elements.length} agences dans OpenStreetMap, ${rows.length} nouvelles`);
     await sleep(3000);
   }
-  await db.from("prospect_settings").update({ last_sync_at: new Date().toISOString() }).eq("id", 1);
+  // Une zone en échec (serveurs saturés) est retentée au passage suivant, pas une semaine plus tard.
+  if (!failed) {
+    await db
+      .from("prospect_settings")
+      .update({ last_sync_at: new Date().toISOString() })
+      .eq("id", 1);
+  }
   return added;
 }
 
@@ -275,8 +283,13 @@ export async function crawl(website) {
       (u) =>
         u && hostOf(u) === host && /contact|mention|legal|nous-trouver|agence|qui-sommes/i.test(u),
     );
-  for (const url of [...new Set(links)].slice(0, 3)) {
-    const page = await fetchText(url);
+  // Menus souvent générés en JavaScript : on essaie aussi directement les pages usuelles.
+  const usual = ["contact", "nous-contacter", "mentions-legales", "contactez-nous"].map(
+    (path) => new URL(`/${path}`, root).href,
+  );
+  for (const url of [...new Set([...links.slice(0, 3), ...usual])]) {
+    if (emails.size) break;
+    const page = await fetchText(url, { timeout: 8000 });
     if (page) extractEmails(page).forEach((e) => emails.add(e));
   }
   return { emails: [...emails], text: excerpt(home) };
@@ -328,6 +341,8 @@ async function enrich() {
     .select("*")
     .eq("status", "nouveau")
     .is("crawled_at", null)
+    .order("email", { ascending: true, nullsFirst: false })
+    .order("website", { ascending: true, nullsFirst: false })
     .limit(ENRICH_PER_RUN);
   let withEmail = 0;
   for (const p of rows || []) {
@@ -460,7 +475,25 @@ async function draftOne(ai, p) {
 }
 
 async function draftMessages(settings) {
-  const ai = new Anthropic({ apiKey: env("ANTHROPIC_API_KEY") });
+  const workspace = process.env.ANTHROPIC_WORKSPACE_ID;
+  const ai = new Anthropic({
+    apiKey: env("ANTHROPIC_API_KEY"),
+    ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),
+  });
+  // Agences écartées à tort lors d'une erreur technique (clé IA refusée) : remises en file, une fois.
+  const { data: stuck } = await db
+    .from("prospects")
+    .select("id,notes")
+    .eq("status", "erreur")
+    .is("subject", null)
+    .ilike("notes", "%non conforme%")
+    .not("notes", "ilike", "%réessai%");
+  for (const p of stuck || []) {
+    await db
+      .from("prospects")
+      .update({ status: "nouveau", notes: `${p.notes}\nRéessai après une erreur technique` })
+      .eq("id", p.id);
+  }
   const { count: pending } = await db
     .from("prospects")
     .select("id", { count: "exact", head: true })
@@ -516,10 +549,15 @@ async function draftMessages(settings) {
     if (host) seen.host.add(host);
     if (phone) seen.phone.add(phone);
     if (p.siren) seen.siren.add(p.siren);
-    const draft = await draftOne(ai, p).catch((e) => {
-      note(`Rédaction ${p.name} : ${e.message}`);
-      return null;
-    });
+    let draft;
+    try {
+      draft = await draftOne(ai, p);
+    } catch (e) {
+      // Erreur technique (clé, quota, service) : l'agence reste en file pour le prochain passage.
+      note(`Rédaction interrompue (${p.name}) : ${e.message}`);
+      if ([400, 401, 403, 429].includes(e.status)) break;
+      continue;
+    }
     if (!draft) {
       await db
         .from("prospects")
