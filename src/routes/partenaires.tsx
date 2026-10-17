@@ -38,14 +38,14 @@ const BENEFITS = [
   {
     icon: Repeat,
     title: "Un apport rémunéré",
-    text: "Chaque propriétaire que vous nous présentez et qui nous confie son logement donne lieu à une rémunération d'apport, définie ensemble par écrit avant toute recommandation.",
+    text: "Chaque propriétaire que vous nous présentez et qui nous confie son logement vous rapporte une commission, selon le logement.",
   },
 ];
 
 const STEPS = [
   "Vous nous présentez un propriétaire, avec son accord.",
   "Nous réalisons l'audit gratuit de son logement sous 24 h, avec une estimation fondée sur les données réelles du marché.",
-  "S'il nous confie la gestion, vous percevez votre rémunération d'apport selon les conditions convenues.",
+  "S'il nous confie la gestion, vous percevez votre commission, selon le logement.",
 ];
 
 const FAQ_PARTNERS = [
@@ -54,8 +54,8 @@ const FAQ_PARTNERS = [
     a: "Non. Spinelle Conciergerie ne fait ni transaction ni gestion locative longue durée : uniquement la gestion de location courte durée. Les propriétaires que vous nous présentez restent vos clients pour tout le reste.",
   },
   {
-    q: "Comment est fixée la rémunération d'apport ?",
-    a: "Elle est convenue ensemble et formalisée par écrit avant la première recommandation, selon votre activité et le volume envisagé. Contactez-nous pour en discuter.",
+    q: "Comment est calculée votre commission ?",
+    a: "Elle dépend du logement que vous nous présentez. Les conditions sont précisées par écrit avant la première recommandation : contactez-nous pour en discuter.",
   },
   {
     q: "Quels logements vous intéressent ?",
