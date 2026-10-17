@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import heroImage from "@/assets/hero-salon.jpg";
 import heroImageMobile from "@/assets/hero-salon-1080.jpg";
-import roomImage from "@/assets/room.jpg";
+import roomImage from "@/assets/photos/chambre-parisienne-portrait.jpg";
 import rooftops from "@/assets/paris-rooftops.jpg";
 import { LeadForm } from "@/components/site/LeadForm";
 import { RevenueSimulator } from "@/components/site/RevenueSimulator";
@@ -326,10 +326,10 @@ function HomePage() {
         <div data-reveal="left" className="grid grid-cols-2 items-start gap-4">
           <img
             src={roomImage}
-            alt="Chambre parisienne préparée avec du linge hôtelier pour des voyageurs"
+            alt="Chambre d'un appartement haussmannien avec porte-fenêtre sur balcon parisien"
             loading="lazy"
             width={1200}
-            height={912}
+            height={1600}
             className="aspect-[3/4] w-full rounded-2xl object-cover"
           />
           <img

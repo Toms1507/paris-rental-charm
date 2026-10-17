@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { postPhoto } from "@/content/photos";
 import { POSTS, SITE } from "@/content/site";
 import { stagger } from "@/lib/reveal";
 import { absoluteUrl, pageHead } from "@/lib/seo";
@@ -57,25 +58,37 @@ function BlogIndex() {
               style={stagger(i % 2)}
               to="/blog/$slug"
               params={{ slug: p.slug }}
-              className={`rounded-2xl border border-border p-7 transition-colors hover:border-primary ${
-                i === 0 ? "bg-[var(--sand)] md:col-span-2 md:p-10" : ""
+              className={`overflow-hidden rounded-2xl border border-border transition-colors hover:border-primary ${
+                i === 0 ? "bg-[var(--sand)] md:col-span-2 md:grid md:grid-cols-2" : ""
               }`}
             >
-              <p className="text-xs text-muted-foreground">
-                {new Date(p.date).toLocaleDateString("fr-FR", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}{" "}
-                · {p.readingTime} de lecture
-              </p>
-              <h2 className={`mt-3 ${i === 0 ? "text-2xl sm:text-3xl" : "text-xl"}`}>{p.title}</h2>
-              <p className="mt-3 max-w-3xl text-[0.95rem] leading-relaxed text-muted-foreground">
-                {p.description}
-              </p>
-              <span className="mt-4 inline-block text-sm font-semibold text-primary">
-                Lire l'article →
-              </span>
+              <img
+                src={postPhoto(p.slug).src}
+                alt={postPhoto(p.slug).alt}
+                width={1600}
+                height={900}
+                loading={i < 3 ? "eager" : "lazy"}
+                className={`aspect-video w-full object-cover ${i === 0 ? "md:aspect-auto md:h-full" : ""}`}
+              />
+              <div className={i === 0 ? "p-7 md:self-center md:p-10" : "p-7"}>
+                <p className="text-xs text-muted-foreground">
+                  {new Date(p.date).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}{" "}
+                  · {p.readingTime} de lecture
+                </p>
+                <h2 className={`mt-3 ${i === 0 ? "text-2xl sm:text-3xl" : "text-xl"}`}>
+                  {p.title}
+                </h2>
+                <p className="mt-3 max-w-3xl text-[0.95rem] leading-relaxed text-muted-foreground">
+                  {p.description}
+                </p>
+                <span className="mt-4 inline-block text-sm font-semibold text-primary">
+                  Lire l'article →
+                </span>
+              </div>
             </Link>
           ))}
         </div>

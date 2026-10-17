@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PHOTOS } from "@/content/photos";
 import { SITE } from "@/content/site";
 import { pageHead } from "@/lib/seo";
 
@@ -64,6 +65,17 @@ function MentionsLegales() {
             calculées à partir des données publiées par Inside Airbnb (licence CC BY 4.0), des prix
             réellement facturés publiés par AirROI, des prix immobiliers DVF (data.gouv.fr) et des
             statistiques de fréquentation d'Eurostat.
+          </p>
+          <p className="mt-3">
+            Crédits photos d'illustration (licence Unsplash)&nbsp;:{" "}
+            {Object.values(PHOTOS).map((p, i, all) => (
+              <span key={p.url}>
+                <a href={p.url} target="_blank" rel="noopener" className="underline">
+                  {p.author}
+                </a>
+                {i < all.length - 1 ? ", " : "."}
+              </span>
+            ))}
           </p>
         </section>
         <section>

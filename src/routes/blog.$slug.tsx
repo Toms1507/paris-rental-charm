@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { LeadForm } from "@/components/site/LeadForm";
+import { postPhoto } from "@/content/photos";
 import { CITIES, POSTS, SITE } from "@/content/site";
-import { absoluteUrl, DEFAULT_IMAGE, pageHead } from "@/lib/seo";
+import { absoluteUrl, pageHead } from "@/lib/seo";
 
 // Google tronque au-delà d'environ 60 caractères pour le titre et 155 pour la description.
 const seoTitle = (title: string) =>
@@ -24,7 +25,9 @@ export const Route = createFileRoute("/blog/$slug")({
     }
     const { post } = loaderData;
     const path = `/blog/${params.slug}`;
+    const photo = postPhoto(post.slug);
     return pageHead({
+      image: photo.src,
       title: seoTitle(post.title),
       description: seoDescription(post.description),
       path,
@@ -38,7 +41,12 @@ export const Route = createFileRoute("/blog/$slug")({
           "@type": "BlogPosting",
           headline: post.title,
           description: post.description,
-          image: DEFAULT_IMAGE,
+          image: {
+            "@type": "ImageObject",
+            url: absoluteUrl(photo.src),
+            width: 1600,
+            height: 900,
+          },
           datePublished: post.date,
           dateModified: post.date,
           inLanguage: "fr-FR",
@@ -69,6 +77,7 @@ function PostNotFound() {
 function BlogPost() {
   const { post } = Route.useLoaderData();
   const related = POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const photo = postPhoto(post.slug);
 
   return (
     <>
@@ -95,6 +104,14 @@ function BlogPost() {
           </p>
           <h1 className="mt-3 text-3xl sm:text-4xl">{post.title}</h1>
           <p className="mt-5 text-lg text-muted-foreground">{post.description}</p>
+          <img
+            src={photo.src}
+            alt={photo.alt}
+            width={1600}
+            height={900}
+            fetchPriority="high"
+            className="mt-8 aspect-video w-full rounded-2xl object-cover"
+          />
 
           {post.sections.map((section) => (
             <section key={section.heading} className="mt-10">
@@ -148,9 +165,17 @@ function BlogPost() {
                 key={p.slug}
                 to="/blog/$slug"
                 params={{ slug: p.slug }}
-                className="rounded-xl border border-border p-5 text-sm transition-colors hover:border-primary"
+                className="overflow-hidden rounded-xl border border-border text-sm transition-colors hover:border-primary"
               >
-                <span className="font-semibold">{p.title}</span>
+                <img
+                  src={postPhoto(p.slug).src}
+                  alt=""
+                  width={1600}
+                  height={900}
+                  loading="lazy"
+                  className="aspect-video w-full object-cover"
+                />
+                <span className="block p-4 font-semibold">{p.title}</span>
               </Link>
             ))}
           </div>
