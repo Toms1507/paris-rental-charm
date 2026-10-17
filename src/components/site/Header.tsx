@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { LockKeyhole, Menu, X } from "lucide-react";
 import { NAV, SITE } from "@/content/site";
 import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 
@@ -27,13 +27,13 @@ export function Header() {
             <span className="font-[family-name:var(--font-display)] text-[1.4rem] font-semibold tracking-tight sm:text-2xl">
               Spinelle
             </span>
-            <span className="eyebrow max-[359px]:hidden max-sm:!text-[0.6rem] max-sm:!tracking-[0.14em]">
+            <span className="eyebrow max-[359px]:hidden lg:max-xl:hidden max-sm:!text-[0.6rem] max-sm:!tracking-[0.14em]">
               Conciergerie
             </span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex xl:gap-11">
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-11">
           {NAV.map((item) => (
             <Link
               key={item.to}
@@ -57,6 +57,15 @@ export function Header() {
           >
             <WhatsAppIcon />
           </a>
+          {/* Accès réservé à l'équipe (connexion obligatoire) */}
+          <Link
+            to="/gestion"
+            aria-label="Intranet (accès réservé)"
+            title="Intranet (accès réservé)"
+            className="hidden size-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary lg:inline-flex"
+          >
+            <LockKeyhole className="size-[18px]" />
+          </Link>
           <Link to="/" hash="estimation" className="btn-primary hidden sm:inline-flex">
             Audit gratuit
           </Link>
@@ -100,6 +109,13 @@ export function Header() {
             >
               <WhatsAppIcon className="size-4 text-[#25D366]" /> WhatsApp
             </a>
+            <Link
+              to="/gestion"
+              onClick={() => setOpen(false)}
+              className="mt-3 flex items-center justify-center gap-2 border-t border-border pt-4 text-sm font-medium text-muted-foreground"
+            >
+              <LockKeyhole className="size-4" /> Intranet (accès réservé)
+            </Link>
           </div>
         </nav>
       )}
