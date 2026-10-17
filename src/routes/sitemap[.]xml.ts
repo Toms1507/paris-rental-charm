@@ -7,7 +7,7 @@ import { absoluteUrl } from "@/lib/seo";
 // Dernière révision des contenus fixes (titres, textes, mentions légales) : à mettre à jour
 // lors d'une modification de ces pages. Les pages qui affichent les données du marché prennent
 // la date du dernier relevé, actualisée automatiquement chaque semaine.
-const CONTENT_UPDATED = "2026-10-16";
+const CONTENT_UPDATED = "2026-10-17";
 const latest = (...dates: (string | undefined)[]) =>
   dates
     .filter((d): d is string => Boolean(d))
@@ -23,6 +23,7 @@ const STATIC_PAGES = [
   { path: "/zones", priority: "0.8", changefreq: "monthly" },
   { path: "/avis", priority: "0.7", changefreq: "monthly" },
   { path: "/faq", priority: "0.7", changefreq: "monthly" },
+  { path: "/partenaires", priority: "0.6", changefreq: "monthly" },
   { path: "/blog", priority: "0.8", changefreq: "weekly" },
   { path: "/mentions-legales", priority: "0.2", changefreq: "yearly" },
   { path: "/confidentialite", priority: "0.2", changefreq: "yearly" },

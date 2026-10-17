@@ -17,6 +17,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GestionRouteImport } from './routes/gestion'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
+import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -85,6 +86,11 @@ const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
 const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
   id: '/mentions-legales',
   path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartenairesRoute = PartenairesRouteImport.update({
+  id: '/partenaires',
+  path: '/partenaires',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/gestion': typeof GestionRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
   '/mentions-legales': typeof MentionsLegalesRoute
+  '/partenaires': typeof PartenairesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/mentions-legales': typeof MentionsLegalesRoute
+  '/partenaires': typeof PartenairesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -322,6 +330,7 @@ export interface FileRoutesById {
   '/gestion': typeof GestionRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
   '/mentions-legales': typeof MentionsLegalesRoute
+  '/partenaires': typeof PartenairesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -363,6 +372,7 @@ export interface FileRouteTypes {
     | '/gestion'
     | '/llms.txt'
     | '/mentions-legales'
+    | '/partenaires'
     | '/robots.txt'
     | '/services'
     | '/sitemap.xml'
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/llms.txt'
     | '/mentions-legales'
+    | '/partenaires'
     | '/robots.txt'
     | '/services'
     | '/sitemap.xml'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/gestion'
     | '/llms.txt'
     | '/mentions-legales'
+    | '/partenaires'
     | '/robots.txt'
     | '/services'
     | '/sitemap.xml'
@@ -480,6 +492,7 @@ export interface RootRouteChildren {
   GestionRoute: typeof GestionRouteWithChildren
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
+  PartenairesRoute: typeof PartenairesRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -555,6 +568,13 @@ declare module '@tanstack/react-router' {
       path: '/mentions-legales'
       fullPath: '/mentions-legales'
       preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partenaires': {
+      id: '/partenaires'
+      path: '/partenaires'
+      fullPath: '/partenaires'
+      preLoaderRoute: typeof PartenairesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -805,6 +825,7 @@ const rootRouteChildren: RootRouteChildren = {
   GestionRoute: GestionRouteWithChildren,
   LlmsDottxtRoute: LlmsDottxtRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
+  PartenairesRoute: PartenairesRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

@@ -49,6 +49,7 @@ function build() {
     `- [Avis voyageurs](${absoluteUrl("/avis")})`,
     `- [Questions fréquentes](${absoluteUrl("/faq")})`,
     `- [Contact et audit gratuit](${absoluteUrl("/contact")})`,
+    `- [Partenaires immobiliers](${absoluteUrl("/partenaires")}) : agences, notaires et syndics qui recommandent Spinelle (apport rémunéré)`,
     "",
     "## Conciergerie par arrondissement de Paris",
     "",

@@ -58,7 +58,7 @@ export function Footer() {
         <div>
           <p className="text-xs font-semibold tracking-wider text-white/50 uppercase">Navigation</p>
           <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5">
-            {NAV.map((item) => (
+            {[...NAV, { to: "/partenaires", label: "Partenaires" } as const].map((item) => (
               <li key={item.to}>
                 <Link
                   to={item.to}

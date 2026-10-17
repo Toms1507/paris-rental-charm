@@ -13,8 +13,8 @@ export type LeadInput = {
   district?: string | undefined;
   city?: string | undefined;
   message?: string | undefined;
-  /** D'où vient la demande : formulaire d'estimation ou simulateur de revenus. */
-  source: "formulaire" | "simulateur";
+  /** D'où vient la demande : formulaire d'estimation, simulateur ou professionnel partenaire. */
+  source: "formulaire" | "simulateur" | "partenaire";
 };
 
 const notification = z.object({
@@ -27,7 +27,7 @@ const notification = z.object({
   district: z.string().max(120).optional(),
   city: z.string().max(120).optional(),
   message: z.string().max(3000).optional(),
-  source: z.enum(["formulaire", "simulateur"]),
+  source: z.enum(["formulaire", "simulateur", "partenaire"]),
 });
 
 const escape = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -48,7 +48,7 @@ async function sendEmail(data: Notification) {
     ["Nom", data.full_name],
     ["Email", data.email],
     ["Téléphone", data.phone],
-    ["Type de bien", data.property_type],
+    [data.source === "partenaire" ? "Activité" : "Type de bien", data.property_type],
     ["Chambres", data.bedrooms],
     ["Surface", data.surface],
     ["Quartier / secteur", data.district],
@@ -73,7 +73,7 @@ async function sendEmail(data: Notification) {
       from: process.env["LEAD_FROM_EMAIL"] ?? `${SITE.name} <onboarding@resend.dev>`,
       to: [process.env["LEAD_NOTIFY_EMAIL"] ?? SITE.email],
       reply_to: data.email,
-      subject: `${data.source === "simulateur" ? "Simulateur" : "Demande d'estimation"} : ${data.full_name}${data.city ? ` (${data.city})` : ""}`,
+      subject: `${{ simulateur: "Simulateur", partenaire: "Partenaire", formulaire: "Demande d'estimation" }[data.source]} : ${data.full_name}${data.city ? ` (${data.city})` : ""}`,
       html,
     }),
   });
@@ -93,7 +93,9 @@ async function sendWhatsApp(data: Notification) {
   }
   const phone = process.env["CALLMEBOT_PHONE"] ?? SITE.phone.replace(/ /g, "");
   const lines = [
-    "*Nouvelle demande d'audit - Spinelle*",
+    data.source === "partenaire"
+      ? "*Nouvelle demande de partenariat - Spinelle*"
+      : "*Nouvelle demande d'audit - Spinelle*",
     `${data.full_name}${data.city ? ` - ${data.city}` : ""}`,
     [data.property_type, data.district].filter(Boolean).join(", "),
     `Tel : ${data.phone}`,
