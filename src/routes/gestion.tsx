@@ -3,6 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import {
   AlertTriangle,
+  BarChart3,
   BedDouble,
   CalendarDays,
   FileText,
@@ -182,6 +183,7 @@ function Login() {
 
 const NAV = [
   { to: "/gestion", label: "Tableau de bord", icon: LayoutDashboard, exact: true },
+  { to: "/gestion/performances", label: "Performances", icon: BarChart3 },
   { to: "/gestion/calendrier", label: "Calendrier", icon: CalendarDays },
   { to: "/gestion/reservations", label: "Réservations", icon: BedDouble },
   { to: "/gestion/menage", label: "Ménages", icon: Sparkles },

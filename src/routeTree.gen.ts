@@ -37,6 +37,7 @@ import { Route as GestionIncidentsRouteImport } from './routes/gestion.incidents
 import { Route as GestionIntegrationsRouteImport } from './routes/gestion.integrations'
 import { Route as GestionMenageRouteImport } from './routes/gestion.menage'
 import { Route as GestionMessagesRouteImport } from './routes/gestion.messages'
+import { Route as GestionPerformancesRouteImport } from './routes/gestion.performances'
 import { Route as GestionPrestatairesRouteImport } from './routes/gestion.prestataires'
 import { Route as GestionProprietairesRouteImport } from './routes/gestion.proprietaires'
 import { Route as GestionProspectionRouteImport } from './routes/gestion.prospection'
@@ -193,6 +194,11 @@ const GestionMessagesRoute = GestionMessagesRouteImport.update({
   path: '/messages',
   getParentRoute: () => GestionRoute,
 } as any)
+const GestionPerformancesRoute = GestionPerformancesRouteImport.update({
+  id: '/performances',
+  path: '/performances',
+  getParentRoute: () => GestionRoute,
+} as any)
 const GestionPrestatairesRoute = GestionPrestatairesRouteImport.update({
   id: '/prestataires',
   path: '/prestataires',
@@ -286,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/gestion/integrations': typeof GestionIntegrationsRoute
   '/gestion/menage': typeof GestionMenageRoute
   '/gestion/messages': typeof GestionMessagesRoute
+  '/gestion/performances': typeof GestionPerformancesRoute
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
   '/gestion/prospection': typeof GestionProspectionRoute
@@ -328,6 +335,7 @@ export interface FileRoutesByTo {
   '/gestion/integrations': typeof GestionIntegrationsRoute
   '/gestion/menage': typeof GestionMenageRoute
   '/gestion/messages': typeof GestionMessagesRoute
+  '/gestion/performances': typeof GestionPerformancesRoute
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
   '/gestion/prospection': typeof GestionProspectionRoute
@@ -372,6 +380,7 @@ export interface FileRoutesById {
   '/gestion/integrations': typeof GestionIntegrationsRoute
   '/gestion/menage': typeof GestionMenageRoute
   '/gestion/messages': typeof GestionMessagesRoute
+  '/gestion/performances': typeof GestionPerformancesRoute
   '/gestion/prestataires': typeof GestionPrestatairesRoute
   '/gestion/proprietaires': typeof GestionProprietairesRoute
   '/gestion/prospection': typeof GestionProspectionRoute
@@ -417,6 +426,7 @@ export interface FileRouteTypes {
     | '/gestion/integrations'
     | '/gestion/menage'
     | '/gestion/messages'
+    | '/gestion/performances'
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
     | '/gestion/prospection'
@@ -459,6 +469,7 @@ export interface FileRouteTypes {
     | '/gestion/integrations'
     | '/gestion/menage'
     | '/gestion/messages'
+    | '/gestion/performances'
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
     | '/gestion/prospection'
@@ -502,6 +513,7 @@ export interface FileRouteTypes {
     | '/gestion/integrations'
     | '/gestion/menage'
     | '/gestion/messages'
+    | '/gestion/performances'
     | '/gestion/prestataires'
     | '/gestion/proprietaires'
     | '/gestion/prospection'
@@ -748,6 +760,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GestionMessagesRouteImport
       parentRoute: typeof GestionRoute
     }
+    '/gestion/performances': {
+      id: '/gestion/performances'
+      path: '/performances'
+      fullPath: '/gestion/performances'
+      preLoaderRoute: typeof GestionPerformancesRouteImport
+      parentRoute: typeof GestionRoute
+    }
     '/gestion/prestataires': {
       id: '/gestion/prestataires'
       path: '/prestataires'
@@ -849,6 +868,7 @@ interface GestionRouteChildren {
   GestionIntegrationsRoute: typeof GestionIntegrationsRoute
   GestionMenageRoute: typeof GestionMenageRoute
   GestionMessagesRoute: typeof GestionMessagesRoute
+  GestionPerformancesRoute: typeof GestionPerformancesRoute
   GestionPrestatairesRoute: typeof GestionPrestatairesRoute
   GestionProprietairesRoute: typeof GestionProprietairesRoute
   GestionProspectionRoute: typeof GestionProspectionRoute
@@ -865,6 +885,7 @@ const GestionRouteChildren: GestionRouteChildren = {
   GestionIntegrationsRoute: GestionIntegrationsRoute,
   GestionMenageRoute: GestionMenageRoute,
   GestionMessagesRoute: GestionMessagesRoute,
+  GestionPerformancesRoute: GestionPerformancesRoute,
   GestionPrestatairesRoute: GestionPrestatairesRoute,
   GestionProprietairesRoute: GestionProprietairesRoute,
   GestionProspectionRoute: GestionProspectionRoute,

@@ -675,6 +675,26 @@ async function draftOne(ai, p) {
   return null;
 }
 
+// Répartition équitable : un contact de chaque groupe (zone × métier) à tour de rôle ; les zones
+// dont la haute saison approche passent deux fois par tour (ski en automne, côtes au printemps).
+function interleave(list) {
+  const month = parisNow().getMonth() + 1;
+  const groups = new Map();
+  for (const p of list) {
+    const key = `${p.zone}|${(p.notes || "").match(/Catégorie : ([^\n]+)/)?.[1] ?? "agence immobilière"}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(p);
+  }
+  const queues = [...groups.entries()].flatMap(([key, items]) =>
+    ZONES[key.split("|")[0]]?.season?.includes(month) ? [items, items] : [items],
+  );
+  const out = [];
+  while (out.length < list.length) {
+    for (const q of queues) if (q.length) out.push(q.shift());
+  }
+  return out;
+}
+
 async function draftMessages(settings) {
   const workspace = process.env.ANTHROPIC_WORKSPACE_ID;
   const ai = new Anthropic({
@@ -701,18 +721,20 @@ async function draftMessages(settings) {
     .in("status", ["brouillon", "valide"]);
   const room = Math.max(0, Math.min(DRAFT_PER_RUN, settings.daily_limit * 2 - (pending || 0)));
   if (!room) return 0;
-  const { data: rows } = await db
-    .from("prospects")
-    .select("*")
-    .eq("status", "nouveau")
-    .not("email", "is", null)
-    .order("zone")
-    .limit(room * 4);
-  // Saison : les zones dont la haute saison approche passent en premier (ski en automne, côtes au printemps).
-  const month = parisNow().getMonth() + 1;
-  const priority = (p) =>
-    ZONES[p.zone]?.season?.includes(month) ? 0 : ZONES[p.zone]?.season ? 2 : 1;
-  rows?.sort((a, b) => priority(a) - priority(b));
+  // Quelques candidats de chaque zone, puis rédaction à tour de rôle (zone et métier).
+  const pools = await Promise.all(
+    Object.keys(ZONES).map(async (zone) => {
+      const { data } = await db
+        .from("prospects")
+        .select("*")
+        .eq("status", "nouveau")
+        .eq("zone", zone)
+        .not("email", "is", null)
+        .limit(room);
+      return data || [];
+    }),
+  );
+  const rows = interleave(pools.flat());
   const { data: optouts } = await db.from("prospect_optouts").select("email");
   const blocked = new Set((optouts || []).map((o) => o.email));
   const { data: used } = await db
@@ -926,13 +948,18 @@ async function sendBatch(settings, box) {
   }
 
   const statuses = settings.mode === "auto" ? ["valide", "brouillon"] : ["valide"];
-  const { data: ready } = await db
+  const { data: candidates } = await db
     .from("prospects")
     .select("*")
     .in("status", statuses)
-    .order("status", { ascending: false }) // les messages validés passent en premier
-    .limit(Math.max(0, budget));
-  for (const p of ready || []) {
+    .order("drafted_at", { ascending: true })
+    .limit(Math.max(0, budget) * 8);
+  // Les messages validés d'abord, puis envoi à tour de rôle entre zones et métiers.
+  const ready = [
+    ...interleave((candidates || []).filter((p) => p.status === "valide")),
+    ...interleave((candidates || []).filter((p) => p.status !== "valide")),
+  ];
+  for (const p of ready) {
     if (budget <= 0) break;
     if (blocked.has(p.email.toLowerCase())) {
       await db.from("prospects").update({ status: "desinscrit" }).eq("id", p.id);
