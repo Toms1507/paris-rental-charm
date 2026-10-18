@@ -128,6 +128,16 @@ const db = createClient(env("SUPABASE_URL"), env("SUPABASE_SERVICE_ROLE_KEY"), {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// La base renvoie au plus 1 000 lignes par requête : lecture page par page.
+async function selectAll(build) {
+  const rows = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await build().range(from, from + 999);
+    if (error) throw new Error(error.message);
+    rows.push(...(data || []));
+    if (!data || data.length < 1000) return rows;
+  }
+}
 const log = [];
 const note = (s) => {
   console.log(s);
@@ -232,8 +242,8 @@ const OFF_TARGET =
   /banque|bank|crédit|credit|assurance|axa|allianz|maaf|macif|matmut|generali|mutuelle|caisse/i;
 
 async function syncAgencies(settings) {
-  const { data: existing } = await db.from("prospects").select("source_id");
-  const known = new Set((existing || []).map((r) => r.source_id));
+  const existing = await selectAll(() => db.from("prospects").select("source_id"));
+  const known = new Set(existing.map((r) => r.source_id));
   let added = 0;
   let failed = false;
   for (const key of settings.zones) {
@@ -276,7 +286,10 @@ async function syncAgencies(settings) {
       });
     }
     for (let i = 0; i < rows.length; i += 200) {
-      const { error } = await db.from("prospects").insert(rows.slice(i, i + 200));
+      // Une agence présente dans deux zones (ex. Roissy et Seine-Saint-Denis) n'est enregistrée qu'une fois.
+      const { error } = await db
+        .from("prospects")
+        .upsert(rows.slice(i, i + 200), { onConflict: "source_id", ignoreDuplicates: true });
       if (error) note(`Insertion ${key} : ${error.message}`);
     }
     added += rows.length;
@@ -706,7 +719,9 @@ Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepren
 - Pas de jargon (« partenariat stratégique », « synergie », « solution clé en main »), pas de superlatifs creux, pas de point d'exclamation, pas d'emoji, pas de « n'hésitez pas », pas de café ni de visite, pas de formule finale ni de signature (elles sont ajoutées automatiquement).
 - N'invente rien, ni sur lui ni sur Spinelle (pas de nombre de clients, pas de références).
 - Ne précise pas ce qu'il n'aurait PAS à faire (« pas de fichier à nous confier », « aucun engagement de votre part »…) : ça sonne faux.
-- L'accroche doit parler de LUI (son agence, son style, sa spécialité, ses biens), pas seulement de sa ville.
+- L'accroche doit parler de LUI (son agence, son style, sa spécialité, ses biens), pas seulement de sa ville : une observation précise et factuelle, jamais un compliment générique (« on sent que vous connaissez bien… », « vos biens ont du charme »).
+- Donne-lui une raison simple de répondre maintenant, tirée du contexte : la saison qui approche dans sa zone, ses clients qui se posent déjà la question, un bien à mettre en location bientôt.
+- La demande doit être concrète : il nous transfère le contact d'un propriétaire intéressé, nous l'appelons et nous nous occupons de tout.
 
 Relance (sept jours plus tard, en réponse au premier e-mail) : deux phrases chaleureuses et légères, sans reproche : tu reviens simplement vers lui, tu rappelles l'idée en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
 
@@ -941,10 +956,12 @@ async function draftMessages(settings) {
   const rows = interleave(pools.flat());
   const { data: optouts } = await db.from("prospect_optouts").select("email");
   const blocked = new Set((optouts || []).map((o) => o.email));
-  const { data: used } = await db
-    .from("prospects")
-    .select("email,website,phone,siren")
-    .not("status", "in", "(nouveau,sans_email)");
+  const used = await selectAll(() =>
+    db
+      .from("prospects")
+      .select("email,website,phone,siren")
+      .not("status", "in", "(nouveau,sans_email)"),
+  );
   const seen = { email: new Set(), host: new Set(), phone: new Set(), siren: new Set() };
   for (const u of used || []) {
     if (u.email) seen.email.add(u.email.toLowerCase());
@@ -1316,10 +1333,12 @@ async function replyExcerpt(source) {
 }
 
 async function checkReplies(box) {
-  const { data: contacted } = await db
-    .from("prospects")
-    .select("id,email,status,notes")
-    .in("status", ["contacte", "relance", "sans_reponse"]);
+  const contacted = await selectAll(() =>
+    db
+      .from("prospects")
+      .select("id,email,status,notes")
+      .in("status", ["contacte", "relance", "sans_reponse"]),
+  );
   const byEmail = new Map();
   const byHost = new Map();
   for (const p of contacted || []) {
