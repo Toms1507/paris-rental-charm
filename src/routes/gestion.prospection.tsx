@@ -93,7 +93,7 @@ contact@spinelleconciergerie.fr
 spinelleconciergerie.fr/partenaires
 
 —
-Vos coordonnées proviennent du site internet de votre agence. Pour ne plus recevoir de message de Spinelle Conciergerie : [lien personnel de désinscription]`;
+Vos coordonnées proviennent de votre site internet. Pour ne plus recevoir de message de Spinelle Conciergerie : [lien personnel de désinscription]`;
 
 const COLUMNS =
   "id,name,zone,address,postcode,city,website,email,phone,contact_name,status,subject,body,followup_subject,followup_body,angle,first_contact_at,last_contact_at,replied_at,notes,updated_at";

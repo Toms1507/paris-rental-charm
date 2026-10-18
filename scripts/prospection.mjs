@@ -15,7 +15,6 @@
 // (facultatives : SMTP_USER, PROSPECT_MODEL). Sans SMTP_PASSWORD, rien n'est envoyé : la liste et
 // les brouillons sont tout de même préparés pour être relus dans l'intranet.
 
-import { readFileSync } from "node:fs";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
 
@@ -94,8 +93,7 @@ const ZONES = {
 
 // Contexte factuel de chaque zone, que le message peut évoquer sans risque d'erreur.
 const ZONE_CONTEXT = {
-  paris:
-    "Paris, première destination touristique mondiale ; location courte durée très encadrée (enregistrement, plafond de 90 nuits pour les résidences principales).",
+  paris: "Paris, où les voyageurs viennent du monde entier toute l'année.",
   "petite-couronne":
     "Proche banlieue de Paris, bien reliée à la capitale, prisée des voyageurs qui veulent loger près de Paris.",
   versailles: "Versailles, son château et ses visiteurs du monde entier.",
@@ -563,40 +561,32 @@ async function enrich() {
 
 // ------------------------------------------------------------------ 3. Rédaction
 
-export function marketFact(p) {
-  if (p.zone !== "paris" || !/^750\d\d$/.test(p.postcode || "")) return null;
-  try {
-    const src = readFileSync("src/content/market-paris.ts", "utf8");
-    const json = JSON.parse(src.split("MARKET_PARIS = ")[1].replace(/ as const;\s*$/, ""));
-    const n = Number(p.postcode.slice(3));
-    const price = json.arrondissements[String(n)]?.buckets?.["1"]?.price;
-    if (!price) return null;
-    const label = n === 1 ? "1er" : `${n}e`;
-    return `Dans le ${label} arrondissement, un logement d'une chambre se loue en médiane ${price} € la nuit, d'après les données du marché que Spinelle suit chaque semaine.`;
-  } catch {
-    return null;
-  }
-}
+// Style des messages : réécrit le 2026-10-18 à la demande du gérant (chaleureux, donne envie de
+// répondre, aucun chiffre ni réglementation). Les brouillons rédigés avant sont réécrits.
+const STYLE_SINCE = "2026-10-18T18:00:00Z";
 
-const SYSTEM = `Tu rédiges, pour Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail de prise de contact avec UN professionnel de l'immobilier précis (agence, syndic ou administrateur de biens, conseiller en investissement, promoteur, marchand de biens), et sa relance. Objectif : obtenir une réponse, en donnant envie de collaborer.
+const SYSTEM = `Tu écris, au nom de Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail à UN professionnel de l'immobilier précis, et sa relance. Un seul objectif : qu'il ait envie de lire jusqu'au bout et de répondre.
 
-Spinelle Conciergerie : conciergerie de location courte durée (Airbnb, Booking) qui gère tout pour le propriétaire : annonce, voyageurs, ménage hôtelier, linge, maintenance, conformité légale. Elle ne fait ni transaction ni gestion locative classique : le client de l'agence reste le sien. Partenariat proposé : l'agence présente à Spinelle ses propriétaires intéressés par la location courte durée ; Spinelle leur fait un audit gratuit sous 24 h ; l'agence perçoit une commission pour chaque logement confié, selon le logement. Pour une agence de transaction, Spinelle peut aussi fournir gratuitement à ses acheteurs investisseurs une estimation des revenus en location courte durée. Page de présentation : spinelleconciergerie.fr/partenaires
+Ce que Spinelle propose aux professionnels : quand l'un de leurs clients veut louer son bien en courte durée (Airbnb, Booking), ils nous le présentent ; nous nous occupons de tout pour le propriétaire (annonce, voyageurs, ménage, entretien) ; leur client reste le leur ; et ils touchent une commission pour chaque bien qu'ils nous confient. Pour eux : un revenu en plus sans rien gérer, et une vraie solution à proposer à leurs clients.
 
-Ton : poli, professionnel, sobre, vouvoiement. Pas de familiarité, pas d'emoji, pas de point d'exclamation, pas de superlatif, pas de jargon marketing, pas de « n'hésitez pas », pas d'invitation à prendre un café ni de visite à l'agence.
+Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepreneur qui écrit lui-même à quelqu'un qu'il aimerait vraiment avoir comme partenaire. Vouvoiement. Phrases courtes et simples. Le message doit se lire en vingt secondes.
 
-Règles du premier e-mail :
-- Commence par « Bonjour Prénom Nom, » si un nom de dirigeant est fourni, sinon par « Bonjour, ».
-- Une première phrase qui montre que tu connais CETTE agence : un détail réel tiré de l'extrait de son site ou des informations fournies (quartier, spécialité, réseau, type de biens, clientèle). N'invente JAMAIS rien : si l'extrait est vide ou peu clair, reste sur la ville ou le quartier.
-- Adapte l'angle à l'agence : transaction → acheteurs investisseurs et estimation gratuite ; gestion locative → propriétaires tentés par la courte durée, commission plutôt que de les voir partir ; prestige → exigence et discrétion ; réseau ou indépendante, selon ce que montre le site.
-- Selon la catégorie fournie : agence immobilière → comme ci-dessus ; syndic ou administrateur de biens → copropriétaires et bailleurs qui envisagent la location courte durée, dans le respect du règlement de copropriété ; conseiller en investissement ou gestion de patrimoine → ses clients investisseurs : estimation gratuite des revenus en location courte durée, gestion clé en main, commission pour chaque logement confié ; promoteur immobilier → les acquéreurs investisseurs de ses programmes : une gestion courte durée clé en main et une estimation des revenus sont un argument de commercialisation, commission pour chaque logement confié ; marchand de biens → les biens qu'il rénove : estimation des revenus en location courte durée pour valoriser la revente auprès d'investisseurs, ou gestion des biens qu'il conserve.
-- Zones touristiques (côte, montagne) : appuie-toi sur la saison et la clientèle décrites dans le contexte de la zone, sans rien ajouter.
-- Présente l'offre en 2 ou 3 phrases, avec la commission « selon le logement » (aucun montant).
-- Tu peux utiliser le contexte de la zone et le chiffre de marché fournis, mot pour mot pour le chiffre. Aucun autre chiffre, aucune autre statistique.
-- Termine par une question simple, par exemple : « Seriez-vous intéressé par un partenariat ? Je peux vous adresser notre présentation ou en échanger par téléphone. »
-- 70 à 120 mots, en paragraphes courts. Pas de formule de politesse finale ni de signature : elles sont ajoutées automatiquement.
-- Objet : 60 caractères maximum, précis et naturel, pas commercial, sans majuscules inutiles.
+À faire :
+- Objet court (moins de 45 caractères), personnel, qui donne envie d'ouvrir sans être racoleur : une idée ou une question qui le concerne, par exemple « Une idée pour vos clients propriétaires », « Vos clients qui pensent à Airbnb », « Une petite question, Prénom ».
+- Salutation : « Bonjour Prénom, » (prénom seul) si un dirigeant est fourni, sinon « Bonjour, ».
+- Première phrase : une attention sincère et précise pour CE professionnel, tirée de son site (son quartier, sa spécialité, son style, ses biens). Jamais inventée : si le site ne dit rien d'utile, parle simplement de sa ville ou de son métier.
+- Puis, en deux ou trois phrases, ce qu'il y gagne, concrètement, selon son métier : agence de vente → ses acheteurs qui veulent faire rapporter leur bien ; agence de gestion → ses propriétaires tentés par Airbnb, qu'il garde au lieu de les perdre, avec une commission en plus ; syndic ou administrateur de biens → ses copropriétaires et bailleurs ; conseiller en patrimoine → ses clients investisseurs ; promoteur → un atout de plus pour vendre ses programmes aux investisseurs ; marchand de biens → un moyen de valoriser ses biens. Zones de vacances (mer, montagne) : la saison et les propriétaires de résidences secondaires.
+- Rends la démarche facile : il lui suffit de nous transférer un contact, nous nous occupons du reste.
+- Termine par une question courte et engageante, à laquelle on a envie de répondre, par exemple « Ça vous dirait qu'on en parle quelques minutes ? ».
+- 50 à 100 mots, en trois ou quatre petits paragraphes.
 
-Relance (envoyée 7 jours plus tard en réponse au premier e-mail, sans réponse entre-temps) : 2 ou 3 phrases, même ton, rappelle simplement la proposition et indique qu'il suffit de transférer le contact d'un propriétaire intéressé. Même salutation que le premier e-mail. Pas de reproche, pas d'insistance.
+À ne jamais faire :
+- Aucun chiffre, aucun prix, aucune statistique, aucun pourcentage, aucun montant de commission.
+- Ne parle ni de réglementation, ni d'encadrement, ni de plafond de nuits, ni de conformité, ni de données de marché.
+- Pas de jargon (« partenariat stratégique », « synergie », « solution clé en main »), pas de superlatifs creux, pas de point d'exclamation, pas d'emoji, pas de « n'hésitez pas », pas de café ni de visite, pas de formule finale ni de signature (elles sont ajoutées automatiquement).
+- N'invente rien, ni sur lui ni sur Spinelle (pas de nombre de clients, pas de références).
+
+Relance (sept jours plus tard, en réponse au premier e-mail) : deux phrases chaleureuses et légères, sans reproche : tu reviens simplement vers lui, tu rappelles l'idée en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
 
 Réponds uniquement au format :
 <angle>angle choisi en quelques mots</angle>
@@ -604,26 +594,26 @@ Réponds uniquement au format :
 <message>…</message>
 <relance>…</relance>`;
 
-export function check(draft, allowedNumbers) {
+const FORBIDDEN =
+  /[[\]{}!%€]|\d|encadr|réglement|reglement|plafond|conformit|médian|median|prix|tarif|clé en main|cle en main|synergie|stratégique|n'hésitez|café|cordialement|Tom Simon/i;
+
+export function check(draft) {
   const problems = [];
   const all = `${draft.subject}\n${draft.body}\n${draft.followup}`;
   const words = draft.body.split(/\s+/).filter(Boolean).length;
-  if (words < 55 || words > 140) problems.push(`le message fait ${words} mots (70 à 120 attendus)`);
-  if (draft.subject.length > 70) problems.push("objet trop long");
+  if (words < 40 || words > 115) problems.push(`le message fait ${words} mots (50 à 100 attendus)`);
+  if (draft.subject.length > 50) problems.push("objet trop long (moins de 45 caractères)");
   if (!/^Bonjour/.test(draft.body) || !/^Bonjour/.test(draft.followup))
     problems.push("doit commencer par « Bonjour »");
-  if (/[[\]{}]|!|café|n'hésitez|cordialement|Tom Simon/i.test(all))
+  const bad = all.match(FORBIDDEN);
+  if (bad)
     problems.push(
-      "formulation interdite (crochets, point d'exclamation, café, « n'hésitez », formule finale ou signature)",
+      `élément interdit « ${bad[0]} » (aucun chiffre, prix, réglementation, jargon, point d'exclamation, formule finale ni signature)`,
     );
-  const numbers = all.match(/\d+/g) || [];
-  const extra = numbers.filter((n) => !allowedNumbers.has(n));
-  if (extra.length) problems.push(`chiffres non autorisés : ${[...new Set(extra)].join(", ")}`);
   return problems;
 }
 
 async function draftOne(ai, p) {
-  const fact = marketFact(p);
   const facts = [
     `Agence : ${p.name}`,
     p.notes ? p.notes : null,
@@ -633,17 +623,10 @@ async function draftOne(ai, p) {
       ? `Dirigeant : ${p.contact_name}`
       : "Dirigeant : inconnu (salutation « Bonjour, »)",
     `Contexte de la zone : ${ZONE_CONTEXT[p.zone] ?? ""}`,
-    fact ? `Chiffre de marché utilisable : ${fact}` : "Chiffre de marché : aucun (n'en cite aucun)",
     `Extrait du site de l'agence :\n${p.site_excerpt || "(aucun)"}`,
   ]
     .filter(Boolean)
     .join("\n");
-  const allowed = new Set([
-    "24",
-    ...(`${fact || ""} ${p.postcode || ""} ${p.name} ${p.address || ""} ${p.site_excerpt || ""}`.match(
-      /\d+/g,
-    ) || []),
-  ]);
   let feedback = "";
   for (let attempt = 0; attempt < 2; attempt++) {
     const res = await ai.messages.create({
@@ -668,7 +651,7 @@ async function draftOne(ai, p) {
       feedback = "\n\nTa réponse précédente ne respectait pas le format demandé.";
       continue;
     }
-    const problems = check(draft, allowed);
+    const problems = check(draft);
     if (!problems.length) return draft;
     feedback = `\n\nCorrige ta proposition précédente : ${problems.join(" ; ")}.`;
   }
@@ -747,6 +730,20 @@ async function draftMessages(settings) {
     apiKey: env("ANTHROPIC_API_KEY"),
     ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),
   });
+  // Brouillons rédigés dans l'ancien style (avant STYLE_SINCE) : remis en file pour être réécrits.
+  await db
+    .from("prospects")
+    .update({
+      status: "nouveau",
+      subject: null,
+      body: null,
+      followup_subject: null,
+      followup_body: null,
+      angle: null,
+      drafted_at: null,
+    })
+    .in("status", ["brouillon", "valide"])
+    .lt("drafted_at", STYLE_SINCE);
   // Agences écartées à tort lors d'une erreur technique (clé IA refusée) : remises en file, une fois.
   const { data: stuck } = await db
     .from("prospects")
@@ -866,9 +863,21 @@ async function draftMessages(settings) {
 
 // ------------------------------------------------------------------ 4. Envoi
 
+// Relance des contacts dont le premier message date de l'ancien style.
+function warmFollowup(p) {
+  const first = p.contact_name ? ` ${p.contact_name.split(" ")[0]}` : "";
+  return `Bonjour${first},
+
+Je me permets de revenir vers vous au sujet de mon message de la semaine dernière.
+
+Si l'un de vos clients pense un jour à louer son bien sur Airbnb, il vous suffit de me transférer son contact : je m'occupe de tout, et vous êtes rémunéré pour chaque bien que vous nous confiez.`;
+}
+
 function compose(p, followup) {
   const unsubscribe = `${SITE}/desinscription?t=${p.unsubscribe_token}`;
-  const text = `${followup ? p.followup_body : p.body}\n\n${SIGNATURE}\n\n—\nVos coordonnées proviennent du site internet de votre agence. Pour ne plus recevoir de message de Spinelle Conciergerie : ${unsubscribe}`;
+  const oldStyle = !p.drafted_at || p.drafted_at < STYLE_SINCE;
+  const content = followup ? (oldStyle ? warmFollowup(p) : p.followup_body) : p.body;
+  const text = `${content}\n\n${SIGNATURE}\n\n—\nVos coordonnées proviennent de votre site internet. Pour ne plus recevoir de message de Spinelle Conciergerie : ${unsubscribe}`;
   const html = text
     .split(/\n{2,}/)
     .map(
