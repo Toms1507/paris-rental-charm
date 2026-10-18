@@ -1255,6 +1255,13 @@ async function main() {
     .eq("id", 1)
     .single();
   if (error || !settings) throw new Error(`Réglages introuvables : ${error?.message}`);
+  // Volume choisi par le gérant : environ 1 600 e-mails par mois (62 par jour, lundi-samedi).
+  // Ne remplace que la valeur d'origine (80) : un réglage fait dans l'intranet est respecté.
+  if (settings.daily_limit === 80) {
+    settings.daily_limit = 62;
+    await db.from("prospect_settings").update({ daily_limit: 62 }).eq("id", 1);
+    note("Plafond quotidien réglé à 62 e-mails (environ 1 600 par mois).");
+  }
   if (settings.paused) {
     note("Prospection en pause.");
   } else {
