@@ -59,7 +59,7 @@ type Settings = {
 };
 
 const STATUSES: Record<string, { label: string; tone: string }> = {
-  brouillon: { label: "À valider", tone: "bg-amber-100 text-amber-800" },
+  brouillon: { label: "Rédigé, en attente d’envoi", tone: "bg-amber-100 text-amber-800" },
   valide: { label: "Validé, envoi prévu", tone: "bg-sky-100 text-sky-800" },
   contacte: { label: "Contactée", tone: "bg-blue-100 text-blue-800" },
   relance: { label: "Relancée", tone: "bg-indigo-100 text-indigo-800" },
@@ -214,7 +214,7 @@ function ProspectionPage() {
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
-          label="À valider"
+          label={settings?.mode === "auto" ? "Prêts à partir" : "À valider"}
           value={counts["brouillon"] ?? 0}
           tone={counts["brouillon"] ? "warn" : undefined}
         />
@@ -300,7 +300,7 @@ function ProspectionPage() {
       <Panel>
         <div className="flex flex-wrap gap-2">
           {[
-            ["brouillon", "À valider"],
+            ["brouillon", settings?.mode === "auto" ? "Prêts à partir" : "À valider"],
             ["valide", "Envoi prévu"],
             ["contacte", "Contactées"],
             ["relance", "Relancées"],
@@ -342,7 +342,7 @@ function ProspectionPage() {
           />
         </div>
 
-        {filter === "brouillon" && drafts.length > 0 && (
+        {filter === "brouillon" && drafts.length > 0 && settings?.mode !== "auto" && (
           <div className="mt-4 flex flex-wrap items-center gap-2 rounded-lg bg-amber-50 p-3 text-sm">
             <span>
               {selected.size} sélectionnée{selected.size > 1 ? "s" : ""}

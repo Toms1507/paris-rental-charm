@@ -536,6 +536,74 @@ async function syncCompanies(settings) {
   return { checked, added };
 }
 
+// Cas « à vérifier » traités automatiquement, pour ne rien laisser en attente :
+//   - message non conforme : nouvelle rédaction 3 jours plus tard, puis contact écarté si échec ;
+//   - adresse invalide : autre adresse cherchée sur le site, sinon contact écarté ;
+//   - erreur d'envoi passagère : nouvel essai, jusqu'à 3 fois.
+const CLEAN_DRAFT = {
+  subject: null,
+  body: null,
+  followup_subject: null,
+  followup_body: null,
+  angle: null,
+  drafted_at: null,
+  message_id: null,
+};
+
+async function resolveErrors() {
+  const { data: rows } = await db.from("prospects").select("*").eq("status", "erreur").limit(100);
+  const add = (p, line) => [p.notes, line].filter(Boolean).join("\n");
+  let retried = 0;
+  let dropped = 0;
+  for (const p of rows || []) {
+    const notes = p.notes || "";
+    let update;
+    if (/non conforme/i.test(notes)) {
+      if (/Réessai de rédaction/.test(notes))
+        update = { status: "ignore", notes: add(p, "Écarté : message toujours non conforme") };
+      else if (Date.now() - new Date(p.updated_at).getTime() > 3 * 86_400_000)
+        update = { status: "nouveau", ...CLEAN_DRAFT, notes: add(p, "Réessai de rédaction") };
+    } else if (/Adresse e-mail invalide/i.test(notes)) {
+      const tried = new Set([
+        p.email,
+        ...[...notes.matchAll(/Nouvelle adresse essayée : (\S+)/g)].map((m) => m[1]),
+      ]);
+      let next = null;
+      if (p.website && tried.size < 3) {
+        const { emails } = await crawl(p.website);
+        next =
+          emails
+            .filter((e) => !tried.has(e))
+            .sort(
+              (a, b) => (PREFERRED_LOCAL.test(b) ? 1 : 0) - (PREFERRED_LOCAL.test(a) ? 1 : 0),
+            )[0] || null;
+      }
+      update = next
+        ? {
+            status: "nouveau",
+            email: next,
+            ...CLEAN_DRAFT,
+            notes: add(p, `Nouvelle adresse essayée : ${next}`),
+          }
+        : { status: "ignore", notes: add(p, "Écarté : aucune adresse e-mail valide trouvée") };
+    } else if (/Envoi impossible/i.test(notes)) {
+      const attempts = (notes.match(/Envoi impossible/g) || []).length;
+      update =
+        attempts >= 3
+          ? { status: "ignore", notes: add(p, "Écarté : envoi impossible après trois essais") }
+          : { status: "brouillon" };
+    }
+    if (!update) continue;
+    await db
+      .from("prospects")
+      .update({ ...update, updated_at: new Date().toISOString() })
+      .eq("id", p.id);
+    if (update.status === "ignore") dropped++;
+    else retried++;
+  }
+  return { retried, dropped };
+}
+
 async function enrich() {
   const { data: rows } = await db
     .from("prospects")
@@ -804,20 +872,6 @@ async function draftMessages(settings) {
     })
     .in("status", ["brouillon", "valide"])
     .lt("drafted_at", STYLE_SINCE);
-  // Agences écartées à tort lors d'une erreur technique (clé IA refusée) : remises en file, une fois.
-  const { data: stuck } = await db
-    .from("prospects")
-    .select("id,notes")
-    .eq("status", "erreur")
-    .is("subject", null)
-    .ilike("notes", "%non conforme%")
-    .not("notes", "ilike", "%réessai%");
-  for (const p of stuck || []) {
-    await db
-      .from("prospects")
-      .update({ status: "nouveau", notes: `${p.notes}\nRéessai après une erreur technique` })
-      .eq("id", p.id);
-  }
   const { count: pending } = await db
     .from("prospects")
     .select("id", { count: "exact", head: true })
@@ -1380,6 +1434,9 @@ async function main() {
     note(
       `Promoteurs et marchands de biens : ${companies.checked} vérifiés, ${companies.added} avec site confirmé`,
     );
+    const fixed = await resolveErrors();
+    if (fixed.retried || fixed.dropped)
+      note(`Cas à vérifier traités : ${fixed.retried} relancés, ${fixed.dropped} écartés`);
     const enriched = await enrich();
     note(`Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}`);
     note(`Répartition : ${await loadWeights()}`);
