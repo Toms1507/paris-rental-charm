@@ -1,0 +1,43 @@
+# Rapport hebdomadaire de la prospection (scripts/rapport-prospection.mjs) : écrit
+# rapports/prospection.md le dimanche, juste avant la routine « Directeur commercial Spinelle »
+# qui le lit pour analyser la semaine. Secrets : SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
+name: Rapport de prospection
+
+on:
+  schedule:
+    # Dimanche, 18 h 43 à Paris en été (une heure plus tôt en hiver), avant la routine de 19 h 13.
+    - cron: "43 16 * * 0"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Rapport
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          npm install --no-audit --no-fund --no-save @supabase/supabase-js
+          node scripts/rapport-prospection.mjs
+
+      - name: Enregistrer le rapport
+        run: |
+          git add rapports/prospection.md
+          if git diff --cached --quiet; then
+            echo "Rapport inchangé."
+            exit 0
+          fi
+          git -c user.name="Toms1507" -c user.email="Simontom33@sfr.fr" commit -m "Rapport hebdomadaire de prospection"
+          git pull --rebase
+          git push
