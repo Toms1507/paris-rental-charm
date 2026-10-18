@@ -33,6 +33,11 @@ const GIVE_UP_AFTER_DAYS = 14;
 const ENRICH_PER_RUN = 120;
 const DRAFT_PER_RUN = 40;
 
+// Durée d'un passage : GitHub l'arrête à 45 minutes ; on s'arrête proprement avant.
+const RUN_START = Date.now();
+const timeLeft = () => RUN_START + 38 * 60_000 - Date.now();
+const MINUTES = 60_000;
+
 const SIGNATURE = `Bien cordialement,
 
 Tom Simon
@@ -194,7 +199,7 @@ async function overpass(zone) {
     "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
   ];
-  for (let attempt = 0; attempt < 8; attempt++) {
+  for (let attempt = 0; attempt < 5; attempt++) {
     const endpoint = endpoints[attempt % endpoints.length];
     try {
       const res = await fetch(endpoint, {
@@ -234,6 +239,11 @@ async function syncAgencies(settings) {
   for (const key of settings.zones) {
     const zone = ZONES[key];
     if (!zone) continue;
+    if (timeLeft() < 15 * MINUTES) {
+      note(`Zone ${key} : reportée au prochain passage (temps du passage)`);
+      failed = true;
+      continue;
+    }
     let elements = [];
     try {
       elements = await overpass(zone);
@@ -310,18 +320,46 @@ export function pickEmail(emails, website) {
 }
 
 function excerpt(html) {
-  const title = (html.match(/<title[^>]*>([^<]*)/i) || [])[1] || "";
+  const clean = (t) =>
+    t
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&nbsp;|&#160;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&#39;|&rsquo;|&#8217;/g, "'")
+      .replace(/\s+/g, " ")
+      .trim();
+  const body = html.replace(
+    /<(script|style|noscript|svg|nav|header|footer|form)[\s\S]*?<\/\1>/gi,
+    " ",
+  );
+  const title = clean((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || "");
   const desc =
     (html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)/i) || [])[1] || "";
-  const body = html
-    .replace(/<(script|style|noscript|svg)[\s\S]*?<\/\1>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;|&#160;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&#39;|&rsquo;/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-  return `${title}\n${desc}\n${body}`.slice(0, 1800);
+  const headings = [...body.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/gi)]
+    .map((m) => clean(m[1]))
+    .filter((t) => t.length > 3);
+  // Les paragraphes qui présentent l'agence (histoire, équipe, spécialité, secteur) passent en premier.
+  const paragraphs = [...body.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)]
+    .map((m) => clean(m[1]))
+    .filter(
+      (t) =>
+        t.length > 60 &&
+        !/cookie|en continuant|consentement|données personnelles|javascript/i.test(t),
+    );
+  const about = paragraphs.filter((t) =>
+    /depuis|fond|équipe|famil|spécialis|expert|quartier|secteur|notre agence|nous accompagn|indépendant|réseau|prestige|luxe|gestion|location|vente/i.test(
+      t,
+    ),
+  );
+  return [
+    `Titre : ${title}`,
+    desc && `Description : ${clean(desc)}`,
+    headings.length && `Titres : ${[...new Set(headings)].slice(0, 8).join(" · ")}`,
+    (about.length ? about : paragraphs).slice(0, 4).join("\n"),
+  ]
+    .filter(Boolean)
+    .join("\n")
+    .slice(0, 2000);
 }
 
 export async function crawl(website) {
@@ -491,7 +529,7 @@ async function syncCompanies(settings) {
     const { data: known } = await db.from("prospects").select("source_id").in("source_id", ids);
     const seen = new Set((known || []).map((k) => k.source_id));
     for (const c of list.results) {
-      if (checked >= COMPANIES_PER_RUN) break;
+      if (checked >= COMPANIES_PER_RUN || timeLeft() < 12 * MINUTES) break;
       if (seen.has(`siren:${c.siren}`)) continue;
       checked++;
       const site = await verifiedSite(c);
@@ -613,22 +651,29 @@ async function enrich() {
     .order("email", { ascending: true, nullsFirst: false })
     .order("website", { ascending: true, nullsFirst: false })
     .limit(ENRICH_PER_RUN);
+  const queue = [...(rows || [])];
+  let checked = 0;
   let withEmail = 0;
-  for (const p of rows || []) {
-    const update = { crawled_at: new Date().toISOString(), updated_at: new Date().toISOString() };
-    if (p.website) {
-      const { emails, text } = await crawl(p.website);
-      if (!p.email) update.email = pickEmail(emails, p.website);
-      if (text) update.site_excerpt = text;
+  const worker = async () => {
+    while (queue.length && timeLeft() > 10 * MINUTES) {
+      const p = queue.shift();
+      const update = { crawled_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+      if (p.website) {
+        const { emails, text } = await crawl(p.website);
+        if (!p.email) update.email = pickEmail(emails, p.website);
+        if (text) update.site_excerpt = text;
+      }
+      const company = await lookupCompany(p).catch(() => null);
+      if (company) Object.assign(update, company);
+      const email = update.email ?? p.email;
+      if (!email) update.status = "sans_email";
+      else withEmail++;
+      await db.from("prospects").update(update).eq("id", p.id);
+      checked++;
     }
-    const company = await lookupCompany(p).catch(() => null);
-    if (company) Object.assign(update, company);
-    const email = update.email ?? p.email;
-    if (!email) update.status = "sans_email";
-    else withEmail++;
-    await db.from("prospects").update(update).eq("id", p.id);
-  }
-  return { checked: (rows || []).length, withEmail };
+  };
+  await Promise.all(Array.from({ length: 6 }, worker));
+  return { checked, withEmail };
 }
 
 // ------------------------------------------------------------------ 3. Rédaction
@@ -660,6 +705,8 @@ Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepren
 - Ne parle ni de réglementation, ni d'encadrement, ni de plafond de nuits, ni de conformité, ni de données de marché.
 - Pas de jargon (« partenariat stratégique », « synergie », « solution clé en main »), pas de superlatifs creux, pas de point d'exclamation, pas d'emoji, pas de « n'hésitez pas », pas de café ni de visite, pas de formule finale ni de signature (elles sont ajoutées automatiquement).
 - N'invente rien, ni sur lui ni sur Spinelle (pas de nombre de clients, pas de références).
+- Ne précise pas ce qu'il n'aurait PAS à faire (« pas de fichier à nous confier », « aucun engagement de votre part »…) : ça sonne faux.
+- L'accroche doit parler de LUI (son agence, son style, sa spécialité, ses biens), pas seulement de sa ville.
 
 Relance (sept jours plus tard, en réponse au premier e-mail) : deux phrases chaleureuses et légères, sans reproche : tu reviens simplement vers lui, tu rappelles l'idée en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
 
@@ -674,7 +721,7 @@ Propose DEUX versions vraiment différentes (accroche, angle, objet), toutes deu
 // Relecture dans la peau du destinataire : il note chaque version selon la probabilité qu'il réponde.
 const JUDGE = `Tu te mets entièrement à la place du professionnel de l'immobilier décrit ci-dessous : tu es lui, avec son métier, sa clientèle, son agenda chargé, et tu reçois chaque jour des dizaines de sollicitations commerciales que tu ignores pour la plupart.
 
-Tu reçois deux versions d'un même e-mail. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
+Tu reçois deux versions d'un même e-mail. Si ton nom n'apparaît pas dans la salutation, c'est normal (l'expéditeur ne le connaît pas) : ne le pénalise pas. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
 
 Réponds uniquement au format :
 <notes>1:N;2:N</notes>
@@ -682,7 +729,7 @@ Réponds uniquement au format :
 <pourquoi>en une phrase, à la première personne, ce qui te ferait répondre ou non à la meilleure</pourquoi>
 <amelioration>la modification la plus utile pour que tu répondes à coup sûr</amelioration>`;
 
-const MIN_SCORE = 7;
+const MIN_SCORE = 6;
 
 const FORBIDDEN =
   /[[\]{}!%€]|\d|encadr|réglement|reglement|plafond|conformit|médian|median|prix|tarif|clé en main|cle en main|synergie|stratégique|n'hésitez|café|cordialement|Tom Simon/i;
@@ -905,13 +952,13 @@ async function draftMessages(settings) {
     if (u.phone) seen.phone.add(u.phone.replace(/\D/g, "").slice(-9));
     if (u.siren) seen.siren.add(u.siren);
   }
-  let drafted = 0;
+  // 1. Sélection (une agence = un seul contact, même sous plusieurs noms ou adresses).
+  const queue = [];
   for (const p of rows || []) {
-    if (drafted >= room) break;
+    if (queue.length >= room) break;
     const email = p.email.toLowerCase();
     const host = p.website ? hostOf(p.website) : null;
     const phone = p.phone ? p.phone.replace(/\D/g, "").slice(-9) : null;
-    // Une agence = un seul contact, même si elle apparaît sous plusieurs noms ou adresses.
     const duplicate =
       blocked.has(email) ||
       seen.email.has(email) ||
@@ -934,47 +981,57 @@ async function draftMessages(settings) {
     if (host) seen.host.add(host);
     if (phone) seen.phone.add(phone);
     if (p.siren) seen.siren.add(p.siren);
-    let draft;
-    try {
-      draft = await draftOne(ai, p);
-    } catch (e) {
-      // Erreur technique (clé, quota, service) : l'agence reste en file pour le prochain passage.
-      note(`Rédaction interrompue (${p.name}) : ${e.message}`);
-      if ([400, 401, 403, 429].includes(e.status)) break;
-      continue;
-    }
-    if (!draft) {
+    queue.push(p);
+  }
+  // 2. Rédaction, quatre messages à la fois, sans dépasser la durée du passage.
+  let drafted = 0;
+  let stop = false;
+  const worker = async () => {
+    while (queue.length && !stop && timeLeft() > 3 * MINUTES) {
+      const p = queue.shift();
+      let draft;
+      try {
+        draft = await draftOne(ai, p);
+      } catch (e) {
+        // Erreur technique (clé, quota, service) : l'agence reste en file pour le prochain passage.
+        note(`Rédaction interrompue (${p.name}) : ${e.message}`);
+        if ([400, 401, 403, 429].includes(e.status)) stop = true;
+        continue;
+      }
+      if (!draft) {
+        await db
+          .from("prospects")
+          .update({
+            status: "erreur",
+            notes: [p.notes, "Message non conforme après deux essais : à rédiger à la main"]
+              .filter(Boolean)
+              .join("\n"),
+          })
+          .eq("id", p.id);
+        continue;
+      }
       await db
         .from("prospects")
         .update({
-          status: "erreur",
-          notes: [p.notes, "Message non conforme après deux essais : à rédiger à la main"]
-            .filter(Boolean)
-            .join("\n"),
+          status: "brouillon",
+          subject: draft.subject,
+          body: draft.body,
+          followup_subject: `Re: ${draft.subject}`,
+          followup_body: draft.followup,
+          angle: draft.angle,
+          drafted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         })
         .eq("id", p.id);
-      continue;
+      drafted++;
+      // Quelques exemples complets par passage dans le journal, pour contrôler la qualité.
+      if (drafted <= 3)
+        note(
+          `Exemple (${p.name}), note ${draft.score}/10 — ${draft.why}\nObjet : ${draft.subject}\n${draft.body}`,
+        );
     }
-    await db
-      .from("prospects")
-      .update({
-        status: "brouillon",
-        subject: draft.subject,
-        body: draft.body,
-        followup_subject: `Re: ${draft.subject}`,
-        followup_body: draft.followup,
-        angle: draft.angle,
-        drafted_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", p.id);
-    drafted++;
-    // Deux exemples complets par passage dans le journal, pour contrôler la qualité.
-    if (drafted <= 3)
-      note(
-        `Exemple (${p.name}), note ${draft.score}/10 — ${draft.why}\nObjet : ${draft.subject}\n${draft.body}`,
-      );
-  }
+  };
+  await Promise.all([worker(), worker(), worker(), worker()]);
   return drafted;
 }
 
@@ -1429,6 +1486,34 @@ async function main() {
     await db.from("prospect_settings").update({ daily_limit: 80 }).eq("id", 1);
     note("Plafond quotidien réglé à 80 nouveaux contacts (environ 2 000 par mois).");
   }
+  // 1. D'abord les envois (messages préparés lors des passages précédents) : ils ne doivent
+  //    jamais être empêchés par une préparation trop longue.
+  if (!settings.paused) {
+    const fixed = await resolveErrors();
+    if (fixed.retried || fixed.dropped)
+      note(`Cas à vérifier traités : ${fixed.retried} relancés, ${fixed.dropped} écartés`);
+    note(`Répartition : ${await loadWeights()}`);
+  }
+  if (process.env.SMTP_PASSWORD) {
+    const box = await mailbox();
+    try {
+      const r = await checkReplies(box);
+      note(`Réponses détectées : ${r.replies}, adresses invalides : ${r.bounces}`);
+      if (!settings.paused) {
+        const sent = await sendBatch(settings, box);
+        note(
+          `Envoyés : ${sent.sent} premiers messages, ${sent.followups} relances (mode ${settings.mode})`,
+        );
+      }
+      await weeklySummary(settings, box);
+    } finally {
+      await box.close();
+    }
+  } else {
+    note("SMTP_PASSWORD absent : aucun envoi (les brouillons restent visibles dans l'intranet).");
+  }
+
+  // 2. Ensuite la préparation des prochains envois, dans le temps qui reste.
   if (settings.paused) {
     note("Prospection en pause.");
   } else {
@@ -1457,32 +1542,10 @@ async function main() {
     note(
       `Promoteurs et marchands de biens : ${companies.checked} vérifiés, ${companies.added} avec site confirmé`,
     );
-    const fixed = await resolveErrors();
-    if (fixed.retried || fixed.dropped)
-      note(`Cas à vérifier traités : ${fixed.retried} relancés, ${fixed.dropped} écartés`);
     const enriched = await enrich();
     note(`Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}`);
-    note(`Répartition : ${await loadWeights()}`);
     if (process.env.ANTHROPIC_API_KEY) note(`Messages rédigés : ${await draftMessages(settings)}`);
     else note("ANTHROPIC_API_KEY absente : pas de rédaction.");
-  }
-  if (process.env.SMTP_PASSWORD) {
-    const box = await mailbox();
-    try {
-      const r = await checkReplies(box);
-      note(`Réponses détectées : ${r.replies}, adresses invalides : ${r.bounces}`);
-      if (!settings.paused) {
-        const s = await sendBatch(settings, box);
-        note(
-          `Envoyés : ${s.sent} premiers messages, ${s.followups} relances (mode ${settings.mode})`,
-        );
-      }
-      await weeklySummary(settings, box);
-    } finally {
-      await box.close();
-    }
-  } else {
-    note("SMTP_PASSWORD absent : aucun envoi (les brouillons restent visibles dans l'intranet).");
   }
   await db
     .from("prospect_settings")
