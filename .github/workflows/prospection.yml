@@ -37,5 +37,5 @@ jobs:
             echo "Secrets Supabase absents : prospection non activée."
             exit 0
           fi
-          npm install --no-audit --no-fund --no-save @anthropic-ai/sdk @supabase/supabase-js nodemailer imapflow
+          npm install --no-audit --no-fund --no-save @anthropic-ai/sdk @supabase/supabase-js nodemailer imapflow mailparser
           node scripts/prospection.mjs

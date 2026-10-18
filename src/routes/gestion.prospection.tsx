@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { ExternalLink, Phone } from "lucide-react";
+import { ExternalLink, Mail, MessageCircleReply, Phone } from "lucide-react";
 import { toast } from "sonner";
 import {
   Empty,
@@ -113,6 +113,7 @@ function ProspectionPage() {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [open, setOpen] = useState<Prospect | null>(null);
+  const [replies, setReplies] = useState<Prospect[]>([]);
 
   const load = useCallback(async () => {
     const s = await db.from("prospect_settings").select("*").eq("id", 1).maybeSingle();
@@ -131,6 +132,13 @@ function ProspectionPage() {
       }),
     );
     setCounts(Object.fromEntries(entries));
+    const answered = await db
+      .from("prospects")
+      .select(COLUMNS)
+      .eq("status", "repondu")
+      .order("replied_at", { ascending: false })
+      .limit(50);
+    setReplies((answered.data ?? []) as Prospect[]);
     let q = db
       .from("prospects")
       .select(COLUMNS)
@@ -227,6 +235,8 @@ function ProspectionPage() {
           tone={counts["partenaire"] ? "ok" : undefined}
         />
       </div>
+
+      <RepliesPanel replies={replies} onStatus={(id, s) => void setStatus([id], s)} />
 
       {settings && (
         <Panel title="Réglages de l'envoi">
@@ -454,6 +464,92 @@ function ProspectionPage() {
         />
       )}
     </div>
+  );
+}
+
+/** Dernière réponse enregistrée dans les notes (« Réponse du JJ/MM/AAAA (adresse) : texte »). */
+function replyOf(p: Prospect) {
+  const lines = (p.notes ?? "").split("\n").filter((l) => l.startsWith("Réponse du "));
+  const last = lines.at(-1);
+  if (!last) return null;
+  const m = last.match(/^Réponse du ([^(]+) \(([^)]*)\) : (.*)$/);
+  return m ? { date: m[1]!.trim(), from: m[2]!, text: m[3]! } : { date: "", from: "", text: last };
+}
+
+function RepliesPanel({
+  replies,
+  onStatus,
+}: {
+  replies: Prospect[];
+  onStatus: (id: string, status: string) => void;
+}) {
+  if (!replies.length) return null;
+  return (
+    <Panel
+      title={
+        <span className="inline-flex items-center gap-2">
+          <MessageCircleReply className="size-4 text-emerald-700" /> Réponses à traiter (
+          {replies.length})
+        </span>
+      }
+    >
+      <ul className="divide-y divide-border">
+        {replies.map((p) => {
+          const reply = replyOf(p);
+          const to = reply?.from || p.email || "";
+          const subject = encodeURIComponent(
+            p.subject ? `Re: ${p.subject}` : "Spinelle Conciergerie",
+          );
+          return (
+            <li key={p.id} className="py-3 text-sm">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <span className="font-semibold text-ink">
+                  {p.name}
+                  {p.contact_name ? ` · ${p.contact_name}` : ""}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {ZONES[p.zone] ?? p.zone}
+                  {reply?.date ? ` · répondu le ${reply.date}` : ""}
+                </span>
+              </div>
+              <p className="mt-1.5 rounded-md bg-muted p-2.5 text-[0.92rem] whitespace-pre-line">
+                {reply?.text ?? "Réponse reçue : voir la boîte contact@."}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <a
+                  href={`mailto:${to}?subject=${subject}`}
+                  className="btn-primary inline-flex items-center gap-1.5 !px-3 !py-1.5 text-xs"
+                >
+                  <Mail className="size-3.5" /> Répondre
+                </a>
+                {p.phone && (
+                  <a
+                    href={`tel:${p.phone.replace(/\s/g, "")}`}
+                    className="btn-outline inline-flex items-center gap-1.5 !px-3 !py-1.5 text-xs"
+                  >
+                    <Phone className="size-3.5" /> Appeler {p.phone}
+                  </a>
+                )}
+                <button
+                  type="button"
+                  className="btn-outline !px-3 !py-1.5 text-xs"
+                  onClick={() => onStatus(p.id, "partenaire")}
+                >
+                  Devenue partenaire
+                </button>
+                <button
+                  type="button"
+                  className="btn-outline !px-3 !py-1.5 text-xs"
+                  onClick={() => onStatus(p.id, "refus")}
+                >
+                  Pas intéressée
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </Panel>
   );
 }
 

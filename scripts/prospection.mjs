@@ -1183,10 +1183,31 @@ async function sendBatch(settings, box) {
 
 const WEBMAIL = /gmail|hotmail|outlook|yahoo|orange|free|sfr|laposte|wanadoo|icloud|live|bbox|neuf/;
 
+// Texte de la réponse, sans la citation de notre message ni la signature.
+async function replyExcerpt(source) {
+  try {
+    const { simpleParser } = await import("mailparser");
+    const mail = await simpleParser(source);
+    const lines = [];
+    for (const line of (mail.text || "").split("\n")) {
+      if (
+        /^>|^(Le|On) .{5,120}(a écrit|wrote)\s*:?\s*$|^-{2,}\s*$|^_{5,}|^De ?:|^From:/i.test(
+          line.trim(),
+        )
+      )
+        break;
+      lines.push(line.trim());
+    }
+    return lines.join(" ").replace(/\s+/g, " ").trim().slice(0, 600);
+  } catch {
+    return "";
+  }
+}
+
 async function checkReplies(box) {
   const { data: contacted } = await db
     .from("prospects")
-    .select("id,email,status")
+    .select("id,email,status,notes")
     .in("status", ["contacte", "relance", "sans_reponse"]);
   const byEmail = new Map();
   const byHost = new Map();
@@ -1209,7 +1230,12 @@ async function checkReplies(box) {
           if (body.includes(email)) {
             await db
               .from("prospects")
-              .update({ status: "erreur", notes: "Adresse e-mail invalide (message non remis)" })
+              .update({
+                status: "erreur",
+                notes: [p.notes, "Adresse e-mail invalide (message non remis)"]
+                  .filter(Boolean)
+                  .join("\n"),
+              })
               .eq("id", p.id);
             byEmail.delete(email);
             bounces++;
@@ -1219,11 +1245,20 @@ async function checkReplies(box) {
       }
       const p = byEmail.get(from) || byHost.get(from.split("@")[1]);
       if (p && p.status !== "repondu") {
+        // Extrait de la réponse, lisible dans l'intranet sans ouvrir la boîte e-mail.
+        const excerpt = await replyExcerpt(msg.source);
+        const date = new Date(msg.envelope?.date || Date.now());
         await db
           .from("prospects")
           .update({
             status: "repondu",
-            replied_at: new Date(msg.envelope?.date || Date.now()).toISOString(),
+            replied_at: date.toISOString(),
+            notes: [
+              p.notes,
+              `Réponse du ${date.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })} (${from}) : ${excerpt || "(voir la boîte e-mail)"}`,
+            ]
+              .filter(Boolean)
+              .join("\n"),
             updated_at: new Date().toISOString(),
           })
           .eq("id", p.id);
