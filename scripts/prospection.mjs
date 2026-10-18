@@ -675,22 +675,68 @@ async function draftOne(ai, p) {
   return null;
 }
 
-// Répartition équitable : un contact de chaque groupe (zone × métier) à tour de rôle ; les zones
-// dont la haute saison approche passent deux fois par tour (ski en automne, côtes au printemps).
+// Répartition entre groupes (zone × métier). Au début, à parts égales ; dès qu'il y a assez de
+// recul, chaque groupe reçoit une part proportionnelle à son taux de réponse (lissé), entre la
+// moitié et le triple de la part normale : on mise davantage sur ce qui marche, sans jamais
+// abandonner les autres groupes. Les zones dont la haute saison approche comptent double.
+const groupKey = (p) =>
+  `${p.zone}|${(p.notes || "").match(/Catégorie : ([^\n]+)/)?.[1] ?? "agence immobilière"}`;
+const MIN_CONTACTS_TO_ADAPT = 100; // contacts au total avant d'ajuster les parts
+const PRIOR = 30; // lissage : un groupe peu contacté reste proche de la moyenne
+
+let weights = null;
+async function loadWeights() {
+  const rows = [];
+  for (let from = 0; ; from += 1000) {
+    const { data } = await db
+      .from("prospects")
+      .select("zone,notes,status")
+      .in("status", ["contacte", "relance", "sans_reponse", "repondu", "partenaire", "refus"])
+      .range(from, from + 999);
+    rows.push(...(data || []));
+    if (!data || data.length < 1000) break;
+  }
+  const answered = (p) => ["repondu", "partenaire", "refus"].includes(p.status);
+  const overall = rows.length ? rows.filter(answered).length / rows.length : 0;
+  weights = new Map();
+  if (rows.length < MIN_CONTACTS_TO_ADAPT || overall === 0) return "parts égales (phase de test)";
+  const stats = new Map();
+  for (const p of rows) {
+    const g = stats.get(groupKey(p)) || { sent: 0, ok: 0 };
+    g.sent++;
+    if (answered(p)) g.ok++;
+    stats.set(groupKey(p), g);
+  }
+  for (const [key, g] of stats) {
+    const rate = (g.ok + PRIOR * overall) / (g.sent + PRIOR);
+    weights.set(key, Math.min(3, Math.max(0.5, rate / overall)));
+  }
+  const best = [...weights.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
+  return `parts ajustées aux réponses (${best.map(([k, w]) => `${k.replace("|", " · ")} ×${w.toFixed(1)}`).join(", ")})`;
+}
+
 function interleave(list) {
   const month = parisNow().getMonth() + 1;
   const groups = new Map();
   for (const p of list) {
-    const key = `${p.zone}|${(p.notes || "").match(/Catégorie : ([^\n]+)/)?.[1] ?? "agence immobilière"}`;
+    const key = groupKey(p);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(p);
   }
-  const queues = [...groups.entries()].flatMap(([key, items]) =>
-    ZONES[key.split("|")[0]]?.season?.includes(month) ? [items, items] : [items],
-  );
+  const queues = [...groups.entries()].map(([key, items]) => ({
+    items,
+    weight: (weights?.get(key) ?? 1) * (ZONES[key.split("|")[0]]?.season?.includes(month) ? 2 : 1),
+    current: 0,
+  }));
+  // Tourniquet pondéré : chaque groupe avance selon sa part, sans jamais être oublié.
   const out = [];
   while (out.length < list.length) {
-    for (const q of queues) if (q.length) out.push(q.shift());
+    const open = queues.filter((q) => q.items.length);
+    const total = open.reduce((sum, q) => sum + q.weight, 0);
+    for (const q of open) q.current += q.weight;
+    const pick = open.reduce((a, b) => (b.current > a.current ? b : a));
+    pick.current -= total;
+    out.push(pick.items.shift());
   }
   return out;
 }
@@ -1169,6 +1215,7 @@ async function main() {
     );
     const enriched = await enrich();
     note(`Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}`);
+    note(`Répartition : ${await loadWeights()}`);
     if (process.env.ANTHROPIC_API_KEY) note(`Messages rédigés : ${await draftMessages(settings)}`);
     else note("ANTHROPIC_API_KEY absente : pas de rédaction.");
   }
