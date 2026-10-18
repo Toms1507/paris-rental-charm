@@ -392,6 +392,148 @@ export async function lookupCompany(p) {
   };
 }
 
+// ------------------------------------------------------------------ 1 bis. Promoteurs et marchands de biens
+
+// Entreprises de l'annuaire officiel (codes d'activité), réparties par département de nos zones.
+// Leur site n'y figure pas : on le devine à partir du nom, et on ne le retient que si le numéro
+// SIREN de l'entreprise y apparaît (mentions légales obligatoires) — jamais d'homonyme.
+const COMPANY_TARGETS = [
+  { naf: "41.10A", label: "promoteur immobilier" },
+  { naf: "68.10Z", label: "marchand de biens" },
+];
+const DEPT_ZONE = {
+  75: "paris",
+  92: "petite-couronne",
+  93: "petite-couronne",
+  94: "petite-couronne",
+  78: "versailles",
+  28: "chartres",
+  77: "disney",
+  95: "roissy",
+  33: "bordeaux",
+  "06": "cote-azur",
+  83: "cote-azur",
+  73: "ski",
+  74: "ski",
+  38: "ski",
+  64: "cote-basque-arcachon",
+};
+const COMPANIES_PER_RUN = 10;
+
+function siteCandidates(company) {
+  const raw = company.nom_complet || "";
+  const inName = (raw.match(/([a-z0-9-]+\.(?:fr|com|immo|paris))/i) || [])[1];
+  const words = (company.siege?.liste_enseignes?.[0] || raw)
+    .replace(/\(.*?\)/g, " ")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(
+      /\b(sas|sasu|sarl|sa|sci|snc|societe|soc|groupe|group|france|immobiliere?|promotion|la|le|les|de|des|et)\b/g,
+      " ",
+    )
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+  const bases = [
+    words.join(""),
+    words.join("-"),
+    words[0],
+    `${words.join("")}-promotion`,
+    `groupe-${words.join("")}`,
+  ];
+  return [
+    ...(inName ? [`https://www.${inName.toLowerCase()}`] : []),
+    ...[...new Set(bases.filter((b) => b && b.length >= 3))].flatMap((b) => [
+      `https://www.${b}.fr`,
+      `https://www.${b}.com`,
+    ]),
+  ];
+}
+
+export async function verifiedSite(company) {
+  const siren = company.siren;
+  const spaced = siren.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3");
+  const has = (html) => html.includes(siren) || html.includes(spaced);
+  for (const url of siteCandidates(company)) {
+    const home = await fetchText(url, { timeout: 7000 });
+    if (!home) continue;
+    if (has(home)) return url;
+    for (const path of ["mentions-legales", "mentions-legales/", "informations-legales", "legal"]) {
+      const page = await fetchText(new URL(`/${path}`, url).href, { timeout: 7000 });
+      if (page && has(page)) return url;
+    }
+  }
+  return null;
+}
+
+async function syncCompanies(settings) {
+  const zones = new Set(settings.zones);
+  const depts = Object.entries(DEPT_ZONE).filter(([, z]) => zones.has(z));
+  let added = 0;
+  let checked = 0;
+  for (let i = 0; i < 6 && checked < COMPANIES_PER_RUN; i++) {
+    // Un département et une activité tirés au hasard à chaque essai : toute la liste est couverte au fil des jours.
+    const [dept, zone] = depts[Math.floor(Math.random() * depts.length)];
+    const target = COMPANY_TARGETS[Math.floor(Math.random() * COMPANY_TARGETS.length)];
+    const base = `https://recherche-entreprises.api.gouv.fr/search?activite_principale=${target.naf}&departement=${dept}&etat_administratif=A&categorie_entreprise=PME&per_page=25`;
+    const first = JSON.parse((await fetchText(base, { timeout: 15000 })) || "{}");
+    const pages = Math.min(first.total_pages || 1, 40);
+    const page = 1 + Math.floor(Math.random() * pages);
+    const list =
+      page === 1
+        ? first
+        : JSON.parse((await fetchText(`${base}&page=${page}`, { timeout: 15000 })) || "{}");
+    await sleep(400);
+    const ids = (list.results || []).map((c) => `siren:${c.siren}`);
+    if (!ids.length) continue;
+    const { data: known } = await db.from("prospects").select("source_id").in("source_id", ids);
+    const seen = new Set((known || []).map((k) => k.source_id));
+    for (const c of list.results) {
+      if (checked >= COMPANIES_PER_RUN) break;
+      if (seen.has(`siren:${c.siren}`)) continue;
+      checked++;
+      const site = await verifiedSite(c);
+      const row = {
+        source_id: `siren:${c.siren}`,
+        name: titleCase(c.siege?.liste_enseignes?.[0] || c.nom_complet),
+        zone,
+        siren: c.siren,
+      };
+      if (!site) {
+        // Retenu quand même (sans e-mail) pour ne pas le revérifier à chaque passage.
+        await db.from("prospects").insert({
+          ...row,
+          status: "sans_email",
+          crawled_at: new Date().toISOString(),
+          notes: `Catégorie : ${target.label}`,
+        });
+        continue;
+      }
+      const { emails, text } = await crawl(site);
+      const person = (c.dirigeants || []).find(
+        (d) => d.type_dirigeant === "personne physique" && d.nom && d.prenoms,
+      );
+      await db.from("prospects").insert({
+        ...row,
+        website: site,
+        email: pickEmail(emails, site),
+        site_excerpt: text,
+        address: c.siege?.adresse || null,
+        postcode: c.siege?.code_postal || null,
+        city: c.siege?.libelle_commune || null,
+        contact_name: person
+          ? `${titleCase(person.prenoms.split(/[ ,]/)[0])} ${titleCase(person.nom)}`
+          : null,
+        crawled_at: new Date().toISOString(),
+        status: pickEmail(emails, site) ? "nouveau" : "sans_email",
+        notes: `Catégorie : ${target.label}`,
+      });
+      added++;
+    }
+  }
+  return { checked, added };
+}
+
 async function enrich() {
   const { data: rows } = await db
     .from("prospects")
@@ -436,7 +578,7 @@ export function marketFact(p) {
   }
 }
 
-const SYSTEM = `Tu rédiges, pour Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail de prise de contact avec UN professionnel de l'immobilier précis (agence, syndic ou administrateur de biens, conseiller en investissement), et sa relance. Objectif : obtenir une réponse, en donnant envie de collaborer.
+const SYSTEM = `Tu rédiges, pour Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail de prise de contact avec UN professionnel de l'immobilier précis (agence, syndic ou administrateur de biens, conseiller en investissement, promoteur, marchand de biens), et sa relance. Objectif : obtenir une réponse, en donnant envie de collaborer.
 
 Spinelle Conciergerie : conciergerie de location courte durée (Airbnb, Booking) qui gère tout pour le propriétaire : annonce, voyageurs, ménage hôtelier, linge, maintenance, conformité légale. Elle ne fait ni transaction ni gestion locative classique : le client de l'agence reste le sien. Partenariat proposé : l'agence présente à Spinelle ses propriétaires intéressés par la location courte durée ; Spinelle leur fait un audit gratuit sous 24 h ; l'agence perçoit une commission pour chaque logement confié, selon le logement. Pour une agence de transaction, Spinelle peut aussi fournir gratuitement à ses acheteurs investisseurs une estimation des revenus en location courte durée. Page de présentation : spinelleconciergerie.fr/partenaires
 
@@ -446,7 +588,7 @@ Règles du premier e-mail :
 - Commence par « Bonjour Prénom Nom, » si un nom de dirigeant est fourni, sinon par « Bonjour, ».
 - Une première phrase qui montre que tu connais CETTE agence : un détail réel tiré de l'extrait de son site ou des informations fournies (quartier, spécialité, réseau, type de biens, clientèle). N'invente JAMAIS rien : si l'extrait est vide ou peu clair, reste sur la ville ou le quartier.
 - Adapte l'angle à l'agence : transaction → acheteurs investisseurs et estimation gratuite ; gestion locative → propriétaires tentés par la courte durée, commission plutôt que de les voir partir ; prestige → exigence et discrétion ; réseau ou indépendante, selon ce que montre le site.
-- Selon la catégorie fournie : agence immobilière → comme ci-dessus ; syndic ou administrateur de biens → copropriétaires et bailleurs qui envisagent la location courte durée, dans le respect du règlement de copropriété ; conseiller en investissement ou gestion de patrimoine → ses clients investisseurs : estimation gratuite des revenus en location courte durée, gestion clé en main, commission pour chaque logement confié.
+- Selon la catégorie fournie : agence immobilière → comme ci-dessus ; syndic ou administrateur de biens → copropriétaires et bailleurs qui envisagent la location courte durée, dans le respect du règlement de copropriété ; conseiller en investissement ou gestion de patrimoine → ses clients investisseurs : estimation gratuite des revenus en location courte durée, gestion clé en main, commission pour chaque logement confié ; promoteur immobilier → les acquéreurs investisseurs de ses programmes : une gestion courte durée clé en main et une estimation des revenus sont un argument de commercialisation, commission pour chaque logement confié ; marchand de biens → les biens qu'il rénove : estimation des revenus en location courte durée pour valoriser la revente auprès d'investisseurs, ou gestion des biens qu'il conserve.
 - Zones touristiques (côte, montagne) : appuie-toi sur la saison et la clientèle décrites dans le contexte de la zone, sans rien ajouter.
 - Présente l'offre en 2 ou 3 phrases, avec la commission « selon le logement » (aucun montant).
 - Tu peux utiliser le contexte de la zone et le chiffre de marché fournis, mot pour mot pour le chiffre. Aucun autre chiffre, aucune autre statistique.
@@ -990,6 +1132,13 @@ async function main() {
         `Zones à charger (${empty.join(", ")}) : ${await syncAgencies({ ...settings, zones: empty })} nouvelles agences`,
       );
     }
+    const companies = await syncCompanies(settings).catch((e) => {
+      note(`Promoteurs et marchands de biens : ${e.message}`);
+      return { checked: 0, added: 0 };
+    });
+    note(
+      `Promoteurs et marchands de biens : ${companies.checked} vérifiés, ${companies.added} avec site confirmé`,
+    );
     const enriched = await enrich();
     note(`Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}`);
     if (process.env.ANTHROPIC_API_KEY) note(`Messages rédigés : ${await draftMessages(settings)}`);
