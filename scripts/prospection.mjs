@@ -563,7 +563,7 @@ async function enrich() {
 
 // Style des messages : réécrit le 2026-10-18 à la demande du gérant (chaleureux, donne envie de
 // répondre, aucun chiffre ni réglementation). Les brouillons rédigés avant sont réécrits.
-const STYLE_SINCE = "2026-10-18T17:56:00Z";
+const STYLE_SINCE = "2026-10-18T17:54:52Z";
 
 const SYSTEM = `Tu écris, au nom de Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail à UN professionnel de l'immobilier précis, et sa relance. Un seul objectif : qu'il ait envie de lire jusqu'au bout et de répondre.
 
