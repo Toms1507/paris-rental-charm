@@ -6,8 +6,8 @@ name: Prospection des agences
 
 on:
   schedule:
-    # Jours ouvrés, 9 h 17, 12 h 17 et 15 h 17 à Paris en été (une heure plus tôt en hiver).
-    - cron: "17 7,10,13 * * 1-5"
+    # Du lundi au samedi, 9 h 17, 12 h 17 et 15 h 17 à Paris en été (une heure plus tôt en hiver).
+    - cron: "17 7,10,13 * * 1-6"
   workflow_dispatch: {}
 
 concurrency:

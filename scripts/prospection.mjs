@@ -54,6 +54,42 @@ const ZONES = {
   disney: { label: "secteur de Disneyland Paris", around: [12000, 48.8722, 2.7836] },
   roissy: { label: "secteur de Roissy-Charles-de-Gaulle", around: [12000, 49.0097, 2.5479] },
   bordeaux: { label: "Bordeaux", around: [12000, 44.8378, -0.5792] },
+  "cote-azur": {
+    label: "Côte d'Azur",
+    arounds: [
+      [12000, 43.7102, 7.262], // Nice
+      [9000, 43.5528, 7.0174], // Cannes
+      [8000, 43.5804, 7.1251], // Antibes, Juan-les-Pins
+      [8000, 43.7765, 7.4975], // Menton
+      [9000, 43.2692, 6.6389], // Saint-Tropez, Ramatuelle, Grimaud
+    ],
+    season: [1, 2, 3, 4, 5, 6], // biens d'été : à démarcher avant la saison
+  },
+  ski: {
+    label: "stations de ski des Alpes",
+    arounds: [
+      [12000, 45.9237, 6.8694], // Chamonix
+      [8000, 45.8567, 6.6175], // Megève
+      [8000, 45.4154, 6.6347], // Courchevel
+      [6000, 45.3967, 6.5656], // Méribel
+      [8000, 45.4486, 6.9806], // Val d'Isère
+      [6000, 45.4685, 6.9055], // Tignes
+      [8000, 45.6186, 6.7692], // Les Arcs, Bourg-Saint-Maurice
+      [8000, 46.1792, 6.7089], // Morzine, Avoriaz
+      [6000, 45.0907, 6.0703], // L'Alpe d'Huez
+    ],
+    season: [8, 9, 10, 11, 12], // biens d'hiver : à démarcher avant la saison
+  },
+  "cote-basque-arcachon": {
+    label: "côte basque et bassin d'Arcachon",
+    arounds: [
+      [12000, 43.4832, -1.5586], // Biarritz, Anglet, Bayonne
+      [8000, 43.388, -1.663], // Saint-Jean-de-Luz
+      [12000, 44.6586, -1.1689], // Arcachon, La Teste
+      [10000, 44.6464, -1.2468], // Cap-Ferret
+    ],
+    season: [1, 2, 3, 4, 5, 6],
+  },
 };
 
 // Contexte factuel de chaque zone, que le message peut évoquer sans risque d'erreur.
@@ -69,6 +105,11 @@ const ZONE_CONTEXT = {
   roissy:
     "Le secteur de l'aéroport Roissy-Charles-de-Gaulle : voyageurs d'affaires, escales, salons du parc des expositions de Villepinte.",
   bordeaux: "Bordeaux, son centre historique classé à l'Unesco et ses visiteurs toute l'année.",
+  "cote-azur":
+    "La Côte d'Azur : clientèle internationale, forte demande l'été, nombreux biens haut de gamme ; Spinelle y intervient avec une équipe locale.",
+  ski: "Les stations de ski des Alpes : chalets et appartements très demandés pendant la saison d'hiver ; Spinelle y intervient avec une équipe locale.",
+  "cote-basque-arcachon":
+    "La côte basque et le bassin d'Arcachon : forte demande l'été et pendant les vacances ; Spinelle y intervient avec une équipe locale.",
 };
 
 const env = (k) => {
@@ -128,6 +169,8 @@ async function overpass(zone) {
     '["shop"="estate_agent"]',
     '["office"="estate_agent"]',
     '["office"="real_estate_agent"]',
+    '["office"="property_management"]', // syndics, administrateurs de biens
+    '["office"="financial_advisor"]', // conseillers en investissement, gestion de patrimoine
   ];
   let head = "";
   let scopes = [];
@@ -138,8 +181,7 @@ async function overpass(zone) {
     head = zone.areas.map((a, i) => `area${a}->.z${i};`).join("");
     scopes = zone.areas.map((_, i) => `(area.z${i})`);
   } else {
-    const [r, lat, lon] = zone.around;
-    scopes = [`(around:${r},${lat},${lon})`];
+    scopes = (zone.arounds || [zone.around]).map(([r, lat, lon]) => `(around:${r},${lat},${lon})`);
   }
   const body = scopes.flatMap((s) => filters.map((f) => `nwr${s}${f};`)).join("");
   const query = `[out:json][timeout:180];${head}(${body});out tags center;`;
@@ -171,6 +213,17 @@ async function overpass(zone) {
   throw new Error("OpenStreetMap indisponible");
 }
 
+function category(t) {
+  if (t.office === "property_management") return "syndic ou administrateur de biens";
+  if (t.office === "financial_advisor")
+    return "conseiller en investissement ou gestion de patrimoine";
+  return "agence immobilière";
+}
+
+// Banques et assurances sont aussi étiquetées « conseiller financier » : hors cible.
+const OFF_TARGET =
+  /banque|bank|crédit|credit|assurance|axa|allianz|maaf|macif|matmut|generali|mutuelle|caisse/i;
+
 async function syncAgencies(settings) {
   const { data: existing } = await db.from("prospects").select("source_id");
   const known = new Set((existing || []).map((r) => r.source_id));
@@ -192,6 +245,8 @@ async function syncAgencies(settings) {
       const t = el.tags || {};
       const id = `osm:${el.type}/${el.id}`;
       if (!t.name || known.has(id)) continue;
+      if (t.office === "financial_advisor" && OFF_TARGET.test(`${t.name} ${t.brand || ""}`))
+        continue;
       known.add(id);
       rows.push({
         source_id: id,
@@ -203,7 +258,9 @@ async function syncAgencies(settings) {
         website: t.website || t["contact:website"] || t.url || null,
         email: (t.email || t["contact:email"] || "").split(/[;,\s]/)[0] || null,
         phone: t.phone || t["contact:phone"] || null,
-        notes: t.brand ? `Réseau : ${t.brand}` : null,
+        notes: [`Catégorie : ${category(t)}`, t.brand ? `Réseau : ${t.brand}` : null]
+          .filter(Boolean)
+          .join("\n"),
       });
     }
     for (let i = 0; i < rows.length; i += 200) {
@@ -379,7 +436,7 @@ export function marketFact(p) {
   }
 }
 
-const SYSTEM = `Tu rédiges, pour Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail de prise de contact avec UNE agence immobilière précise, et sa relance. Objectif : obtenir une réponse, en donnant envie de collaborer.
+const SYSTEM = `Tu rédiges, pour Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail de prise de contact avec UN professionnel de l'immobilier précis (agence, syndic ou administrateur de biens, conseiller en investissement), et sa relance. Objectif : obtenir une réponse, en donnant envie de collaborer.
 
 Spinelle Conciergerie : conciergerie de location courte durée (Airbnb, Booking) qui gère tout pour le propriétaire : annonce, voyageurs, ménage hôtelier, linge, maintenance, conformité légale. Elle ne fait ni transaction ni gestion locative classique : le client de l'agence reste le sien. Partenariat proposé : l'agence présente à Spinelle ses propriétaires intéressés par la location courte durée ; Spinelle leur fait un audit gratuit sous 24 h ; l'agence perçoit une commission pour chaque logement confié, selon le logement. Pour une agence de transaction, Spinelle peut aussi fournir gratuitement à ses acheteurs investisseurs une estimation des revenus en location courte durée. Page de présentation : spinelleconciergerie.fr/partenaires
 
@@ -389,6 +446,8 @@ Règles du premier e-mail :
 - Commence par « Bonjour Prénom Nom, » si un nom de dirigeant est fourni, sinon par « Bonjour, ».
 - Une première phrase qui montre que tu connais CETTE agence : un détail réel tiré de l'extrait de son site ou des informations fournies (quartier, spécialité, réseau, type de biens, clientèle). N'invente JAMAIS rien : si l'extrait est vide ou peu clair, reste sur la ville ou le quartier.
 - Adapte l'angle à l'agence : transaction → acheteurs investisseurs et estimation gratuite ; gestion locative → propriétaires tentés par la courte durée, commission plutôt que de les voir partir ; prestige → exigence et discrétion ; réseau ou indépendante, selon ce que montre le site.
+- Selon la catégorie fournie : agence immobilière → comme ci-dessus ; syndic ou administrateur de biens → copropriétaires et bailleurs qui envisagent la location courte durée, dans le respect du règlement de copropriété ; conseiller en investissement ou gestion de patrimoine → ses clients investisseurs : estimation gratuite des revenus en location courte durée, gestion clé en main, commission pour chaque logement confié.
+- Zones touristiques (côte, montagne) : appuie-toi sur la saison et la clientèle décrites dans le contexte de la zone, sans rien ajouter.
 - Présente l'offre en 2 ou 3 phrases, avec la commission « selon le logement » (aucun montant).
 - Tu peux utiliser le contexte de la zone et le chiffre de marché fournis, mot pour mot pour le chiffre. Aucun autre chiffre, aucune autre statistique.
 - Termine par une question simple, par exemple : « Seriez-vous intéressé par un partenariat ? Je peux vous adresser notre présentation ou en échanger par téléphone. »
@@ -506,7 +565,12 @@ async function draftMessages(settings) {
     .eq("status", "nouveau")
     .not("email", "is", null)
     .order("zone")
-    .limit(room * 2);
+    .limit(room * 4);
+  // Saison : les zones dont la haute saison approche passent en premier (ski en automne, côtes au printemps).
+  const month = parisNow().getMonth() + 1;
+  const priority = (p) =>
+    ZONES[p.zone]?.season?.includes(month) ? 0 : ZONES[p.zone]?.season ? 2 : 1;
+  rows?.sort((a, b) => priority(a) - priority(b));
   const { data: optouts } = await db.from("prospect_optouts").select("email");
   const blocked = new Set((optouts || []).map((o) => o.email));
   const { data: used } = await db
@@ -668,19 +732,19 @@ function allowanceToday(settings) {
   return Math.min(settings.daily_limit, ramp);
 }
 
-// Envois uniquement aux heures de bureau, du lundi au vendredi (heure de Paris), même lors d'un
-// lancement manuel : un e-mail professionnel reçu le soir ou le week-end fait mauvaise impression.
+// Envois uniquement aux heures de bureau, du lundi au samedi (heure de Paris), même lors d'un
+// lancement manuel : un e-mail professionnel reçu le soir ou le dimanche fait mauvaise impression.
 function officeHours() {
   const now = parisNow();
   const minutes = now.getHours() * 60 + now.getMinutes();
   return (
-    now.getDay() >= 1 && now.getDay() <= 5 && minutes >= 8 * 60 + 30 && minutes <= 18 * 60 + 30
+    now.getDay() >= 1 && now.getDay() <= 6 && minutes >= 8 * 60 + 30 && minutes <= 18 * 60 + 30
   );
 }
 
 async function sendBatch(settings, box) {
   if (!officeHours()) {
-    note("Hors heures de bureau (lundi-vendredi, 8 h 30 - 18 h 30) : aucun envoi.");
+    note("Hors heures de bureau (lundi-samedi, 8 h 30 - 18 h 30) : aucun envoi.");
     return { sent: 0, followups: 0 };
   }
   const hour = parisNow().getHours();
@@ -850,6 +914,29 @@ async function weeklySummary(settings, box) {
   const replied = await count(base().gte("replied_at", week));
   const unsub = await count(base().eq("status", "desinscrit").gte("updated_at", week));
   const waiting = await count(base().eq("status", "brouillon"));
+  // À appeler : ce qui signe le plus, c'est un appel après l'e-mail.
+  const { data: answered } = await db
+    .from("prospects")
+    .select("name,phone,email,zone,contact_name")
+    .eq("status", "repondu")
+    .gte("replied_at", week);
+  const { data: toCall } = await db
+    .from("prospects")
+    .select("name,phone,email,zone,contact_name")
+    .in("status", ["relance", "sans_reponse"])
+    .not("phone", "is", null)
+    .order("last_contact_at", { ascending: false })
+    .limit(15);
+  const line = (p) =>
+    `- ${p.name}${p.contact_name ? ` (${p.contact_name})` : ""}, ${ZONES[p.zone]?.label ?? p.zone} : ${p.phone ?? p.email}`;
+  const callList = [
+    answered?.length
+      ? `\nOnt répondu cette semaine, à rappeler en priorité :\n${answered.map(line).join("\n")}\n`
+      : "",
+    toCall?.length
+      ? `\nSans réponse après la relance, à appeler :\n${toCall.map(line).join("\n")}\n`
+      : "",
+  ].join("");
   const text = `Récapitulatif de la prospection de la semaine :
 
 - Agences contactées : ${contacted}
@@ -857,7 +944,7 @@ async function weeklySummary(settings, box) {
 - Réponses reçues : ${replied}
 - Désinscriptions : ${unsub}
 - Messages en attente de validation : ${waiting}
-
+${callList}
 Le détail de chaque agence et de chaque message : ${SITE}/gestion/prospection`;
   await box.send({
     from: { name: "Prospection Spinelle", address: FROM_EMAIL },
@@ -873,6 +960,8 @@ Le détail de chaque agence et de chaque message : ${SITE}/gestion/prospection`;
 
 // ------------------------------------------------------------------ Passage
 
+const allZones = (settings) => [...new Set([...(settings.zones || []), ...Object.keys(ZONES)])];
+
 async function main() {
   const { data: settings, error } = await db
     .from("prospect_settings")
@@ -886,6 +975,7 @@ async function main() {
     const weekAgo = Date.now() - 7 * 86_400_000;
     // Zones encore vides (serveurs saturés lors d'un passage précédent) : rechargées tout de suite.
     const empty = [];
+    settings.zones = allZones(settings);
     for (const zone of settings.zones) {
       const { count } = await db
         .from("prospects")

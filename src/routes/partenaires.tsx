@@ -59,7 +59,7 @@ const FAQ_PARTNERS = [
   },
   {
     q: "Quels logements vous intéressent ?",
-    a: "Les appartements et maisons à Paris (20 arrondissements) et en proche banlieue, du studio au grand appartement, dont le propriétaire souhaite louer en courte durée dans le respect de la réglementation.",
+    a: "Les appartements, maisons et chalets à Paris et en Île-de-France, à Bordeaux, sur la Côte d'Azur, la côte basque, le bassin d'Arcachon et dans les stations de ski des Alpes, du studio au bien de prestige, dont le propriétaire souhaite louer en courte durée dans le respect de la réglementation.",
   },
   {
     q: "Mes clients sont-ils démarchés ensuite ?",
@@ -104,10 +104,11 @@ function PartnersPage() {
             Vos clients veulent louer en courte durée&nbsp;? Recommandez-nous.
           </h1>
           <p className="mt-5 text-muted-foreground">
-            Agences immobilières, notaires, syndics, chasseurs d'appartements, agences de
-            relocation&nbsp;: Spinelle Conciergerie gère la location courte durée des propriétaires
-            que vous nous présentez, à Paris et en proche banlieue. Vous apportez une solution à vos
-            clients, et chaque apport est rémunéré.
+            Agences immobilières, syndics, conseillers en investissement, chasseurs d'appartements,
+            agences de relocation&nbsp;: Spinelle Conciergerie gère la location courte durée des
+            propriétaires que vous nous présentez, à Paris et en Île-de-France, à Bordeaux, sur la
+            Côte d'Azur, la côte basque, le bassin d'Arcachon et dans les stations de ski des Alpes.
+            Vous apportez une solution à vos clients, et chaque apport est rémunéré.
           </p>
           <a href="#devenir-partenaire" className="btn-primary mt-8">
             Devenir partenaire <ArrowRight className="size-4" />
