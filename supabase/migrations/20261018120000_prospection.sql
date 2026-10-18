@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS public.prospect_settings (
   -- validation : rien ne part sans validation dans l'intranet ; auto : envoi des brouillons.
   mode TEXT NOT NULL DEFAULT 'validation' CHECK (mode IN ('validation', 'auto')),
   paused BOOLEAN NOT NULL DEFAULT false,
-  daily_limit INT NOT NULL DEFAULT 62 CHECK (daily_limit BETWEEN 0 AND 150),
+  daily_limit INT NOT NULL DEFAULT 80 CHECK (daily_limit BETWEEN 0 AND 150),
   zones TEXT[] NOT NULL DEFAULT ARRAY['paris','petite-couronne','versailles','chartres','disney','roissy','bordeaux'],
   first_send_at TIMESTAMPTZ,
   last_sync_at TIMESTAMPTZ,

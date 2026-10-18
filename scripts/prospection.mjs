@@ -15,6 +15,7 @@
 // (facultatives : SMTP_USER, PROSPECT_MODEL). Sans SMTP_PASSWORD, rien n'est envoyé : la liste et
 // les brouillons sont tout de même préparés pour être relus dans l'intranet.
 
+import { resolveMx } from "node:dns/promises";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
 
@@ -1006,12 +1007,49 @@ async function sentToday() {
   return count || 0;
 }
 
-function allowanceToday(settings) {
+function allowanceToday(settings, health = 1) {
   // Montée en charge progressive pour préserver la réputation de l'adresse d'envoi.
-  if (!settings.first_send_at) return Math.min(20, settings.daily_limit);
+  if (!settings.first_send_at) return Math.floor(Math.min(20, settings.daily_limit) * health);
   const days = Math.floor((Date.now() - new Date(settings.first_send_at).getTime()) / 86_400_000);
   const ramp = days < 7 ? 20 : 20 + (days - 6) * 10;
-  return Math.min(settings.daily_limit, ramp);
+  return Math.floor(Math.min(settings.daily_limit, ramp) * health);
+}
+
+// Santé de l'adresse d'envoi sur les 7 derniers jours. Les messageries classent en spam les boîtes
+// dont beaucoup d'e-mails reviennent non remis ou dont les destinataires se désinscrivent : au
+// premier signal, on ralentit (moitié du volume), et on s'arrête net si les non-remis explosent.
+async function sendingHealth() {
+  const week = new Date(Date.now() - 7 * 86_400_000).toISOString();
+  const count = async (q) => (await q).count || 0;
+  const base = () => db.from("prospects").select("id", { count: "exact", head: true });
+  const sent = await count(base().gte("first_contact_at", week));
+  if (sent < 40) return { factor: 1, text: "trop peu d'envois pour juger" };
+  const bounced = await count(base().gte("first_contact_at", week).ilike("notes", "%non remis%"));
+  const unsubscribed = await count(base().gte("first_contact_at", week).eq("status", "desinscrit"));
+  const bounceRate = bounced / sent;
+  const unsubRate = unsubscribed / sent;
+  const text = `${Math.round(bounceRate * 1000) / 10} % non remis, ${Math.round(unsubRate * 1000) / 10} % de désinscriptions sur ${sent} envois`;
+  if (bounceRate > 0.08)
+    return { factor: 0, text: `${text} : nouveaux envois arrêtés pour aujourd'hui` };
+  if (bounceRate > 0.04 || unsubRate > 0.02)
+    return { factor: 0.5, text: `${text} : volume divisé par deux` };
+  return { factor: 1, text: `${text} : bon` };
+}
+
+// Le domaine du destinataire sait-il recevoir des e-mails ? Évite les envois voués à revenir.
+const mxCache = new Map();
+async function acceptsMail(email) {
+  const domain = email.split("@")[1]?.toLowerCase();
+  if (!domain) return false;
+  if (!mxCache.has(domain)) {
+    mxCache.set(
+      domain,
+      resolveMx(domain)
+        .then((r) => r.length > 0)
+        .catch((e) => (e.code === "ENODATA" || e.code === "ENOTFOUND" ? false : true)),
+    );
+  }
+  return mxCache.get(domain);
 }
 
 // Envois uniquement aux heures de bureau, du lundi au samedi (heure de Paris), même lors d'un
@@ -1031,7 +1069,9 @@ async function sendBatch(settings, box) {
   }
   const hour = parisNow().getHours();
   const runsLeft = Math.max(1, RUNS_PER_DAY - (hour >= 14 ? 2 : hour >= 11 ? 1 : 0));
-  const remaining = Math.max(0, allowanceToday(settings) - (await sentToday()));
+  const health = await sendingHealth();
+  note(`Santé de l'adresse d'envoi : ${health.text}`);
+  const remaining = Math.max(0, allowanceToday(settings, health.factor) - (await sentToday()));
   let budget = Math.ceil(remaining / runsLeft);
   let sent = 0;
   let followups = 0;
@@ -1081,6 +1121,18 @@ async function sendBatch(settings, box) {
     if (budget <= 0) break;
     if (blocked.has(p.email.toLowerCase())) {
       await db.from("prospects").update({ status: "desinscrit" }).eq("id", p.id);
+      continue;
+    }
+    if (!(await acceptsMail(p.email))) {
+      await db
+        .from("prospects")
+        .update({
+          status: "erreur",
+          notes: [p.notes, "Adresse e-mail invalide (domaine sans messagerie), non envoyé"]
+            .filter(Boolean)
+            .join("\n"),
+        })
+        .eq("id", p.id);
       continue;
     }
     try {
@@ -1257,13 +1309,13 @@ async function main() {
     .eq("id", 1)
     .single();
   if (error || !settings) throw new Error(`Réglages introuvables : ${error?.message}`);
-  // Volume choisi par le gérant : environ 1 600 nouveaux contacts par mois (62 par jour, lundi-samedi),
-  // relances en plus.
-  // Ne remplace que la valeur d'origine (80) : un réglage fait dans l'intranet est respecté.
-  if (settings.daily_limit === 80) {
-    settings.daily_limit = 62;
-    await db.from("prospect_settings").update({ daily_limit: 62 }).eq("id", 1);
-    note("Plafond quotidien réglé à 62 nouveaux contacts (environ 1 600 par mois).");
+  // Volume demandé par le gérant : le maximum raisonnable pour une seule boîte d'envoi, soit 80
+  // nouveaux contacts par jour (environ 2 000 par mois), relances en plus. Ne remplace que la
+  // valeur fixée précédemment (62) : un réglage fait dans l'intranet est respecté.
+  if (settings.daily_limit === 62) {
+    settings.daily_limit = 80;
+    await db.from("prospect_settings").update({ daily_limit: 80 }).eq("id", 1);
+    note("Plafond quotidien réglé à 80 nouveaux contacts (environ 2 000 par mois).");
   }
   if (settings.paused) {
     note("Prospection en pause.");
