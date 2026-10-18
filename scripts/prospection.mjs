@@ -1042,7 +1042,8 @@ async function checkReplies(box) {
 
 async function weeklySummary(settings, box) {
   const now = parisNow();
-  if (now.getDay() !== 5 || now.getHours() < 15) return;
+  // Le samedi, au dernier passage de la semaine (vers 15 h, 14 h en hiver).
+  if (now.getDay() !== 6 || now.getHours() < 14) return;
   if (
     settings.last_summary_at &&
     Date.now() - new Date(settings.last_summary_at).getTime() < 5 * 86_400_000
