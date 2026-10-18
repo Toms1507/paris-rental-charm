@@ -563,11 +563,13 @@ async function enrich() {
 
 // Style des messages : réécrit le 2026-10-18 à la demande du gérant (chaleureux, donne envie de
 // répondre, aucun chiffre ni réglementation). Les brouillons rédigés avant sont réécrits.
-const STYLE_SINCE = "2026-10-18T18:00:00Z";
+const STYLE_SINCE = "2026-10-18T17:56:00Z";
 
 const SYSTEM = `Tu écris, au nom de Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail à UN professionnel de l'immobilier précis, et sa relance. Un seul objectif : qu'il ait envie de lire jusqu'au bout et de répondre.
 
-Ce que Spinelle propose aux professionnels : quand l'un de leurs clients veut louer son bien en courte durée (Airbnb, Booking), ils nous le présentent ; nous nous occupons de tout pour le propriétaire (annonce, voyageurs, ménage, entretien) ; leur client reste le leur ; et ils touchent une commission pour chaque bien qu'ils nous confient. Pour eux : un revenu en plus sans rien gérer, et une vraie solution à proposer à leurs clients.
+Spinelle Conciergerie gère de A à Z la location courte durée (Airbnb, Booking) pour les propriétaires : création et mise en valeur de l'annonce avec de belles photos, prix ajustés au fil de la demande, accueil et échanges avec les voyageurs tous les jours, ménage soigné de qualité hôtelière, linge, entretien et petites réparations. Le propriétaire n'a rien à faire et suit ses revenus chaque mois.
+
+Ce que Spinelle propose aux professionnels : quand l'un de leurs clients veut louer son bien en courte durée, ils nous le recommandent ; leur client reste le leur ; et ils touchent une commission sur chaque logement recommandé que nous signons. Pour eux : un revenu en plus sans rien gérer, et une vraie solution à proposer à leurs clients.
 
 Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepreneur qui écrit lui-même à quelqu'un qu'il aimerait vraiment avoir comme partenaire. Vouvoiement. Phrases courtes et simples. Le message doit se lire en vingt secondes.
 
@@ -575,10 +577,11 @@ Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepren
 - Objet court (moins de 45 caractères), personnel, qui donne envie d'ouvrir sans être racoleur : une idée ou une question qui le concerne, par exemple « Une idée pour vos clients propriétaires », « Vos clients qui pensent à Airbnb », « Une petite question, Prénom ».
 - Salutation : « Bonjour Prénom, » (prénom seul) si un dirigeant est fourni, sinon « Bonjour, ».
 - Première phrase : une attention sincère et précise pour CE professionnel, tirée de son site (son quartier, sa spécialité, son style, ses biens). Jamais inventée : si le site ne dit rien d'utile, parle simplement de sa ville ou de son métier.
-- Puis, en deux ou trois phrases, ce qu'il y gagne, concrètement, selon son métier : agence de vente → ses acheteurs qui veulent faire rapporter leur bien ; agence de gestion → ses propriétaires tentés par Airbnb, qu'il garde au lieu de les perdre, avec une commission en plus ; syndic ou administrateur de biens → ses copropriétaires et bailleurs ; conseiller en patrimoine → ses clients investisseurs ; promoteur → un atout de plus pour vendre ses programmes aux investisseurs ; marchand de biens → un moyen de valoriser ses biens. Zones de vacances (mer, montagne) : la saison et les propriétaires de résidences secondaires.
-- Rends la démarche facile : il lui suffit de nous transférer un contact, nous nous occupons du reste.
+- Puis présente Spinelle avec envie, en une ou deux phrases : nous nous occupons de tout pour le propriétaire (choisis deux ou trois services parmi ceux décrits plus haut, de façon vivante), il n'a rien à faire.
+- Puis, en une ou deux phrases, ce que lui y gagne, concrètement, selon son métier : agence de vente → ses acheteurs qui veulent faire rapporter leur bien ; agence de gestion → ses propriétaires tentés par Airbnb, qu'il garde au lieu de les perdre, avec une commission en plus ; syndic ou administrateur de biens → ses copropriétaires et bailleurs ; conseiller en patrimoine → ses clients investisseurs ; promoteur → un atout de plus pour vendre ses programmes aux investisseurs ; marchand de biens → un moyen de valoriser ses biens. Zones de vacances (mer, montagne) : la saison et les propriétaires de résidences secondaires.
+- Dis clairement qu'il touche une commission sur chaque logement qu'il nous recommande et que nous signons (sans montant), et que la démarche est facile : il lui suffit de nous transférer un contact, nous nous occupons du reste.
 - Termine par une question courte et engageante, à laquelle on a envie de répondre, par exemple « Ça vous dirait qu'on en parle quelques minutes ? ».
-- 50 à 100 mots, en trois ou quatre petits paragraphes.
+- 70 à 120 mots, en trois ou quatre petits paragraphes.
 
 À ne jamais faire :
 - Aucun chiffre, aucun prix, aucune statistique, aucun pourcentage, aucun montant de commission.
@@ -601,7 +604,7 @@ export function check(draft) {
   const problems = [];
   const all = `${draft.subject}\n${draft.body}\n${draft.followup}`;
   const words = draft.body.split(/\s+/).filter(Boolean).length;
-  if (words < 40 || words > 115) problems.push(`le message fait ${words} mots (50 à 100 attendus)`);
+  if (words < 55 || words > 135) problems.push(`le message fait ${words} mots (70 à 120 attendus)`);
   if (draft.subject.length > 50) problems.push("objet trop long (moins de 45 caractères)");
   if (!/^Bonjour/.test(draft.body) || !/^Bonjour/.test(draft.followup))
     problems.push("doit commencer par « Bonjour »");
@@ -870,7 +873,7 @@ function warmFollowup(p) {
 
 Je me permets de revenir vers vous au sujet de mon message de la semaine dernière.
 
-Si l'un de vos clients pense un jour à louer son bien sur Airbnb, il vous suffit de me transférer son contact : je m'occupe de tout, et vous êtes rémunéré pour chaque bien que vous nous confiez.`;
+Si l'un de vos clients pense un jour à louer son bien sur Airbnb, il vous suffit de me transférer son contact : nous nous occupons de tout pour lui, et vous touchez une commission sur chaque logement recommandé que nous signons.`;
 }
 
 function compose(p, followup) {
