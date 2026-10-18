@@ -249,8 +249,8 @@ function ProspectionPage() {
               />
             </Field>
             <Field
-              label="E-mails par jour (maximum)"
-              hint="Montée progressive : 20 par jour la première semaine, puis +10 par jour jusqu'à ce maximum."
+              label="Nouveaux contacts par jour (maximum)"
+              hint="Les relances partent en plus. Montée progressive : 20 par jour la première semaine, puis +10 par jour jusqu'à ce maximum."
             >
               <TextInput
                 type="number"

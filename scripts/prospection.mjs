@@ -27,6 +27,7 @@ const JUDGE_MODEL = process.env.PROSPECT_JUDGE_MODEL || "claude-haiku-5-5";
 const UA = "Mozilla/5.0 (compatible; SpinelleConciergerie/1.0; +https://spinelleconciergerie.fr)";
 const RUNS_PER_DAY = 3; // passages programmés par jour ouvré (voir le workflow)
 const FOLLOWUP_AFTER_DAYS = 7;
+const FOLLOWUPS_PER_RUN = 30; // relances par passage, en plus des nouveaux contacts
 const GIVE_UP_AFTER_DAYS = 14;
 const ENRICH_PER_RUN = 120;
 const DRAFT_PER_RUN = 40;
@@ -993,6 +994,7 @@ async function mailbox() {
   };
 }
 
+// Nouveaux contacts du jour : le plafond quotidien porte sur eux (les relances partent en plus).
 async function sentToday() {
   const start = parisNow();
   start.setHours(0, 0, 0, 0);
@@ -1000,7 +1002,7 @@ async function sentToday() {
   const { count } = await db
     .from("prospects")
     .select("id", { count: "exact", head: true })
-    .gte("last_contact_at", new Date(start.getTime() + offset).toISOString());
+    .gte("first_contact_at", new Date(start.getTime() + offset).toISOString());
   return count || 0;
 }
 
@@ -1037,7 +1039,8 @@ async function sendBatch(settings, box) {
   const blocked = new Set((optouts || []).map((o) => o.email));
   const now = () => new Date().toISOString();
 
-  // Relances d'abord : une seule, 7 jours après, sans réponse entre-temps.
+  // Relances d'abord : une seule, 7 jours après, sans réponse entre-temps. Elles s'ajoutent au
+  // plafond des nouveaux contacts, avec leur propre limite par passage.
   const before = new Date(Date.now() - FOLLOWUP_AFTER_DAYS * 86_400_000).toISOString();
   const { data: due } = await db
     .from("prospects")
@@ -1045,9 +1048,9 @@ async function sendBatch(settings, box) {
     .eq("status", "contacte")
     .eq("followups", 0)
     .lt("last_contact_at", before)
-    .limit(budget);
+    .order("last_contact_at", { ascending: true })
+    .limit(FOLLOWUPS_PER_RUN);
   for (const p of due || []) {
-    if (budget <= 0) break;
     if (blocked.has(p.email.toLowerCase())) continue;
     try {
       await box.send(compose(p, true));
@@ -1056,7 +1059,6 @@ async function sendBatch(settings, box) {
         .update({ status: "relance", followups: 1, last_contact_at: now(), updated_at: now() })
         .eq("id", p.id);
       followups++;
-      budget--;
       await sleep(8000 + Math.random() * 7000);
     } catch (e) {
       note(`Relance ${p.name} : ${e.message}`);
@@ -1255,12 +1257,13 @@ async function main() {
     .eq("id", 1)
     .single();
   if (error || !settings) throw new Error(`Réglages introuvables : ${error?.message}`);
-  // Volume choisi par le gérant : environ 1 600 e-mails par mois (62 par jour, lundi-samedi).
+  // Volume choisi par le gérant : environ 1 600 nouveaux contacts par mois (62 par jour, lundi-samedi),
+  // relances en plus.
   // Ne remplace que la valeur d'origine (80) : un réglage fait dans l'intranet est respecté.
   if (settings.daily_limit === 80) {
     settings.daily_limit = 62;
     await db.from("prospect_settings").update({ daily_limit: 62 }).eq("id", 1);
-    note("Plafond quotidien réglé à 62 e-mails (environ 1 600 par mois).");
+    note("Plafond quotidien réglé à 62 nouveaux contacts (environ 1 600 par mois).");
   }
   if (settings.paused) {
     note("Prospection en pause.");
