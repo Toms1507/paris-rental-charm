@@ -1358,12 +1358,35 @@ async function weeklySummary(settings, box) {
     .limit(15);
   const line = (p) =>
     `- ${p.name}${p.contact_name ? ` (${p.contact_name})` : ""}, ${ZONES[p.zone]?.label ?? p.zone} : ${p.phone ?? p.email}`;
+  // Pas d'e-mail mais un téléphone : à appeler. Zones en saison et groupes qui répondent le mieux
+  // d'abord ; un contact proposé n'est plus reproposé les semaines suivantes.
+  const { data: noEmailPool } = await db
+    .from("prospects")
+    .select("id,name,phone,email,zone,contact_name,notes")
+    .in("status", ["sans_email", "ignore"])
+    .not("phone", "is", null)
+    .not("notes", "ilike", "%Doublon%")
+    .not("notes", "ilike", "%Proposé à l'appel%")
+    .limit(400);
+  const month = parisNow().getMonth() + 1;
+  const score = (p) =>
+    (weights?.get(groupKey(p)) ?? 1) * (ZONES[p.zone]?.season?.includes(month) ? 2 : 1);
+  const noEmail = (noEmailPool || []).sort((a, b) => score(b) - score(a)).slice(0, 15);
+  const today = new Date().toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" });
+  for (const p of noEmail)
+    await db
+      .from("prospects")
+      .update({ notes: [p.notes, `Proposé à l'appel le ${today}`].filter(Boolean).join("\n") })
+      .eq("id", p.id);
   const callList = [
     answered?.length
       ? `\nOnt répondu cette semaine, à rappeler en priorité :\n${answered.map(line).join("\n")}\n`
       : "",
     toCall?.length
       ? `\nSans réponse après la relance, à appeler :\n${toCall.map(line).join("\n")}\n`
+      : "",
+    noEmail.length
+      ? `\nPas d'e-mail trouvé, à appeler (tous les autres dans l'intranet, onglet « À appeler ») :\n${noEmail.map(line).join("\n")}\n`
       : "",
   ].join("");
   const text = `Récapitulatif de la prospection de la semaine :

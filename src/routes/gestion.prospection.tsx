@@ -131,7 +131,13 @@ function ProspectionPage() {
         return [k, count ?? 0] as const;
       }),
     );
-    setCounts(Object.fromEntries(entries));
+    const toCall = await db
+      .from("prospects")
+      .select("id", { count: "exact", head: true })
+      .in("status", ["sans_email", "ignore"])
+      .not("phone", "is", null)
+      .not("notes", "ilike", "%Doublon%");
+    setCounts({ ...Object.fromEntries(entries), appeler: toCall.count ?? 0 });
     const answered = await db
       .from("prospects")
       .select(COLUMNS)
@@ -144,7 +150,12 @@ function ProspectionPage() {
       .select(COLUMNS)
       .order("updated_at", { ascending: false })
       .limit(500);
-    if (filter) q = q.eq("status", filter);
+    if (filter === "appeler")
+      q = q
+        .in("status", ["sans_email", "ignore"])
+        .not("phone", "is", null)
+        .not("notes", "ilike", "%Doublon%");
+    else if (filter) q = q.eq("status", filter);
     if (zone) q = q.eq("zone", zone);
     if (search.trim()) q = q.ilike("name", `%${search.trim()}%`);
     const { data } = await q;
@@ -307,6 +318,7 @@ function ProspectionPage() {
             ["repondu", "Réponses"],
             ["partenaire", "Partenaires"],
             ["sans_reponse", "Sans réponse"],
+            ["appeler", "À appeler (sans e-mail)"],
             ["erreur", "À vérifier"],
             ["", "Toutes"],
           ].map(([value, label]) => (
@@ -698,7 +710,9 @@ function ProspectDialog({
               Écarter
             </button>
           )}
-          {["contacte", "relance", "sans_reponse", "repondu"].includes(p.status) && (
+          {["contacte", "relance", "sans_reponse", "repondu", "sans_email", "ignore"].includes(
+            p.status,
+          ) && (
             <>
               <button
                 type="button"
