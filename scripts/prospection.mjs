@@ -21,7 +21,7 @@ import { createClient } from "@supabase/supabase-js";
 const SITE = "https://spinelleconciergerie.fr";
 const FROM_EMAIL = process.env.SMTP_USER || "contact@spinelleconciergerie.fr";
 const FROM_NAME = "Tom Simon – Spinelle Conciergerie";
-const MODEL = process.env.PROSPECT_MODEL || "claude-sonnet-5";
+const MODEL = process.env.PROSPECT_MODEL || "claude-opus-5-5";
 const UA = "Mozilla/5.0 (compatible; SpinelleConciergerie/1.0; +https://spinelleconciergerie.fr)";
 const RUNS_PER_DAY = 3; // passages programmés par jour ouvré (voir le workflow)
 const FOLLOWUP_AFTER_DAYS = 7;
@@ -563,7 +563,7 @@ async function enrich() {
 
 // Style des messages : réécrit le 2026-10-18 à la demande du gérant (chaleureux, donne envie de
 // répondre, aucun chiffre ni réglementation). Les brouillons rédigés avant sont réécrits.
-const STYLE_SINCE = "2026-10-18T17:55:24Z";
+const STYLE_SINCE = "2026-10-18T17:59:51Z";
 
 const SYSTEM = `Tu écris, au nom de Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail à UN professionnel de l'immobilier précis, et sa relance. Un seul objectif : qu'il ait envie de lire jusqu'au bout et de répondre.
 
@@ -591,11 +591,26 @@ Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepren
 
 Relance (sept jours plus tard, en réponse au premier e-mail) : deux phrases chaleureuses et légères, sans reproche : tu reviens simplement vers lui, tu rappelles l'idée en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
 
-Réponds uniquement au format :
+Propose TROIS versions vraiment différentes (accroche, angle, objet), toutes conformes à ces règles. Réponds uniquement au format suivant, trois fois :
+<version>
 <angle>angle choisi en quelques mots</angle>
 <objet>…</objet>
 <message>…</message>
-<relance>…</relance>`;
+<relance>…</relance>
+</version>`;
+
+// Relecture dans la peau du destinataire : il note chaque version selon la probabilité qu'il réponde.
+const JUDGE = `Tu te mets entièrement à la place du professionnel de l'immobilier décrit ci-dessous : tu es lui, avec son métier, sa clientèle, son agenda chargé, et tu reçois chaque jour des dizaines de sollicitations commerciales que tu ignores pour la plupart.
+
+Tu reçois trois versions d'un même e-mail. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
+
+Réponds uniquement au format :
+<notes>1:N;2:N;3:N</notes>
+<meilleure>numéro</meilleure>
+<pourquoi>en une phrase, à la première personne, ce qui te ferait répondre ou non à la meilleure</pourquoi>
+<amelioration>la modification la plus utile pour que tu répondes à coup sûr</amelioration>`;
+
+const MIN_SCORE = 7;
 
 const FORBIDDEN =
   /[[\]{}!%€]|\d|encadr|réglement|reglement|plafond|conformit|médian|median|prix|tarif|clé en main|cle en main|synergie|stratégique|n'hésitez|café|cordialement|Tom Simon/i;
@@ -616,6 +631,26 @@ export function check(draft) {
   return problems;
 }
 
+async function ask(ai, system, content, effort) {
+  const res = await ai.beta.messages.create({
+    model: MODEL,
+    max_tokens: 16000,
+    betas: ["server-side-fallback-2026-07-01"],
+    fallbacks: "default",
+    output_config: { effort },
+    system,
+    messages: [{ role: "user", content }],
+  });
+  if (res.stop_reason === "refusal") throw new Error("Requête refusée par le modèle");
+  return res.content
+    .filter((b) => b.type === "text")
+    .map((b) => b.text)
+    .join("");
+}
+
+const tagIn = (text, t) =>
+  ((text.match(new RegExp(`<${t}>([\\s\\S]*?)</${t}>`)) || [])[1] || "").trim();
+
 async function draftOne(ai, p) {
   const facts = [
     `Agence : ${p.name}`,
@@ -631,34 +666,49 @@ async function draftOne(ai, p) {
     .filter(Boolean)
     .join("\n");
   let feedback = "";
-  for (let attempt = 0; attempt < 2; attempt++) {
-    const res = await ai.messages.create({
-      model: MODEL,
-      max_tokens: 1200,
-      system: SYSTEM,
-      messages: [{ role: "user", content: facts + feedback }],
-    });
-    const text = res.content
-      .filter((b) => b.type === "text")
-      .map((b) => b.text)
-      .join("");
-    const tag = (t) =>
-      ((text.match(new RegExp(`<${t}>([\\s\\S]*?)</${t}>`)) || [])[1] || "").trim();
-    const draft = {
-      angle: tag("angle"),
-      subject: tag("objet"),
-      body: tag("message"),
-      followup: tag("relance"),
-    };
-    if (!draft.subject || !draft.body || !draft.followup) {
-      feedback = "\n\nTa réponse précédente ne respectait pas le format demandé.";
+  let best = null;
+  for (let round = 0; round < 2; round++) {
+    // 1. Trois versions, contrôlées (aucun chiffre, aucune réglementation, longueur, ton).
+    const text = await ask(ai, SYSTEM, facts + feedback, "medium");
+    const versions = [...text.matchAll(/<version>([\s\S]*?)<\/version>/g)]
+      .map((m) => ({
+        angle: tagIn(m[1], "angle"),
+        subject: tagIn(m[1], "objet"),
+        body: tagIn(m[1], "message"),
+        followup: tagIn(m[1], "relance"),
+      }))
+      .filter((v) => v.subject && v.body && v.followup && !check(v).length);
+    if (!versions.length) {
+      feedback =
+        "\n\nTes versions précédentes ne respectaient pas les règles ou le format : recommence en les respectant strictement.";
       continue;
     }
-    const problems = check(draft);
-    if (!problems.length) return draft;
-    feedback = `\n\nCorrige ta proposition précédente : ${problems.join(" ; ")}.`;
+    // 2. Relecture dans la peau du destinataire, qui garde la version à laquelle il répondrait.
+    const shown = versions
+      .map((v, k) => `--- Version ${k + 1} ---\nObjet : ${v.subject}\n\n${v.body}`)
+      .join("\n\n");
+    const verdict = await ask(
+      ai,
+      JUDGE,
+      `Qui tu es :\n${facts}\n\nLes e-mails reçus :\n\n${shown}`,
+      "medium",
+    );
+    const scores = Object.fromEntries(
+      [...tagIn(verdict, "notes").matchAll(/(\d+)\s*:\s*(\d+)/g)].map((m) => [
+        Number(m[1]),
+        Number(m[2]),
+      ]),
+    );
+    const pick = Number(tagIn(verdict, "meilleure")) || 1;
+    const chosen = versions[pick - 1] ?? versions[0];
+    const score = scores[pick] ?? 0;
+    if (!best || score > best.score) best = { ...chosen, score, why: tagIn(verdict, "pourquoi") };
+    if (score >= MIN_SCORE) break;
+    // 3. Pas assez convaincant : on réécrit en tenant compte de la critique du destinataire.
+    feedback = `\n\nLe destinataire a lu ta meilleure proposition et l'a notée ${score}/10. Son avis : « ${tagIn(verdict, "pourquoi")} ». Ce qui le ferait répondre : « ${tagIn(verdict, "amelioration")} ». Propose trois nouvelles versions bien meilleures.`;
   }
-  return null;
+  if (!best || best.score < 5) return null;
+  return { ...best, angle: `${best.angle} (note ${best.score}/10)` };
 }
 
 // Répartition entre groupes (zone × métier). Au début, à parts égales ; dès qu'il y a assez de
@@ -859,7 +909,10 @@ async function draftMessages(settings) {
       .eq("id", p.id);
     drafted++;
     // Deux exemples complets par passage dans le journal, pour contrôler la qualité.
-    if (drafted <= 2) note(`Exemple (${p.name}) :\nObjet : ${draft.subject}\n${draft.body}`);
+    if (drafted <= 3)
+      note(
+        `Exemple (${p.name}), note ${draft.score}/10 — ${draft.why}\nObjet : ${draft.subject}\n${draft.body}`,
+      );
   }
   return drafted;
 }
