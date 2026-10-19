@@ -782,6 +782,16 @@ export function check(draft) {
 
 // Consommation de l'IA par modèle, reportée dans le résumé du passage pour suivre le coût.
 const usage = {};
+// Tarifs publics en dollars par million de jetons (octobre 2026) : lecture, lecture en cache,
+// écriture en cache, écriture. Objectif : environ un centime par message rédigé.
+const PRICES = {
+  "claude-sonnet-5-5": [2, 0.2, 2.5, 10],
+  "claude-haiku-5-5": [0.1, 0.01, 0.125, 0.5],
+};
+const costOf = (model, u) => {
+  const [i, r, w, o] = PRICES[model] ?? [0, 0, 0, 0];
+  return (u.input * i + u.read * r + u.write * w + u.output * o) / 1e6;
+};
 
 async function ask(ai, model, system, content) {
   // Repli automatique en cas de refus : disponible sur Sonnet 5.5, pas sur Haiku 5.5.
@@ -792,15 +802,19 @@ async function ask(ai, model, system, content) {
     model,
     max_tokens: 4000,
     ...fallback,
+    // Rédacteur sans réflexion préalable : pour un e-mail de cent mots, elle coûtait les deux
+    // tiers de la facture sans meilleur résultat (le relecteur garde la sienne, peu coûteuse).
+    ...(model.startsWith("claude-sonnet") ? { thinking: { type: "between_tools" } } : {}),
     output_config: { effort: "low" },
     // Consignes identiques à chaque message : mises en cache pour payer moins cher.
     system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
     messages: [{ role: "user", content }],
   });
-  const u = (usage[model] ??= { calls: 0, input: 0, cached: 0, output: 0 });
+  const u = (usage[model] ??= { calls: 0, input: 0, read: 0, write: 0, output: 0 });
   u.calls++;
   u.input += res.usage?.input_tokens ?? 0;
-  u.cached += (res.usage?.cache_read_input_tokens ?? 0) + (res.usage?.cache_creation_input_tokens ?? 0);
+  u.read += res.usage?.cache_read_input_tokens ?? 0;
+  u.write += res.usage?.cache_creation_input_tokens ?? 0;
   u.output += res.usage?.output_tokens ?? 0;
   if (res.stop_reason === "refusal") throw new Error("Requête refusée par le modèle");
   return res.content
@@ -1636,9 +1650,12 @@ async function main() {
     if (process.env.ANTHROPIC_API_KEY) {
       const drafted = await draftMessages(settings);
       note(`Messages rédigés : ${drafted}`);
-      for (const [model, u] of Object.entries(usage))
+      const total = Object.entries(usage).reduce((sum, [m, u]) => sum + costOf(m, u), 0);
+      if (total)
         note(
-          `Consommation ${model} : ${u.calls} appels, ${u.input} jetons lus (+${u.cached} en cache), ${u.output} jetons écrits${drafted ? `, soit environ ${Math.round((u.input + u.cached + u.output) / drafted)} jetons par message rédigé` : ""}`,
+          `Coût de la rédaction : ${total.toFixed(2)} $${drafted ? `, soit ${((total / drafted) * 100).toFixed(1)} centime(s) par message` : ""} (${Object.entries(usage)
+            .map(([m, u]) => `${m} : ${u.calls} appels, ${costOf(m, u).toFixed(2)} $`)
+            .join(" ; ")})`,
         );
     }
     else note("ANTHROPIC_API_KEY absente : pas de rédaction.");
