@@ -480,6 +480,18 @@ export async function lookupCompany(p) {
 const COMPANY_TARGETS = [
   { naf: "41.10A", label: "promoteur immobilier" },
   { naf: "68.10Z", label: "marchand de biens" },
+  { naf: "68.32A", label: "syndic ou administrateur de biens" },
+  // Conseillers en gestion de patrimoine : code d'activité large, on ne garde que les noms explicites.
+  {
+    naf: "66.19B",
+    label: "conseiller en investissement ou gestion de patrimoine",
+    name: /patrimoin|gestion priv|wealth|invest/i,
+  },
+  {
+    naf: "70.22Z",
+    label: "conseiller en investissement ou gestion de patrimoine",
+    name: /patrimoin|gestion priv|wealth/i,
+  },
 ];
 const DEPT_ZONE = {
   75: "paris",
@@ -498,7 +510,7 @@ const DEPT_ZONE = {
   38: "ski",
   64: "cote-basque-arcachon",
 };
-const COMPANIES_PER_RUN = 10;
+const COMPANIES_PER_RUN = 30;
 
 function siteCandidates(company) {
   const raw = company.nom_complet || "";
@@ -534,7 +546,11 @@ export async function verifiedSite(company) {
   const siren = company.siren;
   const spaced = siren.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3");
   const has = (html) => html.includes(siren) || html.includes(spaced);
-  for (const url of siteCandidates(company)) {
+  const names = [company.siege?.liste_enseignes?.[0], company.nom_raison_sociale, company.nom_complet]
+    .filter(Boolean)
+    .map((n) => n.replace(/\(.*?\)/g, " "));
+  const urls = [...new Set([...siteCandidates(company), ...names.flatMap(agencyCandidates)])];
+  for (const url of urls) {
     const home = await fetchText(url, { timeout: 7000 });
     if (!home) continue;
     if (has(home)) return url;
@@ -571,6 +587,8 @@ async function syncCompanies(settings) {
     for (const c of list.results) {
       if (checked >= COMPANIES_PER_RUN || timeLeft() < 12 * MINUTES) break;
       if (seen.has(`siren:${c.siren}`)) continue;
+      if (target.name && !target.name.test(`${c.nom_complet} ${c.siege?.liste_enseignes?.[0] ?? ""}`))
+        continue;
       checked++;
       const site = await verifiedSite(c);
       const row = {
@@ -730,10 +748,21 @@ export async function findSite(p) {
     (phone.length === 9 && phoneKeys(html).has(phone)) ||
     (siren && (html.includes(siren) || html.includes(siren.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")))) ||
     (street && p.postcode && norm(html).includes(street) && html.includes(p.postcode));
-  if (phone.length !== 9 && !siren && !(street && p.postcode)) return null;
+  // Sans téléphone, SIREN ni adresse : on accepte un nom distinctif (au moins six lettres) présent
+  // sur un site d'agence immobilière qui cite la même ville.
+  const weak = phone.length !== 9 && !siren && !(street && p.postcode);
+  const city = norm(
+    p.city || { paris: "paris", versailles: "versailles", chartres: "chartres", bordeaux: "bordeaux" }[p.zone] || "",
+  );
+  if (weak && (key.length < 6 || !city)) return null;
   for (const url of agencyCandidates(p.name)) {
     const home = await fetchText(url, { timeout: 6000 });
     if (!home || !flat(home).includes(key)) continue;
+    if (weak) {
+      const text = norm(home);
+      if (text.includes(city) && /immobili|agence|transaction|gestion locative/.test(text)) return url;
+      continue;
+    }
     if (proofs(home)) return url;
     for (const path of ["contact", "nous-contacter", "mentions-legales", "agence"]) {
       const page = await fetchText(new URL(`/${path}`, url).href, { timeout: 6000 });
