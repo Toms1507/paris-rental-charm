@@ -4,14 +4,12 @@ Généré automatiquement par scripts/rapport-prospection.mjs (lecture seule de 
 
 ## Réglages
 - Mode : auto, en pause : non, nouveaux contacts par jour : 80
-- Dernier passage : 2026-10-19T20:15:14.793+00:00
+- Dernier passage : 2026-10-19T22:10:45.141+00:00
 
 ```
+Erreur : Command failed
+Objets remplacés par « Demande de collaboration » (ou équivalent) : 175
 Répartition : parts égales (phase de test)
-Réponses détectées : 0, adresses invalides : 0
-Hors heures de bureau (lundi-samedi, 8 h 30 - 18 h 30) : aucun envoi.
-Envoyés : 0 premiers messages, 0 relances (mode auto)
-Passage d'envoi seul (la préparation est faite par les passages complets).
 ```
 
 ## 7 derniers jours
@@ -89,7 +87,7 @@ Réponse du 19/10/2026 (bci33200@gmail.com) : Bonjour, L'agence BCI a fermé ses
 ## Échantillon de messages prêts à partir
 ### Immobilière Petit (petite-couronne, agence immobilière) — brouillon, tél. +33 1 42 83 46 03
 Envoyé le undefined — Le propriétaire dont le locataire part : la vacance à combler, sans perdre le client (note 6/10)
-**Objet :** Quand votre locataire quitte le logement
+**Objet :** Partenariat avec Immobilière Petit
 
 Bonjour,
 
@@ -107,7 +105,7 @@ Votre client reste le vôtre, nous ne faisons que de la courte durée. Nous vous
 
 ### Monge Patrimoine (paris, agence immobilière) — brouillon, tél. +33 1 46 34 89 44
 Envoyé le undefined — Le propriétaire qui hésite à vendre et veut un revenu en attendant (note 7/10)
-**Objet :** Quand le client préfère garder son bien
+**Objet :** Demande de partenariat
 
 Bonjour,
 
@@ -125,7 +123,7 @@ Vous recevez une commission sur chaque logement recommandé que nous signons, et
 
 ### Guy Hoquet (cote-azur, agence immobilière) — brouillon, tél. +33 4 94 97 93 38
 Envoyé le undefined — L'héritage d'un appartement que personne ne veut occuper, à faire travailler sans gestion (note 5/10)
-**Objet :** Ce bien hérité qui reste vide
+**Objet :** Demande de collaboration
 
 Bonjour,
 
@@ -144,7 +142,7 @@ Réseau : Guy Hoquet
 
 ### Delta Immobilier (cote-azur, agence immobilière) — brouillon, tél. +33 4 97 07 99 32
 Envoyé le undefined — L'acheteur investisseur qui hésite à signer faute de savoir qui gérera son bien (note 6/10)
-**Objet :** Une question sur vos acheteurs investisseurs
+**Objet :** Demande de collaboration
 
 Bonjour,
 
@@ -162,7 +160,7 @@ Catégorie : agence immobilière
 
 ### eDiag (cote-azur, agence immobilière) — brouillon, tél. +33 9 78 49 51 88
 Envoyé le undefined — Le diagnostiqueur comme premier maillon : tout bien mis en location courte durée a besoin de ses diagnostics, et eDiag les réalise déjà. Question directe sur les biens vacants ou en cours de mise en location. (note 6/10)
-**Objet :** Vos diagnostics et la courte durée
+**Objet :** Demande de partenariat
 
 Bonjour,
 
@@ -180,7 +178,7 @@ Catégorie : agence immobilière
 
 ### Rcr Immobilier (paris, agence immobilière) — brouillon, tél. +33 6 14 48 60 80
 Envoyé le undefined — L'acheteur investisseur qui hésite faute de savoir qui s'occupera du bien (note 5/10)
-**Objet :** Quand l'acheteur demande qui gérera
+**Objet :** Collaboration avec Rcr Immobilier
 
 Bonjour,
 
@@ -200,7 +198,7 @@ Vous avez un acheteur dans ce cas en ce moment ?
 
 ### Agence Maisons Pierre Belle Epine (petite-couronne, agence immobilière) — brouillon, tél. +33 1 75 85 11 02
 Envoyé le undefined — Le vendeur qui veut éviter la baisse de prix en attendant (note 6/10)
-**Objet :** Une question sur vos mandats qui traînent
+**Objet :** Demande de collaboration
 
 Bonjour,
 
@@ -220,7 +218,7 @@ Vous avez un dossier de ce type en ce moment ?
 
 ### Immotop (petite-couronne, agence immobilière) — brouillon
 Envoyé le undefined — fin de bail, le propriétaire qui parle d'Airbnb (note 6/10)
-**Objet :** Une question sur vos fins de bail
+**Objet :** Proposition de collaboration
 
 Bonjour,
 
@@ -240,7 +238,7 @@ Votre client reste le vôtre : nous ne faisons que de la courte durée, jamais d
 
 ### Étude Lodel (paris, agence immobilière) — brouillon
 Envoyé le undefined — Le bien en nue-propriété ou en vente à terme : le propriétaire qui garde un appartement parisien pendant plusieurs années avant de le transmettre, et qui voudrait un revenu en attendant sans gérer les voyageurs (note 6/10)
-**Objet :** Un appartement parisien à faire travailler
+**Objet :** Collaboration avec Étude Lodel
 
 Bonjour,
 
@@ -260,7 +258,7 @@ Formulaire de contact : http://www.viagerlodelparis.com/contact
 
 ### Projection immobilière (paris, agence immobilière) — brouillon
 Envoyé le undefined — L'acheteur investisseur qui hésite faute de savoir qui gérera son bien (note 6/10)
-**Objet :** Cet acheteur qui hésite à signer
+**Objet :** Demande de partenariat
 
 Bonjour,
 
