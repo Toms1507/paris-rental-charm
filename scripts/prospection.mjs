@@ -381,7 +381,7 @@ export async function crawl(website) {
   if (!home) return { emails: [], text: null };
   const emails = new Set(extractEmails(home));
   const host = hostOf(root);
-  const links = [...home.matchAll(/href=["']([^"'#]+)["']/gi)]
+  const internal = [...home.matchAll(/href=["']([^"'#]+)["']/gi)]
     .map((m) => {
       try {
         return new URL(m[1], root).href;
@@ -389,10 +389,8 @@ export async function crawl(website) {
         return null;
       }
     })
-    .filter(
-      (u) =>
-        u && hostOf(u) === host && /contact|mention|legal|nous-trouver|agence|qui-sommes/i.test(u),
-    );
+    .filter((u) => u && hostOf(u) === host);
+  const links = internal.filter((u) => /contact|mention|legal|nous-trouver|agence|qui-sommes/i.test(u));
   // Menus souvent générés en JavaScript : on essaie aussi directement les pages usuelles.
   const usual = ["contact", "nous-contacter", "mentions-legales", "contactez-nous"].map(
     (path) => new URL(`/${path}`, root).href,
@@ -402,7 +400,18 @@ export async function crawl(website) {
     const page = await fetchText(url, { timeout: 8000 });
     if (page) extractEmails(page).forEach((e) => emails.add(e));
   }
-  return { emails: [...emails], text: excerpt(home) };
+  // Page de présentation (histoire, équipe, spécialité) : c'est elle qui permet une accroche
+  // vraiment personnelle, au lieu d'un message qui ne parle que de la ville.
+  const aboutUrl = internal.find((u) =>
+    /qui-sommes|a-propos|about|notre-agence|l-agence|notre-equipe|equipe|presentation|histoire|valeurs/i.test(u),
+  );
+  let text = excerpt(home);
+  const about = aboutUrl && (await fetchText(aboutUrl, { timeout: 8000 }));
+  if (about) {
+    const more = excerpt(about).split("\n").filter((l) => !/^(Titre|Description) :/.test(l));
+    if (more.length) text = `${text}\nPage de présentation :\n${more.join("\n")}`.slice(0, 3000);
+  }
+  return { emails: [...emails], text };
 }
 
 const titleCase = (s) =>
@@ -701,6 +710,8 @@ Spinelle Conciergerie gère de A à Z la location courte durée (Airbnb, Booking
 
 Ce que Spinelle propose aux professionnels : quand l'un de leurs clients veut louer son bien en courte durée, ils nous le recommandent ; leur client reste le leur ; et ils touchent une commission sur chaque logement recommandé que nous signons. Pour eux : un revenu en plus sans rien gérer, et une vraie solution à proposer à leurs clients.
 
+Ce qui rassure un professionnel (à utiliser quand c'est naturel) : nous ne faisons que de la location courte durée, nous ne sommes pas une agence, nous ne lui faisons donc jamais concurrence ; son client reste le sien et il reste son interlocuteur pour tout le reste ; Tom répond lui-même, personnellement. Le lecteur se méfie d'une inconnue qui lui demande ses clients : le message doit sonner comme un service rendu à ses clients, pas comme une demande de fichier.
+
 Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepreneur qui écrit lui-même à quelqu'un qu'il aimerait vraiment avoir comme partenaire. Vouvoiement. Phrases courtes et simples. Le message doit se lire en vingt secondes.
 
 À faire :
@@ -719,9 +730,13 @@ Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepren
 - Pas de jargon (« partenariat stratégique », « synergie », « solution clé en main »), pas de superlatifs creux, pas de point d'exclamation, pas d'emoji, pas de « n'hésitez pas », pas de café ni de visite, pas de formule finale ni de signature (elles sont ajoutées automatiquement).
 - N'invente rien, ni sur lui ni sur Spinelle (pas de nombre de clients, pas de références).
 - Ne précise pas ce qu'il n'aurait PAS à faire (« pas de fichier à nous confier », « aucun engagement de votre part »…) : ça sonne faux.
-- L'accroche doit parler de LUI (son agence, son style, sa spécialité, ses biens), pas seulement de sa ville : une observation précise et factuelle, jamais un compliment générique (« on sent que vous connaissez bien… », « vos biens ont du charme »).
-- Donne-lui une raison simple de répondre maintenant, tirée du contexte : la saison qui approche dans sa zone, ses clients qui se posent déjà la question, un bien à mettre en location bientôt.
-- La demande doit être concrète : il nous transfère le contact d'un propriétaire intéressé, nous l'appelons et nous nous occupons de tout.
+- Pas de compliment générique ni de flatterie (« on sent que vous connaissez bien… », « vos biens ont du charme », « votre belle agence »).
+
+Ce qui fait la différence entre un message ignoré et un message qui obtient une réponse :
+- L'accroche parle de LUI : une observation précise et factuelle tirée de son site (un type de bien qu'il met en avant, son ancienneté, sa spécialité, son secteur exact, la façon dont il présente son équipe), reliée en une phrase à notre sujet. Si l'extrait du site est vide ou pauvre, ne fais pas semblant de le connaître : pars de son métier et de son secteur, simplement et honnêtement.
+- Une raison simple de répondre maintenant, tirée du contexte : la saison qui approche dans sa zone, ses clients qui se posent déjà la question, un bien qui va rester vide.
+- Une demande concrète et facile : il nous transfère le contact d'un propriétaire intéressé, nous l'appelons et nous nous occupons de tout.
+- Il doit pouvoir répondre en une ligne : la question finale appelle un « oui », un prénom ou un « appelez-moi ».
 
 Relance (sept jours plus tard, en réponse au premier e-mail) : deux phrases chaleureuses et légères, sans reproche : tu reviens simplement vers lui, tu rappelles l'idée en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
 
@@ -765,6 +780,9 @@ export function check(draft) {
   return problems;
 }
 
+// Consommation de l'IA par modèle, reportée dans le résumé du passage pour suivre le coût.
+const usage = {};
+
 async function ask(ai, model, system, content) {
   // Repli automatique en cas de refus : disponible sur Sonnet 5.5, pas sur Haiku 5.5.
   const fallback = model.startsWith("claude-sonnet-5-5")
@@ -775,9 +793,15 @@ async function ask(ai, model, system, content) {
     max_tokens: 4000,
     ...fallback,
     output_config: { effort: "low" },
-    system,
+    // Consignes identiques à chaque message : mises en cache pour payer moins cher.
+    system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
     messages: [{ role: "user", content }],
   });
+  const u = (usage[model] ??= { calls: 0, input: 0, cached: 0, output: 0 });
+  u.calls++;
+  u.input += res.usage?.input_tokens ?? 0;
+  u.cached += (res.usage?.cache_read_input_tokens ?? 0) + (res.usage?.cache_creation_input_tokens ?? 0);
+  u.output += res.usage?.output_tokens ?? 0;
   if (res.stop_reason === "refusal") throw new Error("Requête refusée par le modèle");
   return res.content
     .filter((b) => b.type === "text")
@@ -800,6 +824,13 @@ function tidy(text) {
     )
     .trim();
 }
+
+const refusals = (p) => ((p.notes || "").match(/Rédaction refusée/g) || []).length;
+// Contact mis de côté après deux refus : pas de nouvel essai avant la date indiquée.
+const parked = (p) => {
+  const until = [...(p.notes || "").matchAll(/Mis de côté jusqu'au (\d{4}-\d{2}-\d{2})/g)].pop()?.[1];
+  return Boolean(until && until > new Date().toISOString().slice(0, 10));
+};
 
 async function draftOne(ai, p, floor = 5) {
   const facts = [
@@ -970,8 +1001,8 @@ async function draftMessages(settings) {
         .eq("status", "nouveau")
         .eq("zone", zone)
         .not("email", "is", null)
-        .limit(room);
-      return data || [];
+        .limit(room * 3);
+      return (data || []).filter((p) => !parked(p)).slice(0, room);
     }),
   );
   const rows = interleave(pools.flat());
@@ -1030,9 +1061,9 @@ async function draftMessages(settings) {
       let draft;
       let reason;
       try {
-        // Au second essai, on accepte un message conforme un peu moins bien noté plutôt que de
-        // perdre le contact.
-        ({ draft, reason } = await draftOne(ai, p, /Réessai de rédaction/.test(p.notes || "") ? 4 : 5));
+        // Aux essais suivants, on accepte un message conforme un peu moins bien noté plutôt que
+        // de perdre le contact.
+        ({ draft, reason } = await draftOne(ai, p, refusals(p) ? 4 : 5));
       } catch (e) {
         // Erreur technique (clé, quota, service) : l'agence reste en file pour le prochain passage.
         note(`Rédaction interrompue (${p.name}) : ${e.message}`);
@@ -1040,21 +1071,28 @@ async function draftMessages(settings) {
         continue;
       }
       if (!draft) {
-        // Premier échec : nouvel essai automatique au passage suivant. Second échec : contact
-        // écarté des envois (il reste dans « À appeler » s'il a un téléphone).
-        const retried = /Réessai de rédaction/.test(p.notes || "");
+        // Aucun contact perdu trop vite : premier échec, nouvel essai au passage suivant ; second
+        // échec, mis de côté une semaine (le temps que les consignes s'améliorent) puis dernier
+        // essai ; ensuite seulement, écarté des envois (il reste dans « À appeler » s'il a un
+        // téléphone).
+        const n = refusals(p) + 1;
+        const until = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10);
         await db
           .from("prospects")
           .update({
-            status: retried ? "ignore" : "nouveau",
+            status: n >= 3 ? "ignore" : "nouveau",
             notes: [
               p.notes,
-              retried
-                ? `Écarté : message non conforme au second essai (${reason})`
-                : `Rédaction refusée (${reason})\nRéessai de rédaction`,
+              `Rédaction refusée (${reason})`,
+              n >= 3
+                ? "Écarté : message non conforme après trois essais"
+                : n === 2
+                  ? `Mis de côté jusqu'au ${until}`
+                  : null,
             ]
               .filter(Boolean)
               .join("\n"),
+            updated_at: new Date().toISOString(),
           })
           .eq("id", p.id);
         continue;
@@ -1595,7 +1633,14 @@ async function main() {
     );
     const enriched = await enrich();
     note(`Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}`);
-    if (process.env.ANTHROPIC_API_KEY) note(`Messages rédigés : ${await draftMessages(settings)}`);
+    if (process.env.ANTHROPIC_API_KEY) {
+      const drafted = await draftMessages(settings);
+      note(`Messages rédigés : ${drafted}`);
+      for (const [model, u] of Object.entries(usage))
+        note(
+          `Consommation ${model} : ${u.calls} appels, ${u.input} jetons lus (+${u.cached} en cache), ${u.output} jetons écrits${drafted ? `, soit environ ${Math.round((u.input + u.cached + u.output) / drafted)} jetons par message rédigé` : ""}`,
+        );
+    }
     else note("ANTHROPIC_API_KEY absente : pas de rédaction.");
   }
   await db
