@@ -1,4 +1,4 @@
-# Rapport de prospection — 2026-10-18
+# Rapport de prospection — 2026-10-19
 
 Généré automatiquement par scripts/rapport-prospection.mjs (lecture seule de la base).
 
@@ -73,6 +73,9 @@ Messages rédigés : 8
 - Désinscriptions : 0 %
 - Note moyenne des messages envoyés : –/10
 - Fiches au total : 3389, sans e-mail : 119
+
+## À vérifier (100)
+- Message non conforme après deux essais  : 100
 
 ## Par zone
 | | Envoyés | Réponses | Taux | Restants (nouveau) | Prêts | Erreurs |
