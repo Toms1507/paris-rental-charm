@@ -856,16 +856,14 @@ async function enrich() {
       const email = update.email ?? p.email;
       if (email) withEmail++;
       else {
-        // Pas d'adresse publiée : avec un téléphone, l'agence va dans « À appeler » ; sans
-        // téléphone, contact par le formulaire du site s'il est utilisable (demande du gérant).
-        const usable = form && !form.captcha && !p.phone;
+        // Ordre voulu par le gérant : e-mail d'abord ; sinon formulaire du site (même si un
+        // téléphone est connu) ; sinon téléphone seul, dans « À appeler ».
+        const usable = form && !form.captcha;
         const line = usable
           ? `Formulaire de contact : ${form.url}`
-          : p.phone
-            ? "Aucun e-mail : à appeler"
-            : form
-              ? "Formulaire protégé par un test anti-robot"
-              : "Aucun e-mail ni formulaire utilisable";
+          : form
+            ? "Formulaire protégé par un test anti-robot"
+            : "Aucun e-mail ni formulaire utilisable";
         update.notes = [update.notes ?? p.notes, line].filter(Boolean).join("\n");
         if (usable) forms++;
         else update.status = "sans_email";
@@ -1641,10 +1639,11 @@ async function sendBatch(settings, box) {
 
 // ------------------------------------------------------------------ 4 bis. Formulaires de contact
 
-// Agences sans adresse e-mail ni téléphone, mais avec un formulaire sur leur site (demande du
-// gérant) : le même message y est déposé par un vrai navigateur. Ne passe pas par la boîte
+// Agences sans adresse e-mail mais avec un formulaire sur leur site (demande du gérant : e-mail,
+// sinon formulaire, sinon téléphone) : le même message y est déposé par un vrai navigateur. Ne passe pas par la boîte
 // d'envoi (aucun risque pour sa réputation), d'où un plafond à part. Jamais de contournement d'un
-// test anti-robot, jamais de champ inventé : le contact est alors simplement abandonné.
+// test anti-robot, jamais de champ inventé : le contact passe alors dans « À appeler » s'il a un
+// téléphone.
 const FORMS_PER_DAY = 30;
 const SUCCESS =
   /merci|bien (été )?envoy|a été envoy|ont été envoy|été transmis|bien reçu|bien été reçu|thank you|message sent|nous vous (re)?contacterons|reviendrons vers vous|prise en compte/i;
@@ -1739,7 +1738,6 @@ async function sendForms(settings) {
     .select("*")
     .in("status", statuses)
     .is("email", null)
-    .is("phone", null)
     .ilike("notes", "%Formulaire de contact :%")
     .order("drafted_at", { ascending: true })
     .limit(budget);
@@ -1776,7 +1774,12 @@ async function sendForms(settings) {
         .from("prospects")
         .update(
           problem
-            ? { status: "ignore", updated_at: now(), notes: add(`Formulaire non utilisable (${problem})`) }
+            ? {
+                // Formulaire impossible : « À appeler » si on a son téléphone, sinon abandon.
+                status: p.phone ? "sans_email" : "ignore",
+                updated_at: now(),
+                notes: add(`Formulaire non utilisable (${problem})${p.phone ? " : à appeler" : ""}`),
+              }
             : {
                 status: "contacte",
                 followups: 1, // pas de relance possible sans adresse e-mail
@@ -2065,14 +2068,13 @@ async function main() {
     note(
       `Entreprises de l'annuaire (promoteurs, marchands de biens, syndics, patrimoine, investissement) : ${companies.checked} vérifiées, ${companies.added} avec site confirmé`,
     );
-    // Contacts « sans e-mail » ni téléphone qui ont un site : on y cherche une fois un formulaire.
+    // Contacts « sans e-mail » qui ont un site : on y cherche une fois un formulaire de contact.
     await db
       .from("prospects")
       .update({ status: "nouveau", crawled_at: null })
       .eq("status", "sans_email")
       .not("website", "is", null)
-      .is("phone", null)
-      .or("notes.is.null,and(notes.not.ilike.*Formulaire*,notes.not.ilike.*Aucun e-mail*)");
+      .or("notes.is.null,and(notes.not.ilike.*Formulaire*,notes.not.ilike.*Aucun e-mail ni formulaire*)");
     // Contacts déjà classés « sans e-mail » faute de site : on cherche leur site une fois.
     await db
       .from("prospects")
