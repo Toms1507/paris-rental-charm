@@ -721,6 +721,9 @@ async function enrich() {
 // Style des messages : réécrit le 2026-10-18 à la demande du gérant (chaleureux, donne envie de
 // répondre, aucun chiffre ni réglementation). Les brouillons rédigés avant sont réécrits.
 const STYLE_SINCE = "2026-10-18T17:59:51Z";
+// Messages pas encore partis, rédigés avant la méthode « curiosité » (situation vécue par le
+// professionnel, court, une question précise) : réécrits avant envoi.
+const REDRAFT_SINCE = "2026-10-19T09:17:30Z";
 
 const SYSTEM = `Tu écris, au nom de Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail à UN professionnel de l'immobilier précis, et sa relance. Un seul objectif : qu'il ait envie de lire jusqu'au bout et de répondre.
 
@@ -732,31 +735,35 @@ Ce qui rassure un professionnel (à utiliser quand c'est naturel) : nous ne fais
 
 Le ton : chaleureux, humain, enthousiaste sans en faire trop, comme un entrepreneur qui écrit lui-même à quelqu'un qu'il aimerait vraiment avoir comme partenaire. Vouvoiement. Phrases courtes et simples. Le message doit se lire en vingt secondes.
 
-À faire :
-- Objet court (moins de 45 caractères), personnel, qui donne envie d'ouvrir sans être racoleur : une idée ou une question qui le concerne, par exemple « Une idée pour vos clients propriétaires », « Vos clients qui pensent à Airbnb », « Une petite question, Prénom ».
+Comment écrire un message qui éveille la curiosité (c'est LE critère) :
+- Pars d'une situation précise que CE professionnel vit avec ses clients, pas d'une description de Spinelle. Le lecteur doit se dire « tiens, j'ai justement un dossier comme ça ». Choisis la situation la plus parlante selon son métier et son site :
+  · agence de vente : le vendeur dont le bien ne trouve pas preneur et qui hésite à baisser, qui pourrait le faire rapporter en attendant ; l'acheteur investisseur qui hésite parce qu'il n'aura pas le temps de gérer ; la famille qui hérite d'un appartement et ne sait pas quoi en faire ; le propriétaire muté ou parti à l'étranger ;
+  · agence de gestion locative : le propriétaire dont le locataire s'en va et qui parle d'essayer Airbnb, et que l'agence risque de perdre ; le propriétaire lassé de la location classique ;
+  · syndic ou administrateur de biens : le copropriétaire bailleur qui demande un contact sérieux pour louer aux voyageurs, alors que l'immeuble veut des voyageurs respectueux et un vrai suivi (nous veillons au calme et au respect de l'immeuble) ;
+  · conseiller en patrimoine : le client qui veut faire travailler un bien sans s'en occuper ;
+  · promoteur : l'acheteur investisseur qui hésite à signer faute de savoir qui s'occupera de son bien ;
+  · marchand de biens : le bien rénové qui attend sa revente ;
+  · zones de vacances (mer, montagne) : la résidence secondaire qui reste fermée une bonne partie de l'année.
+- Accroche (première ou deuxième phrase) : relie un détail vrai et précis tiré de son site (spécialité, type de biens, secteur exact, façon de travailler) à cette situation, ou pose directement la question qui la fait surgir (« Quand un vendeur vous dit qu'il préfère attendre plutôt que baisser, que lui proposez-vous ? »). Jamais d'évidence (« la demande est forte l'été », « beaucoup de voyageurs viennent à Paris »).
+- Puis une seule phrase sur Spinelle, qui répond à cette situation : nous louons le bien en courte durée et nous nous occupons de tout pour le propriétaire. Pas de liste de services (au plus un détail concret et vivant, adapté à la situation).
+- Puis ce qu'il y gagne, en une phrase : une vraie solution pour son client, qui reste le sien (nous ne faisons que de la courte durée, jamais de concurrence avec lui), et une commission sur chaque logement recommandé que nous signons (sans montant).
+- Laisse une part de mystère qui donne envie d'en savoir plus : ne dis pas tout (comment ça se passe concrètement, ce que son client y gagnerait), propose de le lui expliquer.
+- Termine par UNE question courte, précise, liée à la situation, à laquelle il peut répondre en une ligne : « Vous avez un dossier comme ça en ce moment ? », « Ça vous arrive souvent ? ». Jamais « Ça vous dirait qu'on en parle ? » ni une demande de rendez-vous en première intention.
+- Objet : court (moins de 40 caractères), intrigant et personnel, qui évoque la situation, pas Spinelle : « Vos vendeurs qui préfèrent attendre », « Une question sur vos fins de bail », « Ce bien hérité qui reste vide ». Jamais racoleur.
 - Salutation : « Bonjour Prénom, » (prénom seul) si un dirigeant est fourni, sinon « Bonjour, ».
-- Première phrase : une attention sincère et précise pour CE professionnel, tirée de son site (son quartier, sa spécialité, son style, ses biens). Jamais inventée : si le site ne dit rien d'utile, parle simplement de sa ville ou de son métier.
-- Puis présente Spinelle avec envie, en une ou deux phrases : nous nous occupons de tout pour le propriétaire (choisis deux ou trois services parmi ceux décrits plus haut, de façon vivante), il n'a rien à faire.
-- Puis, en une ou deux phrases, ce que lui y gagne, concrètement, selon son métier : agence de vente → ses acheteurs qui veulent faire rapporter leur bien ; agence de gestion → ses propriétaires tentés par Airbnb, qu'il garde au lieu de les perdre, avec une commission en plus ; syndic ou administrateur de biens → ses copropriétaires et bailleurs ; conseiller en patrimoine → ses clients investisseurs ; promoteur → un atout de plus pour vendre ses programmes aux investisseurs ; marchand de biens → un moyen de valoriser ses biens. Zones de vacances (mer, montagne) : la saison et les propriétaires de résidences secondaires.
-- Dis clairement qu'il touche une commission sur chaque logement qu'il nous recommande et que nous signons (sans montant), et que la démarche est facile : il lui suffit de nous transférer un contact, nous nous occupons du reste.
-- Termine par une question courte et engageante, à laquelle on a envie de répondre, par exemple « Ça vous dirait qu'on en parle quelques minutes ? ».
-- 70 à 120 mots, en trois ou quatre petits paragraphes.
+- Court : 60 à 100 mots, trois petits paragraphes, des phrases simples. Il doit se lire en quinze secondes.
+- Varie vraiment les versions : chacune part d'une situation ou d'une accroche différente.
+- Si l'extrait du site est vide ou pauvre, ne fais pas semblant de connaître l'agence : pars de son métier et de son secteur, avec la question-situation.
 
 À ne jamais faire :
 - Aucun chiffre, aucun prix, aucune statistique, aucun pourcentage, aucun montant de commission.
 - Ne parle ni de réglementation, ni d'encadrement, ni de plafond de nuits, ni de conformité, ni de données de marché.
 - Pas de jargon (« partenariat stratégique », « synergie », « solution clé en main »), pas de superlatifs creux, pas de point d'exclamation, pas d'emoji, pas de « n'hésitez pas », pas de café ni de visite, pas de formule finale ni de signature (elles sont ajoutées automatiquement).
-- N'invente rien, ni sur lui ni sur Spinelle (pas de nombre de clients, pas de références).
+- N'invente rien, ni sur lui ni sur Spinelle (pas de nombre de clients, pas de références, pas de cas client inventé : parle de situations qu'il connaît, pas d'histoires).
 - Ne précise pas ce qu'il n'aurait PAS à faire (« pas de fichier à nous confier », « aucun engagement de votre part »…) : ça sonne faux.
 - Pas de compliment générique ni de flatterie (« on sent que vous connaissez bien… », « vos biens ont du charme », « votre belle agence »).
 
-Ce qui fait la différence entre un message ignoré et un message qui obtient une réponse :
-- L'accroche parle de LUI : une observation précise et factuelle tirée de son site (un type de bien qu'il met en avant, son ancienneté, sa spécialité, son secteur exact, la façon dont il présente son équipe), reliée en une phrase à notre sujet. Si l'extrait du site est vide ou pauvre, ne fais pas semblant de le connaître : pars de son métier et de son secteur, simplement et honnêtement.
-- Une raison simple de répondre maintenant, tirée du contexte : la saison qui approche dans sa zone, ses clients qui se posent déjà la question, un bien qui va rester vide.
-- Une demande concrète et facile : il nous transfère le contact d'un propriétaire intéressé, nous l'appelons et nous nous occupons de tout.
-- Il doit pouvoir répondre en une ligne : la question finale appelle un « oui », un prénom ou un « appelez-moi ».
-
-Relance (sept jours plus tard, en réponse au premier e-mail) : deux phrases chaleureuses et légères, sans reproche : tu reviens simplement vers lui, tu rappelles l'idée en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
+Relance (sept jours plus tard, en réponse au premier e-mail) : deux ou trois phrases chaleureuses et légères, sans reproche : tu reviens vers lui avec un autre angle (une autre situation de ses clients que la première), en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
 
 Propose le nombre de versions demandé, vraiment différentes entre elles (accroche, angle, objet), toutes conformes à ces règles. Réponds uniquement au format suivant, une fois par version :
 <version>
@@ -769,7 +776,7 @@ Propose le nombre de versions demandé, vraiment différentes entre elles (accro
 // Relecture dans la peau du destinataire : il note chaque version selon la probabilité qu'il réponde.
 const JUDGE = `Tu te mets entièrement à la place du professionnel de l'immobilier décrit ci-dessous : tu es lui, avec son métier, sa clientèle, son agenda chargé, et tu reçois chaque jour des dizaines de sollicitations commerciales que tu ignores pour la plupart.
 
-Tu reçois plusieurs versions d'un même e-mail. Si ton nom n'apparaît pas dans la salutation, c'est normal (l'expéditeur ne le connaît pas) : ne le pénalise pas. L'absence de chiffres, de montant de commission et de conditions détaillées est voulue (l'expéditeur les donne de vive voix au premier échange) : ne la pénalise pas et ne la suggère pas comme amélioration ; juge l'accroche, la pertinence pour toi, la confiance inspirée et l'envie de répondre. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
+Tu reçois plusieurs versions d'un même e-mail. Si ton nom n'apparaît pas dans la salutation, c'est normal (l'expéditeur ne le connaît pas) : ne le pénalise pas. L'absence de chiffres, de montant de commission et de conditions détaillées est voulue (l'expéditeur les donne de vive voix au premier échange) : ne la pénalise pas et ne la suggère pas comme amélioration ; juge surtout la curiosité éveillée (est-ce que ça parle d'une situation que tu vis vraiment avec tes clients, est-ce que tu as envie d'en savoir plus ?), puis la pertinence pour toi, la confiance inspirée et la facilité de répondre. Un message qui ressemble à une plaquette (liste de services) ou à un envoi en masse ne dépasse pas 5. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
 
 Réponds uniquement au format :
 <notes>1:N;2:N;…</notes>
@@ -786,8 +793,8 @@ export function check(draft) {
   const problems = [];
   const all = `${draft.subject}\n${draft.body}\n${draft.followup}`;
   const words = draft.body.split(/\s+/).filter(Boolean).length;
-  if (words < 55 || words > 135) problems.push(`le message fait ${words} mots (70 à 120 attendus)`);
-  if (draft.subject.length > 50) problems.push("objet trop long (moins de 45 caractères)");
+  if (words < 45 || words > 115) problems.push(`le message fait ${words} mots (60 à 100 attendus)`);
+  if (draft.subject.length > 45) problems.push("objet trop long (moins de 40 caractères)");
   if (!/^Bonjour/.test(draft.body) || !/^Bonjour/.test(draft.followup))
     problems.push("doit commencer par « Bonjour »");
   const bad = all.match(FORBIDDEN);
@@ -1033,7 +1040,7 @@ async function draftMessages(settings) {
       drafted_at: null,
     })
     .in("status", ["brouillon", "valide"])
-    .lt("drafted_at", STYLE_SINCE);
+    .lt("drafted_at", REDRAFT_SINCE);
   const { count: pending } = await db
     .from("prospects")
     .select("id", { count: "exact", head: true })
