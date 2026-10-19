@@ -68,27 +68,28 @@ Coût de la rédaction : 0.40 $, soit 1.1 centime(s) par message (claude-haiku-5
 - Adresses non remises : 0 (0 %)
 - Désinscriptions : 0 %
 - Note moyenne des messages envoyés : 5.4/10
-- Fiches au total : 4083, sans e-mail : 497
+- Fiches au total : 4083, sans e-mail : 547
 
 ## À vérifier (0)
 Aucun.
 
-## Sans e-mail (497)
-- Avec site connu : 352, sans site : 145, avec téléphone : 295, avec SIREN : 138
-- Réseaux : indépendant 412, Barnes 22, Century 21 21, Laforêt 10, Human Immobilier 7, Stéphane Plaza Immobilier 5, ERA 4, RE/MAX 3, Guy Hoquet 3, Nestenn 2, Sotheby's 1, ESSA Immobilier 1
-- Exemples de sites sans e-mail trouvé : https://www.cb-immobilier-64.fr/ https://www.cabinetcourtois.com/ https://www.barnes-international.com/fr/agences/barnes-saint-germain-des-pres.html https://www.agenceavril.com/ http://cannes.citya.com/ https://www.barnes-international.com/ https://www.easy-immobilier.com/ https://squarehabitat.fr/ https://www.barnes-international.com/ https://www.barnes-international.com/ https://www.cove-immobilier.fr https://www.agenceprincipale.com/ https://www.diderot-immobilier.fr/ https://danielfeau.com/fr/detail-agence-immobiliere/22089 http://www.csa-ori.com/
-- Fiches « nouveau » pas encore analysées : 2526, dont sans site : 2190
+## Sans e-mail (547)
+- Avec site connu : 402, sans site : 145, avec téléphone : 338, avec SIREN : 143
+- Réseaux : indépendant 455, Barnes 22, Century 21 21, Laforêt 10, Human Immobilier 7, Orpi 6, Stéphane Plaza Immobilier 5, ERA 4, RE/MAX 3, Guy Hoquet 3, Nexity 2, Nestenn 2
+- Exemples de sites sans e-mail trouvé : https://www.cb-immobilier-64.fr/ https://www.cabinetcourtois.com/ https://www.barnes-international.com/fr/agences/barnes-saint-germain-des-pres.html https://www.agenceavril.com/ https://www.my-apartment-in-paris.com/fr/ http://cannes.citya.com/ https://www.barnes-international.com/ https://www.easy-immobilier.com/ https://squarehabitat.fr/ https://www.barnes-international.com/ https://www.barnes-international.com/ https://www.cove-immobilier.fr https://www.agenceprincipale.com/ https://www.diderot-immobilier.fr/ https://danielfeau.com/fr/detail-agence-immobiliere/22089
+- Réseaux des fiches sans site ni e-mail pas encore analysées : indépendant 1777, Century 21 116, Laforêt 99, Guy Hoquet 62, ERA 29, Stéphane Plaza Immobilier 28, Foncia 15, Human Immobilier 15, Nestenn 11, Orpi 8, Square Habitat 7, Coldwell Banker 5, Nexity 4, Barnes 3, Engel & Völkers 3
+- Fiches « nouveau » pas encore analysées : 2429, dont sans site : 2190
 
 ## Par zone
 | | Envoyés | Réponses | Taux | Restants (nouveau) | Prêts | Erreurs |
 |---|---|---|---|---|---|---|
-| paris | 22 | 0 | 0 % | 1104 | 3 | 0 |
-| petite-couronne | 3 | 0 | 0 % | 1017 | 4 | 0 |
-| cote-azur | 0 | 0 | – | 530 | 3 | 0 |
-| bordeaux | 6 | 1 | 16.7 % | 222 | 4 | 0 |
-| cote-basque-arcachon | 4 | 0 | 0 % | 199 | 6 | 0 |
-| versailles | 3 | 0 | 0 % | 86 | 3 | 0 |
-| disney | 1 | 0 | 0 % | 48 | 5 | 0 |
+| paris | 22 | 0 | 0 % | 1086 | 3 | 0 |
+| petite-couronne | 3 | 0 | 0 % | 1004 | 4 | 0 |
+| cote-azur | 0 | 0 | – | 517 | 4 | 0 |
+| bordeaux | 6 | 1 | 16.7 % | 213 | 4 | 0 |
+| cote-basque-arcachon | 4 | 0 | 0 % | 193 | 6 | 0 |
+| versailles | 3 | 0 | 0 % | 80 | 4 | 0 |
+| disney | 1 | 0 | 0 % | 44 | 6 | 0 |
 | roissy | 0 | 0 | – | 20 | 5 | 0 |
 | ski | 0 | 0 | – | 0 | 0 | 0 |
 | chartres | 0 | 0 | – | 10 | 2 | 0 |
@@ -96,7 +97,7 @@ Aucun.
 ## Par catégorie
 | | Envoyés | Réponses | Taux | Restants (nouveau) | Prêts | Erreurs |
 |---|---|---|---|---|---|---|
-| agence immobilière | 39 | 1 | 2.6 % | 3212 | 33 | 0 |
+| agence immobilière | 39 | 1 | 2.6 % | 3143 | 36 | 0 |
 | marchand de biens | 0 | 0 | – | 0 | 1 | 0 |
 | promoteur immobilier | 0 | 0 | – | 0 | 0 | 0 |
 | syndic ou administrateur de biens | 0 | 0 | – | 22 | 1 | 0 |
