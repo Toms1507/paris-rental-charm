@@ -1222,6 +1222,46 @@ function interleave(list) {
   return out;
 }
 
+// Objet des e-mails : sobre et professionnel, pour qu'on voie tout de suite que ce n'est pas une
+// publicité (demande du gérant, 2026-10-20). Choisi d'après la fiche, donc toujours le même pour
+// une agence ; le nom de l'agence n'y figure que s'il est court et que ce n'est pas un réseau.
+const SUBJECT_SINCE = "2026-10-19T22:08:26Z";
+function collabSubject(p) {
+  const name = (p.name || "").trim();
+  const network = /Réseau : /.test(p.notes || "");
+  const named = !network && name && name.length <= 26;
+  const options = [
+    "Demande de collaboration",
+    "Proposition de collaboration",
+    "Demande de partenariat",
+    ...(named ? [`Collaboration avec ${name}`, `Partenariat avec ${name}`] : []),
+  ];
+  const seed = [...String(p.id || name)].reduce((a, c) => a + c.charCodeAt(0), 0);
+  return options[seed % options.length];
+}
+
+// Messages prêts rédigés avant ce changement : leur objet est remplacé (le texte ne change pas).
+async function renameSubjects() {
+  const rows = await selectAll(() =>
+    db
+      .from("prospects")
+      .select("id,name,notes,subject")
+      .in("status", ["brouillon", "valide"])
+      .lt("drafted_at", SUBJECT_SINCE),
+  );
+  let renamed = 0;
+  for (const p of rows) {
+    const subject = collabSubject(p);
+    if (p.subject === subject) continue;
+    await db
+      .from("prospects")
+      .update({ subject, followup_subject: `Re: ${subject}` })
+      .eq("id", p.id);
+    renamed++;
+  }
+  return renamed;
+}
+
 async function draftMessages(settings) {
   const workspace = process.env.ANTHROPIC_WORKSPACE_ID;
   const ai = new Anthropic({
@@ -1366,13 +1406,14 @@ async function draftMessages(settings) {
           .eq("id", p.id);
         continue;
       }
+      const subject = collabSubject(p);
       await db
         .from("prospects")
         .update({
           status: "brouillon",
-          subject: draft.subject,
+          subject,
           body: draft.body,
-          followup_subject: `Re: ${draft.subject}`,
+          followup_subject: `Re: ${subject}`,
           followup_body: draft.followup,
           angle: draft.angle,
           drafted_at: new Date().toISOString(),
@@ -2017,6 +2058,8 @@ async function main() {
   // 1. D'abord les envois (messages préparés lors des passages précédents) : ils ne doivent
   //    jamais être empêchés par une préparation trop longue.
   if (!settings.paused) {
+    const renamed = await renameSubjects();
+    if (renamed) note(`Objets remplacés par « Demande de collaboration » (ou équivalent) : ${renamed}`);
     const fixed = await resolveErrors();
     if (fixed.retried || fixed.dropped)
       note(`Cas à vérifier traités : ${fixed.retried} relancés, ${fixed.dropped} écartés`);
