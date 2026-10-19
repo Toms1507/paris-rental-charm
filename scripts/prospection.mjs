@@ -34,7 +34,7 @@ const RUNS_PER_DAY = 3; // passages programmés par jour ouvré (voir le workflo
 const FOLLOWUP_AFTER_DAYS = 7;
 const FOLLOWUPS_PER_RUN = 30; // relances par passage, en plus des nouveaux contacts
 const GIVE_UP_AFTER_DAYS = 14;
-const ENRICH_PER_RUN = 120;
+const ENRICH_PER_RUN = 200;
 const DRAFT_PER_RUN = 40;
 
 // Durée d'un passage : GitHub l'arrête à 45 minutes ; on s'arrête proprement avant.
@@ -678,6 +678,67 @@ async function resolveErrors() {
   return { retried, dropped };
 }
 
+// Agences sans site connu (la majorité dans OpenStreetMap) : on devine l'adresse du site à partir
+// du nom, et on ne la garde que si le site prouve qu'il s'agit bien de la même agence (même
+// téléphone, même SIREN, ou même rue et code postal). Sans preuve, rien n'est retenu.
+const flat = (s) => norm(s).replace(/[^a-z0-9]/g, "");
+const phoneKeys = (html) =>
+  new Set(
+    [...html.matchAll(/(?:\+33\s*\(?0?\)?|0)\s*[1-9](?:[\s.-]*\d{2}){4}/g)].map((m) =>
+      m[0].replace(/\D/g, "").slice(-9),
+    ),
+  );
+function agencyCandidates(name) {
+  const words = norm(name)
+    .replace(/[&'’.]/g, " ")
+    .replace(/\b(sas|sasu|sarl|sa|la|le|les|de|des|du|et|l|d)\b/g, " ")
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+  const core = words.filter((w) => !/^(immobilier|immobiliere|immo|agence|cabinet)$/.test(w));
+  const c = core.join("");
+  const bases = [
+    words.join(""),
+    words.join("-"),
+    c,
+    core.join("-"),
+    `${c}-immobilier`,
+    `${c}immobilier`,
+    `${c}-immo`,
+    `${c}immo`,
+    `agence-${c}`,
+    `agence${c}`,
+  ];
+  return [...new Set(bases.filter((b) => b.length >= 4))].flatMap((b) => [
+    `https://www.${b}.fr`,
+    `https://www.${b}.com`,
+  ]);
+}
+export async function findSite(p) {
+  const key = flat(p.name || "");
+  if (key.length < 4) return null;
+  const phone = (p.phone || "").replace(/\D/g, "").slice(-9);
+  const siren = p.siren;
+  const street = norm(p.address || "")
+    .split(/[^a-z]+/)
+    .filter((w) => w.length > 3 && !/^(rue|avenue|boulevard|place|quai|allee|chemin|route|impasse|square)$/.test(w))
+    .pop();
+  const proofs = (html) =>
+    (phone.length === 9 && phoneKeys(html).has(phone)) ||
+    (siren && (html.includes(siren) || html.includes(siren.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")))) ||
+    (street && p.postcode && norm(html).includes(street) && html.includes(p.postcode));
+  if (phone.length !== 9 && !siren && !(street && p.postcode)) return null;
+  for (const url of agencyCandidates(p.name)) {
+    const home = await fetchText(url, { timeout: 6000 });
+    if (!home || !flat(home).includes(key)) continue;
+    if (proofs(home)) return url;
+    for (const path of ["contact", "nous-contacter", "mentions-legales", "agence"]) {
+      const page = await fetchText(new URL(`/${path}`, url).href, { timeout: 6000 });
+      if (page && proofs(page)) return url;
+    }
+  }
+  return null;
+}
+
 async function enrich() {
   const { data: rows } = await db
     .from("prospects")
@@ -690,21 +751,37 @@ async function enrich() {
   const queue = [...(rows || [])];
   let checked = 0;
   let withEmail = 0;
+  let found = 0;
   const worker = async () => {
     while (queue.length && timeLeft() > 10 * MINUTES) {
       const p = queue.shift();
       const update = { crawled_at: new Date().toISOString(), updated_at: new Date().toISOString() };
-      if (p.website) {
+      const company = await withTimeout(lookupCompany(p).catch(() => null), 20_000, null);
+      if (company) Object.assign(update, company);
+      let website = p.website;
+      if (!website && !p.email) {
+        website = await withTimeout(
+          findSite({ ...p, siren: company?.siren ?? p.siren }).catch(() => null),
+          60_000,
+          null,
+        );
+        update.notes = [p.notes, website ? `Site retrouvé et vérifié : ${website}` : "Site cherché, non trouvé"]
+          .filter(Boolean)
+          .join("\n");
+        if (website) {
+          update.website = website;
+          found++;
+        }
+      }
+      if (website) {
         const { emails, text } = await withTimeout(
-          crawl(p.website).catch(() => ({ emails: [], text: null })),
+          crawl(website).catch(() => ({ emails: [], text: null })),
           45_000,
           { emails: [], text: null },
         );
-        if (!p.email) update.email = pickEmail(emails, p.website);
+        if (!p.email) update.email = pickEmail(emails, website);
         if (text) update.site_excerpt = text;
       }
-      const company = await withTimeout(lookupCompany(p).catch(() => null), 20_000, null);
-      if (company) Object.assign(update, company);
       const email = update.email ?? p.email;
       if (!email) update.status = "sans_email";
       else withEmail++;
@@ -713,7 +790,7 @@ async function enrich() {
     }
   };
   await Promise.all(Array.from({ length: 6 }, worker));
-  return { checked, withEmail };
+  return { checked, withEmail, found };
 }
 
 // ------------------------------------------------------------------ 3. Rédaction
@@ -795,6 +872,8 @@ export function check(draft) {
   const words = draft.body.split(/\s+/).filter(Boolean).length;
   if (words < 45 || words > 115) problems.push(`le message fait ${words} mots (60 à 100 attendus)`);
   if (draft.subject.length > 45) problems.push("objet trop long (moins de 40 caractères)");
+  if (!/commission/i.test(draft.body))
+    problems.push("le message doit dire qu'il touche une commission sur chaque logement recommandé que nous signons");
   if (!/^Bonjour/.test(draft.body) || !/^Bonjour/.test(draft.followup))
     problems.push("doit commencer par « Bonjour »");
   const bad = all.match(FORBIDDEN);
@@ -1719,8 +1798,17 @@ async function main() {
     note(
       `Promoteurs et marchands de biens : ${companies.checked} vérifiés, ${companies.added} avec site confirmé`,
     );
+    // Contacts déjà classés « sans e-mail » faute de site : on cherche leur site une fois.
+    await db
+      .from("prospects")
+      .update({ status: "nouveau", crawled_at: null })
+      .eq("status", "sans_email")
+      .is("website", null)
+      .or("notes.is.null,notes.not.ilike.*Site cherché*");
     const enriched = await enrich();
-    note(`Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}`);
+    note(
+      `Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}, sites retrouvés et vérifiés : ${enriched.found}`,
+    );
     if (process.env.ANTHROPIC_API_KEY) {
       const drafted = await draftMessages(settings);
       note(`Messages rédigés : ${drafted}`);
