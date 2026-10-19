@@ -1854,7 +1854,7 @@ async function main() {
       return { checked: 0, added: 0 };
     });
     note(
-      `Promoteurs et marchands de biens : ${companies.checked} vérifiés, ${companies.added} avec site confirmé`,
+      `Entreprises de l'annuaire (promoteurs, marchands de biens, syndics, patrimoine, investissement) : ${companies.checked} vérifiées, ${companies.added} avec site confirmé`,
     );
     // Contacts déjà classés « sans e-mail » faute de site : on cherche leur site une fois.
     await db
