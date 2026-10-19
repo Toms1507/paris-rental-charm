@@ -30,7 +30,11 @@ const MODEL = process.env.PROSPECT_DRAFT_MODEL || "claude-haiku-5-5";
 const POLISH_MODEL = process.env.PROSPECT_MODEL || "claude-sonnet-5-5";
 const JUDGE_MODEL = process.env.PROSPECT_JUDGE_MODEL || "claude-haiku-5-5";
 const UA = "Mozilla/5.0 (compatible; SpinelleConciergerie/1.0; +https://spinelleconciergerie.fr)";
-const RUNS_PER_DAY = 3; // passages programmés par jour ouvré (voir le workflow)
+// Passages : un passage d'envoi léger toutes les heures (envois étalés sur la journée, réponses
+// relevées vite, et un passage sauté par GitHub ne bloque plus rien), plus trois passages complets
+// par jour qui préparent les messages suivants. PROSPECT_MODE=envoi pour un passage léger.
+const SEND_ONLY = process.env.PROSPECT_MODE === "envoi";
+const LAST_SEND_HOUR = 18; // dernier passage d'envoi vers 18 h (heure de Paris)
 const FOLLOWUP_AFTER_DAYS = 7;
 const FOLLOWUPS_PER_RUN = 30; // relances par passage, en plus des nouveaux contacts
 const GIVE_UP_AFTER_DAYS = 14;
@@ -1433,7 +1437,7 @@ async function sendBatch(settings, box) {
     return { sent: 0, followups: 0 };
   }
   const hour = parisNow().getHours();
-  const runsLeft = Math.max(1, RUNS_PER_DAY - (hour >= 14 ? 2 : hour >= 11 ? 1 : 0));
+  const runsLeft = Math.max(1, LAST_SEND_HOUR - hour);
   const health = await sendingHealth();
   note(`Santé de l'adresse d'envoi : ${health.text}`);
   const remaining = Math.max(0, allowanceToday(settings, health.factor) - (await sentToday()));
@@ -1770,7 +1774,9 @@ async function main() {
   }
 
   // 2. Ensuite la préparation des prochains envois, dans le temps qui reste.
-  if (settings.paused) {
+  if (SEND_ONLY) {
+    note("Passage d'envoi seul (la préparation est faite par les passages complets).");
+  } else if (settings.paused) {
     note("Prospection en pause.");
   } else {
     const weekAgo = Date.now() - 7 * 86_400_000;
@@ -1833,6 +1839,16 @@ async function main() {
 
 // Lancement direct uniquement (le module peut être importé pour les tests).
 if (import.meta.url === `file://${process.argv[1]}`) {
+  // Bug connu de Node (connexion coupée pendant la lecture d'une page) : il ne concerne qu'un
+  // site d'agence, il ne doit pas arrêter tout le passage.
+  process.on("uncaughtException", (e) => {
+    if (e?.code === "ERR_ASSERTION" && /undici/.test(e.stack || "")) {
+      console.error("Connexion à un site interrompue (ignorée).");
+      return;
+    }
+    console.error(e);
+    process.exit(1);
+  });
   let finished = false;
   process.on("beforeExit", () => {
     if (finished) return;

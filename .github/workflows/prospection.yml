@@ -6,9 +6,16 @@ name: Prospection des agences
 
 on:
   schedule:
-    # Du lundi au samedi, 9 h 17, 12 h 17 et 15 h 17 à Paris en été (une heure plus tôt en hiver).
+    # Du lundi au samedi (heure de Paris en été, une heure plus tôt en hiver) :
+    # passages complets à 9 h 17, 12 h 17 et 15 h 17 ; passages d'envoi seul toutes les heures à
+    # la demie, de 8 h 47 à 18 h 47 (envois étalés, un passage sauté par GitHub ne bloque rien).
     - cron: "17 7,10,13 * * 1-6"
-  workflow_dispatch: {}
+    - cron: "47 6-16 * * 1-6"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "complet (tout) ou envoi (envois et réponses seulement)"
+        default: complet
 
 concurrency:
   group: prospection
@@ -32,6 +39,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_WORKSPACE_ID: ${{ secrets.ANTHROPIC_WORKSPACE_ID }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          PROSPECT_MODE: ${{ github.event.schedule == '47 6-16 * * 1-6' && 'envoi' || inputs.mode || 'complet' }}
         run: |
           if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ] || [ -z "$SUPABASE_URL" ]; then
             echo "Secrets Supabase absents : prospection non activée."
