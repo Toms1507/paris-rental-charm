@@ -905,6 +905,38 @@ async function judge(ai, facts, versions) {
   };
 }
 
+// Situations vécues par chaque métier : une est tirée au sort par agence, pour que les messages
+// ne racontent pas tous la même histoire (le rédacteur peut en choisir une meilleure d'après le site).
+const SITUATIONS = {
+  "agence immobilière": [
+    "le vendeur dont le bien ne trouve pas preneur et qui préfère attendre plutôt que baisser : il pourrait le faire rapporter en attendant",
+    "l'acheteur investisseur qui hésite parce qu'il n'aura pas le temps de gérer son bien",
+    "la famille qui hérite d'un appartement et ne sait pas quoi en faire",
+    "le propriétaire muté ou parti à l'étranger qui ne veut pas vendre",
+    "le propriétaire dont le locataire s'en va et qui parle d'essayer Airbnb, et que l'agence risque de perdre",
+    "le propriétaire lassé de la location classique qui cherche une autre façon de faire travailler son bien",
+  ],
+  "syndic ou administrateur de biens": [
+    "le copropriétaire bailleur qui demande un contact sérieux pour louer aux voyageurs, alors que l'immeuble veut des voyageurs respectueux et un vrai suivi",
+    "le copropriétaire qui loue déjà en courte durée de façon désordonnée et dont les voisins se plaignent",
+  ],
+  "conseiller en investissement ou gestion de patrimoine": [
+    "le client qui veut faire travailler un bien sans s'en occuper",
+    "le client qui hésite à investir dans un appartement faute de savoir qui le gérera",
+  ],
+  "promoteur immobilier": [
+    "l'acheteur investisseur qui hésite à signer faute de savoir qui s'occupera de son bien",
+  ],
+  "marchand de biens": ["le bien rénové qui attend sa revente et reste vide en attendant"],
+};
+const HOLIDAY = "la résidence secondaire qui reste fermée une bonne partie de l'année";
+function situationFor(p) {
+  const cat = (p.notes || "").match(/Catégorie : ([^\n]+)/)?.[1] ?? "agence immobilière";
+  const list = [...(SITUATIONS[cat] ?? SITUATIONS["agence immobilière"])];
+  if (ZONES[p.zone]?.season) list.push(HOLIDAY, HOLIDAY);
+  return list[Math.floor(Math.random() * list.length)];
+}
+
 async function draftOne(ai, p, floor = 5) {
   const facts = [
     `Agence : ${p.name}`,
@@ -919,13 +951,14 @@ async function draftOne(ai, p, floor = 5) {
   ]
     .filter(Boolean)
     .join("\n");
+  const situation = `Situation suggérée pour ce professionnel : ${situationFor(p)} (prends-en une autre de la liste seulement si son site en suggère clairement une meilleure).`;
   let feedback = "";
   let best = null;
   let lastProblem = "";
   // 1. Trois versions par le modèle rapide, contrôlées (aucun chiffre, aucune réglementation,
   //    longueur, ton) puis notées ; jusqu'à trois tours si elles ne conviennent pas.
   for (let round = 0; round < 3; round++) {
-    const parsed = parseVersions(await ask(ai, MODEL, SYSTEM, `${facts}\n\nNombre de versions demandé : trois.${feedback}`));
+    const parsed = parseVersions(await ask(ai, MODEL, SYSTEM, `${facts}\n\n${situation}\n\nNombre de versions demandé : trois.${feedback}`));
     const problems = parsed.length ? parsed.map(problemsOf) : [["format non respecté (balises <version> absentes)"]];
     const versions = parsed.filter((v, k) => !problems[k].length);
     if (!versions.length) {
@@ -943,7 +976,7 @@ async function draftOne(ai, p, floor = 5) {
   // 2. Retouche unique par le modèle haut de gamme, à partir de l'avis du destinataire ; gardée
   //    seulement si elle est conforme et que le destinataire la préfère.
   if (best.score < 8) {
-    const brief = `${facts}\n\nNombre de versions demandé : une seule, la version finale.\n\nVoici la meilleure version écrite jusqu'ici :\nObjet : ${best.subject}\n\n${best.body}\n\nRelance : ${best.followup}\n\nLe destinataire l'a notée ${best.score}/10. Son avis : « ${best.why} ». Ce qui le ferait répondre : « ${best.tip} ». Réécris-la pour qu'il ait vraiment envie de répondre, en gardant ce qui marche et en respectant strictement toutes les règles.`;
+    const brief = `${facts}\n\nNombre de versions demandé : une seule, la version finale.\n\nVoici la meilleure version écrite jusqu'ici :\nObjet : ${best.subject}\n\n${best.body}\n\nRelance : ${best.followup}\n\nLe destinataire l'a notée ${best.score}/10. Son avis : « ${best.why} ». Ce qui le ferait répondre : « ${best.tip} ». Réécris-la pour qu'il ait vraiment envie de répondre, en gardant ce qui marche et en respectant strictement toutes les règles. Supprime toute énumération de services (au plus un détail concret), garde la situation vécue au cœur du message et la question finale précise.`;
     const [polished] = parseVersions(await ask(ai, POLISH_MODEL, SYSTEM, brief).catch(() => ""));
     if (polished && !problemsOf(polished).length) {
       const pick = await judge(ai, facts, [best, polished]);
