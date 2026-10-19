@@ -97,6 +97,10 @@ for (const p of rows.filter((r) => r.status === "erreur")) {
   errors.set(cause, (errors.get(cause) || 0) + 1);
 }
 
+const ready = rows
+  .filter((p) => ["brouillon", "valide"].includes(p.status) && p.body)
+  .slice(-10);
+
 const report = [
   `# Rapport de prospection — ${new Date().toISOString().slice(0, 10)}`,
   "",
@@ -128,6 +132,9 @@ const report = [
   "",
   `## Messages qui ont obtenu une réponse (${replies.length})`,
   replies.slice(0, 30).map(message).join("\n\n---\n\n") || "Aucune pour l'instant.",
+  "",
+  "## Échantillon de messages prêts à partir",
+  ready.map(message).join("\n\n---\n\n") || "Aucun.",
   "",
   "## Échantillon de messages envoyés sans réponse",
   silent.map(message).join("\n\n---\n\n") || "Aucun.",
