@@ -2066,8 +2066,15 @@ async function main() {
     note(`Répartition : ${await loadWeights()}`);
   }
   if (process.env.SMTP_PASSWORD) {
-    const box = await mailbox();
-    try {
+    // Boîte inaccessible (mot de passe changé, blocage du fournisseur) : aucun e-mail ce passage,
+    // mais formulaires et préparation continuent ; l'alerte apparaît dans le résumé de l'intranet.
+    const box = await mailbox().catch((e) => {
+      note(
+        `ALERTE : connexion à la boîte ${FROM_EMAIL} refusée (${e.responseText || e.message}). Aucun e-mail envoyé ni réponse relevée : vérifier le mot de passe (secret SMTP_PASSWORD).`,
+      );
+      return null;
+    });
+    if (box) try {
       const r = await checkReplies(box);
       note(`Réponses détectées : ${r.replies}, adresses invalides : ${r.bounces}`);
       if (!settings.paused) {
