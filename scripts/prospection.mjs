@@ -769,7 +769,7 @@ Propose le nombre de versions demandé, vraiment différentes entre elles (accro
 // Relecture dans la peau du destinataire : il note chaque version selon la probabilité qu'il réponde.
 const JUDGE = `Tu te mets entièrement à la place du professionnel de l'immobilier décrit ci-dessous : tu es lui, avec son métier, sa clientèle, son agenda chargé, et tu reçois chaque jour des dizaines de sollicitations commerciales que tu ignores pour la plupart.
 
-Tu reçois plusieurs versions d'un même e-mail. Si ton nom n'apparaît pas dans la salutation, c'est normal (l'expéditeur ne le connaît pas) : ne le pénalise pas. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
+Tu reçois plusieurs versions d'un même e-mail. Si ton nom n'apparaît pas dans la salutation, c'est normal (l'expéditeur ne le connaît pas) : ne le pénalise pas. L'absence de chiffres, de montant de commission et de conditions détaillées est voulue (l'expéditeur les donne de vive voix au premier échange) : ne la pénalise pas et ne la suggère pas comme amélioration ; juge l'accroche, la pertinence pour toi, la confiance inspirée et l'envie de répondre. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
 
 Réponds uniquement au format :
 <notes>1:N;2:N;…</notes>
@@ -811,7 +811,7 @@ const costOf = (model, u) => {
   return (u.input * i + u.read * r + u.write * w + u.output * o) / 1e6;
 };
 
-async function ask(ai, model, system, content) {
+async function ask(ai, model, system, content, { think = false } = {}) {
   // Repli automatique en cas de refus : disponible sur Sonnet 5.5, pas sur Haiku 5.5.
   const fallback = model.startsWith("claude-sonnet-5-5")
     ? { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" }
@@ -820,9 +820,11 @@ async function ask(ai, model, system, content) {
     model,
     max_tokens: 4000,
     ...fallback,
-    // Rédacteur sans réflexion préalable : pour un e-mail de cent mots, elle coûtait les deux
-    // tiers de la facture sans meilleur résultat (le relecteur garde la sienne, peu coûteuse).
-    ...(model.startsWith("claude-sonnet") ? { thinking: { type: "between_tools" } } : {}),
+    // Rédaction sans réflexion préalable : pour un e-mail de cent mots, elle coûtait les deux
+    // tiers de la facture sans meilleur résultat. Le relecteur garde la sienne (peu coûteuse).
+    ...(think
+      ? {}
+      : { thinking: { type: model.startsWith("claude-sonnet") ? "between_tools" : "disabled" } }),
     output_config: { effort: "low" },
     // Consignes identiques à chaque message : mises en cache pour payer moins cher.
     system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
@@ -881,7 +883,9 @@ async function judge(ai, facts, versions) {
   const shown = versions
     .map((v, k) => `--- Version ${k + 1} ---\nObjet : ${v.subject}\n\n${v.body}`)
     .join("\n\n");
-  const verdict = await ask(ai, JUDGE_MODEL, JUDGE, `Qui tu es :\n${facts}\n\nLes e-mails reçus :\n\n${shown}`);
+  const verdict = await ask(ai, JUDGE_MODEL, JUDGE, `Qui tu es :\n${facts}\n\nLes e-mails reçus :\n\n${shown}`, {
+    think: true,
+  });
   const scores = Object.fromEntries(
     [...tagIn(verdict, "notes").matchAll(/(\d+)\s*:\s*(\d+)/g)].map((m) => [Number(m[1]), Number(m[2])]),
   );
