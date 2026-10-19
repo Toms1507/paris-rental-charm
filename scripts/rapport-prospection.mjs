@@ -112,6 +112,14 @@ const noEmailText = [
   `- Avec site connu : ${count(noEmail, (p) => p.website)}, sans site : ${count(noEmail, (p) => !p.website)}, avec téléphone : ${count(noEmail, (p) => p.phone)}, avec SIREN : ${count(noEmail, (p) => p.siren)}`,
   `- Réseaux : ${[...brands].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([b, n]) => `${b} ${n}`).join(", ")}`,
   `- Exemples de sites sans e-mail trouvé : ${noEmail.filter((p) => p.website).slice(0, 15).map((p) => p.website).join(" ")}`,
+  `- Réseaux des fiches sans site ni e-mail pas encore analysées : ${(() => {
+    const m = new Map();
+    for (const p of rows.filter((r) => r.status === "nouveau" && !r.crawled_at && !r.website && !r.email)) {
+      const b = (p.notes || "").match(/Réseau : ([^\n]+)/)?.[1] ?? "indépendant";
+      m.set(b, (m.get(b) || 0) + 1);
+    }
+    return [...m].sort((x, y) => y[1] - x[1]).slice(0, 15).map(([b, n]) => `${b} ${n}`).join(", ");
+  })()}`,
   `- Fiches « nouveau » pas encore analysées : ${count(rows, (p) => p.status === "nouveau" && !p.crawled_at)}, dont sans site : ${count(rows, (p) => p.status === "nouveau" && !p.crawled_at && !p.website && !p.email)}`,
 ].join("\n");
 
