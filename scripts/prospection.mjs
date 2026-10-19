@@ -588,7 +588,7 @@ async function syncCompanies(settings) {
 }
 
 // Cas « à vérifier » traités automatiquement, pour ne rien laisser en attente :
-//   - message non conforme : nouvelle rédaction 3 jours plus tard, puis contact écarté si échec ;
+//   - message non conforme : nouvelle rédaction au passage suivant, puis contact écarté si échec ;
 //   - adresse invalide : autre adresse cherchée sur le site, sinon contact écarté ;
 //   - erreur d'envoi passagère : nouvel essai, jusqu'à 3 fois.
 const CLEAN_DRAFT = {
@@ -602,7 +602,7 @@ const CLEAN_DRAFT = {
 };
 
 async function resolveErrors() {
-  const { data: rows } = await db.from("prospects").select("*").eq("status", "erreur").limit(100);
+  const rows = await selectAll(() => db.from("prospects").select("*").eq("status", "erreur"));
   const add = (p, line) => [p.notes, line].filter(Boolean).join("\n");
   let retried = 0;
   let dropped = 0;
@@ -612,7 +612,7 @@ async function resolveErrors() {
     if (/non conforme/i.test(notes)) {
       if (/Réessai de rédaction/.test(notes))
         update = { status: "ignore", notes: add(p, "Écarté : message toujours non conforme") };
-      else if (Date.now() - new Date(p.updated_at).getTime() > 3 * 86_400_000)
+      else
         update = { status: "nouveau", ...CLEAN_DRAFT, notes: add(p, "Réessai de rédaction") };
     } else if (/Adresse e-mail invalide/i.test(notes)) {
       const tried = new Set([
@@ -697,7 +697,7 @@ const STYLE_SINCE = "2026-10-18T17:59:51Z";
 
 const SYSTEM = `Tu écris, au nom de Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail à UN professionnel de l'immobilier précis, et sa relance. Un seul objectif : qu'il ait envie de lire jusqu'au bout et de répondre.
 
-Spinelle Conciergerie gère de A à Z la location courte durée (Airbnb, Booking) pour les propriétaires : création et mise en valeur de l'annonce avec de belles photos, prix ajustés au fil de la demande, accueil et échanges avec les voyageurs tous les jours, ménage soigné de qualité hôtelière, linge, entretien et petites réparations. Le propriétaire n'a rien à faire et suit ses revenus chaque mois.
+Spinelle Conciergerie gère de A à Z la location courte durée (Airbnb, Booking) pour les propriétaires : création et mise en valeur de l'annonce avec de belles photos, calendrier ajusté au fil de la demande, accueil et échanges avec les voyageurs tous les jours, ménage soigné de qualité hôtelière, linge, entretien et petites réparations. Le propriétaire n'a rien à faire et suit ses revenus chaque mois.
 
 Ce que Spinelle propose aux professionnels : quand l'un de leurs clients veut louer son bien en courte durée, ils nous le recommandent ; leur client reste le leur ; et ils touchent une commission sur chaque logement recommandé que nous signons. Pour eux : un revenu en plus sans rien gérer, et une vraie solution à proposer à leurs clients.
 
@@ -788,7 +788,20 @@ async function ask(ai, model, system, content) {
 const tagIn = (text, t) =>
   ((text.match(new RegExp(`<${t}>([\\s\\S]*?)</${t}>`)) || [])[1] || "").trim();
 
-async function draftOne(ai, p) {
+// Petites fautes corrigées d'office plutôt que de jeter un bon message : point d'exclamation,
+// formule finale ou signature ajoutée par erreur à la fin.
+function tidy(text) {
+  return text
+    .replace(/\s*!/g, ".")
+    .replace(/\.{2,}/g, ".")
+    .replace(
+      /(\n\s*(Bien cordialement|Cordialement|Bien à vous|Belle journée|Tom Simon|Tom|Spinelle Conciergerie|Fondateur[^\n]*)[\s,.]*)+$/i,
+      "",
+    )
+    .trim();
+}
+
+async function draftOne(ai, p, floor = 5) {
   const facts = [
     `Agence : ${p.name}`,
     p.notes ? p.notes : null,
@@ -804,20 +817,27 @@ async function draftOne(ai, p) {
     .join("\n");
   let feedback = "";
   let best = null;
-  for (let round = 0; round < 2; round++) {
+  let lastProblem = "";
+  for (let round = 0; round < 3; round++) {
+    if (round === 2 && best) break; // troisième essai seulement si aucune version n'était conforme
     // 1. Trois versions, contrôlées (aucun chiffre, aucune réglementation, longueur, ton).
     const text = await ask(ai, MODEL, SYSTEM, facts + feedback);
-    const versions = [...text.matchAll(/<version>([\s\S]*?)<\/version>/g)]
-      .map((m) => ({
-        angle: tagIn(m[1], "angle"),
-        subject: tagIn(m[1], "objet"),
-        body: tagIn(m[1], "message"),
-        followup: tagIn(m[1], "relance"),
-      }))
-      .filter((v) => v.subject && v.body && v.followup && !check(v).length);
+    const parsed = [...text.matchAll(/<version>([\s\S]*?)<\/version>/g)].map((m) => ({
+      angle: tagIn(m[1], "angle"),
+      subject: tidy(tagIn(m[1], "objet")),
+      body: tidy(tagIn(m[1], "message")),
+      followup: tidy(tagIn(m[1], "relance")),
+    }));
+    const problems = parsed.length
+      ? parsed.map((v) =>
+          v.subject && v.body && v.followup ? check(v) : ["format incomplet (objet, message ou relance manquant)"],
+        )
+      : [["format non respecté (balises <version> absentes)"]];
+    const versions = parsed.filter((v, k) => !problems[k].length);
     if (!versions.length) {
-      feedback =
-        "\n\nTes versions précédentes ne respectaient pas les règles ou le format : recommence en les respectant strictement.";
+      lastProblem = [...new Set(problems.flat())].join(" ; ");
+      // On dit précisément au rédacteur ce qui n'allait pas, pour qu'il ne refasse pas l'erreur.
+      feedback = `\n\nTes versions précédentes ont été refusées pour ces raisons : ${lastProblem}. Recommence en corrigeant exactement ces points, sans rien changer d'autre aux règles.`;
       continue;
     }
     // 2. Relecture dans la peau du destinataire, qui garde la version à laquelle il répondrait.
@@ -844,8 +864,9 @@ async function draftOne(ai, p) {
     // 3. Pas assez convaincant : on réécrit en tenant compte de la critique du destinataire.
     feedback = `\n\nLe destinataire a lu ta meilleure proposition et l'a notée ${score}/10. Son avis : « ${tagIn(verdict, "pourquoi")} ». Ce qui le ferait répondre : « ${tagIn(verdict, "amelioration")} ». Propose deux nouvelles versions bien meilleures.`;
   }
-  if (!best || best.score < 5) return null;
-  return { ...best, angle: `${best.angle} (note ${best.score}/10)` };
+  if (!best) return { reason: `règles non respectées (${lastProblem})` };
+  if (best.score < floor) return { reason: `note trop basse (${best.score}/10)` };
+  return { draft: { ...best, angle: `${best.angle} (note ${best.score}/10)` } };
 }
 
 // Répartition entre groupes (zone × métier). Au début, à parts égales ; dès qu'il y a assez de
@@ -1007,8 +1028,11 @@ async function draftMessages(settings) {
     while (queue.length && !stop && timeLeft() > 3 * MINUTES) {
       const p = queue.shift();
       let draft;
+      let reason;
       try {
-        draft = await draftOne(ai, p);
+        // Au second essai, on accepte un message conforme un peu moins bien noté plutôt que de
+        // perdre le contact.
+        ({ draft, reason } = await draftOne(ai, p, /Réessai de rédaction/.test(p.notes || "") ? 4 : 5));
       } catch (e) {
         // Erreur technique (clé, quota, service) : l'agence reste en file pour le prochain passage.
         note(`Rédaction interrompue (${p.name}) : ${e.message}`);
@@ -1016,11 +1040,19 @@ async function draftMessages(settings) {
         continue;
       }
       if (!draft) {
+        // Premier échec : nouvel essai automatique au passage suivant. Second échec : contact
+        // écarté des envois (il reste dans « À appeler » s'il a un téléphone).
+        const retried = /Réessai de rédaction/.test(p.notes || "");
         await db
           .from("prospects")
           .update({
-            status: "erreur",
-            notes: [p.notes, "Message non conforme après deux essais : à rédiger à la main"]
+            status: retried ? "ignore" : "nouveau",
+            notes: [
+              p.notes,
+              retried
+                ? `Écarté : message non conforme au second essai (${reason})`
+                : `Rédaction refusée (${reason})\nRéessai de rédaction`,
+            ]
               .filter(Boolean)
               .join("\n"),
           })
