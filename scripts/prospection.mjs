@@ -393,6 +393,10 @@ function excerpt(html) {
     .slice(0, 2000);
 }
 
+// Tests anti-robot visibles (case à cocher, puzzle) : le formulaire est alors laissé de côté.
+const CAPTCHA =
+  /class=["'][^"']*g-recaptcha|h-captcha|hcaptcha\.com|cf-turnstile|challenges\.cloudflare\.com\/turnstile|frc-captcha|name=["'][^"']*captcha/i;
+
 export async function crawl(website) {
   const root = website.startsWith("http") ? website : `https://${website}`;
   const home = await fetchText(root);
@@ -413,10 +417,24 @@ export async function crawl(website) {
   const usual = ["contact", "nous-contacter", "mentions-legales", "contactez-nous"].map(
     (path) => new URL(`/${path}`, root).href,
   );
+  // Formulaire de contact (repli quand aucune adresse n'est publiée) : page avec un champ de
+  // message ; on note s'il est protégé par un test anti-robot (jamais contourné).
+  let form = null;
+  const lookForm = (url, html) => {
+    if (form && !/contact/i.test(url)) return;
+    const blocks = html.match(/<form[\s\S]*?<\/form>/gi) || [];
+    if (!blocks.some((b) => /<textarea/i.test(b))) return;
+    if (form && /contact/i.test(form.url)) return;
+    form = { url, captcha: CAPTCHA.test(html) };
+  };
+  lookForm(root, home);
   for (const url of [...new Set([...links.slice(0, 3), ...usual])]) {
     if (emails.size) break;
     const page = await fetchText(url, { timeout: 8000 });
-    if (page) extractEmails(page).forEach((e) => emails.add(e));
+    if (page) {
+      extractEmails(page).forEach((e) => emails.add(e));
+      lookForm(url, page);
+    }
   }
   // Page de présentation (histoire, équipe, spécialité) : c'est elle qui permet une accroche
   // vraiment personnelle, au lieu d'un message qui ne parle que de la ville.
@@ -429,7 +447,7 @@ export async function crawl(website) {
     const more = excerpt(about).split("\n").filter((l) => !/^(Titre|Description) :/.test(l));
     if (more.length) text = `${text}\nPage de présentation :\n${more.join("\n")}`.slice(0, 3000);
   }
-  return { emails: [...emails], text };
+  return { emails: [...emails], text, form };
 }
 
 const titleCase = (s) =>
@@ -802,6 +820,7 @@ async function enrich() {
   let checked = 0;
   let withEmail = 0;
   let found = 0;
+  let forms = 0;
   const worker = async () => {
     while (queue.length && timeLeft() > 10 * MINUTES) {
       const p = queue.shift();
@@ -823,24 +842,40 @@ async function enrich() {
           found++;
         }
       }
+      let form = null;
       if (website) {
-        const { emails, text } = await withTimeout(
+        const res = await withTimeout(
           crawl(website).catch(() => ({ emails: [], text: null })),
           45_000,
           { emails: [], text: null },
         );
-        if (!p.email) update.email = pickEmail(emails, website);
-        if (text) update.site_excerpt = text;
+        if (!p.email) update.email = pickEmail(res.emails, website);
+        if (res.text) update.site_excerpt = res.text;
+        form = res.form;
       }
       const email = update.email ?? p.email;
-      if (!email) update.status = "sans_email";
-      else withEmail++;
+      if (email) withEmail++;
+      else {
+        // Pas d'adresse publiée : avec un téléphone, l'agence va dans « À appeler » ; sans
+        // téléphone, contact par le formulaire du site s'il est utilisable (demande du gérant).
+        const usable = form && !form.captcha && !p.phone;
+        const line = usable
+          ? `Formulaire de contact : ${form.url}`
+          : p.phone
+            ? "Aucun e-mail : à appeler"
+            : form
+              ? "Formulaire protégé par un test anti-robot"
+              : "Aucun e-mail ni formulaire utilisable";
+        update.notes = [update.notes ?? p.notes, line].filter(Boolean).join("\n");
+        if (usable) forms++;
+        else update.status = "sans_email";
+      }
       await db.from("prospects").update(update).eq("id", p.id);
       checked++;
     }
   };
   await Promise.all(Array.from({ length: 6 }, worker));
-  return { checked, withEmail, found };
+  return { checked, withEmail, found, forms };
 }
 
 // ------------------------------------------------------------------ 3. Rédaction
@@ -1223,7 +1258,7 @@ async function draftMessages(settings) {
         .select("*")
         .eq("status", "nouveau")
         .eq("zone", zone)
-        .not("email", "is", null)
+        .or("email.not.is.null,notes.ilike.*Formulaire de contact :*")
         .limit(room * 3);
       return (data || []).filter((p) => !parked(p)).slice(0, room);
     }),
@@ -1248,12 +1283,12 @@ async function draftMessages(settings) {
   const queue = [];
   for (const p of rows || []) {
     if (queue.length >= room) break;
-    const email = p.email.toLowerCase();
+    const email = (p.email || "").toLowerCase();
     const host = p.website ? hostOf(p.website) : null;
     const phone = p.phone ? p.phone.replace(/\D/g, "").slice(-9) : null;
     const duplicate =
-      blocked.has(email) ||
-      seen.email.has(email) ||
+      (email && blocked.has(email)) ||
+      (email && seen.email.has(email)) ||
       (host && seen.host.has(host)) ||
       (phone && seen.phone.has(phone)) ||
       (p.siren && seen.siren.has(p.siren));
@@ -1269,7 +1304,7 @@ async function draftMessages(settings) {
         .eq("id", p.id);
       continue;
     }
-    seen.email.add(email);
+    if (email) seen.email.add(email);
     if (host) seen.host.add(host);
     if (phone) seen.phone.add(phone);
     if (p.siren) seen.siren.add(p.siren);
@@ -1417,14 +1452,16 @@ async function mailbox() {
 }
 
 // Nouveaux contacts du jour : le plafond quotidien porte sur eux (les relances partent en plus).
-async function sentToday() {
+// Premiers contacts du jour, par e-mail (plafond de la boîte d'envoi) ou par formulaire.
+async function sentToday(byForm = false) {
   const start = parisNow();
   start.setHours(0, 0, 0, 0);
   const offset = Date.now() - parisNow().getTime();
-  const { count } = await db
+  const q = db
     .from("prospects")
     .select("id", { count: "exact", head: true })
     .gte("first_contact_at", new Date(start.getTime() + offset).toISOString());
+  const { count } = await (byForm ? q.is("email", null) : q.not("email", "is", null));
   return count || 0;
 }
 
@@ -1508,6 +1545,7 @@ async function sendBatch(settings, box) {
     .select("*")
     .eq("status", "contacte")
     .eq("followups", 0)
+    .not("email", "is", null)
     .lt("last_contact_at", before)
     .order("last_contact_at", { ascending: true })
     .limit(FOLLOWUPS_PER_RUN);
@@ -1531,6 +1569,7 @@ async function sendBatch(settings, box) {
     .from("prospects")
     .select("*")
     .in("status", statuses)
+    .not("email", "is", null)
     .order("drafted_at", { ascending: true })
     .limit(Math.max(0, budget) * 8);
   // Les messages validés d'abord, puis envoi à tour de rôle entre zones et métiers.
@@ -1600,6 +1639,162 @@ async function sendBatch(settings, box) {
   return { sent, followups };
 }
 
+// ------------------------------------------------------------------ 4 bis. Formulaires de contact
+
+// Agences sans adresse e-mail ni téléphone, mais avec un formulaire sur leur site (demande du
+// gérant) : le même message y est déposé par un vrai navigateur. Ne passe pas par la boîte
+// d'envoi (aucun risque pour sa réputation), d'où un plafond à part. Jamais de contournement d'un
+// test anti-robot, jamais de champ inventé : le contact est alors simplement abandonné.
+const FORMS_PER_DAY = 30;
+const SUCCESS =
+  /merci|bien (été )?envoy|a été envoy|ont été envoy|été transmis|bien reçu|bien été reçu|thank you|message sent|nous vous (re)?contacterons|reviendrons vers vous|prise en compte/i;
+
+async function fillForm(page, p, message) {
+  const form = page.locator("form:has(textarea)").first();
+  if (!(await form.count())) return "pas de formulaire de message";
+  const labelOf = (el) =>
+    el.evaluate((e) => {
+      const byFor = e.id && document.querySelector(`label[for="${CSS.escape(e.id)}"]`);
+      return [e.name, e.id, e.placeholder, e.getAttribute("aria-label"), byFor?.textContent, e.closest("label")?.textContent]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+    });
+  const fields = form.locator("input:visible, textarea:visible, select:visible");
+  const n = await fields.count();
+  const labels = [];
+  for (let i = 0; i < n; i++) labels.push(await labelOf(fields.nth(i)));
+  const hasFirstName = labels.some((l) => /pr[ée]nom|first/.test(l));
+  const radios = new Set();
+  for (let i = 0; i < n; i++) {
+    const f = fields.nth(i);
+    const label = labels[i];
+    const tag = await f.evaluate((e) => e.tagName.toLowerCase());
+    const type = ((await f.getAttribute("type")) || "text").toLowerCase();
+    if (tag === "textarea") {
+      await f.fill(message);
+      continue;
+    }
+    if (tag === "select") {
+      const options = await f.locator("option").evaluateAll((os) =>
+        os.map((o) => ({ value: o.value, text: o.textContent.trim().toLowerCase() })),
+      );
+      const choice =
+        options.find((o) => o.value && /partenar|professionnel|autre|other|contact|renseignement|information/.test(o.text)) ||
+        options.find((o) => o.value);
+      if (choice) await f.selectOption(choice.value).catch(() => {});
+      continue;
+    }
+    if (["hidden", "submit", "button", "file", "image", "reset", "password", "date"].includes(type)) continue;
+    if (type === "checkbox") {
+      if (/rgpd|consent|accept|politique|donn[ée]es|cgu|conditions|privacy|j'ai lu/.test(label))
+        await f.check({ force: true }).catch(() => {});
+      continue;
+    }
+    if (type === "radio") {
+      const name = (await f.getAttribute("name")) || "";
+      if (radios.has(name)) continue;
+      if (!/partenar|professionnel|autre|other|contact|renseignement|information/.test(label)) continue;
+      radios.add(name);
+      await f.check({ force: true }).catch(() => {});
+      continue;
+    }
+    let value = null;
+    if (type === "email" || /mail/.test(label)) value = FROM_EMAIL;
+    else if (type === "tel" || /t[ée]l[ée]?phone|\bt[ée]l\b|phone|portable|mobile/.test(label)) value = "0631935166";
+    else if (/pr[ée]nom|first/.test(label)) value = "Tom";
+    else if (/soci[ée]t[ée]|entreprise|company|raison sociale|organisation/.test(label)) value = "Spinelle Conciergerie";
+    else if (/objet|sujet|subject/.test(label)) value = p.subject;
+    else if (/site|url|web/.test(label) || type === "url") value = "https://spinelleconciergerie.fr";
+    else if (/\bnom\b|name|identit/.test(label)) value = hasFirstName ? "Simon" : "Tom Simon";
+    if (value) await f.fill(value).catch(() => {});
+  }
+  // Un champ obligatoire qu'on ne sait pas remplir honnêtement : on renonce.
+  const invalid = await form.locator(":invalid").count().catch(() => 0);
+  if (invalid) return "champ obligatoire inconnu";
+  const submit = form
+    .locator('button[type="submit"]:visible, input[type="submit"]:visible, button:not([type]):visible')
+    .first();
+  if (!(await submit.count())) return "bouton d'envoi introuvable";
+  const before = (await page.locator("body").innerText().catch(() => "")).toLowerCase();
+  const startUrl = page.url();
+  await submit.click({ timeout: 10_000 });
+  await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+  await page.waitForTimeout(3000);
+  const after = (await page.locator("body").innerText().catch(() => "")).toLowerCase();
+  if (page.url() !== startUrl && /merci|thank|confirm|success/i.test(page.url())) return null;
+  // Contact compté seulement si un message de confirmation apparaît après l'envoi.
+  return SUCCESS.test(after) && !SUCCESS.test(before) ? null : "envoi non confirmé par le site";
+}
+
+async function sendForms(settings) {
+  if (!officeHours()) return { sent: 0 };
+  const hour = parisNow().getHours();
+  const runsLeft = hour < 12 ? 3 : hour < 15 ? 2 : 1;
+  const budget = Math.ceil(Math.max(0, FORMS_PER_DAY - (await sentToday(true))) / runsLeft);
+  if (!budget) return { sent: 0 };
+  const statuses = settings.mode === "auto" ? ["valide", "brouillon"] : ["valide"];
+  const { data: rows } = await db
+    .from("prospects")
+    .select("*")
+    .in("status", statuses)
+    .is("email", null)
+    .is("phone", null)
+    .ilike("notes", "%Formulaire de contact :%")
+    .order("drafted_at", { ascending: true })
+    .limit(budget);
+  if (!rows?.length) return { sent: 0 };
+  let chromium;
+  try {
+    ({ chromium } = await import("playwright"));
+  } catch {
+    note("Formulaires : navigateur non installé, rien n'est envoyé.");
+    return { sent: 0 };
+  }
+  const browser = await chromium.launch();
+  const now = () => new Date().toISOString();
+  let sent = 0;
+  try {
+    for (const p of rows) {
+      if (timeLeft() < 12 * MINUTES) break;
+      const url = (p.notes.match(/Formulaire de contact : (\S+)/) || [])[1];
+      const ctx = await browser.newContext({ locale: "fr-FR" });
+      const page = await ctx.newPage();
+      let problem;
+      try {
+        await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30_000 });
+        await page.waitForTimeout(2500);
+        if (CAPTCHA.test(await page.content())) problem = "test anti-robot";
+        else problem = await withTimeout(fillForm(page, p, compose(p, false).text), 60_000, "délai dépassé");
+      } catch (e) {
+        problem = e.message.split("\n")[0].slice(0, 120);
+      } finally {
+        await ctx.close().catch(() => {});
+      }
+      const add = (line) => [p.notes, line].filter(Boolean).join("\n");
+      await db
+        .from("prospects")
+        .update(
+          problem
+            ? { status: "ignore", updated_at: now(), notes: add(`Formulaire non utilisable (${problem})`) }
+            : {
+                status: "contacte",
+                followups: 1, // pas de relance possible sans adresse e-mail
+                first_contact_at: now(),
+                last_contact_at: now(),
+                updated_at: now(),
+                notes: add(`Contacté par le formulaire du site le ${now().slice(0, 10)}`),
+              },
+        )
+        .eq("id", p.id);
+      if (!problem) sent++;
+    }
+  } finally {
+    await browser.close().catch(() => {});
+  }
+  return { sent };
+}
+
 // ------------------------------------------------------------------ 5. Réponses et récapitulatif
 
 const WEBMAIL = /gmail|hotmail|outlook|yahoo|orange|free|sfr|laposte|wanadoo|icloud|live|bbox|neuf/;
@@ -1629,12 +1824,17 @@ async function checkReplies(box) {
   const contacted = await selectAll(() =>
     db
       .from("prospects")
-      .select("id,email,status,notes")
+      .select("id,email,website,status,notes")
       .in("status", ["contacte", "relance", "sans_reponse"]),
   );
   const byEmail = new Map();
   const byHost = new Map();
   for (const p of contacted || []) {
+    // Contactés par formulaire : leur réponse arrive d'une adresse du domaine de leur site.
+    if (p.website) {
+      const h = hostOf(p.website).replace(/^www\./, "");
+      if (h && !WEBMAIL.test(h)) byHost.set(h, p);
+    }
     if (!p.email) continue;
     byEmail.set(p.email.toLowerCase(), p);
     const h = p.email.split("@")[1];
@@ -1825,6 +2025,15 @@ async function main() {
     note("SMTP_PASSWORD absent : aucun envoi (les brouillons restent visibles dans l'intranet).");
   }
 
+  // 1 bis. Formulaires de contact (passages complets seulement : il faut un navigateur).
+  if (!SEND_ONLY && !settings.paused) {
+    const viaForms = await sendForms(settings).catch((e) => {
+      note(`Formulaires : ${e.message}`);
+      return { sent: 0 };
+    });
+    note(`Contactés par formulaire : ${viaForms.sent}`);
+  }
+
   // 2. Ensuite la préparation des prochains envois, dans le temps qui reste.
   if (SEND_ONLY) {
     note("Passage d'envoi seul (la préparation est faite par les passages complets).");
@@ -1856,6 +2065,14 @@ async function main() {
     note(
       `Entreprises de l'annuaire (promoteurs, marchands de biens, syndics, patrimoine, investissement) : ${companies.checked} vérifiées, ${companies.added} avec site confirmé`,
     );
+    // Contacts « sans e-mail » ni téléphone qui ont un site : on y cherche une fois un formulaire.
+    await db
+      .from("prospects")
+      .update({ status: "nouveau", crawled_at: null })
+      .eq("status", "sans_email")
+      .not("website", "is", null)
+      .is("phone", null)
+      .or("notes.is.null,and(notes.not.ilike.*Formulaire*,notes.not.ilike.*Aucun e-mail*)");
     // Contacts déjà classés « sans e-mail » faute de site : on cherche leur site une fois.
     await db
       .from("prospects")
@@ -1865,7 +2082,7 @@ async function main() {
       .or("notes.is.null,notes.not.ilike.*Site cherché*");
     const enriched = await enrich();
     note(
-      `Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}, sites retrouvés et vérifiés : ${enriched.found}`,
+      `Sites analysés : ${enriched.checked}, e-mail trouvé : ${enriched.withEmail}, formulaire de contact : ${enriched.forms}, sites retrouvés et vérifiés : ${enriched.found}`,
     );
     if (process.env.ANTHROPIC_API_KEY) {
       const drafted = await draftMessages(settings);
