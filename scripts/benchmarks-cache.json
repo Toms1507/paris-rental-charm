@@ -1,7 +1,7 @@
 {
  "aix-en-provence": {
   "adr": 99.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "13",
   "listings": 2342,
   "name": "Aix-en-Provence",
@@ -66,7 +66,7 @@
  },
  "ajaccio": {
   "adr": 100.5,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "2A",
   "listings": 1381,
   "name": "Ajaccio",
@@ -131,7 +131,7 @@
  },
  "amiens": {
   "adr": 65.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "80",
   "listings": 799,
   "name": "Amiens",
@@ -196,7 +196,7 @@
  },
  "angers": {
   "adr": 64.4,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "49",
   "listings": 1157,
   "name": "Angers",
@@ -261,7 +261,7 @@
  },
  "annecy": {
   "adr": 119.4,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "74",
   "listings": 3177,
   "name": "Annecy",
@@ -326,7 +326,7 @@
  },
  "antibes": {
   "adr": 128.8,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "06",
   "listings": 4196,
   "name": "Antibes",
@@ -391,7 +391,7 @@
  },
  "arcachon": {
   "adr": 126.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "33",
   "listings": 1726,
   "name": "Arcachon",
@@ -456,7 +456,7 @@
  },
  "avignon": {
   "adr": 89.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "84",
   "listings": 2536,
   "name": "Avignon",
@@ -521,7 +521,7 @@
  },
  "bastia": {
   "adr": 89.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "2B",
   "listings": 457,
   "name": "Bastia",
@@ -586,7 +586,7 @@
  },
  "besancon": {
   "adr": 61.0,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "25",
   "listings": 649,
   "name": "Besançon",
@@ -651,7 +651,7 @@
  },
  "bordeaux": {
   "adr": 99.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "33",
   "listings": 3452,
   "name": "Bordeaux",
@@ -716,7 +716,7 @@
  },
  "boulogne-billancourt": {
   "adr": 132.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "92",
   "listings": 884,
   "name": "Boulogne-Billancourt",
@@ -781,7 +781,7 @@
  },
  "brest": {
   "adr": 57.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "29",
   "listings": 960,
   "name": "Brest",
@@ -846,7 +846,7 @@
  },
  "caen": {
   "adr": 70.4,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "14",
   "listings": 1009,
   "name": "Caen",
@@ -911,7 +911,7 @@
  },
  "cannes": {
   "adr": 170.1,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "06",
   "listings": 8370,
   "name": "Cannes",
@@ -976,7 +976,7 @@
  },
  "clermont-ferrand": {
   "adr": 61.8,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "63",
   "listings": 1076,
   "name": "Clermont-Ferrand",
@@ -1041,7 +1041,7 @@
  },
  "clichy": {
   "adr": 104.8,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "92",
   "listings": 589,
   "name": "Clichy",
@@ -1106,7 +1106,7 @@
  },
  "colmar": {
   "adr": 117.7,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "68",
   "listings": 1318,
   "name": "Colmar",
@@ -1171,7 +1171,7 @@
  },
  "courbevoie": {
   "adr": 104.8,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "92",
   "listings": 477,
   "name": "Courbevoie",
@@ -1236,7 +1236,7 @@
  },
  "dijon": {
   "adr": 67.0,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "21",
   "listings": 1698,
   "name": "Dijon",
@@ -1301,7 +1301,7 @@
  },
  "grenoble": {
   "adr": 58.4,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "38",
   "listings": 1338,
   "name": "Grenoble",
@@ -1366,7 +1366,7 @@
  },
  "issy-les-moulineaux": {
   "adr": 113.4,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "92",
   "listings": 401,
   "name": "Issy-les-Moulineaux",
@@ -1431,7 +1431,7 @@
  },
  "ivry-sur-seine": {
   "adr": 87.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "94",
   "listings": 485,
   "name": "Ivry-sur-Seine",
@@ -1496,7 +1496,7 @@
  },
  "la-rochelle": {
   "adr": 89.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "17",
   "listings": 2861,
   "name": "La Rochelle",
@@ -1561,7 +1561,7 @@
  },
  "le-havre": {
   "adr": 64.4,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "76",
   "listings": 1110,
   "name": "Le Havre",
@@ -1626,7 +1626,7 @@
  },
  "le-mans": {
   "adr": 104.8,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "72",
   "listings": 2116,
   "name": "Le Mans",
@@ -1691,7 +1691,7 @@
  },
  "levallois-perret": {
   "adr": 121.1,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "92",
   "listings": 353,
   "name": "Levallois-Perret",
@@ -1756,7 +1756,7 @@
  },
  "lille": {
   "adr": 87.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "59",
   "listings": 1846,
   "name": "Lille",
@@ -1821,7 +1821,7 @@
  },
  "limoges": {
   "adr": 53.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "87",
   "listings": 659,
   "name": "Limoges",
@@ -1886,7 +1886,7 @@
  },
  "lyon": {
   "adr": 91.9,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "69",
   "listings": 4552,
   "name": "Lyon",
@@ -1951,7 +1951,7 @@
  },
  "marseille": {
   "adr": 97.1,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "13",
   "listings": 8767,
   "name": "Marseille",
@@ -2016,7 +2016,7 @@
  },
  "menton": {
   "adr": 123.7,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "06",
   "listings": 1458,
   "name": "Menton",
@@ -2081,7 +2081,7 @@
  },
  "metz": {
   "adr": 75.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "57",
   "listings": 728,
   "name": "Metz",
@@ -2146,7 +2146,7 @@
  },
  "montpellier": {
   "adr": 73.0,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "34",
   "listings": 3241,
   "name": "Montpellier",
@@ -2211,7 +2211,7 @@
  },
  "montreuil": {
   "adr": 87.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "93",
   "listings": 770,
   "name": "Montreuil",
@@ -2276,7 +2276,7 @@
  },
  "montrouge": {
   "adr": 108.2,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "92",
   "listings": 307,
   "name": "Montrouge",
@@ -2341,7 +2341,7 @@
  },
  "mulhouse": {
   "adr": 68.7,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "68",
   "listings": 930,
   "name": "Mulhouse",
@@ -2406,7 +2406,7 @@
  },
  "nancy": {
   "adr": 66.1,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "54",
   "listings": 1012,
   "name": "Nancy",
@@ -2471,7 +2471,7 @@
  },
  "nantes": {
   "adr": 68.7,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "44",
   "listings": 2103,
   "name": "Nantes",
@@ -2536,7 +2536,7 @@
  },
  "neuilly-sur-seine": {
   "adr": 152.9,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "92",
   "listings": 412,
   "name": "Neuilly-sur-Seine",
@@ -2601,7 +2601,7 @@
  },
  "nice": {
   "adr": 127.1,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "06",
   "listings": 9856,
   "name": "Nice",
@@ -2666,7 +2666,7 @@
  },
  "nimes": {
   "adr": 79.9,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "30",
   "listings": 1143,
   "name": "Nîmes",
@@ -2731,7 +2731,7 @@
  },
  "orleans": {
   "adr": 59.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "45",
   "listings": 955,
   "name": "Orléans",
@@ -2796,7 +2796,7 @@
  },
  "pantin": {
   "adr": 90.2,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "93",
   "listings": 409,
   "name": "Pantin",
@@ -2861,7 +2861,7 @@
  },
  "paris": {
   "adr": 163.2,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "75",
   "listings": 40362,
   "name": "Paris",
@@ -2926,7 +2926,7 @@
  },
  "pau": {
   "adr": 57.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "64",
   "listings": 696,
   "name": "Pau",
@@ -2991,7 +2991,7 @@
  },
  "perpignan": {
   "adr": 67.0,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "66",
   "listings": 1114,
   "name": "Perpignan",
@@ -3056,7 +3056,7 @@
  },
  "poitiers": {
   "adr": 58.4,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "86",
   "listings": 694,
   "name": "Poitiers",
@@ -3121,7 +3121,7 @@
  },
  "puteaux": {
   "adr": 120.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "92",
   "listings": 318,
   "name": "Puteaux",
@@ -3186,7 +3186,7 @@
  },
  "reims": {
   "adr": 75.6,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "51",
   "listings": 1715,
   "name": "Reims",
@@ -3251,7 +3251,7 @@
  },
  "rennes": {
   "adr": 67.0,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "35",
   "listings": 1360,
   "name": "Rennes",
@@ -3316,7 +3316,7 @@
  },
  "rouen": {
   "adr": 64.4,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "76",
   "listings": 1430,
   "name": "Rouen",
@@ -3381,7 +3381,7 @@
  },
  "saint-denis": {
   "adr": 104.8,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "93",
   "listings": 987,
   "name": "Saint-Denis",
@@ -3446,7 +3446,7 @@
  },
  "saint-etienne": {
   "adr": 51.5,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "42",
   "listings": 860,
   "name": "Saint-Étienne",
@@ -3511,7 +3511,7 @@
  },
  "saint-malo": {
   "adr": 106.5,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "35",
   "listings": 1858,
   "name": "Saint-Malo",
@@ -3576,7 +3576,7 @@
  },
  "saint-ouen-sur-seine": {
   "adr": 102.2,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "93",
   "listings": 637,
   "name": "Saint-Ouen-sur-Seine",
@@ -3641,7 +3641,7 @@
  },
  "strasbourg": {
   "adr": 104.8,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "67",
   "listings": 2655,
   "name": "Strasbourg",
@@ -3706,7 +3706,7 @@
  },
  "toulon": {
   "adr": 79.0,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "83",
   "listings": 1833,
   "name": "Toulon",
@@ -3771,7 +3771,7 @@
  },
  "toulouse": {
   "adr": 65.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "31",
   "listings": 3878,
   "name": "Toulouse",
@@ -3836,7 +3836,7 @@
  },
  "tours": {
   "adr": 65.3,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "37",
   "listings": 1242,
   "name": "Tours",
@@ -3901,7 +3901,7 @@
  },
  "versailles": {
   "adr": 109.1,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "78",
   "listings": 495,
   "name": "Versailles",
@@ -3966,7 +3966,7 @@
  },
  "vincennes": {
   "adr": 104.8,
-  "checked": "2026-10-16",
+  "checked": "2026-10-19",
   "dept": "94",
   "listings": 330,
   "name": "Vincennes",
