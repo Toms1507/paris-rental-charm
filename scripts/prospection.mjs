@@ -159,6 +159,16 @@ const hostOf = (url) => {
 };
 const parisNow = () => new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Paris" }));
 
+// Délai maximal pour une étape réseau : certains sites laissent la connexion pendue, ce qui
+// arrêtait le passage sans message. Passé le délai, l'étape est simplement abandonnée.
+const withTimeout = (promise, ms, fallback) => {
+  let timer;
+  return Promise.race([
+    promise,
+    new Promise((resolve) => (timer = setTimeout(() => resolve(fallback), ms))),
+  ]).finally(() => clearTimeout(timer));
+};
+
 async function fetchText(url, { timeout = 12000, max = 800_000 } = {}) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeout);
@@ -681,11 +691,15 @@ async function enrich() {
       const p = queue.shift();
       const update = { crawled_at: new Date().toISOString(), updated_at: new Date().toISOString() };
       if (p.website) {
-        const { emails, text } = await crawl(p.website);
+        const { emails, text } = await withTimeout(
+          crawl(p.website).catch(() => ({ emails: [], text: null })),
+          45_000,
+          { emails: [], text: null },
+        );
         if (!p.email) update.email = pickEmail(emails, p.website);
         if (text) update.site_excerpt = text;
       }
-      const company = await lookupCompany(p).catch(() => null);
+      const company = await withTimeout(lookupCompany(p).catch(() => null), 20_000, null);
       if (company) Object.assign(update, company);
       const email = update.email ?? p.email;
       if (!email) update.status = "sans_email";
@@ -1670,15 +1684,26 @@ async function main() {
 }
 
 // Lancement direct uniquement (le module peut être importé pour les tests).
-if (import.meta.url === `file://${process.argv[1]}`)
-  main().catch(async (e) => {
-    console.error(e);
-    await db
-      .from("prospect_settings")
-      .update({
-        last_run_at: new Date().toISOString(),
-        last_run_summary: `Erreur : ${e.message}\n${log.join("\n")}`.slice(0, 4000),
-      })
-      .eq("id", 1);
-    process.exit(1);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  let finished = false;
+  process.on("beforeExit", () => {
+    if (finished) return;
+    finished = true;
+    console.error(`Passage interrompu sans erreur visible. Dernières étapes :\n${log.slice(-3).join("\n")}`);
+    process.exitCode = 1;
   });
+  main()
+    .then(() => (finished = true))
+    .catch(async (e) => {
+      finished = true;
+      console.error(e);
+      await db
+        .from("prospect_settings")
+        .update({
+          last_run_at: new Date().toISOString(),
+          last_run_summary: `Erreur : ${e.message}\n${log.join("\n")}`.slice(0, 4000),
+        })
+        .eq("id", 1);
+      process.exit(1);
+    });
+}
