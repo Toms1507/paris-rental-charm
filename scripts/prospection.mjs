@@ -1242,26 +1242,36 @@ async function draftMessages(settings) {
     })
     .in("status", ["brouillon", "valide"])
     .lt("drafted_at", REDRAFT_SINCE);
-  const { count: pending } = await db
-    .from("prospects")
-    .select("id", { count: "exact", head: true })
-    .in("status", ["brouillon", "valide"]);
-  const room = Math.max(0, Math.min(DRAFT_PER_RUN, settings.daily_limit * 2 - (pending || 0)));
+  // Deux réserves de messages prêts, chacune à sa mesure : e-mails (plafond de la boîte d'envoi)
+  // et formulaires (plafond à part), pour que l'une ne bloque jamais l'autre.
+  const pendingOf = async (byForm) => {
+    const q = db
+      .from("prospects")
+      .select("id", { count: "exact", head: true })
+      .in("status", ["brouillon", "valide"]);
+    return (await (byForm ? q.is("email", null) : q.not("email", "is", null))).count || 0;
+  };
+  const rooms = {
+    email: Math.max(0, Math.min(DRAFT_PER_RUN, settings.daily_limit * 2 - (await pendingOf(false)))),
+    form: Math.max(0, Math.min(20, FORMS_PER_DAY * 2 - (await pendingOf(true)))),
+  };
+  const room = rooms.email + rooms.form;
   if (!room) return 0;
   // Quelques candidats de chaque zone, puis rédaction à tour de rôle (zone et métier).
-  const pools = await Promise.all(
-    Object.keys(ZONES).map(async (zone) => {
-      const { data } = await db
-        .from("prospects")
-        .select("*")
-        .eq("status", "nouveau")
-        .eq("zone", zone)
-        .or("email.not.is.null,notes.ilike.*Formulaire de contact :*")
-        .limit(room * 3);
-      return (data || []).filter((p) => !parked(p)).slice(0, room);
-    }),
-  );
-  const rows = interleave(pools.flat());
+  const pick = (kind) =>
+    Promise.all(
+      Object.keys(ZONES).map(async (zone) => {
+        if (!rooms[kind]) return [];
+        const q = db.from("prospects").select("*").eq("status", "nouveau").eq("zone", zone);
+        const { data } = await (kind === "email"
+          ? q.not("email", "is", null)
+          : q.is("email", null).ilike("notes", "%Formulaire de contact :%")
+        ).limit(rooms[kind] * 3);
+        return (data || []).filter((p) => !parked(p)).slice(0, rooms[kind]);
+      }),
+    );
+  const rows = [...interleave((await pick("email")).flat()), ...interleave((await pick("form")).flat())];
+  const taken = { email: 0, form: 0 };
   const { data: optouts } = await db.from("prospect_optouts").select("email");
   const blocked = new Set((optouts || []).map((o) => o.email));
   const used = await selectAll(() =>
@@ -1281,6 +1291,8 @@ async function draftMessages(settings) {
   const queue = [];
   for (const p of rows || []) {
     if (queue.length >= room) break;
+    const kind = p.email ? "email" : "form";
+    if (taken[kind] >= rooms[kind]) continue;
     const email = (p.email || "").toLowerCase();
     const host = p.website ? hostOf(p.website) : null;
     const phone = p.phone ? p.phone.replace(/\D/g, "").slice(-9) : null;
@@ -1306,6 +1318,7 @@ async function draftMessages(settings) {
     if (host) seen.host.add(host);
     if (phone) seen.phone.add(phone);
     if (p.siren) seen.siren.add(p.siren);
+    taken[kind]++;
     queue.push(p);
   }
   // 2. Rédaction, quatre messages à la fois, sans dépasser la durée du passage.
