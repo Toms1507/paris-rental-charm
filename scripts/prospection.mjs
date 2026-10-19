@@ -23,7 +23,11 @@ const SITE = "https://spinelleconciergerie.fr";
 const FROM_EMAIL = process.env.SMTP_USER || "contact@spinelleconciergerie.fr";
 const FROM_NAME = "Tom Simon – Spinelle Conciergerie";
 // Coût visé : environ un centime par message (rédaction Sonnet, relecture Haiku, réflexion réduite).
-const MODEL = process.env.PROSPECT_MODEL || "claude-sonnet-5-5";
+// Rédaction en deux temps, pour une très bonne qualité à environ un centime par message :
+// le modèle rapide écrit trois versions (et les réécrit si besoin), le modèle haut de gamme
+// retouche une seule fois la meilleure à partir de l'avis du relecteur.
+const MODEL = process.env.PROSPECT_DRAFT_MODEL || "claude-haiku-5-5";
+const POLISH_MODEL = process.env.PROSPECT_MODEL || "claude-sonnet-5-5";
 const JUDGE_MODEL = process.env.PROSPECT_JUDGE_MODEL || "claude-haiku-5-5";
 const UA = "Mozilla/5.0 (compatible; SpinelleConciergerie/1.0; +https://spinelleconciergerie.fr)";
 const RUNS_PER_DAY = 3; // passages programmés par jour ouvré (voir le workflow)
@@ -754,7 +758,7 @@ Ce qui fait la différence entre un message ignoré et un message qui obtient un
 
 Relance (sept jours plus tard, en réponse au premier e-mail) : deux phrases chaleureuses et légères, sans reproche : tu reviens simplement vers lui, tu rappelles l'idée en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
 
-Propose DEUX versions vraiment différentes (accroche, angle, objet), toutes deux conformes à ces règles. Réponds uniquement au format suivant, deux fois :
+Propose le nombre de versions demandé, vraiment différentes entre elles (accroche, angle, objet), toutes conformes à ces règles. Réponds uniquement au format suivant, une fois par version :
 <version>
 <angle>angle choisi en quelques mots</angle>
 <objet>…</objet>
@@ -765,10 +769,10 @@ Propose DEUX versions vraiment différentes (accroche, angle, objet), toutes deu
 // Relecture dans la peau du destinataire : il note chaque version selon la probabilité qu'il réponde.
 const JUDGE = `Tu te mets entièrement à la place du professionnel de l'immobilier décrit ci-dessous : tu es lui, avec son métier, sa clientèle, son agenda chargé, et tu reçois chaque jour des dizaines de sollicitations commerciales que tu ignores pour la plupart.
 
-Tu reçois deux versions d'un même e-mail. Si ton nom n'apparaît pas dans la salutation, c'est normal (l'expéditeur ne le connaît pas) : ne le pénalise pas. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
+Tu reçois plusieurs versions d'un même e-mail. Si ton nom n'apparaît pas dans la salutation, c'est normal (l'expéditeur ne le connaît pas) : ne le pénalise pas. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
 
 Réponds uniquement au format :
-<notes>1:N;2:N</notes>
+<notes>1:N;2:N;…</notes>
 <meilleure>numéro</meilleure>
 <pourquoi>en une phrase, à la première personne, ce qui te ferait répondre ou non à la meilleure</pourquoi>
 <amelioration>la modification la plus utile pour que tu répondes à coup sûr</amelioration>`;
@@ -860,6 +864,36 @@ const parked = (p) => {
   return Boolean(until && until > new Date().toISOString().slice(0, 10));
 };
 
+const parseVersions = (text) =>
+  [...text.matchAll(/<version>([\s\S]*?)<\/version>/g)].map((m) => ({
+    angle: tagIn(m[1], "angle"),
+    subject: tidy(tagIn(m[1], "objet")),
+    body: tidy(tagIn(m[1], "message")),
+    followup: tidy(tagIn(m[1], "relance")),
+  }));
+const problemsOf = (v) =>
+  v.subject && v.body && v.followup
+    ? check(v)
+    : ["format incomplet (objet, message ou relance manquant)"];
+
+// Relecture dans la peau du destinataire : note chaque version, garde celle à laquelle il répondrait.
+async function judge(ai, facts, versions) {
+  const shown = versions
+    .map((v, k) => `--- Version ${k + 1} ---\nObjet : ${v.subject}\n\n${v.body}`)
+    .join("\n\n");
+  const verdict = await ask(ai, JUDGE_MODEL, JUDGE, `Qui tu es :\n${facts}\n\nLes e-mails reçus :\n\n${shown}`);
+  const scores = Object.fromEntries(
+    [...tagIn(verdict, "notes").matchAll(/(\d+)\s*:\s*(\d+)/g)].map((m) => [Number(m[1]), Number(m[2])]),
+  );
+  const pick = Number(tagIn(verdict, "meilleure")) || 1;
+  return {
+    ...(versions[pick - 1] ?? versions[0]),
+    score: scores[pick] ?? 0,
+    why: tagIn(verdict, "pourquoi"),
+    tip: tagIn(verdict, "amelioration"),
+  };
+}
+
 async function draftOne(ai, p, floor = 5) {
   const facts = [
     `Agence : ${p.name}`,
@@ -877,21 +911,11 @@ async function draftOne(ai, p, floor = 5) {
   let feedback = "";
   let best = null;
   let lastProblem = "";
+  // 1. Trois versions par le modèle rapide, contrôlées (aucun chiffre, aucune réglementation,
+  //    longueur, ton) puis notées ; jusqu'à trois tours si elles ne conviennent pas.
   for (let round = 0; round < 3; round++) {
-    if (round === 2 && best) break; // troisième essai seulement si aucune version n'était conforme
-    // 1. Trois versions, contrôlées (aucun chiffre, aucune réglementation, longueur, ton).
-    const text = await ask(ai, MODEL, SYSTEM, facts + feedback);
-    const parsed = [...text.matchAll(/<version>([\s\S]*?)<\/version>/g)].map((m) => ({
-      angle: tagIn(m[1], "angle"),
-      subject: tidy(tagIn(m[1], "objet")),
-      body: tidy(tagIn(m[1], "message")),
-      followup: tidy(tagIn(m[1], "relance")),
-    }));
-    const problems = parsed.length
-      ? parsed.map((v) =>
-          v.subject && v.body && v.followup ? check(v) : ["format incomplet (objet, message ou relance manquant)"],
-        )
-      : [["format non respecté (balises <version> absentes)"]];
+    const parsed = parseVersions(await ask(ai, MODEL, SYSTEM, `${facts}\n\nNombre de versions demandé : trois.${feedback}`));
+    const problems = parsed.length ? parsed.map(problemsOf) : [["format non respecté (balises <version> absentes)"]];
     const versions = parsed.filter((v, k) => !problems[k].length);
     if (!versions.length) {
       lastProblem = [...new Set(problems.flat())].join(" ; ");
@@ -899,31 +923,23 @@ async function draftOne(ai, p, floor = 5) {
       feedback = `\n\nTes versions précédentes ont été refusées pour ces raisons : ${lastProblem}. Recommence en corrigeant exactement ces points, sans rien changer d'autre aux règles.`;
       continue;
     }
-    // 2. Relecture dans la peau du destinataire, qui garde la version à laquelle il répondrait.
-    const shown = versions
-      .map((v, k) => `--- Version ${k + 1} ---\nObjet : ${v.subject}\n\n${v.body}`)
-      .join("\n\n");
-    const verdict = await ask(
-      ai,
-      JUDGE_MODEL,
-      JUDGE,
-      `Qui tu es :\n${facts}\n\nLes e-mails reçus :\n\n${shown}`,
-    );
-    const scores = Object.fromEntries(
-      [...tagIn(verdict, "notes").matchAll(/(\d+)\s*:\s*(\d+)/g)].map((m) => [
-        Number(m[1]),
-        Number(m[2]),
-      ]),
-    );
-    const pick = Number(tagIn(verdict, "meilleure")) || 1;
-    const chosen = versions[pick - 1] ?? versions[0];
-    const score = scores[pick] ?? 0;
-    if (!best || score > best.score) best = { ...chosen, score, why: tagIn(verdict, "pourquoi") };
-    if (score >= MIN_SCORE) break;
-    // 3. Pas assez convaincant : on réécrit en tenant compte de la critique du destinataire.
-    feedback = `\n\nLe destinataire a lu ta meilleure proposition et l'a notée ${score}/10. Son avis : « ${tagIn(verdict, "pourquoi")} ». Ce qui le ferait répondre : « ${tagIn(verdict, "amelioration")} ». Propose deux nouvelles versions bien meilleures.`;
+    const chosen = await judge(ai, facts, versions);
+    if (!best || chosen.score > best.score) best = chosen;
+    if (best.score >= MIN_SCORE) break;
+    feedback = `\n\nLe destinataire a lu ta meilleure proposition et l'a notée ${chosen.score}/10. Son avis : « ${chosen.why} ». Ce qui le ferait répondre : « ${chosen.tip} ». Propose trois nouvelles versions bien meilleures.`;
   }
   if (!best) return { reason: `règles non respectées (${lastProblem})` };
+  // 2. Retouche unique par le modèle haut de gamme, à partir de l'avis du destinataire ; gardée
+  //    seulement si elle est conforme et que le destinataire la préfère.
+  if (best.score < 8) {
+    const brief = `${facts}\n\nNombre de versions demandé : une seule, la version finale.\n\nVoici la meilleure version écrite jusqu'ici :\nObjet : ${best.subject}\n\n${best.body}\n\nRelance : ${best.followup}\n\nLe destinataire l'a notée ${best.score}/10. Son avis : « ${best.why} ». Ce qui le ferait répondre : « ${best.tip} ». Réécris-la pour qu'il ait vraiment envie de répondre, en gardant ce qui marche et en respectant strictement toutes les règles.`;
+    const [polished] = parseVersions(await ask(ai, POLISH_MODEL, SYSTEM, brief).catch(() => ""));
+    if (polished && !problemsOf(polished).length) {
+      const pick = await judge(ai, facts, [best, polished]);
+      if (pick.body === polished.body || pick.score > best.score)
+        best = { ...pick, angle: pick.angle || best.angle };
+    }
+  }
   if (best.score < floor) return { reason: `note trop basse (${best.score}/10)` };
   return { draft: { ...best, angle: `${best.angle} (note ${best.score}/10)` } };
 }
