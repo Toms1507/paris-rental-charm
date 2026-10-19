@@ -4,54 +4,55 @@ Généré automatiquement par scripts/rapport-prospection.mjs (lecture seule de 
 
 ## Réglages
 - Mode : auto, en pause : non, nouveaux contacts par jour : 80
-- Dernier passage : 2026-10-19T08:57:26.35+00:00
+- Dernier passage : 2026-10-19T09:26:30.386+00:00
 
 ```
+Cas à vérifier traités : 0 relancés, 1 écartés
 Répartition : parts égales (phase de test)
 Réponses détectées : 0, adresses invalides : 0
 Santé de l'adresse d'envoi : trop peu d'envois pour juger
 Envoyés : 1 premiers messages, 0 relances (mode auto)
-Promoteurs et marchands de biens : 10 vérifiés, 1 avec site confirmé
-Sites analysés : 120, e-mail trouvé : 77
-Exemple (Immo-links), note 6/10 — Je trouve l'e-mail 2 un peu plus concerné par mes propres propriétaires, mais je serais tout de même méfiant envers une conciergerie de location courte durée qui me demande de lui recommander mes clients, car cela touche à leur patrimoine et à la réputation de l'agence que nous construisons sur l'humain et la confiance.
-Objet : Une petite question sur vos propriétaires
+Promoteurs et marchands de biens : 10 vérifiés, 0 avec site confirmé
+Sites analysés : 120, e-mail trouvé : 87
+Exemple (Agence Mdi 77 Montévrain), note 6/10 — Je trouve le message pertinent parce qu'à Montévrain, près de Disneyland, je reçois souvent des propriétaires qui veulent louer en courte durée sans s'en occuper, et le fait que mon client reste le mien me rassure, mais il reste assez général et je n'ai aucune raison concrète de penser que ce sont des gens sérieux plutôt qu'une plaquette.
+Objet : Une question sur un bien à Montévrain
 Bonjour,
 
-Votre agence accompagne des propriétaires à Charenton depuis longtemps, et j'imagine que certains d'entre eux se demandent parfois s'ils pourraient louer leur appartement autrement qu'à l'année.
+Dans le secteur de Marne-la-Vallée, beaucoup de propriétaires souhaitent louer sans avoir le temps de s'en occuper. Quand l'un d'eux vous demande une solution simple, que lui proposez-vous aujourd'hui ?
 
-C'est exactement ce que fait Spinelle Conciergerie : nous prenons en charge la location courte durée pour le propriétaire, de la création de l'annonce à l'accueil des voyageurs, en passant par le ménage, le linge et les petites réparations. Il n'a rien à faire et suit ses revenus chaque mois.
+Chez Spinelle Conciergerie, nous louons les biens en courte durée et nous prenons en charge toute la gestion : annonce soignée, échanges avec les voyageurs, ménage et petites réparations. Le propriétaire reçoit ses revenus chaque mois sans rien faire.
 
-Si l'un de vos clients y pense, vous pouvez nous le recommander. Il reste votre client, et vous touchez une commission sur chaque logement que nous signons. Il vous suffit de nous transférer un contact, nous nous occupons du reste.
+Votre client reste le vôtre, et nous vous versons une commission sur chaque logement recommandé que nous signons. Je peux vous détailler le fonctionnement à votre convenance.
 
-Ça vous dirait qu'on en parle quelques minutes ?
-Exemple (Particed (foncierimmo)), note 6/10 — Je réponds peut-être à celui-ci parce qu'il cite mes biens réels (maisons à rénover, appartements restaurés, terrains) et leur logique de revente, mais la location courte durée reste hors de mon cœur de métier et l'idée de recommander mes clients à un tiers contre commission me met mal à l'aise.
-Objet : Vos biens rénovés, avant la vente
-Bonjour Didier,
-
-Vous proposez des maisons anciennes à rénover, des appartements entièrement restaurés, des terrains un peu partout en Gironde. Entre la fin des travaux et la vente, certains biens restent vides un moment.
-
-Spinelle Conciergerie s'occupe de la location courte durée de A à Z : l'annonce avec de belles photos, les voyageurs au quotidien, le ménage de qualité hôtelière. Le propriétaire n'a rien à faire. Pour vos biens, ou pour un acheteur qui veut les faire rapporter, c'est une vraie option à proposer.
-
-Vous nous transférez le contact, nous l'appelons et gérons tout. Vous touchez une commission sur chaque logement signé, et le client reste le vôtre.
-
-Auriez-vous un bien en tête, ou un acheteur qui se pose la question ?
-Exemple (Ernest & Associés), note 6/10 — Je lis le message 2 avec un peu plus d'intérêt parce qu'il part d'une situation réelle de mon métier, la demande d'estimation, et qu'il cite Saint-Quentin et l'Hôpital Saint-Louis, deux secteurs où j'ai des biens, mais le message reste générique, sans exemple concret ni garantie sur la réglementation parisienne, et je ne réponds pas tout à fait à coup sûr.
-Objet : Un propriétaire qui hésite à louer en courte durée
+Vous avez un dossier de ce type en cours ?
+Exemple (Bien Serein Immobilier), note 6/10 — Je réponds à ce genre de situation, une famille qui hérite d'un appartement à Chartres sans savoir quoi en faire, parce que ça m'arrive réellement avec mes clients, et l'idée de le faire travailler sans concurrencer mon agence m'intéresse ; la question finale est facile à traiter d'un mot.
+Objet : Ce bien hérité qui reste vide
 Bonjour,
 
-Lorsqu'un propriétaire de votre secteur vous demande une estimation, il réfléchit souvent à ce que son bien pourrait rapporter autrement. La courte durée revient régulièrement dans ces discussions, notamment pour les appartements proches de Saint-Quentin ou de l'Hôpital Saint-Louis.
+Quand une famille hérite d'un appartement à Chartres et ne sait pas quoi en faire, vous arrive-t-il de leur proposer une piste pour le faire travailler ?
 
-Spinelle Conciergerie se charge de tout pour lui : annonce soignée, calendrier ajusté, accueil et échanges avec les voyageurs, ménage et linge. Il n'a qu'à suivre ses revenus chaque mois.
+Chez Spinelle Conciergerie, nous louons les biens en courte durée pour le compte du propriétaire. Nous rédigeons l'annonce, accueillons les voyageurs, assurons le ménage et l'entretien, et il suit ses revenus chaque mois.
 
-Si cela vous intéresse, vous pouvez nous recommander ce propriétaire : il reste votre client, vous touchez une commission sur chaque logement que nous signons, et une simple transmission de contact suffit de votre côté.
+Pour vous, c'est une solution à proposer à votre client, qui reste le vôtre : nous ne faisons que de la courte durée, jamais de concurrence avec votre agence. Une commission vous revient sur chaque logement recommandé que nous signons.
 
-Ça vous dirait qu'on en parle quelques minutes ?
-Messages rédigés : 30
-Coût de la rédaction : 0.35 $, soit 1.2 centime(s) par message (claude-haiku-5-5 : 116 appels, 0.08 $ ; claude-sonnet-5-5 : 30 appels, 0.
+Ça vous arrive souvent, ce genre de situation ?
+Exemple (La Cote Immobilière), note 6/10 — Je réponds à la version 1 parce que la situation d'un héritier qui ne sait pas quoi faire d'un appartement parisien vide est une question que je rencontre vraiment, et l'e-mail me laisse une vraie curiosité sur ce qu'on pourrait lui conseiller, sans m'obliger à décider tout de suite.
+Objet : Ce bien hérité qui reste vide
+Bonjour,
+
+Quand une famille hérite d'un appartement à Paris et ne sait pas quoi en faire, que lui conseillez-vous en attendant de décider ?
+
+Nous sommes Spinelle Conciergerie. Nous louons des logements parisiens en courte durée et nous gérons tout pour le propriétaire, des photos de l'annonce aux échanges avec les voyageurs.
+
+Pour vous, c'est une vraie solution pour vos clients. Ils restent les vôtres, nous ne faisons jamais concurrence à votre agence, et vous touchez une commission sur chaque logement recommandé que nous signons.
+
+Ce genre de situation vous arrive-t-il souvent ?
+Messages rédigés : 35
+Coût de la rédaction : 0.40 $, soit 1.1 centime(s) par message (claude-haiku-5-5 : 147 appels, 0.11 $ ; claude-sonnet-5-5 : 35 appels, 0.29 $)
 ```
 
 ## 7 derniers jours
-- Premiers messages envoyés : 38
+- Premiers messages envoyés : 39
 - Relances envoyées : 1
 - Réponses : 1
 - Partenaires : 0, refus : 0, désinscriptions : 0
@@ -60,39 +61,45 @@ Coût de la rédaction : 0.35 $, soit 1.2 centime(s) par message (claude-haiku-5
 - Note moyenne des messages envoyés : 5.4/10
 
 ## Depuis le début
-- Premiers messages envoyés : 38
+- Premiers messages envoyés : 39
 - Relances envoyées : 1
 - Réponses : 1
 - Partenaires : 0, refus : 0, désinscriptions : 0
 - Adresses non remises : 0 (0 %)
 - Désinscriptions : 0 %
 - Note moyenne des messages envoyés : 5.4/10
-- Fiches au total : 4063, sans e-mail : 437
+- Fiches au total : 4083, sans e-mail : 497
 
-## À vérifier (1)
-- Adresse e-mail invalide (domaine sans messagerie), non envoyé : 1
+## À vérifier (0)
+Aucun.
+
+## Sans e-mail (497)
+- Avec site connu : 352, sans site : 145, avec téléphone : 295, avec SIREN : 138
+- Réseaux : indépendant 412, Barnes 22, Century 21 21, Laforêt 10, Human Immobilier 7, Stéphane Plaza Immobilier 5, ERA 4, RE/MAX 3, Guy Hoquet 3, Nestenn 2, Sotheby's 1, ESSA Immobilier 1
+- Exemples de sites sans e-mail trouvé : https://www.cb-immobilier-64.fr/ https://www.cabinetcourtois.com/ https://www.barnes-international.com/fr/agences/barnes-saint-germain-des-pres.html https://www.agenceavril.com/ http://cannes.citya.com/ https://www.barnes-international.com/ https://www.easy-immobilier.com/ https://squarehabitat.fr/ https://www.barnes-international.com/ https://www.barnes-international.com/ https://www.cove-immobilier.fr https://www.agenceprincipale.com/ https://www.diderot-immobilier.fr/ https://danielfeau.com/fr/detail-agence-immobiliere/22089 http://www.csa-ori.com/
+- Fiches « nouveau » pas encore analysées : 2526, dont sans site : 2190
 
 ## Par zone
 | | Envoyés | Réponses | Taux | Restants (nouveau) | Prêts | Erreurs |
 |---|---|---|---|---|---|---|
-| paris | 22 | 0 | 0 % | 1088 | 27 | 0 |
-| petite-couronne | 3 | 0 | 0 % | 1007 | 33 | 1 |
-| cote-azur | 0 | 0 | – | 524 | 18 | 0 |
-| bordeaux | 5 | 1 | 20 % | 220 | 16 | 0 |
-| cote-basque-arcachon | 4 | 0 | 0 % | 183 | 27 | 0 |
-| versailles | 3 | 0 | 0 % | 64 | 27 | 0 |
-| disney | 1 | 0 | 0 % | 52 | 5 | 0 |
-| roissy | 0 | 0 | – | 22 | 5 | 0 |
+| paris | 22 | 0 | 0 % | 1104 | 3 | 0 |
+| petite-couronne | 3 | 0 | 0 % | 1017 | 4 | 0 |
+| cote-azur | 0 | 0 | – | 530 | 3 | 0 |
+| bordeaux | 6 | 1 | 16.7 % | 222 | 4 | 0 |
+| cote-basque-arcachon | 4 | 0 | 0 % | 199 | 6 | 0 |
+| versailles | 3 | 0 | 0 % | 86 | 3 | 0 |
+| disney | 1 | 0 | 0 % | 48 | 5 | 0 |
+| roissy | 0 | 0 | – | 20 | 5 | 0 |
 | ski | 0 | 0 | – | 0 | 0 | 0 |
 | chartres | 0 | 0 | – | 10 | 2 | 0 |
 
 ## Par catégorie
 | | Envoyés | Réponses | Taux | Restants (nouveau) | Prêts | Erreurs |
 |---|---|---|---|---|---|---|
-| agence immobilière | 38 | 1 | 2.6 % | 3147 | 156 | 1 |
+| agence immobilière | 39 | 1 | 2.6 % | 3212 | 33 | 0 |
 | marchand de biens | 0 | 0 | – | 0 | 1 | 0 |
 | promoteur immobilier | 0 | 0 | – | 0 | 0 | 0 |
-| syndic ou administrateur de biens | 0 | 0 | – | 21 | 3 | 0 |
+| syndic ou administrateur de biens | 0 | 0 | – | 22 | 1 | 0 |
 | conseiller en investissement ou gestion de patrimoine | 0 | 0 | – | 2 | 0 | 0 |
 
 ## Messages qui ont obtenu une réponse (1)
@@ -115,19 +122,57 @@ Pour vous, c'est une vraie solution à proposer, et une commission sur chaque lo
 Réponse du 19/10/2026 (bci33200@gmail.com) : Bonjour, L'agence BCI a fermé ses portes depuis Juillet 2025. Vous pouvez désormais contacter directement Géraldine ROGER-ALLIER, ancienne gérante désormais chez SAFTI, au 0617044693. Bien cordialement,
 
 ## Échantillon de messages prêts à partir
-### Breteuil (cote-basque-arcachon, agence immobilière) — brouillon, tél. +33 5 59 54 15 46
-Envoyé le undefined — Location saisonnière déjà proposée par l'agence, clients tentés par Airbnb (note 6/10)
-**Objet :** Une petite question sur la saison
+### BSGI (disney, agence immobilière) — brouillon, Corinne Cattiaux, tél. +33 1 64 62 11 11
+Envoyé le undefined — le copropriétaire bailleur et le voisin qui se plaint (note 6/10)
+**Objet :** Un voisin qui se plaint du bruit
+
+Bonjour Corinne,
+
+Un copropriétaire bailleur vous annonce qu'il va louer aux voyageurs, et trois semaines plus tard, un voisin vous appelle pour une porte qui claque à minuit. C'est vous qui recevez l'appel, alors que ce n'est pas votre locataire.
+
+Spinelle Conciergerie loue le bien en courte durée et gère tout pour le propriétaire : accueil des voyageurs, consignes de calme, ménage. Quelqu'un répond à vos copropriétaires, pas vous.
+
+Nous ne faisons que de la courte durée : le copropriétaire reste votre client. Et vous touchez une commission sur chaque logement recommandé que nous signons.
+
+Ce cas vous est déjà arrivé ?
+
+**Notes (réponses, erreurs) :**
+
+
+
+---
+
+### Movement (bordeaux, agence immobilière) — brouillon, tél. +33 6 11 13 92 64
+Envoyé le undefined — L'acheteur investisseur qui hésite à signer faute de savoir qui gérera son bien, adapté à une agence qui met en avant la réactivité (note 7/10)
+**Objet :** Vos acquéreurs investisseurs qui hésitent
 
 Bonjour,
 
-J'ai vu que Breteuil accompagne ses clients de l'achat à la location saisonnière, du premier rendez-vous à la remise des clés. Sur la côte basque, la demande de l'été doit susciter des questions.
+Quand un acquéreur investisseur hésite à signer parce qu'il n'aura pas le temps de gérer son bien, qu'est-ce qui le rassure le plus à Bordeaux ?
 
-C'est là que nous pouvons aider. Spinelle Conciergerie gère la location courte durée pour le propriétaire : calendrier ajusté selon la demande, échanges quotidiens avec les voyageurs, ménage et linge. Il suit ses revenus chaque mois.
+Chez Spinelle Conciergerie, nous ne faisons que de la location courte durée. Nous prenons en charge l'annonce, les voyageurs, le ménage et le linge, et le propriétaire suit simplement ses revenus chaque mois.
 
-Vous touchez une commission sur chaque logement que vous nous recommandez et que nous signons. Un simple transfert de contact suffit. Je réponds moi-même, personnellement, et vous restez l'interlocuteur de votre client.
+Pour vous, c'est un argument de plus à proposer à vos acquéreurs, sans jamais concurrencer votre activité. Vous touchez une commission sur chaque logement recommandé que nous signons, et votre client reste le vôtre.
 
-Un propriétaire vous a-t-il déjà posé la question ?
+Ce type de projet, vous le rencontrez souvent ?
+
+**Notes (réponses, erreurs) :**
+
+
+
+---
+
+### Agence de la Gare (roissy, agence immobilière) — brouillon, Jean-Francois Haguet, tél. +33 1 34 72 92 92
+Envoyé le undefined — Le bien d'investissement qui attend son locataire, près de l'aéroport (note 6/10)
+**Objet :** Une question sur vos biens disponibles
+
+Bonjour Jean-Francois,
+
+Un investisseur achète près de l'aéroport, mais hésite : qui s'occupera du bien à distance ? Comment rassurez-vous ce type d'acheteur ?
+
+Chez Spinelle Conciergerie, nous proposons la location courte durée aux voyageurs d'affaires et de passage, et nous gérons tout pour le propriétaire, du calendrier à l'accueil des voyageurs.
+
+Pour vous, c'est un argument supplémentaire à proposer à vos acheteurs, sans que cela vous retire le dossier, car nous ne faisons que de la courte durée. Une commission vous revient sur chaque logement recommandé que nous signons. Je peux vous présenter le fonctionnement en quelques minutes. Vous recevez souvent des acheteurs dans ce cas ?
 
 **Notes (réponses, erreurs) :**
 
@@ -135,39 +180,17 @@ Catégorie : agence immobilière
 
 ---
 
-### Espace Lmnp (versailles, agence immobilière) — brouillon, tél. +33 1 84 79 24 50
-Envoyé le undefined — Lien direct avec le cœur de métier LMNP : l'acquéreur qui veut rentabiliser son meublé (note 6/10)
-**Objet :** Vos acquéreurs LMNP à Versailles
+### Deguelt Immobilier (versailles, agence immobilière) — brouillon, Patricia Berthelot (parisse), tél. +33 1 30 83 91 19
+Envoyé le undefined — L'acheteur investisseur qui hésite à signer faute de pouvoir gérer (note 6/10)
+**Objet :** L'investisseur qui n'ose pas signer
 
-Bonjour,
+Bonjour Patricia,
 
-Vous accompagnez des investisseurs qui achètent un meublé, et à Versailles, beaucoup se demandent si la courte durée ne rapporterait pas davantage, avec tous les visiteurs du château.
+Un acheteur qui aime un appartement à Versailles, mais qui renonce parce qu'il n'aura pas le temps de s'en occuper : vous en avez eu cette année ?
 
-Spinelle Conciergerie prend cela en main pour eux : une annonce soignée, un calendrier ajusté à la demande, l'accueil des voyageurs, le ménage. Le propriétaire n'a rien à faire. Nous ne faisons que de la courte durée, donc aucune concurrence avec la revente, et l'acquéreur reste le vôtre.
+Nous louons le bien en courte durée aux voyageurs venus visiter le château, et nous gérons tout à sa place. Il n'a plus qu'à suivre ses revenus. Il reste votre client, vous restez son interlocutrice, et vous touchez une commission sur chaque logement recommandé que nous signons.
 
-Pour vous, c'est une réponse concrète quand un client veut rentabiliser son bien après l'achat, avec une commission sur chaque logement signé grâce à vous. Un contact transféré suffit, nous appelons et gérons le reste.
-
-Auriez-vous un acquéreur en tête à qui nous pourrions parler cette semaine ?
-
-**Notes (réponses, erreurs) :**
-
-
-
----
-
-### Immob'ilier Saint-Germain (petite-couronne, agence immobilière) — brouillon, tél. +33981750431
-Envoyé le undefined — Nom de l'agence, proche banlieue, acquéreurs investisseurs, appel facile à fixer (note 6/10)
-**Objet :** Une idée pour vos acquéreurs, Saint-Germain
-
-Bonjour,
-
-Immob'ilier Saint-Germain accompagne des acheteurs aux portes de Paris, là où beaucoup de voyageurs cherchent à loger. Certains de vos acquéreurs se demandent sans doute si leur bien pourrait aussi rapporter en courte durée.
-
-Chez Spinelle Conciergerie, nous gérons tout pour le propriétaire : annonce soignée, calendrier ajusté à la demande, accueil des voyageurs, ménage et linge de qualité hôtelière. Il n'a rien à faire et suit ses revenus chaque mois.
-
-Nous ne vendons pas de biens, donc aucune concurrence : votre client reste le vôtre. Vous touchez une commission sur chaque logement recommandé que nous signons. Il vous suffit de nous transférer un contact, nous l'appelons et nous nous occupons du reste.
-
-Je vous réponds personnellement : quel jour de la semaine vous arrange pour un court appel ?
+Je vous explique volontiers comment cela se passe pour lui. Qu'est-ce qui le fait le plus hésiter, en général : le temps ou la distance ?
 
 **Notes (réponses, erreurs) :**
 
@@ -176,143 +199,19 @@ Réessai de rédaction
 
 ---
 
-### Cafpi (petite-couronne, agence immobilière) — brouillon, tél. +33 1 75 64 64 64
-Envoyé le undefined — Situation précise d'un client de l'agence de Vincennes, financé puis tenté par la location courte durée (note 6/10)
-**Objet :** Vos clients qui pensent à Airbnb
+### Agence Mdi 77 Montévrain (disney, agence immobilière) — brouillon, tél. +33 1 64 30 60 60
+Envoyé le undefined — Le propriétaire qui ne veut rien gérer (note 6/10)
+**Objet :** Une question sur un bien à Montévrain
 
 Bonjour,
 
-Un client qui vient de financer un appartement à Vincennes vous demande-t-il parfois s'il vaut mieux le louer à l'année ou en courte durée ? Avec le bois et Paris à deux pas, la question revient souvent.
+Dans le secteur de Marne-la-Vallée, beaucoup de propriétaires souhaitent louer sans avoir le temps de s'en occuper. Quand l'un d'eux vous demande une solution simple, que lui proposez-vous aujourd'hui ?
 
-Chez Spinelle Conciergerie, nous gérons tout pour le propriétaire : l'annonce et ses belles photos, l'accueil des voyageurs, le ménage de qualité hôtelière, le linge, l'entretien. Il n'a rien à faire.
+Chez Spinelle Conciergerie, nous louons les biens en courte durée et nous prenons en charge toute la gestion : annonce soignée, échanges avec les voyageurs, ménage et petites réparations. Le propriétaire reçoit ses revenus chaque mois sans rien faire.
 
-Pour vous, c'est une vraie réponse à donner à ces clients, et une commission sur chaque logement recommandé que nous signons. Il vous suffit de nous transférer son contact. Vous restez son courtier, nous ne faisons que de la courte durée.
+Votre client reste le vôtre, et nous vous versons une commission sur chaque logement recommandé que nous signons. Je peux vous détailler le fonctionnement à votre convenance.
 
-Ça vous dirait qu'on en parle quelques minutes ?
-
-**Notes (réponses, erreurs) :**
-
-Rédaction refusée (note trop basse (4/10))
-
----
-
-### Amatxi 64 (cote-basque-arcachon, agence immobilière) — brouillon, tél. +33 5 59 49 19 09
-Envoyé le undefined — La saison qui approche et les propriétaires de résidences secondaires (note 6/10)
-**Objet :** Vos propriétaires de résidences secondaires
-
-Bonjour,
-
-Votre agence couvre la côte basque et aussi le bassin d'Arcachon, deux secteurs où la demande est forte l'été. Certains de vos propriétaires de résidences secondaires se posent peut-être déjà la question de louer leur bien pendant leurs absences.
-
-Spinelle Conciergerie s'occupe de tout pour eux : création et mise en valeur de l'annonce, calendrier ajusté à la demande, accueil des voyageurs et ménage soigné. Le propriétaire n'a rien à faire et suit ses revenus chaque mois.
-
-Pour vous, c'est une façon de garder ces propriétaires plutôt que de les voir partir ailleurs, avec une commission en plus sur chaque logement que vous nous recommandez et que nous signons.
-
-Il vous suffit de nous transférer un contact, nous nous occupons du reste. Ça vous dirait qu'on en parle quelques minutes ?
-
-**Notes (réponses, erreurs) :**
-
-Catégorie : agence immobilière
-Message non conforme après deux essais : à rédiger à la main
-Réessai de rédaction
-Rédaction refusée (note trop basse (4/10))
-
----
-
-### ERA (petite-couronne, agence immobilière) — brouillon, tél. +33 1 41 31 06 06
-Envoyé le undefined — Garder ses propriétaires et être payé en plus (note 6/10)
-**Objet :** Une petite question
-
-Bonjour,
-
-Quand un propriétaire de votre secteur vous dit qu'il aimerait tenter Airbnb, que lui répondez-vous ? Proche de Paris, les voyageurs cherchent justement à loger près de la capitale, et c'est une question qui revient.
-
-Nous faisons uniquement de la location courte durée, donc jamais de concurrence : nous gérons tout (annonce, voyageurs, ménage, linge, petites réparations) et votre client reste le vôtre. Vous touchez une commission sur chaque logement recommandé que nous signons.
-
-Je vous propose un échange de dix minutes pour vous détailler le fonctionnement et le montant de la commission. Quel moment vous arrangerait cette semaine ?
-
-**Notes (réponses, erreurs) :**
-
-Réseau : ERA
-
----
-
-### Century 21 (petite-couronne, agence immobilière) — brouillon, tél. +33 1 46 68 89 96
-Envoyé le undefined — Appartements vides ou en attente de vente, valorisés en courte durée (note 6/10)
-**Objet :** Une petite question sur vos biens
-
-Bonjour,
-
-Une question me vient en pensant à votre agence : certains de vos clients ont-ils un bien qui reste vide, ou qui attend un acquéreur ?
-
-La proche banlieue de Paris plaît beaucoup aux voyageurs qui veulent loger près de la capitale. Spinelle Conciergerie peut le louer pour eux en courte durée : annonce soignée, calendrier ajusté à la demande, accueil des voyageurs, ménage et entretien. Le propriétaire suit simplement ses revenus.
-
-Vous touchez une commission sur chaque logement que vous nous recommandez et que nous signons. Vous n'avez qu'à nous transférer un contact, nous appelons et gérons tout. Votre client reste le vôtre.
-
-Y a-t-il un propriétaire à qui vous penseriez tout de suite ?
-
-**Notes (réponses, erreurs) :**
-
-Réseau : Century 21
-Message non conforme après deux essais : à rédiger à la main
-Réessai de rédaction
-Rédaction refusée (note trop basse (4/10))
-
----
-
-### Gab-gestion (petite-couronne, agence immobilière) — brouillon, tél. +33 1 40 90 58 20
-Envoyé le undefined — Propriétaires tentés par Airbnb, qu'on garde (note 5/10)
-**Objet :** Vos propriétaires tentés par Airbnb
-
-Bonjour,
-
-Gérer des biens à Puteaux, si près de Paris, doit donner à certains de vos propriétaires l'envie de les louer aux voyageurs.
-
-Chez Spinelle Conciergerie, nous nous occupons de tout pour eux : l'annonce avec de belles photos, les échanges quotidiens avec les voyageurs, le ménage soigné et le linge. Le propriétaire n'a rien à faire.
-
-Pour vous, c'est un moyen de garder ces clients au lieu de les voir partir, et de toucher une commission sur chaque logement recommandé que nous signons. Il vous suffit de nous transférer un contact, nous faisons le reste.
-
-Ça vous dirait qu'on en parle quelques minutes ?
-
-**Notes (réponses, erreurs) :**
-
-
-
----
-
-### CHLB (paris, agence immobilière) — brouillon, Stephanie Le Brun (legendre), tél. +33 1 42 88 01 58
-Envoyé le undefined — Vente : les acheteurs qui veulent faire rapporter leur bien (note 5/10)
-**Objet :** Une petite question, Stephanie
-
-Bonjour Stephanie,
-
-Vendre des appartements dans le seizième, en agence de proximité comme CHLB, c'est souvent entendre un acheteur demander : « Et si je le louais sur Airbnb ? »
-
-C'est là que Spinelle Conciergerie intervient. Nous créons l'annonce, accueillons les voyageurs, organisons le ménage et l'entretien. Le propriétaire n'a rien à faire.
-
-Pour vous, c'est une vraie réponse à donner à ces acheteurs, et une commission sur chaque logement recommandé que nous signons. Vous nous transférez le contact, nous appelons la personne et nous nous occupons de tout.
-
-Avez-vous des acheteurs qui se posent cette question en ce moment ?
-
-**Notes (réponses, erreurs) :**
-
-
-
----
-
-### Atmosphere (paris, agence immobilière) — brouillon, tél. +33 1 45 25 22 25
-Envoyé le undefined — Aucune information sur l'agence : on part de Paris, de la clientèle internationale et de la question des propriétaires, avec une demande simple (note 5/10)
-**Objet :** Vos clients qui pensent à Airbnb
-
-Bonjour,
-
-À Paris, les voyageurs arrivent du monde entier toute l'année, et certains de vos propriétaires se demandent forcément si leur bien ne pourrait pas en profiter.
-
-Chez Spinelle Conciergerie, nous gérons la location courte durée de A à Z : l'annonce avec de belles photos, les échanges avec les voyageurs chaque jour, le ménage de qualité hôtelière. Le propriétaire n'a rien à faire.
-
-Pour vous, c'est une vraie réponse à donner à ces clients, qui restent les vôtres : nous ne sommes pas une agence, nous ne faisons jamais concurrence. Vous touchez une commission sur chaque logement recommandé que nous signons. Il vous suffit de nous transférer un contact, nous nous occupons du reste.
-
-Un de vos propriétaires vous en a-t-il déjà parlé ?
+Vous avez un dossier de ce type en cours ?
 
 **Notes (réponses, erreurs) :**
 
@@ -321,7 +220,124 @@ Réessai après une erreur technique
 Message non conforme après deux essais : à rédiger à la main
 Réessai de rédaction
 
+---
+
+### Immo stil (cote-azur, agence immobilière) — brouillon, tél. +33 4 93 22 00 00
+Envoyé le undefined — Bien hérité à Cagnes ou Vence, sans toucher à ses mandats (note 6/10)
+**Objet :** Ce bien hérité qui reste vide
+
+Bonjour,
+
+Une famille hérite d'un appartement à Cagnes-sur-Mer ou vers Vence et ne sait pas quoi en faire : vendre tout de suite ou louer ? Que lui conseillez-vous ?
+
+Spinelle Conciergerie propose une troisième voie : nous louons le bien aux voyageurs et nous nous occupons de tout, de l'annonce au ménage. Votre mandat de vente ou de gestion reste le vôtre, nous ne faisons que de la courte durée.
+
+La famille garde son bien, vous gardez votre client, et vous touchez une commission sur chaque logement recommandé que nous signons. Je vous explique volontiers comment ça se passe.
+
+Un dossier comme ça en ce moment chez vous ?
+
+**Notes (réponses, erreurs) :**
+
+Catégorie : agence immobilière
+
+---
+
+### CAPA Promotion (bordeaux, agence immobilière) — brouillon, tél. +33 5 56 75 94 03
+Envoyé le undefined — Le promoteur qui a un bien à faire travailler en attendant la livraison ou la vente (note 6/10)
+**Objet :** Vos logements livrés qui attendent preneur
+
+Bonjour,
+
+Quand un programme est livré et que les derniers logements ne trouvent pas preneur tout de suite, que proposez-vous à vos acheteurs investisseurs ?
+
+Nous sommes Spinelle Conciergerie. Nous louons les biens en courte durée et nous nous occupons de tout : annonce, accueil des voyageurs, ménage, linge, petites réparations. L'acheteur n'a rien à gérer.
+
+Vous y gagnez une solution concrète pour vos clients, qui restent les vôtres, puisque nous ne faisons que de la courte durée. Et une commission sur chaque logement recommandé que nous signons. Je peux vous expliquer comment ça se passe concrètement.
+
+Vous avez un dossier comme ça en ce moment ?
+
+**Notes (réponses, erreurs) :**
+
+Rédaction refusée (note trop basse (4/10))
+Réessai de rédaction
+
+---
+
+### Cabinet Louis Berecochea (cote-basque-arcachon, agence immobilière) — brouillon, tél. +33 5 33 11 33 48
+Envoyé le undefined — héritage d'un bien vide, rassurer un administrateur de biens sur son mandat (note 7/10)
+**Objet :** Ce bien hérité qui reste vide
+
+Bonjour,
+
+Après une succession, il arrive qu'un appartement reste vide, faute de temps ou de décision dans la famille. Que proposez-vous à ces héritiers en attendant : une location classique, ou la vente ?
+
+Chez Spinelle Conciergerie, nous faisons travailler ce type de bien en courte durée, et nous nous occupons de tout pour le propriétaire. Nous ne faisons que ça : le bien de votre client revient simplement à vous si l'héritier préfère la location longue durée ou un mandat de gestion, et vous restez son interlocuteur pour tout le reste.
+
+Nous reversons une commission sur chaque logement recommandé que nous signons. Vous avez un dossier de ce genre en ce moment ?
+
+**Notes (réponses, erreurs) :**
+
+Catégorie : agence immobilière
+
+---
+
+### eDiag (cote-azur, agence immobilière) — brouillon, tél. +33 9 78 49 51 88
+Envoyé le undefined — Le diagnostiqueur comme premier maillon : tout bien mis en location courte durée a besoin de ses diagnostics, et eDiag les réalise déjà. Question directe sur les biens vacants ou en cours de mise en location. (note 6/10)
+**Objet :** Vos diagnostics et la courte durée
+
+Bonjour,
+
+Chez eDiag, vous réalisez les diagnostics que nous demandons pour chaque bien mis en location courte durée : DPE, ERP, électricité, gaz. Vous connaissez donc très bien la première étape de ce type de projet.
+
+Chez Spinelle Conciergerie, nous louons ces biens en courte durée et nous nous occupons de tout pour le propriétaire : annonce, accueil des voyageurs, ménage, entretien. Nous ne faisons que de la courte durée, nous ne sommes pas une agence, et nous ne faisons jamais concurrence à vos clients sur le reste de leur bien.
+
+Avez-vous en ce moment des biens vides ou en attente de mise en location dont les propriétaires hésitent sur la suite ?
+
+**Notes (réponses, erreurs) :**
+
+Catégorie : agence immobilière
+
+---
+
+### Immotop (petite-couronne, agence immobilière) — brouillon
+Envoyé le undefined — fin de bail, le propriétaire qui parle d'Airbnb (note 6/10)
+**Objet :** Une question sur vos fins de bail
+
+Bonjour,
+
+Chez Immotop, quand le locataire d'un bien à Pantin ou à Saint-Denis s'en va, il arrive que le propriétaire vous parle d'Airbnb. Que lui répondez-vous à ce moment-là ?
+
+Spinelle Conciergerie loue le logement en courte durée et s'occupe de tout à sa place : il récupère son bien, sans les messages de voyageurs ni les ménages à organiser, et voit ses revenus arriver chaque mois.
+
+Votre client reste le vôtre : nous ne faisons que de la courte durée, jamais de concurrence. Vous touchez une commission sur chaque logement que vous nous recommandez et que nous signons.
+
+Ça vous arrive souvent ?
+
+**Notes (réponses, erreurs) :**
+
+
+
 ## Échantillon de messages envoyés sans réponse
+### ABx (bordeaux, agence immobilière) — contacte, tél. +33 5 56 38 45 33
+Envoyé le 2026-10-19 — Biens variés et quartiers prisés, acheteurs qui veulent faire rapporter leur bien (note 6/10)
+**Objet :** Vos acheteurs et Airbnb
+
+Bonjour,
+
+Un duplex aux Quinconces, une maison avec cour à Saint-Michel, un appartement au Parc Bordelais : vos biens ont vraiment du charme.
+
+Spinelle Conciergerie gère la location courte durée (Airbnb, Booking) à la place du propriétaire : annonce avec de belles photos, échanges avec les voyageurs, ménage soigné. Il n'a rien à faire.
+
+Certains de vos acheteurs veulent sûrement faire rapporter leur bien. Vous leur proposez une vraie solution, et vous touchez une commission sur chaque logement recommandé que nous signons. Il vous suffit de nous transférer le contact, nous faisons le reste.
+
+Ça vous dirait qu'on en parle quelques minutes ?
+
+**Notes (réponses, erreurs) :**
+
+
+
+---
+
 ### Cabinet immobilier Cabay (cote-basque-arcachon, agence immobilière) — contacte, Didier Cabay, tél. +33 5 59 26 82 82
 Envoyé le 2026-10-19 — Saison et résidences secondaires, côte basque (note 6/10)
 **Objet :** Une idée pour vos clients propriétaires
@@ -504,23 +520,3 @@ Seriez-vous d'accord pour qu'on en discute quelques minutes ?
 Réseau : Guy Hoquet
 Message non conforme après deux essais : à rédiger à la main
 Réessai après une erreur technique
-
----
-
-### Agence Cascino Daugareil - Syndic de copropriété (cote-basque-arcachon, agence immobilière) — contacte, tél. +33 5 59 59 26 69
-Envoyé le 2026-10-19 — Une question directe sur ce que le syndic répond à ses copropriétaires (note 5/10)
-**Objet :** Copropriétaires et saison d'été
-
-Bonjour,
-
-Quand un copropriétaire vous demande qui peut s'occuper de son appartement pendant la saison, que lui répondez-vous ?
-
-Je suis Tom, de Spinelle Conciergerie. Notre équipe locale, présente sur la côte basque, s'occupe de tout pour le propriétaire : annonce soignée, accueil des voyageurs, ménage de qualité hôtelière, entretien. Lui n'a rien à faire et suit ses revenus chaque mois.
-
-Vous gardez la relation avec votre client, et vous avez une vraie réponse à lui donner. Vous touchez en plus une commission sur chaque logement que nous signons. Il suffit de nous transférer son contact, nous faisons le reste.
-
-Est-ce que cela vous dirait d'en discuter ?
-
-**Notes (réponses, erreurs) :**
-
-Catégorie : agence immobilière
