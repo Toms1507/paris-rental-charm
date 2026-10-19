@@ -90,6 +90,13 @@ const silent = rows
   .sort((a, b) => b.first_contact_at.localeCompare(a.first_contact_at))
   .slice(0, 10);
 
+// Cas « À vérifier » : regroupés par la dernière ligne des notes (la cause).
+const errors = new Map();
+for (const p of rows.filter((r) => r.status === "erreur")) {
+  const cause = (p.notes || "").trim().split("\n").pop().replace(/: .*/, "").slice(0, 80);
+  errors.set(cause, (errors.get(cause) || 0) + 1);
+}
+
 const report = [
   `# Rapport de prospection — ${new Date().toISOString().slice(0, 10)}`,
   "",
@@ -109,6 +116,9 @@ const report = [
   "## Depuis le début",
   stats(rows, false),
   `- Fiches au total : ${rows.length}, sans e-mail : ${count(rows, (p) => p.status === "sans_email")}`,
+  "",
+  `## À vérifier (${count(rows, (p) => p.status === "erreur")})`,
+  [...errors].sort((a, b) => b[1] - a[1]).map(([c, n]) => `- ${c} : ${n}`).join("\n") || "Aucun.",
   "",
   "## Par zone",
   table((p) => p.zone),
