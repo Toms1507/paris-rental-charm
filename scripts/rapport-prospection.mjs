@@ -22,7 +22,7 @@ const rows = await selectAll(() =>
   db
     .from("prospects")
     .select(
-      "name, zone, notes, status, subject, body, followup_body, angle, first_contact_at, last_contact_at, replied_at, phone, contact_name",
+      "name, zone, notes, status, subject, body, followup_body, angle, first_contact_at, last_contact_at, replied_at, phone, contact_name, website, email, crawled_at, siren",
     )
     .order("id"),
 );
@@ -101,6 +101,20 @@ const ready = rows
   .filter((p) => ["brouillon", "valide"].includes(p.status) && p.body)
   .slice(-10);
 
+// Contacts sans e-mail : avec ou sans site connu, et réseaux les plus fréquents.
+const noEmail = rows.filter((p) => p.status === "sans_email");
+const brands = new Map();
+for (const p of noEmail) {
+  const b = (p.notes || "").match(/Réseau : ([^\n]+)/)?.[1] ?? "indépendant";
+  brands.set(b, (brands.get(b) || 0) + 1);
+}
+const noEmailText = [
+  `- Avec site connu : ${count(noEmail, (p) => p.website)}, sans site : ${count(noEmail, (p) => !p.website)}, avec téléphone : ${count(noEmail, (p) => p.phone)}, avec SIREN : ${count(noEmail, (p) => p.siren)}`,
+  `- Réseaux : ${[...brands].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([b, n]) => `${b} ${n}`).join(", ")}`,
+  `- Exemples de sites sans e-mail trouvé : ${noEmail.filter((p) => p.website).slice(0, 15).map((p) => p.website).join(" ")}`,
+  `- Fiches « nouveau » pas encore analysées : ${count(rows, (p) => p.status === "nouveau" && !p.crawled_at)}, dont sans site : ${count(rows, (p) => p.status === "nouveau" && !p.crawled_at && !p.website && !p.email)}`,
+].join("\n");
+
 const report = [
   `# Rapport de prospection — ${new Date().toISOString().slice(0, 10)}`,
   "",
@@ -123,6 +137,9 @@ const report = [
   "",
   `## À vérifier (${count(rows, (p) => p.status === "erreur")})`,
   [...errors].sort((a, b) => b[1] - a[1]).map(([c, n]) => `- ${c} : ${n}`).join("\n") || "Aucun.",
+  "",
+  `## Sans e-mail (${noEmail.length})`,
+  noEmailText,
   "",
   "## Par zone",
   table((p) => p.zone),
