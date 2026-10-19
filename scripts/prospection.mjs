@@ -492,6 +492,23 @@ const COMPANY_TARGETS = [
     label: "conseiller en investissement ou gestion de patrimoine",
     name: /patrimoin|gestion priv|wealth/i,
   },
+  // Sociétés d'investissement immobilier (foncières, investisseurs, gérants de fonds immobiliers) :
+  // codes d'activité larges, seuls les noms qui le disent clairement sont retenus.
+  {
+    naf: "68.20B",
+    label: "société d'investissement immobilier",
+    name: /fonci[eè]re|invest|patrimoine|real estate|asset/i,
+  },
+  {
+    naf: "66.30Z",
+    label: "société d'investissement immobilier",
+    name: /immobili|real estate|pierre|scpi|fonci[eè]re|property/i,
+  },
+  {
+    naf: "64.20Z",
+    label: "société d'investissement immobilier",
+    name: /immobili|fonci[eè]re|real estate|property/i,
+  },
 ];
 const DEPT_ZONE = {
   75: "paris",
@@ -852,6 +869,7 @@ Comment écrire un message qui éveille la curiosité (c'est LE critère) :
   · syndic ou administrateur de biens : le copropriétaire bailleur qui demande un contact sérieux pour louer aux voyageurs, alors que l'immeuble veut des voyageurs respectueux et un vrai suivi (nous veillons au calme et au respect de l'immeuble) ;
   · conseiller en patrimoine : le client qui veut faire travailler un bien sans s'en occuper ;
   · promoteur : l'acheteur investisseur qui hésite à signer faute de savoir qui s'occupera de son bien ;
+  · société d'investissement immobilier (foncière, investisseur, gérant de fonds) : le logement meublé de son parc qui reste vide entre deux locations, les investisseurs qu'elle accompagne qui veulent un bon rendement sans gestion ;
   · marchand de biens : le bien rénové qui attend sa revente ;
   · zones de vacances (mer, montagne) : la résidence secondaire qui reste fermée une bonne partie de l'année.
 - Accroche (première ou deuxième phrase) : relie un détail vrai et précis tiré de son site (spécialité, type de biens, secteur exact, façon de travailler) à cette situation, ou pose directement la question qui la fait surgir (« Quand un vendeur vous dit qu'il préfère attendre plutôt que baisser, que lui proposez-vous ? »). Jamais d'évidence (« la demande est forte l'été », « beaucoup de voyageurs viennent à Paris »).
@@ -1040,6 +1058,11 @@ const SITUATIONS = {
     "l'acheteur investisseur qui hésite à signer faute de savoir qui s'occupera de son bien",
   ],
   "marchand de biens": ["le bien rénové qui attend sa revente et reste vide en attendant"],
+  "société d'investissement immobilier": [
+    "le logement meublé de son parc qui reste vide entre deux locations et pourrait rapporter davantage sans gestion de plus",
+    "les investisseurs qu'elle accompagne, qui veulent un bon rendement de leur appartement sans s'en occuper",
+    "le bien acquis récemment qu'elle veut rentabiliser vite en attendant de décider de sa stratégie",
+  ],
 };
 const HOLIDAY = "la résidence secondaire qui reste fermée une bonne partie de l'année";
 function situationFor(p) {
