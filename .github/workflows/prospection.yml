@@ -39,6 +39,8 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_WORKSPACE_ID: ${{ secrets.ANTHROPIC_WORKSPACE_ID }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_HOST: ${{ vars.SMTP_HOST }}
+          IMAP_HOST: ${{ vars.IMAP_HOST }}
           PROSPECT_MODE: ${{ github.event.schedule == '47 6-16 * * 1-6' && 'envoi' || inputs.mode || 'complet' }}
         run: |
           if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ] || [ -z "$SUPABASE_URL" ]; then

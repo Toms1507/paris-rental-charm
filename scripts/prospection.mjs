@@ -1477,9 +1477,15 @@ async function mailbox() {
   const MailComposer = (await import("nodemailer/lib/mail-composer/index.js")).default;
   const { ImapFlow } = await import("imapflow");
   const auth = { user: FROM_EMAIL, pass: process.env.SMTP_PASSWORD };
-  const smtp = nodemailer.createTransport({ host: "smtp.ionos.fr", port: 465, secure: true, auth });
+  // Serveurs du fournisseur de la boîte (IONOS par défaut ; SMTP_HOST / IMAP_HOST pour un autre).
+  const smtp = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.ionos.fr",
+    port: 465,
+    secure: true,
+    auth,
+  });
   const imap = new ImapFlow({
-    host: "imap.ionos.fr",
+    host: process.env.IMAP_HOST || "imap.ionos.fr",
     port: 993,
     secure: true,
     auth,
