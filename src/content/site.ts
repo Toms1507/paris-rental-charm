@@ -209,6 +209,69 @@ export type BlogPost = {
 
 const ARTICLES: BlogPost[] = [
   {
+    slug: "assurance-location-courte-duree-paris",
+    title: "Assurance location courte durée à Paris : ce qu'il faut vérifier",
+    description:
+      "Assurance habitation, PNO, garanties des plateformes comme AirCover : ce que couvre réellement chaque contrat avant de louer en courte durée à Paris.",
+    date: "2026-10-23",
+    readingTime: "6 min",
+    sections: [
+      {
+        heading: "Un risque locatif différent de la location classique",
+        paragraphs: [
+          "Louer un logement à la nuitée change la donne pour l'assurance : les voyageurs se succèdent, l'occupation est discontinue et un sinistre (dégât des eaux, bris, vol) peut survenir à tout moment du séjour. Beaucoup de propriétaires découvrent seulement après un incident que leur contrat d'assurance habitation classique ne couvre pas cette activité.",
+          "Avant de mettre un logement en location courte durée, mieux vaut vérifier précisément ce que couvre votre assurance actuelle, ce qu'elle exclut, et ce que les garanties proposées par les plateformes prennent réellement en charge.",
+        ],
+      },
+      {
+        heading: "Déclarez l'activité à votre assureur",
+        paragraphs: [
+          "Un contrat d'assurance habitation est souscrit pour un usage précis : résidence principale, résidence secondaire ou location nue à un locataire unique. La location meublée de courte durée à des voyageurs successifs constitue un changement d'usage que la plupart des assureurs demandent à connaître.",
+          "Ne pas signaler cette activité peut être considéré comme une aggravation du risque non déclarée, avec un effet direct en cas de sinistre : réduction de l'indemnisation, voire refus de garantie. Un simple appel à votre assureur pour faire adapter le contrat, ou souscrire une extension dédiée, évite ce risque.",
+        ],
+      },
+      {
+        heading: "L'assurance propriétaire non occupant (PNO)",
+        paragraphs: [
+          "En copropriété, la loi Alur impose à chaque propriétaire de souscrire une assurance responsabilité civile propriétaire non occupant (PNO), que le logement soit habité par vous-même, loué ou vacant. Hors copropriété, aucune loi n'impose cette assurance, mais elle reste vivement recommandée.",
+          "La PNO couvre notamment votre responsabilité civile de propriétaire et les sinistres qui surviennent pendant les périodes de vacance entre deux séjours, souvent plus fréquentes en courte durée qu'avec un locataire à l'année.",
+        ],
+      },
+      {
+        heading: "AirCover et les garanties des plateformes ne remplacent pas une assurance",
+        paragraphs: [
+          "Airbnb (AirCover), Booking et les autres plateformes proposent des garanties en cas de dommages causés par un voyageur, mais ce ne sont pas des assurances au sens juridique du terme : elles ne s'appliquent qu'aux réservations passées par leur intermédiaire, jamais à vos réservations directes.",
+          "Ces garanties excluent généralement plusieurs cas fréquents : elles complètent une couverture personnelle adaptée, elles ne la remplacent pas.",
+        ],
+        bullets: [
+          "L'usure normale du mobilier et des équipements",
+          "Les catastrophes naturelles",
+          "Les objets de grande valeur (bijoux, œuvres d'art, espèces)",
+          "Les sinistres survenant en dehors des périodes de séjour réservé",
+        ],
+      },
+      {
+        heading: "La responsabilité civile face aux dommages causés par un voyageur",
+        paragraphs: [
+          "Une PNO classique ne couvre pas toujours les dommages causés par l'occupant temporaire du logement, ni ceux qu'il pourrait causer à un voisin ou à un tiers. Signalez explicitement à votre assureur que le logement est destiné à la location meublée de tourisme ou saisonnière : certains contrats proposent une extension spécifique, parfois appelée « pour le compte de qui il appartiendra », qui comble ce manque.",
+        ],
+      },
+      {
+        heading: "Avant de mettre votre logement en location",
+        paragraphs: [
+          "Un point assurance mal vérifié se découvre souvent au pire moment : pendant un sinistre, avec un voyageur sur place. Quelques vérifications suffisent pour partir sereinement.",
+          "Lors de l'audit gratuit de votre logement, nous passons ce point en revue avec vous, aux côtés du cadre légal et de l'estimation de revenus. Réponse sous 24 h, sans engagement.",
+        ],
+        bullets: [
+          "Informez votre assureur de la location courte durée et faites adapter le contrat",
+          "Vérifiez si une PNO est obligatoire pour votre copropriété",
+          "Demandez une extension « meublé de tourisme » ou « location saisonnière »",
+          "Ne comptez pas uniquement sur les garanties de la plateforme",
+        ],
+      },
+    ],
+  },
+  {
     slug: "choisir-conciergerie-airbnb-paris",
     title: "Comment choisir sa conciergerie Airbnb à Paris : les 8 critères qui comptent",
     description:
