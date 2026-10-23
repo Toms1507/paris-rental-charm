@@ -21,5 +21,10 @@ jobs:
             echo "Secret PMS_CRON_SECRET absent : automatisations serveur non activées."
             exit 0
           fi
-          curl -sS --fail-with-body -X POST https://spinelleconciergerie.fr/api/pms/cron \
-            -H "Authorization: Bearer $PMS_CRON_SECRET" --max-time 280
+          # Domaine principal, sinon l'adresse Vercel du même site (si le domaine est indisponible).
+          for base in https://spinelleconciergerie.fr https://paris-rental-charm.vercel.app; do
+            if curl -sS --fail-with-body -X POST "$base/api/pms/cron" \
+              -H "Authorization: Bearer $PMS_CRON_SECRET" --max-time 280; then exit 0; fi
+            echo "Échec sur $base, essai suivant."
+          done
+          exit 1
