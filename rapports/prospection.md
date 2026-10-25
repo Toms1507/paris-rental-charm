@@ -1,19 +1,18 @@
-# Rapport de prospection — 2026-10-19
+# Rapport de prospection — 2026-10-25
 
 Généré automatiquement par scripts/rapport-prospection.mjs (lecture seule de la base).
 
 ## Réglages
 - Mode : auto, en pause : non, nouveaux contacts par jour : 80
-- Dernier passage : 2026-10-19T22:10:45.141+00:00
+- Dernier passage : 2026-10-19T22:14:19.033+00:00
 
 ```
 Erreur : Command failed
-Objets remplacés par « Demande de collaboration » (ou équivalent) : 175
 Répartition : parts égales (phase de test)
 ```
 
 ## 7 derniers jours
-- Premiers messages envoyés : 39
+- Premiers messages envoyés : 20
 - Relances envoyées : 1
 - Réponses : 1
 - Partenaires : 0, refus : 0, désinscriptions : 0
