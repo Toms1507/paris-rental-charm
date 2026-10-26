@@ -1889,8 +1889,17 @@ async function replyExcerpt(source) {
   try {
     const { simpleParser } = await import("mailparser");
     const mail = await simpleParser(source);
+    // Réponses envoyées en HTML seulement : on en tire le texte.
+    const text =
+      mail.text ||
+      (mail.html || "")
+        .replace(/<(style|script)[\s\S]*?<\/\1>/gi, " ")
+        .replace(/<br\s*\/?>|<\/p>|<\/div>/gi, "\n")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&amp;/g, "&");
     const lines = [];
-    for (const line of (mail.text || "").split("\n")) {
+    for (const line of text.split("\n")) {
       if (
         /^>|^(Le|On) .{5,120}(a écrit|wrote)\s*:?\s*$|^-{2,}\s*$|^_{5,}|^De ?:|^From:/i.test(
           line.trim(),
@@ -1946,6 +1955,7 @@ async function checkReplies(box) {
   }
   let replies = 0;
   let bounces = 0;
+  let unsubscribed = 0;
   const lock = await box.imap.getMailboxLock("INBOX");
   try {
     const since = new Date(Date.now() - 21 * 86_400_000);
@@ -1972,6 +1982,19 @@ async function checkReplies(box) {
       }
       const raw = msg.source?.toString() || "";
       const head = raw.split(/\r?\n\r?\n/)[0] || "";
+      // Désinscription par e-mail (lien « se désabonner » de la messagerie du destinataire) :
+      // l'adresse n'est plus jamais contactée, quelle que soit sa fiche.
+      if (/^\s*d[ée]sinscription\s*$|unsubscribe/i.test(msg.envelope?.subject || "") && from) {
+        await db.from("prospect_optouts").upsert({ email: from }, { onConflict: "email", ignoreDuplicates: true });
+        const { data: hit } = await db
+          .from("prospects")
+          .update({ status: "desinscrit", updated_at: new Date().toISOString() })
+          .ilike("email", from)
+          .neq("status", "desinscrit")
+          .select("id");
+        if (hit?.length) unsubscribed++;
+        continue;
+      }
       const refs = [msg.envelope?.inReplyTo, ...(head.match(/^(?:References|In-Reply-To):[\s\S]*?(?=\r?\n\S)/gim) || [])]
         .join(" ")
         .match(/<[^>]+>/g) || [];
@@ -2012,6 +2035,7 @@ async function checkReplies(box) {
   } finally {
     lock.release();
   }
+  if (unsubscribed) note(`Désinscriptions reçues par e-mail : ${unsubscribed}`);
   if (unmatched.length)
     note(`Réponses non reliées à une agence (à vérifier dans la boîte) : ${unmatched.slice(0, 10).join(" ; ")}`);
   return { replies, bounces };
