@@ -1228,16 +1228,24 @@ function interleave(list) {
 // Objet des e-mails : sobre et professionnel, pour qu'on voie tout de suite que ce n'est pas une
 // publicité (demande du gérant, 2026-10-20). Choisi d'après la fiche, donc toujours le même pour
 // une agence ; le nom de l'agence n'y figure que s'il est court et que ce n'est pas un réseau.
-const SUBJECT_SINCE = "2026-10-19T22:08:26Z";
+const SUBJECT_SINCE = "2026-10-26T13:59:59Z";
+// Mis à jour le 2026-10-26 : « apporteur d'affaires » dit aux professionnels, dans leur propre
+// vocabulaire, que le partenariat est rémunéré, sans les mots qui font fuir ou déclenchent les
+// filtres anti-spam (« rémunéré », « gagnez »…).
 function collabSubject(p) {
   const name = (p.name || "").trim();
   const network = /Réseau : /.test(p.notes || "");
-  const named = !network && name && name.length <= 26;
+  const named = !network && name && name.length <= 24;
+  const cat = (p.notes || "").match(/Catégorie : ([^\n]+)/)?.[1] ?? "agence immobilière";
   const options = [
-    "Demande de collaboration",
-    "Proposition de collaboration",
-    "Demande de partenariat",
-    ...(named ? [`Collaboration avec ${name}`, `Partenariat avec ${name}`] : []),
+    "Partenariat apporteur d'affaires – Spinelle Conciergerie",
+    "Proposition de partenariat – Spinelle Conciergerie",
+    ...(named ? [`${name} × Spinelle Conciergerie`] : []),
+    ...(/patrimoine|investissement|promoteur/.test(cat)
+      ? ["Partenariat pour vos clients investisseurs"]
+      : /syndic/.test(cat)
+        ? ["Partenariat pour vos copropriétaires bailleurs"]
+        : ["Partenariat pour vos clients propriétaires"]),
   ];
   const seed = [...String(p.id || name)].reduce((a, c) => a + c.charCodeAt(0), 0);
   return options[seed % options.length];
@@ -1450,7 +1458,14 @@ Si l'un de vos clients pense un jour à louer son bien sur Airbnb, il vous suffi
 function compose(p, followup) {
   const unsubscribe = `${SITE}/desinscription?t=${p.unsubscribe_token}`;
   const oldStyle = !p.drafted_at || p.drafted_at < STYLE_SINCE;
-  const content = followup ? (oldStyle ? warmFollowup(p) : p.followup_body) : p.body;
+  let content = followup ? (oldStyle ? warmFollowup(p) : p.followup_body) : p.body;
+  // Contactés juste avant la coupure du domaine (20-26 octobre 2026) : leur éventuelle réponse
+  // ne nous est pas parvenue, on le dit simplement dans la relance.
+  if (followup && p.first_contact_at && p.first_contact_at < "2026-10-20T00:00:00Z")
+    content = content.replace(
+      /^(Bonjour[^\n]*\n+)/,
+      "$1Ma messagerie a connu une coupure la semaine dernière : si vous m'avez répondu, votre message ne m'est peut-être pas parvenu, et je vous prie de m'en excuser.\n\n",
+    );
   const text = `${content}\n\n${SIGNATURE}\n\n—\nVos coordonnées proviennent de votre site internet. Pour ne plus recevoir de message de Spinelle Conciergerie : ${unsubscribe}`;
   const html = text
     .split(/\n{2,}/)
