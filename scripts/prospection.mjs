@@ -34,6 +34,9 @@ const UA = "Mozilla/5.0 (compatible; SpinelleConciergerie/1.0; +https://spinelle
 // relevées vite, et un passage sauté par GitHub ne bloque plus rien), plus trois passages complets
 // par jour qui préparent les messages suivants. PROSPECT_MODE=envoi pour un passage léger.
 const SEND_ONLY = process.env.PROSPECT_MODE === "envoi";
+// Test de connexion à la boîte d'envoi, sans rien envoyer ni modifier (PROSPECT_MODE=test).
+const CONNECTION_TEST = process.env.PROSPECT_MODE === "test";
+const RAMP_SINCE = "2026-10-26T00:00:00+01:00";
 const LAST_SEND_HOUR = 18; // dernier passage d'envoi vers 18 h (heure de Paris)
 const FOLLOWUP_AFTER_DAYS = 7;
 const FOLLOWUPS_PER_RUN = 30; // relances par passage, en plus des nouveaux contacts
@@ -1492,6 +1495,7 @@ async function mailbox() {
     logger: false,
   });
   await imap.connect();
+  await smtp.verify();
   const boxes = await imap.list();
   const sent = boxes.find((b) => b.specialUse === "\\Sent")?.path;
   return {
@@ -1526,7 +1530,10 @@ async function sentToday(byForm = false) {
 function allowanceToday(settings, health = 1) {
   // Montée en charge progressive pour préserver la réputation de l'adresse d'envoi.
   if (!settings.first_send_at) return Math.floor(Math.min(20, settings.daily_limit) * health);
-  const days = Math.floor((Date.now() - new Date(settings.first_send_at).getTime()) / 86_400_000);
+  // Boîte recréée le 26 octobre 2026 après la coupure du domaine : la montée en charge repart de
+  // zéro à cette date, pour rebâtir sa réputation en douceur.
+  const start = Math.max(new Date(settings.first_send_at).getTime(), new Date(RAMP_SINCE).getTime());
+  const days = Math.floor((Date.now() - start) / 86_400_000);
   const ramp = days < 7 ? 20 : 20 + (days - 6) * 10;
   return Math.floor(Math.min(settings.daily_limit, ramp) * health);
 }
@@ -2047,6 +2054,12 @@ Le détail de chaque agence et de chaque message : ${SITE}/gestion/prospection`;
 const allZones = (settings) => [...new Set([...(settings.zones || []), ...Object.keys(ZONES)])];
 
 async function main() {
+  if (CONNECTION_TEST) {
+    const box = await mailbox();
+    await box.close();
+    console.log(`Connexion à la boîte ${FROM_EMAIL} : envoi et réception OK.`);
+    return;
+  }
   const { data: settings, error } = await db
     .from("prospect_settings")
     .select("*")

@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "complet (tout) ou envoi (envois et réponses seulement)"
+        description: "complet (tout), envoi (envois et réponses seulement) ou test (connexion à la boîte, rien n'est envoyé)"
         default: complet
 
 concurrency:
@@ -49,5 +49,5 @@ jobs:
           fi
           npm install --no-audit --no-fund --no-save @anthropic-ai/sdk @supabase/supabase-js nodemailer imapflow mailparser playwright
           # Navigateur pour les formulaires de contact (passages complets seulement).
-          if [ "$PROSPECT_MODE" != "envoi" ]; then npx playwright install --with-deps chromium; fi
+          if [ "$PROSPECT_MODE" = "complet" ]; then npx playwright install --with-deps chromium; fi
           node scripts/prospection.mjs
