@@ -1942,6 +1942,13 @@ async function checkReplies(box) {
     );
   };
   const unmatched = [];
+  // Agences qui ont déjà répondu : leurs nouveaux messages ne sont pas signalés comme inconnus.
+  const answeredRows = await selectAll(() =>
+    db.from("prospects").select("email,website").in("status", ["repondu", "partenaire", "refus", "desinscrit"]),
+  );
+  const known = new Set(
+    answeredRows.flatMap((r) => [r.email?.toLowerCase(), r.email?.split("@")[1], r.website && hostOf(r.website)]).filter(Boolean),
+  );
   for (const p of contacted || []) {
     // Contactés par formulaire : leur réponse arrive d'une adresse du domaine de leur site.
     if (p.website) {
@@ -2008,7 +2015,13 @@ async function checkReplies(box) {
         // Nom de l'agence : seulement pour un message qui parle de nous (réponse qui cite notre
         // e-mail ou notre nom), jamais pour un e-mail quelconque.
         (/spinelle/i.test(raw) ? byName(`${sender} ${raw.slice(0, 20000)}`) : null);
-      if (!p && /^\s*(re|tr|fwd?)\s*:/i.test(subject) && from !== FROM_EMAIL.toLowerCase())
+      if (
+        !p &&
+        /^\s*(re|tr|fwd?)\s*:/i.test(subject) &&
+        from !== FROM_EMAIL.toLowerCase() &&
+        !known.has(from) &&
+        !known.has(from.split("@")[1])
+      )
         unmatched.push(`${from} — ${subject.slice(0, 80)}`);
       if (p && p.status !== "repondu") {
         // Extrait de la réponse, lisible dans l'intranet sans ouvrir la boîte e-mail.
