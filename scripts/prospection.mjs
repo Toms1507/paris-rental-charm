@@ -1909,11 +1909,30 @@ async function checkReplies(box) {
   const contacted = await selectAll(() =>
     db
       .from("prospects")
-      .select("id,email,website,status,notes")
+      .select("id,name,email,website,status,notes,message_id,subject,first_contact_at")
       .in("status", ["contacte", "relance", "sans_reponse"]),
   );
   const byEmail = new Map();
   const byHost = new Map();
+  const byMessageId = new Map();
+  for (const p of contacted || []) if (p.message_id) byMessageId.set(p.message_id, p);
+  const clean = (t) => norm(t || "").replace(/^(re|tr|fwd?)\s*:\s*/g, "").replace(/[^a-z0-9]/g, "");
+  // Repli : objet identique, ou nom de l'agence cité par l'expéditeur, retenu seulement s'il ne
+  // désigne qu'une seule agence (réponse depuis une autre adresse que celle contactée, ou
+  // réponse à un message laissé par formulaire).
+  const unique = (list) => (list.length === 1 ? list[0] : null);
+  const bySubject = (subject) =>
+    unique((contacted || []).filter((p) => p.subject && clean(p.subject) === clean(subject)).filter((p) => !/×|apporteur|proposition de partenariat|pour vos clients|pour vos copropri|demande de|collaboration/i.test(p.subject)));
+  const byName = (text) => {
+    const t = norm(text).replace(/[^a-z0-9]/g, "");
+    return unique(
+      (contacted || []).filter((p) => {
+        const k = norm(p.name || "").replace(/[^a-z0-9]/g, "");
+        return k.length >= 6 && t.includes(k);
+      }),
+    );
+  };
+  const unmatched = [];
   for (const p of contacted || []) {
     // Contactés par formulaire : leur réponse arrive d'une adresse du domaine de leur site.
     if (p.website) {
@@ -1951,7 +1970,23 @@ async function checkReplies(box) {
         }
         continue;
       }
-      const p = byEmail.get(from) || byHost.get(from.split("@")[1]);
+      const raw = msg.source?.toString() || "";
+      const head = raw.split(/\r?\n\r?\n/)[0] || "";
+      const refs = [msg.envelope?.inReplyTo, ...(head.match(/^(?:References|In-Reply-To):[\s\S]*?(?=\r?\n\S)/gim) || [])]
+        .join(" ")
+        .match(/<[^>]+>/g) || [];
+      const subject = msg.envelope?.subject || "";
+      const sender = `${msg.envelope?.from?.[0]?.name || ""} ${from}`;
+      const p =
+        refs.map((r) => byMessageId.get(r)).find(Boolean) ||
+        byEmail.get(from) ||
+        byHost.get(from.split("@")[1]) ||
+        bySubject(subject) ||
+        // Nom de l'agence : seulement pour un message qui parle de nous (réponse qui cite notre
+        // e-mail ou notre nom), jamais pour un e-mail quelconque.
+        (/spinelle/i.test(raw) ? byName(`${sender} ${raw.slice(0, 20000)}`) : null);
+      if (!p && /^\s*(re|tr|fwd?)\s*:/i.test(subject) && from !== FROM_EMAIL.toLowerCase())
+        unmatched.push(`${from} — ${subject.slice(0, 80)}`);
       if (p && p.status !== "repondu") {
         // Extrait de la réponse, lisible dans l'intranet sans ouvrir la boîte e-mail.
         const excerpt = await replyExcerpt(msg.source);
@@ -1977,6 +2012,8 @@ async function checkReplies(box) {
   } finally {
     lock.release();
   }
+  if (unmatched.length)
+    note(`Réponses non reliées à une agence (à vérifier dans la boîte) : ${unmatched.slice(0, 10).join(" ; ")}`);
   return { replies, bounces };
 }
 
