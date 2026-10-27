@@ -209,6 +209,73 @@ export type BlogPost = {
 
 const ARTICLES: BlogPost[] = [
   {
+    slug: "check-in-autonome-paris",
+    title: "Check-in autonome à Paris : comment bien l'organiser",
+    description:
+      "Boîte à clés, code électronique ou serrure connectée : organiser un check-in autonome fiable, sans mauvaise surprise, pour une location à Paris.",
+    date: "2026-10-27",
+    readingTime: "6 min",
+    sections: [
+      {
+        heading: "Pourquoi le check-in autonome s'est imposé à Paris",
+        paragraphs: [
+          "À Paris, les voyageurs arrivent à toute heure : vol retardé, train de nuit, correspondance tardive à l'aéroport. Un accueil en personne imposé à heure fixe devient vite une contrainte, aussi bien pour le voyageur que pour le propriétaire ou l'équipe qui gère le logement.",
+          "Le check-in autonome répond à cette réalité : le voyageur accède au logement par ses propres moyens, à l'heure qui lui convient, sans dépendre de la disponibilité d'une personne. C'est aujourd'hui la norme sur la plupart des annonces performantes à Paris.",
+        ],
+      },
+      {
+        heading: "Boîte à clés, code ou serrure connectée : quelle solution choisir",
+        paragraphs: [
+          "Trois solutions coexistent, avec des niveaux de coût et de fiabilité différents.",
+        ],
+        bullets: [
+          "Boîte à clés mécanique fixée à l'entrée : solution la moins chère, mais le code doit être changé manuellement entre deux voyageurs et la boîte peut s'user ou se bloquer",
+          "Serrure ou clavier à code électronique : le code se change à distance depuis une application, sans intervention physique, pour un coût d'achat plus élevé",
+          "Serrure connectée pilotable à distance : ouverture par application ou badge et historique des accès, mais dépend d'une connexion internet et d'une alimentation électrique fiables",
+        ],
+      },
+      {
+        heading: "Les règles à vérifier avant d'installer un accès autonome",
+        paragraphs: [
+          "Un dispositif d'accès autonome touche souvent les parties communes de l'immeuble : porte d'entrée, hall, interphone. Avant toute installation, mieux vaut vérifier le règlement de copropriété et, si le dispositif doit être fixé sur une partie commune, demander l'accord du syndic ou du conseil syndical.",
+          "Pensez aussi à la sécurité du dispositif lui-même : un code jamais changé entre deux voyageurs, ou une boîte à clés visible depuis la rue, expose le logement à un risque facilement évitable.",
+        ],
+      },
+      {
+        heading: "Le guide d'arrivée, l'outil qui évite la moitié des messages",
+        paragraphs: [
+          "Un guide d'arrivée clair, envoyé automatiquement avant le séjour, répond par avance aux questions les plus fréquentes et réduit nettement le nombre de messages pendant le check-in.",
+        ],
+        bullets: [
+          "L'adresse exacte et les instructions d'accès, étape par étape, avec photos si besoin",
+          "Le code ou la procédure d'ouverture, et un numéro à contacter en cas de souci",
+          "Le code wifi, le fonctionnement du chauffage ou de la climatisation",
+          "Les règles de la maison : horaires de calme, tri des déchets, nombre de voyageurs autorisé",
+          "Les transports à proximité et quelques adresses utiles dans le quartier",
+        ],
+      },
+      {
+        heading: "Les erreurs qui coûtent une mauvaise note",
+        paragraphs: [
+          "Le check-in autonome supprime le contact humain au moment le plus stressant du séjour pour un voyageur : l'arrivée dans un logement inconnu. Quelques négligences suffisent à transformer ce moment en premier motif d'avis négatif.",
+        ],
+        bullets: [
+          "Un code resté identique après plusieurs séjours, ou partagé par erreur",
+          "Aucune solution de repli si la technologie tombe en panne (batterie, réseau)",
+          "Un numéro de contact qui ne répond pas en cas de blocage",
+          "Des instructions d'accès trop vagues pour un voyageur arrivant de nuit",
+        ],
+      },
+      {
+        heading: "Comment nous organisons le check-in chez Spinelle",
+        paragraphs: [
+          "Nous équipons chaque logement d'une solution d'accès autonome adaptée à sa configuration, rédigeons le guide d'arrivée et restons disponibles pour les voyageurs en cas de besoin, 7 jours sur 7.",
+          "Lors de l'audit gratuit de votre logement, nous vous proposons la solution de check-in la plus adaptée, avec une estimation de revenus sous 24 h, sans engagement.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "assurance-location-courte-duree-paris",
     title: "Assurance location courte durée à Paris : ce qu'il faut vérifier",
     description:

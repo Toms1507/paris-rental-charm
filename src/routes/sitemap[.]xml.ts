@@ -7,7 +7,7 @@ import { absoluteUrl } from "@/lib/seo";
 // Dernière révision des contenus fixes (titres, textes, mentions légales) : à mettre à jour
 // lors d'une modification de ces pages. Les pages qui affichent les données du marché prennent
 // la date du dernier relevé, actualisée automatiquement chaque semaine.
-const CONTENT_UPDATED = "2026-10-23";
+const CONTENT_UPDATED = "2026-10-27";
 const latest = (...dates: (string | undefined)[]) =>
   dates
     .filter((d): d is string => Boolean(d))
