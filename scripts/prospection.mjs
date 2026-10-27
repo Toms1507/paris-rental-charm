@@ -2183,6 +2183,22 @@ async function main() {
       return null;
     });
     if (box) try {
+      // Surveillance : plus de 3 h sans passage pendant les heures de bureau (horloges sautées,
+      // panne) → ce passage rattrape le retard et le gérant est prévenu par e-mail.
+      const gap = settings.last_run_at ? Date.now() - new Date(settings.last_run_at).getTime() : 0;
+      const hour = parisNow().getHours();
+      if (gap > 3 * 3_600_000 && officeHours() && hour >= 11 && !settings.paused) {
+        const hours = Math.round(gap / 3_600_000);
+        note(`ALERTE : aucun passage depuis ${hours} h, retard rattrapé par ce passage.`);
+        await box
+          .send({
+            from: { name: "Prospection Spinelle", address: FROM_EMAIL },
+            to: FROM_EMAIL,
+            subject: "Alerte prospection : passages manqués, relance automatique",
+            text: `Bonjour Tom,\n\nAucun passage de prospection n'avait tourné depuis ${hours} heures. Un passage vient d'être relancé automatiquement pour rattraper le retard : tu n'as rien à faire.\n\nSi ce message revient plusieurs jours de suite, préviens Claude.\n\nLa prospection Spinelle`,
+          })
+          .catch(() => {});
+      }
       const r = await checkReplies(box);
       note(`Réponses détectées : ${r.replies}, adresses invalides : ${r.bounces}`);
       if (!settings.paused) {
