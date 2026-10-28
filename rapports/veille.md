@@ -1,5 +1,33 @@
 # Veille marché Spinelle
 
+## Veille du 2026-10-28
+Nouveautés depuis la veille du 27/10. Plusieurs sources sont des agrégateurs ou des sites commerciaux : dates et chiffres à confirmer.
+- Fiscalité (info clé) : le PLF 2027 plafonnerait l'amortissement LMNP (2,5 %/an, 7 000 €/foyer ; 1,5 % et 5 000 € pour les meublés de tourisme selon le projet du gouvernement). https://selectra.info/finance/actualites/marche/lmnp-budget-2027-amortissement-plafond-7000-euros
+- Le 8 oct. 2026, la commission des finances a adopté un amendement : pas d'amortissement pour les meublés de tourisme acquis dès le 01/01/2027 en LMNP ; les baux meublés de résidence principale seraient exclus du plafonnement. Texte non définitif (Assemblée puis Sénat), à confirmer. https://hospitality-on.com/fr/tendances/budget-2027-les-deputes-concentrent-le-durcissement-fiscal-sur-les-meubles-de-tourisme
+- L'UNPLV demande le retrait des mesures visant les meublés de tourisme (même source ci-dessus). Impact possible sur les investisseurs qui achètent pour du court séjour.
+- Le PLF 2027 durcirait aussi les sanctions des plateformes (détail à confirmer). https://hospitality-on.com/fr/hotellerie/location-saisonniere-le-budget-2027-plafonne-lamortissement-des-meubles-et-durcit-les
+- Réglementation : déclaration en mairie et numéro d'enregistrement obligatoires partout depuis le 20 mai 2026 ; la responsabilité de la conciergerie peut être engagée si le logement n'est pas conforme. https://www.toute-la-franchise.com/article-conciergerie-airbnb-obligations-demarches
+- Annecy aurait retiré environ 3 740 annonces Airbnb autour du lac avant juin 2026 (quotas) ; Lyon, Bordeaux, Nice, Marseille, Cannes ont renforcé leurs règles avant le 20 mai 2026 (source média voyage, à confirmer). https://ulysse.com/news/annecy-airbnb-quotas-loi-le-meur-ete-2026
+- Paris, décembre : Orelsan à l'Accor Arena (9-20 déc. selon un agenda, jusqu'au 28 selon un autre), concerts à Paris La Défense Arena et à l'Olympia ; dates divergentes, à confirmer. https://www.eventworld.co/paris/december/
+- Paris, salon Made in France à Porte de Versailles 27 nov.-1er déc., Tech Show 18-19 nov. (15e), Saveurs des Plaisirs Gourmands 4-7 déc. (Champerret). https://www.cometoparis.com/fre/decouvrir-paris/que-faire-a-paris-en-novembre-s1195
+- Tourisme d'affaires IDF : tendance à plus de congrès avec moins de participants ; Paris 2e au classement ICCA (CCI, bilan 2025). https://www.cci-paris-idf.fr/fr/prospective/tourisme-daffaires-paris-ile-de-france-edition-2026
+- Côte d'Azur : Carnaval de Nice du 9 au 28 février 2027 (thème « Vive l'Amour ») ; 420 000 participants recensés en 2026. https://cotedazurfrance.fr/offres/carnaval-de-nice-2027-vive-lamour-nice-fr-3810291/
+- Alpes : bilan Noël 2025-2026 en montagne à 81 % de réservation (+2,5 %) selon l'ANMSM ; INSEE : fréquentation des hébergements collectifs hiver 2025-26 +1,8 %, tirée par les non-résidents. https://www.anmsm.fr/media/1337/download
+- JO d'hiver 2030 attribués aux Alpes françaises (Haute-Savoie, Savoie, Briançonnais, Nice) : pression immobilière déjà citée dans le Briançonnais (source militante, à nuancer). https://www.outside.fr/en-attendant-le-desastre-la-speculation-immobiliere-continue-en-montagne
+- Bassin d'Arcachon, été 2025 : fréquentation en hausse pour 56 % des professionnels ; baisse de la clientèle étrangère en Gironde. https://www.gironde-tourisme.com/espace-pro/wp-content/uploads/sites/2/2025/09/Conjoncture-touristique-en-Gironde-aout-2025.pdf
+- Concurrence : Annecy compte 17 conciergeries recensées, commission moyenne ~19,5 % (annuaire commercial, à vérifier). https://toploc.com/blog/conciergerie/conciergerie-annecy
+- Concurrence : aucune levée ou rachat 2026 confirmé trouvé (résultats anciens : GuestReady, Primo Conciergerie 2024). https://ac-franchise.com/article/primo-conciergerie-se-donne-les-moyens-daccelerer-son-developpement
+
+### Opportunités
+1. Argumentaire investisseurs/CGP : l'amortissement LMNP est menacé pour le court séjour. Proposer des biens déjà détenus (hors règle 2027) et des scénarios de rentabilité sans amortissement ; article de blog « PLF 2027 et meublés de tourisme : que faire ? » une fois le vote connu.
+2. Pousser Paris pour les fêtes (concerts Bercy/La Défense, marchés de Noël) auprès des agences et syndics : séjours courts de fin d'année.
+3. Étudier Nice/Côte d'Azur pour février 2027 (Carnaval) puis MIPIM en mars ; à l'inverse, Annecy semble fermée (quotas) : ne pas la prioriser.
+
+### Points d'attention
+- Le PLF 2027 peut encore changer : ne rien promettre aux prescripteurs avant le vote final.
+- Conformité (numéro d'enregistrement) : vérifier chaque bien avant de signer, la conciergerie peut être tenue responsable.
+- Dates d'événements issues d'agrégateurs : confirmer avant toute campagne.
+
 ## Veille du 2026-10-27
 Première veille (aucune veille précédente). Dates issues d'agendas : à confirmer auprès des organisateurs.
 - Paris, congrès/salons à venir : Journées de l'Orthodontie 6-8 nov. (Palais des Congrès), SOFCOT 19-20 nov. (Villette), Échoclinique 24-28 nov. (Palais des Congrès), MIF Expo 27 nov.-1er déc. (Porte de Versailles). https://www.fest.fr/agenda/paris/marches-foires-et-salons
