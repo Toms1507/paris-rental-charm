@@ -2347,6 +2347,25 @@ async function main() {
     }
     for (const e of (process.env.VERIFY_TEST || "").split(",").filter(Boolean))
       console.log(`Vérification ${e} : ${await verifyAddress(e)}`);
+    // Raisons des derniers messages non remis (diagnostic).
+    const diag = await mailbox();
+    const lock = await diag.imap.getMailboxLock("INBOX");
+    try {
+      const since = new Date(Date.now() - 14 * 86_400_000);
+      for await (const msg of diag.imap.fetch({ since }, { envelope: true, source: true })) {
+        const from = (msg.envelope?.from?.[0]?.address || "").toLowerCase();
+        if (!/mailer-daemon|postmaster/.test(from)) continue;
+        const raw = msg.source?.toString() || "";
+        const to = (raw.match(/(?:Final-Recipient|Original-Recipient):[^;]*;\s*(\S+)/i) || [])[1] || "?";
+        const why = (raw.match(/Diagnostic-Code:[^\n]*(\n\s+[^\n]*)*/i) || raw.match(/\b5\d\d[ -][^\n]{0,160}/) || [""])[0]
+          .replace(/\s+/g, " ")
+          .slice(0, 220);
+        console.log(`Non remis ${msg.envelope?.date?.toISOString?.().slice(0, 10)} ${to} : ${why}`);
+      }
+    } finally {
+      lock.release();
+      await diag.close();
+    }
     return;
   }
   const { data: settings, error } = await db
