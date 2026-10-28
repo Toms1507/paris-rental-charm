@@ -2207,6 +2207,17 @@ async function main() {
     const box = await mailbox();
     await box.close();
     console.log(`Connexion à la boîte ${FROM_EMAIL} : envoi et réception OK.`);
+    // Les serveurs de messagerie des destinataires sont-ils joignables (vérification d'adresses) ?
+    const net = await import("node:net");
+    for (const host of ["gmail-smtp-in.l.google.com", "mx00.ionos.fr"]) {
+      const ok = await new Promise((resolve) => {
+        const sock = net.connect({ host, port: 25, timeout: 8000 });
+        sock.once("data", (d) => (resolve(d.toString().slice(0, 40)), sock.destroy()));
+        sock.once("timeout", () => (resolve(false), sock.destroy()));
+        sock.once("error", () => resolve(false));
+      });
+      console.log(`Port 25 ${host} : ${ok ? `ouvert (${ok.trim()})` : "fermé"}`);
+    }
     return;
   }
   const { data: settings, error } = await db
