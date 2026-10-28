@@ -329,6 +329,13 @@ async function syncAgencies(settings) {
 
 // ------------------------------------------------------------------ 2. Enrichissement
 
+// Adresses de fournisseur d'accès internet (Orange, Free, SFR, Bbox, La Poste…) : souvent
+// fermées quand l'agence change d'opérateur mais restées affichées sur son site, elles reviennent
+// « non remis » et abîment la réputation de la boîte d'envoi. On passe alors au formulaire du site
+// ou à l'appel. Les messageries courantes (Gmail, Outlook…) restent acceptées.
+const ISP_MAIL =
+  /@(orange|wanadoo|free|sfr|neuf|bbox|laposte|aol|club-internet|numericable|cegetel|noos|alice|aliceadsl|libertysurf|9online|9business|voila|tele2)\.(fr|net|com)$/i;
+
 const BAD_EMAIL =
   /(example|exemple|domain|sentry|wixpress|godaddy|noreply|no-reply|nepasrepondre|\.png|\.jpe?g|\.gif|\.webp|\.svg|@2x|u00)/i;
 const PREFERRED_LOCAL =
@@ -345,6 +352,7 @@ export function extractEmails(html) {
 }
 
 export function pickEmail(emails, website) {
+  emails = [...emails].filter((e) => !ISP_MAIL.test(e));
   const host = website ? hostOf(website) : null;
   const base = host ? host.split(".").slice(-2).join(".") : null;
   const score = (e) =>
@@ -707,7 +715,7 @@ async function resolveErrors() {
         const { emails } = await crawl(p.website);
         next =
           emails
-            .filter((e) => !tried.has(e))
+            .filter((e) => !tried.has(e) && !ISP_MAIL.test(e))
             .sort(
               (a, b) => (PREFERRED_LOCAL.test(b) ? 1 : 0) - (PREFERRED_LOCAL.test(a) ? 1 : 0),
             )[0] || null;
@@ -1567,8 +1575,10 @@ async function sendingHealth() {
   const bounceRate = bounced / sent;
   const unsubRate = unsubscribed / sent;
   const text = `${Math.round(bounceRate * 1000) / 10} % non remis, ${Math.round(unsubRate * 1000) / 10} % de désinscriptions sur ${sent} envois`;
+  // Au-delà de 8 % : volume réduit au quart plutôt qu'arrêté, sinon le taux (calculé sur 7 jours)
+  // ne pourrait jamais redescendre ; les adresses envoyées sont désormais filtrées en amont.
   if (bounceRate > 0.08)
-    return { factor: 0, text: `${text} : nouveaux envois arrêtés pour aujourd'hui` };
+    return { factor: 0.25, text: `${text} : volume réduit au quart le temps que le taux redescende` };
   if (bounceRate > 0.04 || unsubRate > 0.02)
     return { factor: 0.5, text: `${text} : volume divisé par deux` };
   return { factor: 1, text: `${text} : bon` };
@@ -1661,6 +1671,22 @@ async function sendBatch(settings, box) {
     if (budget <= 0) break;
     if (blocked.has(p.email.toLowerCase())) {
       await db.from("prospects").update({ status: "desinscrit" }).eq("id", p.id);
+      continue;
+    }
+    if (ISP_MAIL.test(p.email)) {
+      // Brouillon préparé avant ce filtre : on cherche plutôt le formulaire du site.
+      await db
+        .from("prospects")
+        .update({
+          ...CLEAN_DRAFT,
+          email: null,
+          status: p.website ? "nouveau" : "sans_email",
+          crawled_at: null,
+          notes: [p.notes, `Adresse de fournisseur d'accès écartée (souvent périmée) : ${p.email}`]
+            .filter(Boolean)
+            .join("\n"),
+        })
+        .eq("id", p.id);
       continue;
     }
     if (!(await acceptsMail(p.email))) {
