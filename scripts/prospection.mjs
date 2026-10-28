@@ -1568,9 +1568,18 @@ async function sendingHealth() {
   const week = new Date(Date.now() - 7 * 86_400_000).toISOString();
   const count = async (q) => (await q).count || 0;
   const base = () => db.from("prospects").select("id", { count: "exact", head: true });
-  const sent = await count(base().gte("first_contact_at", week));
+  // Seuls les e-mails comptent (les formulaires ne passent pas par la boîte), et les adresses de
+  // fournisseur d'accès, qui ne sont plus utilisées, ne pèsent plus sur le calcul.
+  const sent = await count(base().gte("first_contact_at", week).not("email", "is", null));
   if (sent < 40) return { factor: 1, text: "trop peu d'envois pour juger" };
-  const bounced = await count(base().gte("first_contact_at", week).ilike("notes", "%non remis%"));
+  const { data: bouncedRows } = await db
+    .from("prospects")
+    .select("email,notes")
+    .gte("first_contact_at", week)
+    .ilike("notes", "%non remis%");
+  const bounced = (bouncedRows || []).filter(
+    (r) => !ISP_MAIL.test(r.email || "") && !/Adresse de fournisseur d'accès écartée/.test(r.notes || ""),
+  ).length;
   const unsubscribed = await count(base().gte("first_contact_at", week).eq("status", "desinscrit"));
   const bounceRate = bounced / sent;
   const unsubRate = unsubscribed / sent;
@@ -1819,9 +1828,23 @@ async function fillForm(page, p, message) {
   // Un champ obligatoire qu'on ne sait pas remplir honnêtement : on renonce.
   const invalid = await form.locator(":invalid").count().catch(() => 0);
   if (invalid) return "champ obligatoire inconnu";
-  const submit = form
+  // Bouton d'envoi : bouton classique, sinon tout bouton du formulaire (ou de la page) dont le
+  // texte dit « envoyer », « valider »… (formulaires animés en JavaScript).
+  const sendText = /envoy|envoi|send|soumettre|valider|submit/i;
+  let submit = form
     .locator('button[type="submit"]:visible, input[type="submit"]:visible, button:not([type]):visible')
     .first();
+  if (!(await submit.count()))
+    submit = form
+      .locator('button:visible, input[type="button"]:visible, [role="button"]:visible, a:visible')
+      .filter({ hasText: sendText })
+      .first();
+  if (!(await submit.count()))
+    submit = form
+      .locator('input[type="button"][value*="nvoy" i]:visible, input[type="button"][value*="send" i]:visible, input[type="button"][value*="valid" i]:visible')
+      .first();
+  if (!(await submit.count()))
+    submit = page.locator('button:visible, [role="button"]:visible').filter({ hasText: sendText }).first();
   if (!(await submit.count())) return "bouton d'envoi introuvable";
   const before = (await page.locator("body").innerText().catch(() => "")).toLowerCase();
   const startUrl = page.url();
@@ -1830,6 +1853,14 @@ async function fillForm(page, p, message) {
   await page.waitForTimeout(3000);
   const after = (await page.locator("body").innerText().catch(() => "")).toLowerCase();
   if (page.url() !== startUrl && /merci|thank|confirm|success/i.test(page.url())) return null;
+  // Formulaire vidé ou disparu après l'envoi, sans message d'erreur : envoi accepté.
+  const left = await page
+    .locator("form:has(textarea) textarea")
+    .first()
+    .inputValue()
+    .catch(() => null);
+  if ((left === null || left === "") && !/erreur|invalide|obligatoire|required|error/i.test(after.replace(before, "")))
+    return null;
   // Contact compté seulement si un message de confirmation apparaît après l'envoi.
   return SUCCESS.test(after) && !SUCCESS.test(before) ? null : "envoi non confirmé par le site";
 }
@@ -1837,7 +1868,7 @@ async function fillForm(page, p, message) {
 async function sendForms(settings) {
   if (!officeHours()) return { sent: 0 };
   const hour = parisNow().getHours();
-  const runsLeft = hour < 12 ? 3 : hour < 15 ? 2 : 1;
+  const runsLeft = Math.max(1, LAST_SEND_HOUR - hour);
   const budget = Math.ceil(Math.max(0, FORMS_PER_DAY - (await sentToday(true))) / runsLeft);
   if (!budget) return { sent: 0 };
   const statuses = settings.mode === "auto" ? ["valide", "brouillon"] : ["valide"];
@@ -2241,8 +2272,8 @@ async function main() {
     note("SMTP_PASSWORD absent : aucun envoi (les brouillons restent visibles dans l'intranet).");
   }
 
-  // 1 bis. Formulaires de contact (passages complets seulement : il faut un navigateur).
-  if (!SEND_ONLY && !settings.paused) {
+  // 1 bis. Formulaires de contact, à chaque passage (ne passent pas par la boîte d'envoi).
+  if (!settings.paused) {
     const viaForms = await sendForms(settings).catch((e) => {
       note(`Formulaires : ${e.message}`);
       return { sent: 0 };

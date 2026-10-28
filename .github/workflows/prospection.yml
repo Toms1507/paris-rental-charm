@@ -48,6 +48,6 @@ jobs:
             exit 0
           fi
           npm install --no-audit --no-fund --no-save @anthropic-ai/sdk @supabase/supabase-js nodemailer imapflow mailparser playwright
-          # Navigateur pour les formulaires de contact (passages complets seulement).
-          if [ "$PROSPECT_MODE" = "complet" ]; then npx playwright install --with-deps chromium; fi
+          # Navigateur pour les formulaires de contact (à chaque passage).
+          if [ "$PROSPECT_MODE" != "test" ]; then npx playwright install --with-deps chromium; fi
           node scripts/prospection.mjs
