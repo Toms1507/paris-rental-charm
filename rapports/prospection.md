@@ -60,6 +60,11 @@ Coût de la rédaction : 0.02 $, soit 1.8 centime(s) par message (claude-haiku-5
 ## À vérifier (0)
 Aucun.
 
+## Formulaires de contact
+- Contactés par formulaire : 3
+- Formulaires repérés en attente de message ou d'envoi : 4
+- Échecs : bouton d'envoi introuvable 10, envoi non confirmé par le site 6, test anti-robot 5, champ obligatoire inconnu 5
+
 ## Adresses non remises (5)
 - Ædifrance (paris) : contact@aedifrance.com — site https://www.aedifrance.com
 - Jouy Immobilier Conseil (versailles) : jouy.immo@orange.fr — site https://www.jouy-immo.com/
