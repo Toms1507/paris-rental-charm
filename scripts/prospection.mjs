@@ -343,6 +343,8 @@ const PREFERRED_LOCAL =
 
 export function extractEmails(html) {
   const text = html
+    // Liens « mailto: » encodés (« %20contact@… », « %40 ») : décodés avant lecture.
+    .replace(/%([0-9a-f]{2})/gi, (m, h) => String.fromCharCode(parseInt(h, 16)))
     .replace(/&#64;|&#x40;|\s*\[\s*(at|arobase)\s*\]\s*|\s*\(\s*(at|arobase)\s*\)\s*/gi, "@")
     .replace(/&#46;|\s*\[\s*(dot|point)\s*\]\s*/gi, ".");
   const found = text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g) || [];
@@ -2156,20 +2158,68 @@ async function checkReplies(box) {
     for await (const msg of box.imap.fetch({ since }, { envelope: true, source: true })) {
       const from = (msg.envelope?.from?.[0]?.address || "").toLowerCase();
       if (/mailer-daemon|postmaster/.test(from)) {
-        const body = (msg.source?.toString() || "").toLowerCase();
+        const rawBounce = msg.source?.toString() || "";
+        const body = rawBounce.toLowerCase();
+        // Raison du refus : adresse inexistante (seul cas qui compte pour le frein anti-spam),
+        // filtrage de l'expéditeur par le serveur du destinataire (serveurs d'IONOS sur une liste),
+        // ou problème passager (boîte pleine, indisponible).
+        const diag = (rawBounce.match(/Diagnostic-Code:[^\n]*(\n\s+[^\n]*)*/i) ||
+          rawBounce.match(/\b[45]\d\d[ -][^\n]{0,200}/) || [""])[0];
+        const kind = /5\.7\.|rbl|block|spam|policy|reputation|denied/i.test(diag)
+          ? "filtrage"
+          : /5\.2\.2|quota|full|pleine|\b4\d\d\b|\b4\.\d\.\d/i.test(diag)
+            ? "passager"
+            : "invalide";
         for (const [email, p] of byEmail) {
-          if (body.includes(email)) {
+          if (!body.includes(email)) continue;
+          byEmail.delete(email);
+          if (kind === "invalide") {
             await db
               .from("prospects")
               .update({
                 status: "erreur",
-                notes: [p.notes, "Adresse e-mail invalide (message non remis)"]
+                notes: [p.notes, `Adresse e-mail invalide (message non remis) : ${email}`]
                   .filter(Boolean)
                   .join("\n"),
               })
               .eq("id", p.id);
-            byEmail.delete(email);
             bounces++;
+            continue;
+          }
+          // L'adresse existe : nouvel essai plus tard (deux fois au plus).
+          const tries = ((p.notes || "").match(/Refusé par le serveur du destinataire/g) || []).length;
+          await db
+            .from("prospects")
+            .update({
+              ...(tries < 2 ? { status: "brouillon" } : {}),
+              notes: [
+                p.notes,
+                `Refusé par le serveur du destinataire (${kind === "filtrage" ? "filtrage de l'expéditeur" : "boîte pleine ou indisponible"}) : ${tries < 2 ? "nouvel essai prévu" : "abandonné"}`,
+              ]
+                .filter(Boolean)
+                .join("\n"),
+            })
+            .eq("id", p.id);
+        }
+        // Refus de filtrage déjà comptés à tort comme adresses invalides : corrigés.
+        if (kind !== "invalide") {
+          const to = (rawBounce.match(/(?:Final-Recipient|Original-Recipient):[^;]*;\s*<?([^\s>]+)/i) || [])[1];
+          if (to) {
+            const { data: wrong } = await db
+              .from("prospects")
+              .select("id,notes")
+              .or(`email.ilike.${to},notes.ilike.*${to}*`)
+              .ilike("notes", "%non remis%");
+            for (const w of wrong || [])
+              await db
+                .from("prospects")
+                .update({
+                  notes: w.notes.replace(
+                    /Adresse e-mail invalide \(message non remis\)[^\n]*/,
+                    `Refusé par le serveur du destinataire (${kind === "filtrage" ? "filtrage de l'expéditeur" : "boîte pleine ou indisponible"}), l'adresse existe`,
+                  ),
+                })
+                .eq("id", w.id);
           }
         }
         continue;
