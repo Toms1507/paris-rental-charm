@@ -860,7 +860,10 @@ async function enrich() {
           45_000,
           { emails: [], text: null },
         );
-        if (!p.email) update.email = pickEmail(res.emails, website);
+        const dead = new Set(
+          [...(p.notes || "").matchAll(/(?:Adresse vérifiée inexistante|Adresse de fournisseur d'accès écartée[^:]*) : (\S+)/g)].map((m) => m[1]),
+        );
+        if (!p.email) update.email = pickEmail(res.emails.filter((e) => !dead.has(e)), website);
         if (res.text) update.site_excerpt = res.text;
         form = res.form;
       }
@@ -1550,13 +1553,13 @@ async function sentToday(byForm = false) {
   return count || 0;
 }
 
-function allowanceToday(settings, health = 1) {
+function allowanceToday(settings, health = 1, at = new Date()) {
   // Montée en charge progressive pour préserver la réputation de l'adresse d'envoi.
   if (!settings.first_send_at) return Math.floor(Math.min(20, settings.daily_limit) * health);
   // Boîte recréée le 26 octobre 2026 après la coupure du domaine : la montée en charge repart de
   // zéro à cette date, pour rebâtir sa réputation en douceur.
   const start = Math.max(new Date(settings.first_send_at).getTime(), new Date(RAMP_SINCE).getTime());
-  const days = Math.floor((Date.now() - start) / 86_400_000);
+  const days = Math.floor((at.getTime() - start) / 86_400_000);
   // Montée voulue par le gérant : 20 le premier jour, puis 10 de plus chaque jour jusqu'au plafond.
   const ramp = 20 + days * 10;
   return Math.floor(Math.min(settings.daily_limit, ramp) * health);
@@ -1610,6 +1613,125 @@ async function acceptsMail(email) {
     );
   }
   return mxCache.get(domain);
+}
+
+// Vérification gratuite d'une adresse avant envoi : on demande au serveur de messagerie du
+// destinataire s'il connaît l'adresse, sans rien envoyer. Résultats : « existe », « accepte-tout »
+// (le serveur dit oui à tout), « inexistante » (refus explicite : utilisateur inconnu) ou
+// « inconnue » (serveur qui ne répond pas à ce genre de question : on envoie comme avant).
+const USER_UNKNOWN =
+  /5\.1\.[01]|user unknown|unknown user|no such user|does not exist|doesn't exist|not exist|mailbox (is )?(unavailable|not found)|recipient (address )?(rejected|unknown|not found)|invalid (recipient|mailbox|address)|address rejected|n'existe pas|inconnu/i;
+const POLICY_REFUSAL = /5\.7\.|block|spam|policy|blacklist|reputation|denied|relay|access/i;
+
+export async function verifyAddress(email) {
+  const domain = email.split("@")[1]?.toLowerCase();
+  let mx;
+  try {
+    mx = (await resolveMx(domain)).sort((a, b) => a.priority - b.priority)[0]?.exchange;
+  } catch (e) {
+    return e.code === "ENODATA" || e.code === "ENOTFOUND" ? "inexistante" : "inconnue";
+  }
+  if (!mx) return "inexistante";
+  const net = await import("node:net");
+  return new Promise((resolve) => {
+    const sock = net.connect({ host: mx, port: 25 });
+    let buf = "";
+    let waiter = null;
+    sock.on("data", (d) => {
+      buf += d.toString();
+      const lines = buf.split(/\r?\n/).filter(Boolean);
+      const last = lines[lines.length - 1] || "";
+      if (waiter && /^\d{3} /.test(last)) {
+        const w = waiter;
+        waiter = null;
+        const text = buf;
+        buf = "";
+        w({ code: Number(last.slice(0, 3)), text });
+      }
+    });
+    const talk = (line) =>
+      new Promise((r) => {
+        waiter = r;
+        if (line) sock.write(`${line}\r\n`);
+      });
+    const done = (result) => {
+      clearTimeout(timer);
+      sock.destroy();
+      resolve(result);
+    };
+    const timer = setTimeout(() => done("inconnue"), 15_000);
+    sock.once("error", () => done("inconnue"));
+    (async () => {
+      if ((await talk()).code !== 220) return done("inconnue");
+      if ((await talk("EHLO spinelleconciergerie.fr")).code !== 250) return done("inconnue");
+      if ((await talk("MAIL FROM:<>")).code !== 250) return done("inconnue");
+      const rcpt = await talk(`RCPT TO:<${email}>`);
+      if (rcpt.code >= 500)
+        return done(USER_UNKNOWN.test(rcpt.text) && !POLICY_REFUSAL.test(rcpt.text) ? "inexistante" : "inconnue");
+      if (rcpt.code !== 250 && rcpt.code !== 251) return done("inconnue");
+      const probe = await talk(`RCPT TO:<verification-${Date.now()}@${domain}>`);
+      sock.write("QUIT\r\n");
+      done(probe.code === 250 ? "accepte-tout" : "existe");
+    })().catch(() => done("inconnue"));
+  });
+}
+
+const verifiedOf = (p) =>
+  [...(p.notes || "").matchAll(/Adresse vérifiée \(([^)]+)\) : (\S+)/g)].find((m) => m[2] === p.email)?.[1];
+
+// Adresse inexistante : écartée (et retenue pour ne jamais être reprise), on cherche le formulaire
+// du site ; sans site, l'agence va dans « À appeler » si elle a un téléphone.
+async function dropDeadAddress(p) {
+  await db
+    .from("prospects")
+    .update({
+      ...CLEAN_DRAFT,
+      email: null,
+      status: p.website ? "nouveau" : p.phone ? "sans_email" : "ignore",
+      crawled_at: null,
+      notes: [p.notes, `Adresse vérifiée inexistante : ${p.email}`].filter(Boolean).join("\n"),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", p.id);
+}
+
+// Préparation du lot suivant (à chaque passage, et donc dès la fin de journée pour le lendemain) :
+// les prochains messages à partir ont leur adresse vérifiée à l'avance. Pas de surprise au moment
+// de l'envoi, et les adresses inexistantes ne partent jamais.
+async function prepareNextBatch(settings) {
+  const tomorrow = new Date(Date.now() + 86_400_000);
+  const target = Math.ceil(allowanceToday(settings, 1, tomorrow) * 1.2);
+  const statuses = settings.mode === "auto" ? ["valide", "brouillon"] : ["valide"];
+  const { data: rows } = await db
+    .from("prospects")
+    .select("*")
+    .in("status", statuses)
+    .not("email", "is", null)
+    .order("drafted_at", { ascending: true })
+    .limit(target * 2);
+  const queue = (rows || []).filter((p) => !verifiedOf(p));
+  const ready = (rows || []).length - queue.length;
+  let checked = 0;
+  let dead = 0;
+  const worker = async () => {
+    while (queue.length && checked + ready < target && timeLeft() > 4 * MINUTES) {
+      const p = queue.shift();
+      if (ISP_MAIL.test(p.email)) continue;
+      const result = await verifyAddress(p.email);
+      checked++;
+      if (result === "inexistante") {
+        await dropDeadAddress(p);
+        dead++;
+        continue;
+      }
+      await db
+        .from("prospects")
+        .update({ notes: [p.notes, `Adresse vérifiée (${result}) : ${p.email}`].filter(Boolean).join("\n") })
+        .eq("id", p.id);
+    }
+  };
+  await Promise.all(Array.from({ length: 5 }, worker));
+  return { ready: ready + checked - dead, dead, target };
 }
 
 // Envois uniquement aux heures de bureau, du lundi au samedi (heure de Paris), même lors d'un
@@ -1699,6 +1821,11 @@ async function sendBatch(settings, box) {
             .join("\n"),
         })
         .eq("id", p.id);
+      continue;
+    }
+    const check = verifiedOf(p) ?? (await verifyAddress(p.email));
+    if (check === "inexistante") {
+      await dropDeadAddress(p);
       continue;
     }
     if (!(await acceptsMail(p.email))) {
@@ -2218,6 +2345,8 @@ async function main() {
       });
       console.log(`Port 25 ${host} : ${ok ? `ouvert (${ok.trim()})` : "fermé"}`);
     }
+    for (const e of (process.env.VERIFY_TEST || "").split(",").filter(Boolean))
+      console.log(`Vérification ${e} : ${await verifyAddress(e)}`);
     return;
   }
   const { data: settings, error } = await db
@@ -2293,6 +2422,18 @@ async function main() {
       return { sent: 0 };
     });
     note(`Contactés par formulaire : ${viaForms.sent}`);
+  }
+
+  // 1 ter. Lot suivant vérifié à l'avance (fin de journée : le lot du lendemain est prêt).
+  if (!settings.paused) {
+    const next = await prepareNextBatch(settings).catch((e) => {
+      note(`Vérification des adresses : ${e.message}`);
+      return null;
+    });
+    if (next)
+      note(
+        `Prochain lot : ${next.ready} messages prêts et vérifiés pour ${next.target} prévus${next.dead ? `, ${next.dead} adresses inexistantes écartées avant envoi` : ""}`,
+      );
   }
 
   // 2. Ensuite la préparation des prochains envois, dans le temps qui reste.
