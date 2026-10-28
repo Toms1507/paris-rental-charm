@@ -33,7 +33,9 @@ const recent = (d) => d && new Date(d).getTime() >= weekAgo;
 const category = (p) => (p.notes || "").match(/Catégorie : ([^\n]+)/)?.[1] ?? "agence immobilière";
 const score = (p) => Number((p.angle || "").match(/note (\d+(?:[.,]\d+)?)\/10/)?.[1]?.replace(",", "."));
 const sent = (p) => Boolean(p.first_contact_at);
-const answered = (p) => ["repondu", "partenaire", "refus"].includes(p.status) || Boolean(p.replied_at);
+// Une désinscription n'est pas une réponse (même si elle arrive par e-mail).
+const answered = (p) =>
+  p.status !== "desinscrit" && (["repondu", "partenaire", "refus"].includes(p.status) || Boolean(p.replied_at));
 const bounced = (p) => /non remis/i.test(p.notes || "");
 const pct = (a, b) => (b ? `${Math.round((a / b) * 1000) / 10} %` : "–");
 const count = (list, f) => list.filter(f).length;
