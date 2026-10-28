@@ -123,6 +123,12 @@ const noEmailText = [
   `- Fiches « nouveau » pas encore analysées : ${count(rows, (p) => p.status === "nouveau" && !p.crawled_at)}, dont sans site : ${count(rows, (p) => p.status === "nouveau" && !p.crawled_at && !p.website && !p.email)}`,
 ].join("\n");
 
+// Adresses revenues « non remis » : pour comprendre d'où viennent les erreurs.
+const bouncedList = rows
+  .filter(bounced)
+  .map((p) => `- ${p.name} (${p.zone}) : ${p.email ?? "?"} — site ${p.website ?? "aucun"}${/Site retrouvé/.test(p.notes || "") ? " (site retrouvé)" : ""}${/Nouvelle adresse essayée/.test(p.notes || "") ? " (adresse de remplacement)" : ""}`)
+  .join("\n");
+
 const report = [
   `# Rapport de prospection — ${new Date().toISOString().slice(0, 10)}`,
   "",
@@ -145,6 +151,9 @@ const report = [
   "",
   `## À vérifier (${count(rows, (p) => p.status === "erreur")})`,
   [...errors].sort((a, b) => b[1] - a[1]).map(([c, n]) => `- ${c} : ${n}`).join("\n") || "Aucun.",
+  "",
+  `## Adresses non remises (${count(rows, bounced)})`,
+  bouncedList || "Aucune.",
   "",
   `## Sans e-mail (${noEmail.length})`,
   noEmailText,
