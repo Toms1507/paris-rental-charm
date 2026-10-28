@@ -129,6 +129,18 @@ const bouncedList = rows
   .map((p) => `- ${p.name} (${p.zone}) : ${p.email ?? "?"} — site ${p.website ?? "aucun"}${/Site retrouvé/.test(p.notes || "") ? " (site retrouvé)" : ""}${/Nouvelle adresse essayée/.test(p.notes || "") ? " (adresse de remplacement)" : ""}`)
   .join("\n");
 
+// Formulaires : envoyés, en attente, et raisons d'échec.
+const formFail = new Map();
+for (const p of rows) {
+  const m = (p.notes || "").match(/Formulaire non utilisable \(([^)]*)\)/);
+  if (m) formFail.set(m[1], (formFail.get(m[1]) || 0) + 1);
+}
+const formText = [
+  `- Contactés par formulaire : ${count(rows, (p) => /Contacté par le formulaire/.test(p.notes || ""))}`,
+  `- Formulaires repérés en attente de message ou d'envoi : ${count(rows, (p) => !p.email && /Formulaire de contact :/.test(p.notes || "") && ["nouveau", "brouillon", "valide"].includes(p.status))}`,
+  `- Échecs : ${[...formFail].sort((x, y) => y[1] - x[1]).map(([r, n]) => `${r} ${n}`).join(", ") || "aucun"}`,
+].join("\n");
+
 const report = [
   `# Rapport de prospection — ${new Date().toISOString().slice(0, 10)}`,
   "",
@@ -151,6 +163,9 @@ const report = [
   "",
   `## À vérifier (${count(rows, (p) => p.status === "erreur")})`,
   [...errors].sort((a, b) => b[1] - a[1]).map(([c, n]) => `- ${c} : ${n}`).join("\n") || "Aucun.",
+  "",
+  "## Formulaires de contact",
+  formText,
   "",
   `## Adresses non remises (${count(rows, bounced)})`,
   bouncedList || "Aucune.",
