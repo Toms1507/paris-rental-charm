@@ -1557,7 +1557,8 @@ function allowanceToday(settings, health = 1) {
   // zéro à cette date, pour rebâtir sa réputation en douceur.
   const start = Math.max(new Date(settings.first_send_at).getTime(), new Date(RAMP_SINCE).getTime());
   const days = Math.floor((Date.now() - start) / 86_400_000);
-  const ramp = days < 7 ? 20 : 20 + (days - 6) * 10;
+  // Montée voulue par le gérant : 20 le premier jour, puis 10 de plus chaque jour jusqu'au plafond.
+  const ramp = 20 + days * 10;
   return Math.floor(Math.min(settings.daily_limit, ramp) * health);
 }
 
