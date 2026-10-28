@@ -1587,9 +1587,11 @@ async function sendingHealth() {
   const text = `${Math.round(bounceRate * 1000) / 10} % non remis, ${Math.round(unsubRate * 1000) / 10} % de désinscriptions sur ${sent} envois`;
   // Au-delà de 8 % : volume réduit au quart plutôt qu'arrêté, sinon le taux (calculé sur 7 jours)
   // ne pourrait jamais redescendre ; les adresses envoyées sont désormais filtrées en amont.
-  if (bounceRate > 0.08)
+  // Un cas isolé ne déclenche rien (sur quelques dizaines d'envois, une seule adresse invalide
+  // dépasse déjà les pourcentages) : il faut un problème répété.
+  if (bounced >= 5 && bounceRate > 0.08)
     return { factor: 0.25, text: `${text} : volume réduit au quart le temps que le taux redescende` };
-  if (bounceRate > 0.04 || unsubRate > 0.02)
+  if ((bounced >= 3 && bounceRate > 0.04) || (unsubscribed >= 2 && unsubRate > 0.02))
     return { factor: 0.5, text: `${text} : volume divisé par deux` };
   return { factor: 1, text: `${text} : bon` };
 }
