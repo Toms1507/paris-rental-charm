@@ -1322,19 +1322,36 @@ async function draftMessages(settings) {
   const room = rooms.email + rooms.form;
   if (!room) return 0;
   // Quelques candidats de chaque zone, puis rédaction à tour de rôle (zone et métier).
-  const pick = (kind) =>
-    Promise.all(
-      Object.keys(ZONES).map(async (zone) => {
-        if (!rooms[kind]) return [];
-        const q = db.from("prospects").select("*").eq("status", "nouveau").eq("zone", zone);
-        const { data } = await (kind === "email"
-          ? q.not("email", "is", null)
-          : q.is("email", null).ilike("notes", "%Formulaire de contact :%")
-        ).limit(rooms[kind] * 3);
-        return (data || []).filter((p) => !parked(p)).slice(0, rooms[kind]);
-      }),
+  // Candidats pris par zone ET par métier : sans ça, les milliers d'agences remplissaient tout et
+  // les syndics, promoteurs, investisseurs… n'étaient presque jamais rédigés.
+  const CATEGORIES = [
+    "agence immobilière",
+    "syndic ou administrateur de biens",
+    "conseiller en investissement ou gestion de patrimoine",
+    "promoteur immobilier",
+    "marchand de biens",
+    "société d'investissement immobilier",
+  ];
+  const pick = async (kind) => {
+    if (!rooms[kind]) return [];
+    const lists = await Promise.all(
+      Object.keys(ZONES).flatMap((zone) =>
+        CATEGORIES.map(async (cat) => {
+          let q = db.from("prospects").select("*").eq("status", "nouveau").eq("zone", zone);
+          q = cat === "agence immobilière"
+            ? q.or("notes.is.null,notes.ilike.*Catégorie : agence immobilière*")
+            : q.ilike("notes", `%Catégorie : ${cat}%`);
+          const { data } = await (kind === "email"
+            ? q.not("email", "is", null)
+            : q.is("email", null).ilike("notes", "%Formulaire de contact :%")
+          ).limit(rooms[kind] * 2);
+          return (data || []).filter((p) => !parked(p)).slice(0, rooms[kind]);
+        }),
+      ),
     );
-  const rows = [...interleave((await pick("email")).flat()), ...interleave((await pick("form")).flat())];
+    return lists.flat();
+  };
+  const rows = [...interleave(await pick("email")), ...interleave(await pick("form"))];
   const taken = { email: 0, form: 0 };
   const { data: optouts } = await db.from("prospect_optouts").select("email");
   const blocked = new Set((optouts || []).map((o) => o.email));
