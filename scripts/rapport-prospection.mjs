@@ -22,7 +22,7 @@ const rows = await selectAll(() =>
   db
     .from("prospects")
     .select(
-      "name, zone, notes, status, subject, body, followup_body, angle, first_contact_at, last_contact_at, replied_at, phone, contact_name, website, email, crawled_at, siren",
+      "name, zone, notes, status, subject, body, followup_body, angle, first_contact_at, last_contact_at, replied_at, phone, contact_name, website, email, crawled_at, siren, drafted_at",
     )
     .order("id"),
 );
@@ -143,6 +143,19 @@ const formText = [
   `- Échecs : ${[...formFail].sort((x, y) => y[1] - x[1]).map(([r, n]) => `${r} ${n}`).join(", ") || "aucun"}`,
 ].join("\n");
 
+// Prochains envois : les messages prêts les plus anciens partent en premier.
+const nextUp = rows
+  .filter((p) => ["brouillon", "valide"].includes(p.status) && p.email && p.body)
+  .sort((a, b) => (a.drafted_at || "").localeCompare(b.drafted_at || ""))
+  .slice(0, 70);
+const nextCats = new Map();
+for (const p of nextUp) nextCats.set(category(p), (nextCats.get(category(p)) || 0) + 1);
+const nextText = [
+  `Par métier : ${[...nextCats].map(([c, n]) => `${c} ${n}`).join(", ")}`,
+  "",
+  ...nextUp.map((p, i) => `${i + 1}. ${p.name} — ${p.zone} — ${category(p)} — « ${p.subject} »`),
+].join("\n");
+
 const report = [
   `# Rapport de prospection — ${new Date().toISOString().slice(0, 10)}`,
   "",
@@ -165,6 +178,9 @@ const report = [
   "",
   `## À vérifier (${count(rows, (p) => p.status === "erreur")})`,
   [...errors].sort((a, b) => b[1] - a[1]).map(([c, n]) => `- ${c} : ${n}`).join("\n") || "Aucun.",
+  "",
+  "## Prochains envois (dans l'ordre)",
+  nextText,
   "",
   "## Formulaires de contact",
   formText,
