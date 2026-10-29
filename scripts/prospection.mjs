@@ -1570,8 +1570,12 @@ function allowanceToday(settings, health = 1, at = new Date()) {
 // Santé de l'adresse d'envoi sur les 7 derniers jours. Les messageries classent en spam les boîtes
 // dont beaucoup d'e-mails reviennent non remis ou dont les destinataires se désinscrivent : au
 // premier signal, on ralentit (moitié du volume), et on s'arrête net si les non-remis explosent.
+// Depuis le 28 octobre au soir, chaque adresse est vérifiée avant l'envoi : la santé est jugée
+// sur les envois faits avec cette vérification, pas sur les erreurs de l'ancienne méthode.
+const VERIFY_SINCE = "2026-10-28T17:30:00Z";
+
 async function sendingHealth() {
-  const week = new Date(Date.now() - 7 * 86_400_000).toISOString();
+  const week = new Date(Math.max(Date.now() - 7 * 86_400_000, new Date(VERIFY_SINCE).getTime())).toISOString();
   const count = async (q) => (await q).count || 0;
   const base = () => db.from("prospects").select("id", { count: "exact", head: true });
   // Seuls les e-mails comptent (les formulaires ne passent pas par la boîte), et les adresses de
