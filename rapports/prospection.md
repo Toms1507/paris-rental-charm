@@ -4,48 +4,49 @@ Généré automatiquement par scripts/rapport-prospection.mjs (lecture seule de 
 
 ## Réglages
 - Mode : auto, en pause : non, nouveaux contacts par jour : 80
-- Dernier passage : 2026-10-29T16:59:44.522+00:00
+- Dernier passage : 2026-10-29T17:19:59.89+00:00
 
 ```
-Répartition : parts ajustées aux réponses (petite-couronne · agence immobilière ×1.3, cote-basque-arcachon · agence immobilière ×1.3, bordeaux · agence immobilière ×1.3)
-Réponses détectées : 0, adresses invalides : 0
-Santé de l'adresse d'envoi : trop peu d'envois pour juger
-Envoyés : 25 premiers messages, 0 relances (mode auto)
+Répartition : parts ajustées aux réponses (petite-couronne · agence immobilière ×1.4, cote-basque-arcachon · agence immobilière ×1.3, bordeaux · agence immobilière ×1.3)
+Réponses détectées : 0, adresses invalides : 1
+Santé de l'adresse d'envoi : 4 % non remis, 0 % de désinscriptions sur 50 envois : bon
+Envoyés : 0 premiers messages, 0 relances (mode auto)
 Contactés par formulaire : 0
-Prochain lot : 76 messages prêts et vérifiés pour 72 prévus
+Prochain lot : 77 messages prêts et vérifiés pour 72 prévus
 Passage d'envoi seul (la préparation est faite par les passages complets).
 ```
 
 ## 7 derniers jours
 - Premiers messages envoyés : 122
 - Relances envoyées : 38
-- Réponses : 3
+- Réponses : 1
 - Partenaires : 0, refus : 0, désinscriptions : 1
-- Adresses non remises : 5 (4.1 %)
+- Adresses non remises : 6 (4.9 %)
 - Désinscriptions : 0.8 %
 - Note moyenne des messages envoyés : 6.2/10
 
 ## Depuis le début
 - Premiers messages envoyés : 161
 - Relances envoyées : 39
-- Réponses : 4
+- Réponses : 2
 - Partenaires : 0, refus : 1, désinscriptions : 3
-- Adresses non remises : 5 (3.1 %)
+- Adresses non remises : 6 (3.7 %)
 - Désinscriptions : 1.9 %
 - Note moyenne des messages envoyés : 6.1/10
 - Fiches au total : 4433, sans e-mail : 890
 
-## À vérifier (0)
-Aucun.
+## À vérifier (1)
+- Adresse e-mail invalide (message non remis)  : 1
 
 ## Formulaires de contact
 - Contactés par formulaire : 4
 - Formulaires repérés en attente de message ou d'envoi : 1
 - Échecs : bouton d'envoi introuvable 13, envoi non confirmé par le site 6, test anti-robot 5, champ obligatoire inconnu 5
 
-## Adresses non remises (5)
+## Adresses non remises (6)
 - Pars immo (petite-couronne) : votre@email.com — site https://www.parsimmo.fr/
 - Nexity (cote-azur) : satisfaction@evoriel.fr — site https://www.lamy-immobilier.fr/nos-agences-immobilieres/alpes-maritimes-06/nice-06300/nexity-nice-barla (adresse de remplacement)
+- Selestim (paris) : direction@selestim.com — site https://www.selestim.com/
 - Belin Promotion (cote-basque-arcachon) : contact@medimmoconso.fr — site https://www.belinpromotion.com (adresse de remplacement)
 - BSGI (disney) : contact.bsgi@gmail.com — site https://www.bsgi.fr/ (adresse de remplacement)
 - CAPA Promotion (bordeaux) : capapromotion@bbox.fr — site https://capapromotion.site-solocal.com
@@ -60,11 +61,11 @@ Aucun.
 ## Par zone
 | | Envoyés | Réponses | Taux | Restants (nouveau) | Prêts | Erreurs |
 |---|---|---|---|---|---|---|
-| paris | 40 | 1 | 2.5 % | 770 | 25 | 0 |
-| petite-couronne | 22 | 1 | 4.5 % | 1020 | 22 | 0 |
+| paris | 40 | 1 | 2.5 % | 770 | 25 | 1 |
+| petite-couronne | 22 | 0 | 0 % | 1020 | 23 | 0 |
 | cote-azur | 19 | 0 | 0 % | 382 | 37 | 0 |
 | bordeaux | 24 | 1 | 4.2 % | 245 | 6 | 0 |
-| cote-basque-arcachon | 23 | 1 | 4.3 % | 182 | 27 | 0 |
+| cote-basque-arcachon | 23 | 0 | 0 % | 182 | 27 | 0 |
 | versailles | 16 | 0 | 0 % | 51 | 17 | 0 |
 | disney | 10 | 0 | 0 % | 57 | 1 | 0 |
 | ski | 0 | 0 | – | 38 | 0 | 0 |
@@ -74,52 +75,14 @@ Aucun.
 ## Par catégorie
 | | Envoyés | Réponses | Taux | Restants (nouveau) | Prêts | Erreurs |
 |---|---|---|---|---|---|---|
-| agence immobilière | 150 | 4 | 2.7 % | 2460 | 135 | 0 |
-| syndic ou administrateur de biens | 7 | 0 | 0 % | 117 | 0 | 0 |
+| agence immobilière | 150 | 2 | 1.3 % | 2460 | 136 | 0 |
+| syndic ou administrateur de biens | 7 | 0 | 0 % | 117 | 0 | 1 |
 | marchand de biens | 1 | 0 | 0 % | 95 | 0 | 0 |
 | promoteur immobilier | 1 | 0 | 0 % | 83 | 0 | 0 |
 | conseiller en investissement ou gestion de patrimoine | 2 | 0 | 0 % | 24 | 0 | 0 |
 | société d'investissement immobilier | 0 | 0 | – | 3 | 0 | 0 |
 
-## Messages qui ont obtenu une réponse (4)
-### Agence principale (petite-couronne, agence immobilière) — repondu, tél. +33 1 47 10 01 01
-Envoyé le 2026-10-29 — acheteur investisseur qui hésite, relié à la gestion locative de l'agence (note 7/10)
-**Objet :** Proposition de partenariat – Spinelle Conciergerie
-
-Bonjour,
-
-Un acheteur investisseur qui hésite parce qu'il n'aura pas le temps de s'occuper de son bien : ça arrive sûrement chez vous, entre Rueil et Bougival. Et comme vous gérez déjà des locations, vous voyez aussi ceux qui se demandent s'ils ne feraient pas mieux avec les voyageurs.
-
-Chez Spinelle Conciergerie, nous louons le bien en courte durée et nous nous occupons de tout, jusqu'à l'accueil des voyageurs. Nous ne faisons que ça, jamais de vente ni de gestion classique : votre client reste le vôtre. Vous touchez une commission sur chaque logement recommandé que nous signons.
-
-Vous avez un dossier comme ça en ce moment ?
-
-**Notes (réponses, erreurs) :**
-
-Adresse vérifiée (inconnue) : rueil@agenceprincipale.com
-Réponse du 29/10/2026 (rueil@agenceprincipale.com) : Chers clients, Nous avons bien reçu votre e-mail, nous reviendrons vers vous dans les plus brefs délais. Chloé SILVA Assistante commerciale Agence Principale 144 avenue Paul Doumer 92500 Rueil Malmaison 01-47-10-01-01 www.rueil.agenceprincipale.com
-
----
-
-### Belharra immobilier (cote-basque-arcachon, agence immobilière) — repondu, tél. +33 5 59 20 90 49
-Envoyé le 2026-10-28 — Le bien en attente de locataire pendant une mutation (note 7/10)
-**Objet :** Belharra immobilier × Spinelle Conciergerie
-
-Bonjour,
-
-Votre client muté loin de la côte basque, qui ne veut pas vendre son appartement et le laisse vide : vous arrive-t-il de le conseiller sur la suite ?
-
-Spinelle Conciergerie loue ce type de bien en courte durée et gère tout pour le propriétaire : l'annonce, l'accueil des voyageurs, le ménage, les petites réparations.
-
-Votre client reste le vôtre, nous ne faisons que de la courte durée, donc aucune concurrence avec vous. Une commission vous revient sur chaque logement recommandé que nous signons. Je peux vous détailler le fonctionnement si le sujet vous parle.
-
-**Notes (réponses, erreurs) :**
-
-Catégorie : agence immobilière
-Réponse du 28/10/2026 (contact@belharra-immobilier.com) : Madame, Monsieur, Nous accusons bonne réception de votre courriel et vous en remercions. Soyez assurés qu'il sera traité avec la plus grande attention et dans les prochaines 24 heures (hors week-end et jour férié) Dans cette attente, Nous vous prions de croire, Madame, Monsieur, à l'assurance de nos sentiments les plus dévoués.
-
----
-
+## Messages qui ont obtenu une réponse (2)
 ### George V Immobilier (paris, agence immobilière) — repondu, tél. +33 142868018
 Envoyé le 2026-10-17 — Agence généraliste du 5e arrondissement, double approche propriétaires existants et acheteurs investisseurs
 **Objet :** Partenariat location courte durée, 5e arrondissement
@@ -476,7 +439,7 @@ Adresse vérifiée (inconnue) : contact@ajy.fr
 
 ---
 
-### Oxigen Syndic (petite-couronne, agence immobilière) — contacte, tél. +33184212023
+### Oxigen Syndic (petite-couronne, agence immobilière) — brouillon, tél. +33184212023
 Envoyé le 2026-10-29 — Le bien qui reste inoccupé faute de locataire, avec la question de l'usage temporaire pour les copropriétaires qui ne savent pas quoi en faire. (note 5/10)
 **Objet :** Partenariat apporteur d'affaires – Spinelle Conciergerie
 
@@ -494,6 +457,7 @@ Avez-vous un copropriétaire dans cette situation en ce moment ?
 
 Rédaction refusée (note trop basse (4/10))
 Adresse vérifiée (inconnue) : contact@mooverflow.com
+Refusé par le serveur du destinataire (boîte pleine ou indisponible) : nouvel essai prévu
 
 ---
 
@@ -515,24 +479,6 @@ Adresse vérifiée (existe) : jennifer.eclatsmontevrain@gmail.com
 
 ---
 
-### Selestim (paris, syndic ou administrateur de biens) — contacte, tél. +33 1 45 02 83 37
-Envoyé le 2026-10-29 — Le copropriétaire qui demande conseil à son syndic sur la location aux voyageurs (note 6/10)
-**Objet :** Selestim × Spinelle Conciergerie
-
-Bonjour,
-
-Il arrive qu'un copropriétaire vous demande ce qu'il peut faire d'un appartement qu'il ne veut plus louer à l'année, et qu'il vous interroge sur la location aux voyageurs.
-
-Spinelle Conciergerie est une conciergerie de location courte durée uniquement. Nous ne sommes pas une agence : votre copropriétaire reste le vôtre, et vous restez son interlocuteur pour tout le reste. Nous prenons en charge l'annonce, les voyageurs, le ménage et l'entretien, pour un propriétaire qui n'a rien à gérer.
-
-Si vous nous recommandez un copropriétaire qui souhaite louer en courte durée, nous vous versons une commission sur chaque logement que nous signons. Est-ce une question qui revient souvent chez vos copropriétaires ?
-
-**Notes (réponses, erreurs) :**
-
-Catégorie : syndic ou administrateur de biens
-
----
-
 ### Pitch Immo (cote-azur, syndic ou administrateur de biens) — contacte, tél. +33 4 92 47 80 00
 Envoyé le 2026-10-29 — Le copropriétaire bailleur qui veut louer aux voyageurs, et l'immeuble qui veut rester tranquille (note 7/10)
 **Objet :** Pitch Immo × Spinelle Conciergerie
@@ -550,3 +496,24 @@ Vous avez un copropriétaire dans ce cas en ce moment ?
 **Notes (réponses, erreurs) :**
 
 Catégorie : syndic ou administrateur de biens
+
+---
+
+### L'Immobilière de Normandie (paris, agence immobilière) — contacte
+Envoyé le 2026-10-29 — Bien hérité en attente de décision, qui reste dans le mandat de l'agence (note 7/10)
+**Objet :** Partenariat pour vos clients propriétaires
+
+Bonjour,
+
+Quand une famille hérite d'un appartement à Paris et ne sait pas encore s'il faut le vendre, que lui conseillez-vous en attendant ?
+
+Chez Spinelle Conciergerie, nous louons le bien en courte durée et nous nous occupons de tout pour la famille, jusqu'au ménage entre deux voyageurs. Le bien ne reste pas vide, et la vente, elle, reste chez vous.
+
+Votre client reste le vôtre, et vous restez son interlocuteur pour la vente comme pour la gestion. Nous ne faisons que de la courte durée, donc jamais de concurrence. Vous touchez une commission sur chaque logement recommandé que nous signons.
+
+Vous avez un dossier comme ça en ce moment ?
+
+**Notes (réponses, erreurs) :**
+
+Site retrouvé et vérifié : https://www.immobiliere-normandie.fr
+Adresse vérifiée (existe) : screstaux@inparis-immo.com
