@@ -2264,6 +2264,21 @@ async function checkReplies(box) {
         !known.has(from.split("@")[1])
       )
         unmatched.push(`${from} — ${subject.slice(0, 80)}`);
+      // Réponses automatiques (accusé de réception, absence) : notées, sans compter comme une
+      // vraie réponse, pour que la relance parte quand même.
+      const auto =
+        /^auto-submitted:\s*auto-(replied|generated)|^x-autoreply|^x-autorespond|^precedence:\s*(auto_reply|bulk|junk)/im.test(head) ||
+        /r[ée]ponse automatique|automatic reply|auto(matic)?[- ]?reply|out of office|absent du|absente du|accusons (bonne )?r[ée]ception|avons bien re[çc]u votre (e-?mail|message|courriel|demande)|nous reviendrons vers vous dans les (plus )?brefs d[ée]lais/i.test(
+          `${subject} ${raw.slice(0, 6000)}`,
+        );
+      if (p && auto) {
+        if (!/Accusé de réception automatique/.test(p.notes || ""))
+          await db
+            .from("prospects")
+            .update({ notes: [p.notes, "Accusé de réception automatique reçu (pas encore de vraie réponse)"].join("\n") })
+            .eq("id", p.id);
+        continue;
+      }
       if (p && p.status !== "repondu") {
         // Extrait de la réponse, lisible dans l'intranet sans ouvrir la boîte e-mail.
         const excerpt = await replyExcerpt(msg.source);
@@ -2288,6 +2303,21 @@ async function checkReplies(box) {
     }
   } finally {
     lock.release();
+  }
+  // Accusés de réception automatiques comptés à tort comme des réponses : remis en « contacté ».
+  const { data: wronglyAnswered } = await db.from("prospects").select("id,notes,followups").eq("status", "repondu");
+  for (const w of wronglyAnswered || []) {
+    const last = [...(w.notes || "").matchAll(/Réponse du [^\n]*/g)].pop()?.[0] || "";
+    if (/accusons (bonne )?r[ée]ception|avons bien re[çc]u votre (e-?mail|message|courriel|demande)|r[ée]ponse automatique|absent|nous reviendrons vers vous dans les (plus )?brefs d[ée]lais/i.test(last)) {
+      await db
+        .from("prospects")
+        .update({
+          status: w.followups ? "relance" : "contacte",
+          replied_at: null,
+          notes: `${w.notes}\nCette réponse était un accusé de réception automatique : la relance reste prévue`,
+        })
+        .eq("id", w.id);
+    }
   }
   if (unsubscribed) note(`Désinscriptions reçues par e-mail : ${unsubscribed}`);
   if (unmatched.length)
