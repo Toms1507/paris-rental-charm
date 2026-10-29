@@ -1,5 +1,31 @@
 # Veille marché Spinelle
 
+## Veille du 2026-10-29
+Nouveautés depuis la veille du 28/10. Beaucoup de sources sont des agrégateurs ou blogs : dates et chiffres à confirmer.
+- PLF 2027 : calendrier de vote incertain (vote solennel Assemblée sur les recettes le 3 nov. selon une source, vote d'ensemble le 17 nov. selon une autre, puis Sénat, adoption attendue fin décembre) ; rien n'est voté. https://www.mysweetimmo.com/2026/10/09/plf-2027-les-locations-meublees-dhabitation-epargnees/
+- PLF 2027 : une « clause du grand-père » (investissements réalisés avant 2027) est évoquée, à confirmer. https://fiscalonline.com/outils-fiscaux/lmnp-plf2027-clause-grand-pere-investissements-realises-avant-2027
+- Marché : la croissance de la location courte durée en Europe a nettement ralenti au 1er semestre 2026 ; la France a compté 213 M de nuitées sur plateformes en 2025 (n°1 européen). https://www.rentalscaleup.com/fr/la-croissance-des-locations-de-courte-duree-en-europe-divisee-par-deux-en-2026-et-les-donnees-refutent-4-idees-recues/
+- Airbnb : les Français voyagent de plus en plus près de chez eux (été 2026), et se font aussi un pont du 11 novembre en région ; argument pour les séjours courts de proximité. https://news.airbnb.com/fr/ete-2026-les-francais-voyagent-de-plus-en-en-plus-pres-de-chez-eux/
+- Roissy : ouverture du CDG Express annoncée le 28 mars 2027 (Gare de l'Est - T2, ~20 min, 28 € l'aller-retour). https://www.voyages-d-affaires.com/en/cdg-express-march-2027
+- Grand Paris Express : ligne 15 Sud repoussée à l'automne 2027 (à confirmer) ; ligne 18 vers Orly prévue fin 2027. https://www.batiweb.com/actualites/construction/grand-paris-express-la-mise-en-service-de-la-ligne-15-sud-repoussee-a-2027-47912
+- Disneyland Paris : saison de Noël du 7 nov. 2026 au 6 janv. 2027, avec le Monde de La Reine des Neiges illuminé pour la première fois ; 35e anniversaire le 12 avril 2027. https://www.laughingplace.com/disney-parks/disneyland-paris-2027-look-ahead/
+- Bordeaux : Vinitech-Sifel 1-3 déc. 2026 (40 000 participants annoncés), Salon du Mariage 16-17 janv. 2027, Salon des Séniors 11-12 fév. 2027 (Palais des Congrès). https://congres.bordeaux-tourisme.com/sites/bcb/files/widgets/list/pdf/Calendrier%20des%20%C3%A9v%C3%A9nements%202026.pdf
+- Côte d'Azur : MIPIM Cannes du 15 au 19 mars 2027 (quelques sources indiquent le 16). https://cotedazurfrance.fr/offres/mipim-cannes-fr-3769593/
+- Alpes : ouvertures prévues Tignes et Val Thorens 21 nov., Les 2 Alpes et Montgenèvre 28 nov., Courchevel 4 déc. 2026 ; Megève et autres mi-décembre (prévisions, selon enneigement). https://guide-ski.fr/?p=4038
+- Pays basque : location de résidence principale limitée à 120 jours/an (passage à 90 évoqué) ; DPE F et G interdits en zone tendue ; zonage fixé par la CAPB. https://www.holidu.fr/magazine/reglement-locations-saisonnieres-biarritz-pays-basque
+- Concurrence : aucune opération 2026 trouvée sur les conciergeries (résultats anciens uniquement).
+- Villes à étudier (non couvertes) : Marseille en progression et Nice très rentable en courte durée selon Welkeys (blog de conciergerie, à vérifier) ; rien de fiable trouvé sur Strasbourg, Lille, Nantes, La Rochelle. https://www.welkeys.com/pt/blog/infographie-airbnb-chiffres-cles
+
+### Opportunités
+1. Roissy / nord-est de Paris : message aux agences et syndics sur le CDG Express (mars 2027) et les salons de Villepinte ; article de blog « CDG Express : quels quartiers pour louer en courte durée ».
+2. Disneyland Paris : cibler les propriétaires de Marne-la-Vallée avant la saison de Noël et l'anniversaire d'avril 2027.
+3. Étude d'une nouvelle ville : lancer une recherche ciblée sur Strasbourg, Lille ou Nantes (règles locales, offre de conciergeries) avant d'arbitrer.
+
+### Points d'attention
+- Calendrier du PLF 2027 flou : attendre le vote avant tout argumentaire fiscal ferme.
+- Ralentissement européen du marché : prudence sur les promesses de rendement aux prescripteurs.
+- Dates des ouvertures de stations et des transports sujettes à changement.
+
 ## Veille du 2026-10-28
 Nouveautés depuis la veille du 27/10. Plusieurs sources sont des agrégateurs ou des sites commerciaux : dates et chiffres à confirmer.
 - Fiscalité (info clé) : le PLF 2027 plafonnerait l'amortissement LMNP (2,5 %/an, 7 000 €/foyer ; 1,5 % et 5 000 € pour les meublés de tourisme selon le projet du gouvernement). https://selectra.info/finance/actualites/marche/lmnp-budget-2027-amortissement-plafond-7000-euros
