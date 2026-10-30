@@ -2454,6 +2454,22 @@ async function main() {
     }
     for (const e of (process.env.VERIFY_TEST || "").split(",").filter(Boolean))
       console.log(`Vérification ${e} : ${await verifyAddress(e)}`);
+    // Exemplaire d'un vrai message prêt, envoyé à une adresse de test (délivrabilité) ; la fiche
+    // de l'agence n'est pas modifiée.
+    if (process.env.SAMPLE_TO) {
+      const { data: sample } = await db
+        .from("prospects")
+        .select("*")
+        .in("status", ["brouillon", "valide"])
+        .not("email", "is", null)
+        .order("drafted_at", { ascending: true })
+        .limit(1)
+        .single();
+      const box = await mailbox();
+      await box.send({ ...compose(sample, false), to: process.env.SAMPLE_TO });
+      await box.close();
+      console.log(`Exemplaire envoyé à ${process.env.SAMPLE_TO} (message prévu pour ${sample.name})`);
+    }
     // Raisons des derniers messages non remis (diagnostic).
     const diag = await mailbox();
     const lock = await diag.imap.getMailboxLock("INBOX");
