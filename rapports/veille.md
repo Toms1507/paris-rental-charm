@@ -1,5 +1,31 @@
 # Veille marché Spinelle
 
+## Veille du 2026-10-30
+Nouveautés depuis la veille du 29/10. Sources souvent agrégateurs ou commerciales : dates et chiffres à confirmer.
+- PLF 2027 : divergence entre sources sur le sort des amendements « meublés de tourisme » (Fiscalonline indique que la commission a rejeté la partie recettes, donc ces amendements pourraient ne pas figurer dans le texte débattu en séance) ; aucun résultat de vote trouvé. https://fiscalonline.com/outils-fiscaux/plf-2027-location-meublee-commission-finances-recentre-plafonnement
+- PLF 2027 : texte initial = suppression du report des amortissements non utilisés (à confirmer). https://www.indy.fr/guide/location-meublee/lmnp/investissement-lmnp/fiscalite/plf-2027/
+- Immobilier neuf : l'enquête trimestrielle INSEE d'octobre 2026 (publiée le 23/10) montre des perspectives de mises en chantier toujours dégradées chez les promoteurs et des stocks invendus au plus haut depuis 2011 (formulation de synthèse, à confirmer) : promoteurs en recherche de solutions de commercialisation. https://www.insee.fr/fr/statistiques/fichier/version-html/9096575/IR258_TrimPromoImmo_oct26.pdf
+- Neuf : retour progressif des investisseurs particuliers ; le dispositif Jeanbrun vise le locatif non meublé, le meublé (résidences étudiantes notamment) absorbe une partie de la demande ex-Pinel. https://www.batiweb.com/actualites/immobilier/immobilier-neuf-vers-un-retour-des-investisseurs-particuliers-48700
+- Paris, Porte de Versailles : Salon du Mariage 16-17 janv., Retromobile 3-7 fév., Salon de l'agriculture 27 fév.-7 mars 2027 ; Pharmapack 27-28 janv. (dates d'agrégateurs). https://tradefest.io/fr/selection/les-meilleurs-foires-et-salons-a-paris
+- Paris : Salon Mondial du Tourisme du 11 au 14 mars 2027 (Porte de Versailles) ; JEC World à Villepinte du 2 au 4 mars 2027. https://parisjetaime.com/eng/event/paris-world-tourism-fair-e2043
+- Côte basque : salon Horesta à Biarritz du 14 au 16 mars 2027 (à confirmer). https://www.abcsalles.com/lieu/biarritz
+- Bassin d'Arcachon : Salon Maison & Jardin à La Teste-de-Buch le 21 mars 2027 (à confirmer) ; Palais des Congrès d'Arcachon de 10 à 900 personnes. https://www.abcsalles.com/lieu/palais-congres-darcachon
+- Haute-Savoie : l'hiver 2026-27 est présenté comme un premier test des nouvelles règles courte durée (article local). https://www.tourisme-haute-savoie.com/actualites-de-haute-savoie/les-locations-courte-duree-vont-elles-devenir-inaccessibles/
+- Île-de-France : amendes municipales de 5 000 à 15 000 € en cas de défaut de numéro d'enregistrement (source de blog, à confirmer). https://rentaplus.immo/blog/preparer-airbnb-ete-2026-ile-de-france/
+- Nouvelle ville : Strasbourg, rendement locatif net moyen ~3,5 % en longue durée (pas de donnée courte durée) ; conciergeries locales à ~25 % HT (annuaire commercial) : offre existante, positionnement à étudier. https://toploc.com/blog/conciergerie/conciergerie-strasbourg
+- Versailles / Chartres : aucun événement 2027 trouvé (à chercher auprès des offices de tourisme).
+- Concurrence : toujours aucune levée ou rachat 2026 confirmé (résultats anciens : Luckey/Airbnb 2018, GuestReady). https://www.frenchweb.fr/locations-airbnb-la-conciergerie-guestready-leve-53-millions-deuros/363733
+
+### Opportunités
+1. Janvier-mars à Paris : calendrier Porte de Versailles dense (Retromobile, SIA, Salon du Tourisme) ; démarcher agences et syndics avec une offre « séjours salons » et un article de blog « Se loger près de la Porte de Versailles ».
+2. Promoteurs : stocks invendus élevés et retour du meublé : proposer aux promoteurs/marchands de biens une garantie de gestion locative courte durée pour aider leurs ventes aux investisseurs (sans promesse de rendement).
+3. Strasbourg : ville à étudier (marché de la conciergerie existant, commissions ~25 %) ; chercher données d'occupation et règles de la mairie.
+
+### Points d'attention
+- Pas de résultat de vote PLF 2027 connu : suivre le 3 et le 17 nov.
+- Marché du neuf fragile : prudence sur les volumes attendus des promoteurs.
+- Dates des salons issues d'agrégateurs : confirmer avant campagne.
+
 ## Veille du 2026-10-29
 Nouveautés depuis la veille du 28/10. Beaucoup de sources sont des agrégateurs ou blogs : dates et chiffres à confirmer.
 - PLF 2027 : calendrier de vote incertain (vote solennel Assemblée sur les recettes le 3 nov. selon une source, vote d'ensemble le 17 nov. selon une autre, puis Sénat, adoption attendue fin décembre) ; rien n'est voté. https://www.mysweetimmo.com/2026/10/09/plf-2027-les-locations-meublees-dhabitation-epargnees/
