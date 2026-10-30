@@ -1886,6 +1886,12 @@ async function sendBatch(settings, box) {
       budget--;
       await sleep(8000 + Math.random() * 7000);
     } catch (e) {
+      // Refus passager du serveur d'envoi (code 4xx, saturation chez IONOS) : on s'arrête là pour
+      // ce passage sans rien marquer en erreur ; les messages repartent au passage suivant.
+      if (e.responseCode >= 400 && e.responseCode < 500) {
+        note(`Serveur d'envoi momentanément saturé (${e.responseCode}) : envois repris au passage suivant.`);
+        break;
+      }
       note(`Envoi ${p.name} : ${e.message}`);
       await db
         .from("prospects")
