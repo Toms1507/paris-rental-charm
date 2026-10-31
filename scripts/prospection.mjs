@@ -336,6 +336,9 @@ async function syncAgencies(settings) {
 const ISP_MAIL =
   /@(orange|wanadoo|free|sfr|neuf|bbox|laposte|aol|club-internet|numericable|cegetel|noos|alice|aliceadsl|libertysurf|9online|9business|voila|tele2)\.(fr|net|com)$/i;
 
+// Adresses modèles laissées sur les sites (« votre@email.com », « mon-adresse@email.com »…).
+const PLACEHOLDER_EMAIL =
+  /^(votre|vous|your|mon-?adresse|votre-?(e-?)?mail|prenom|nom|prenom[._-]nom|xxx+)@|@(email|e-mail|adresse|votre-?domaine|votresite|monsite|site)\.(com|fr|net)$/i;
 const BAD_EMAIL =
   /(example|exemple|domain|sentry|wixpress|godaddy|noreply|no-reply|nepasrepondre|\.png|\.jpe?g|\.gif|\.webp|\.svg|@2x|u00)/i;
 const PREFERRED_LOCAL =
@@ -349,12 +352,12 @@ export function extractEmails(html) {
     .replace(/&#46;|\s*\[\s*(dot|point)\s*\]\s*/gi, ".");
   const found = text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g) || [];
   return [...new Set(found.map((e) => e.toLowerCase().replace(/\.$/, "")))].filter(
-    (e) => !BAD_EMAIL.test(e),
+    (e) => !BAD_EMAIL.test(e) && !PLACEHOLDER_EMAIL.test(e),
   );
 }
 
 export function pickEmail(emails, website) {
-  emails = [...emails].filter((e) => !ISP_MAIL.test(e));
+  emails = [...emails].filter((e) => !ISP_MAIL.test(e) && !PLACEHOLDER_EMAIL.test(e));
   const host = website ? hostOf(website) : null;
   const base = host ? host.split(".").slice(-2).join(".") : null;
   const score = (e) =>
@@ -1739,7 +1742,7 @@ async function prepareNextBatch(settings) {
   const worker = async () => {
     while (queue.length && checked + ready < target && timeLeft() > 4 * MINUTES) {
       const p = queue.shift();
-      if (ISP_MAIL.test(p.email)) continue;
+      if (ISP_MAIL.test(p.email) || PLACEHOLDER_EMAIL.test(p.email)) continue;
       const result = await verifyAddress(p.email);
       checked++;
       if (result === "inexistante") {
@@ -1830,8 +1833,8 @@ async function sendBatch(settings, box) {
       await db.from("prospects").update({ status: "desinscrit" }).eq("id", p.id);
       continue;
     }
-    if (ISP_MAIL.test(p.email)) {
-      // Brouillon préparé avant ce filtre : on cherche plutôt le formulaire du site.
+    if (ISP_MAIL.test(p.email) || PLACEHOLDER_EMAIL.test(p.email)) {
+      // Brouillon préparé avant ce filtre (ou adresse modèle du site) : on cherche plutôt le formulaire du site.
       await db
         .from("prospects")
         .update({
@@ -1839,7 +1842,7 @@ async function sendBatch(settings, box) {
           email: null,
           status: p.website ? "nouveau" : "sans_email",
           crawled_at: null,
-          notes: [p.notes, `Adresse de fournisseur d'accès écartée (souvent périmée) : ${p.email}`]
+          notes: [p.notes, PLACEHOLDER_EMAIL.test(p.email) ? `Adresse modèle du site écartée : ${p.email}` : `Adresse de fournisseur d'accès écartée (souvent périmée) : ${p.email}`]
             .filter(Boolean)
             .join("\n"),
         })
@@ -2134,7 +2137,7 @@ async function checkReplies(box) {
   const contacted = await selectAll(() =>
     db
       .from("prospects")
-      .select("id,name,email,website,status,notes,message_id,subject,first_contact_at")
+      .select("id,name,email,website,status,notes,message_id,subject,first_contact_at,last_contact_at")
       .in("status", ["contacte", "relance", "sans_reponse"]),
   );
   const byEmail = new Map();
@@ -2192,13 +2195,18 @@ async function checkReplies(box) {
         // ou problème passager (boîte pleine, indisponible).
         const diag = (rawBounce.match(/Diagnostic-Code:[^\n]*(\n\s+[^\n]*)*/i) ||
           rawBounce.match(/\b[45]\d\d[ -][^\n]{0,200}/) || [""])[0];
-        const kind = /5\.7\.|rbl|block|spam|policy|reputation|denied/i.test(diag)
+        // « Relay access denied » : le domaine n'est pas hébergé là, l'adresse n'existe pas.
+        const kind = /relay access denied|relaying denied|mailbox unavailable|no such user|user unknown/i.test(diag)
+          ? "invalide"
+          : /5\.7\.|rbl|block|spam|policy|reputation|denied/i.test(diag)
           ? "filtrage"
           : /5\.2\.2|quota|full|pleine|\b4\d\d\b|\b4\.\d\.\d/i.test(diag)
             ? "passager"
             : "invalide";
         for (const [email, p] of byEmail) {
           if (!body.includes(email)) continue;
+          // Refus antérieur au dernier envoi : déjà traité lors d'un passage précédent.
+          if (p.last_contact_at && msg.envelope?.date && new Date(msg.envelope.date) < new Date(p.last_contact_at)) continue;
           byEmail.delete(email);
           if (kind === "invalide") {
             await db
@@ -2213,15 +2221,15 @@ async function checkReplies(box) {
             bounces++;
             continue;
           }
-          // L'adresse existe : nouvel essai plus tard (deux fois au plus).
+          // L'adresse existe : un seul nouvel essai, pour ne pas multiplier les refus.
           const tries = ((p.notes || "").match(/Refusé par le serveur du destinataire/g) || []).length;
           await db
             .from("prospects")
             .update({
-              ...(tries < 2 ? { status: "brouillon" } : {}),
+              ...(tries < 1 ? { status: "brouillon" } : { status: "erreur" }),
               notes: [
                 p.notes,
-                `Refusé par le serveur du destinataire (${kind === "filtrage" ? "filtrage de l'expéditeur" : "boîte pleine ou indisponible"}) : ${tries < 2 ? "nouvel essai prévu" : "abandonné"}`,
+                `Refusé par le serveur du destinataire (${kind === "filtrage" ? "filtrage de l'expéditeur" : "boîte pleine ou indisponible"}) : ${tries < 1 ? "nouvel essai prévu" : "abandonné"}`,
               ]
                 .filter(Boolean)
                 .join("\n"),
