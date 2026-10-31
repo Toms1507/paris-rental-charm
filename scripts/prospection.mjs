@@ -824,15 +824,38 @@ export async function findSite(p) {
 }
 
 async function enrich() {
-  const { data: rows } = await db
-    .from("prospects")
-    .select("*")
-    .eq("status", "nouveau")
-    .is("crawled_at", null)
-    .order("email", { ascending: true, nullsFirst: false })
-    .order("website", { ascending: true, nullsFirst: false })
-    .limit(ENRICH_PER_RUN);
-  const queue = [...(rows || [])];
+  // Chaque métier a sa part : les fiches de l'annuaire des entreprises (promoteurs, marchands de
+  // biens, investisseurs…), sans site au départ, ne restent plus derrière les agences.
+  const kinds = [
+    "promoteur immobilier",
+    "marchand de biens",
+    "société d'investissement immobilier",
+    "conseiller en investissement ou gestion de patrimoine",
+    "syndic ou administrateur de biens",
+    "agence immobilière",
+  ];
+  const lists = await Promise.all(
+    kinds.map(async (cat) => {
+      let q = db.from("prospects").select("*").eq("status", "nouveau").is("crawled_at", null);
+      q = cat === "agence immobilière"
+        ? q.or("notes.is.null,notes.ilike.*Catégorie : agence immobilière*")
+        : q.ilike("notes", `%Catégorie : ${cat}%`);
+      const { data } = await q
+        .order("email", { ascending: true, nullsFirst: false })
+        .order("website", { ascending: true, nullsFirst: false })
+        .limit(ENRICH_PER_RUN);
+      return data || [];
+    }),
+  );
+  // Tour de rôle entre métiers (les autres métiers d'abord), dans la limite du passage.
+  const queue = [];
+  const ids = new Set();
+  for (let i = 0; queue.length < ENRICH_PER_RUN && lists.some((l) => l[i]); i++)
+    for (const l of lists)
+      if (l[i] && !ids.has(l[i].id) && queue.length < ENRICH_PER_RUN) {
+        ids.add(l[i].id);
+        queue.push(l[i]);
+      }
   let checked = 0;
   let withEmail = 0;
   let found = 0;
