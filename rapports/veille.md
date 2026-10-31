@@ -1,5 +1,30 @@
 # Veille marché Spinelle
 
+## Veille du 2026-10-31
+Nouveautés depuis la veille du 30/10. Beaucoup de sources sont des agrégateurs ou blogs : dates et chiffres à confirmer.
+- PLF 2027 : le texte de base du gouvernement (art. 7) plafonne l'amortissement LMNP (1,5 %/an et 5 000 € pour les meublés de tourisme). Comme la commission a rejeté la partie recettes, les amendements de commission (suppression de l'amortissement pour les meublés de tourisme achetés dès 2027) ne seraient pas dans le texte débattu en séance : non acquis ; dates de vote 3 nov. / 17 nov. à confirmer. https://fiscalonline.com/outils-fiscaux/plf-2027-location-meublee-commission-finances-recentre-plafonnement
+- Marché immobilier : note des Notaires de France d'octobre 2026 : 951 000 transactions sur 12 mois (+3,6 %), prix -0,8 % sur un an au T2 2026, reprise qui s'essouffle ; investisseurs privés toujours en retrait. https://www.mysweetimmo.com/2026/10/23/immobilier-les-prix-baissent-mais-la-reprise-sessouffle/
+- Location courte durée : +8,1 % de réservations au T1 2026 en France (Airbnb, Booking, Expedia) contre +2,5 % pour l'hôtellerie (source non officielle, à confirmer). https://modelesdebusinessplan.com/blogs/infos/hotel-airbnb-concurrence-baisse
+- Paris, Porte de Versailles : Heavent Paris (événementiel/séminaires), Séminaire Expo et Affaire de Cadeaux du 17 au 19 nov. ; Data Centre World et Cloud Expo Europe 18-19 nov. ; Salon des services à la personne 1-2 déc. (agrégateurs). https://tradefest.io/fr/selection/les-meilleurs-foires-et-salons-a-paris
+- Versailles : exposition « Marie-Antoinette » de Sofia Coppola au Petit Trianon jusqu'au 24 janv. 2027 (20 ans du film) ; saison musicale 2026-27 de l'Opéra Royal publiée. https://en.chateauversailles.fr/press
+- Chartres : illuminations « Chartres en Lumières » tous les soirs jusqu'au 3 janv. 2027 (extinction 23 h depuis le 25 oct.), décors de Noël sur une douzaine de sites dès fin novembre. https://www.chartresenlumieres.com/en/chartres-en-lumieres-2026
+- Disneyland Paris : travaux du théâtre Animagique (spectacle Mickey & the Magician) dès le 10 janv. 2027 ; nouvelle parade de jour annoncée pour 2028 ; refonte de Space Mountain fin 2027 ; presse spécialisée jugeant les annonces D23 modestes. https://ridingthemagic.uk/news/mickey-and-the-magician-closing-disneyland-paris-2027
+- Bordeaux : Rendez-vous en France (salon pro du tourisme) les 23-24 mars 2027 ; congrès NeuroFrance (1 500 délégués) du 11 au 13 mai 2027. https://www.tourmag.com/Rendez-vous-en-France-Bordeaux-designe-pour-l-edition-2027_a131186.html
+- Alpes : Sunweb annonce +51 % de Français ayant déjà réservé pour l'hiver 2026-27 sur sa plateforme (à confirmer) ; zone C en vacances dès le 6 fév. 2027 ; ouverture des réservations TGV le 12 nov. pour les trajets du 7 janv. au 2 juil. 2027. https://www.lechotouristique.com/france/ski-les-francais-reservent-plus-tot-leurs-vacances-selon-sunweb
+- Résidences secondaires : en 2026, Lyon, Marseille, Nantes, Montpellier, Strasbourg, Rennes, Bordeaux, Nice mais aussi Annecy, Biarritz, Bayonne, La Rochelle, Arcachon appliquent la majoration maximale de taxe d'habitation (60 %, selon SeLoger, à confirmer) : propriétaires incités à rentabiliser leur bien. https://edito.seloger.com/luxe/droits-fiscalite/residence-secondaire-communes-majorent-fortement-taxe-d-habitation-article
+- Nouvelle ville : Lille – ~460 annonces dans le centre en juillet 2026 ; quotas possibles par quartier, amendes lourdes (33 000 € cités) ; conciergeries locales à 15-24 % (offre commerciale) ; location longue durée déjà très liquide, donc intérêt du saisonnier à vérifier. https://rentaplus.immo/blog/conciergerie-airbnb-a-lille/
+- Concurrence : toujours aucune levée ni rachat 2026 confirmé trouvé (seuls résultats anciens : GuestReady, Luckey, Primo 2024).
+
+### Opportunités
+1. Fin d'année en région parisienne : proposer aux agences de Versailles et Chartres un message « week-end illuminations + exposition Coppola » (jusqu'au 3 et 24 janv.) pour les propriétaires de leur secteur.
+2. Cibler les propriétaires de résidences secondaires (taxe majorée à 60 % dans plusieurs de nos zones : Bordeaux, Nice, Biarritz, Arcachon) via agences et CGP : angle « faire travailler le bien » ; sujet de blog « Résidence secondaire : taxe majorée, comment la compenser ».
+3. Alpes : démarcher agences de stations dès novembre, les réservations d'hiver et de TGV s'ouvrent (12 nov.) ; Lille à étudier seulement après vérification des quotas.
+
+### Points d'attention
+- PLF 2027 : ne pas citer les amendements de commission comme acquis ; suivre les votes des 3 et 17 nov.
+- Marché du neuf et investissement privé toujours fragiles (notaires) : prudence sur les volumes attendus.
+- Chiffres de réservation issus de blogs ou de prestataires : ne pas les utiliser tels quels face aux prescripteurs.
+
 ## Veille du 2026-10-30
 Nouveautés depuis la veille du 29/10. Sources souvent agrégateurs ou commerciales : dates et chiffres à confirmer.
 - PLF 2027 : divergence entre sources sur le sort des amendements « meublés de tourisme » (Fiscalonline indique que la commission a rejeté la partie recettes, donc ces amendements pourraient ne pas figurer dans le texte débattu en séance) ; aucun résultat de vote trouvé. https://fiscalonline.com/outils-fiscaux/plf-2027-location-meublee-commission-finances-recentre-plafonnement
