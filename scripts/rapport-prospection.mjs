@@ -143,11 +143,17 @@ const formText = [
   `- Échecs : ${[...formFail].sort((x, y) => y[1] - x[1]).map(([r, n]) => `${r} ${n}`).join(", ") || "aucun"}`,
 ].join("\n");
 
-// Prochains envois : les messages prêts les plus anciens partent en premier.
-const nextUp = rows
+// Prochains envois : à tour de rôle entre métiers, les plus anciens d'abord dans chaque métier.
+const byTrade = new Map();
+for (const p of rows
   .filter((p) => ["brouillon", "valide"].includes(p.status) && p.email && p.body)
-  .sort((a, b) => (a.drafted_at || "").localeCompare(b.drafted_at || ""))
-  .slice(0, 70);
+  .sort((a, b) => (a.drafted_at || "").localeCompare(b.drafted_at || ""))) {
+  if (!byTrade.has(category(p))) byTrade.set(category(p), []);
+  byTrade.get(category(p)).push(p);
+}
+const nextUp = [];
+for (let i = 0; nextUp.length < 70 && [...byTrade.values()].some((l) => l[i]); i++)
+  for (const l of byTrade.values()) if (l[i] && nextUp.length < 70) nextUp.push(l[i]);
 const nextCats = new Map();
 for (const p of nextUp) nextCats.set(category(p), (nextCats.get(category(p)) || 0) + 1);
 const nextText = [
