@@ -591,13 +591,22 @@ export async function verifiedSite(company) {
     .filter(Boolean)
     .map((n) => n.replace(/\(.*?\)/g, " "));
   const urls = [...new Set([...siteCandidates(company), ...names.flatMap(agencyCandidates)])];
+  // Les petites sociétés affichent rarement leur SIREN : on accepte aussi un site qui porte leur nom,
+  // parle du bon métier et cite leur ville ou leur code postal (accueil, contact ou mentions légales).
+  const key = flat(names[0] || "");
+  const city = norm(company.siege?.libelle_commune || "");
+  const postcode = company.siege?.code_postal || "";
+  const TRADE = /patrimoin|immobili|promot|invest|fonci|logement|programme|chasseur|r[ée]sidence|gestion/;
+  const local = (html) => (city.length >= 3 && norm(html).includes(city)) || (postcode && html.includes(postcode));
   for (const url of urls) {
     const home = await fetchText(url, { timeout: 7000 });
     if (!home) continue;
     if (has(home)) return url;
-    for (const path of ["mentions-legales", "mentions-legales/", "informations-legales", "legal"]) {
+    const named = key.length >= 6 && flat(home).includes(key) && TRADE.test(norm(home));
+    if (named && local(home)) return url;
+    for (const path of ["mentions-legales", "mentions-legales/", "informations-legales", "legal", "contact"]) {
       const page = await fetchText(new URL(`/${path}`, url).href, { timeout: 7000 });
-      if (page && has(page)) return url;
+      if (page && (has(page) || (named && local(page)))) return url;
     }
   }
   return null;
