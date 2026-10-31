@@ -511,38 +511,28 @@ export async function lookupCompany(p) {
 // Entreprises de l'annuaire officiel (codes d'activité), réparties par département de nos zones.
 // Leur site n'y figure pas : on le devine à partir du nom, et on ne le retient que si le numéro
 // SIREN de l'entreprise y apparaît (mentions légales obligatoires) — jamais d'homonyme.
+// Cibles de l'annuaire des entreprises : code d'activité + mot-clé de recherche (« q »), puis filtre
+// de nom strict. La recherche par mot-clé donne des listes précises au lieu de pages tirées au hasard
+// parmi des milliers de sociétés. Les SCI (souvent familiales, donc des particuliers) sont exclues.
 const COMPANY_TARGETS = [
   { naf: "41.10A", label: "promoteur immobilier" },
   { naf: "68.10Z", label: "marchand de biens" },
   { naf: "68.32A", label: "syndic ou administrateur de biens" },
-  // Conseillers en gestion de patrimoine : code d'activité large, on ne garde que les noms explicites.
-  {
-    naf: "66.19B",
-    label: "conseiller en investissement ou gestion de patrimoine",
-    name: /patrimoin|gestion priv|wealth|invest/i,
-  },
-  {
-    naf: "70.22Z",
-    label: "conseiller en investissement ou gestion de patrimoine",
-    name: /patrimoin|gestion priv|wealth/i,
-  },
-  // Sociétés d'investissement immobilier (foncières, investisseurs, gérants de fonds immobiliers) :
-  // codes d'activité larges, seuls les noms qui le disent clairement sont retenus.
-  {
-    naf: "68.20B",
-    label: "société d'investissement immobilier",
-    name: /fonci[eè]re|invest|patrimoine|real estate|asset/i,
-  },
-  {
-    naf: "66.30Z",
-    label: "société d'investissement immobilier",
-    name: /immobili|real estate|pierre|scpi|fonci[eè]re|property/i,
-  },
-  {
-    naf: "64.20Z",
-    label: "société d'investissement immobilier",
-    name: /immobili|fonci[eè]re|real estate|property/i,
-  },
+  { naf: "68.32A", label: "syndic ou administrateur de biens", q: "gestion locative" },
+  // Conseillers en gestion de patrimoine : inscrits sous plusieurs codes d'activité.
+  { naf: "66.19B", label: "conseiller en investissement ou gestion de patrimoine", q: "patrimoine", name: /patrimoin/i },
+  { naf: "70.22Z", label: "conseiller en investissement ou gestion de patrimoine", q: "patrimoine", name: /patrimoin/i },
+  { naf: "66.22Z", label: "conseiller en investissement ou gestion de patrimoine", q: "patrimoine", name: /patrimoin/i },
+  { naf: "68.31Z", label: "conseiller en investissement ou gestion de patrimoine", q: "patrimoine", name: /patrimoin/i },
+  // Chasseurs immobiliers : ils trouvent des biens pour des acheteurs, souvent investisseurs.
+  { naf: "68.31Z", label: "chasseur immobilier", q: "chasseur", name: /chasseur|chasse/i },
+  { naf: "70.22Z", label: "chasseur immobilier", q: "chasseur immobilier", name: /chasseur|chasse/i },
+  // Sociétés d'investissement immobilier : investissement locatif clé en main, foncières, gérants de SCPI.
+  { naf: "68.31Z", label: "société d'investissement immobilier", q: "invest", name: /invest/i },
+  { naf: "70.22Z", label: "société d'investissement immobilier", q: "investissement immobilier", name: /invest|immo/i },
+  { naf: "68.20B", label: "société d'investissement immobilier", q: "investissement", name: /invest|fonci[eè]re|real estate|asset/i },
+  { naf: "66.30Z", label: "société d'investissement immobilier", q: "immobilier", name: /immobili|real estate|pierre|scpi|fonci[eè]re|property/i },
+  { naf: "64.20Z", label: "société d'investissement immobilier", q: "immobilier", name: /immobili|fonci[eè]re|real estate|property/i },
 ];
 const DEPT_ZONE = {
   75: "paris",
@@ -561,7 +551,7 @@ const DEPT_ZONE = {
   38: "ski",
   64: "cote-basque-arcachon",
 };
-const COMPANIES_PER_RUN = 30;
+const COMPANIES_PER_RUN = 60;
 
 function siteCandidates(company) {
   const raw = company.nom_complet || "";
@@ -618,11 +608,15 @@ async function syncCompanies(settings) {
   const depts = Object.entries(DEPT_ZONE).filter(([, z]) => zones.has(z));
   let added = 0;
   let checked = 0;
-  for (let i = 0; i < 6 && checked < COMPANIES_PER_RUN; i++) {
-    // Un département et une activité tirés au hasard à chaque essai : toute la liste est couverte au fil des jours.
+  const labels = [...new Set(COMPANY_TARGETS.map((t) => t.label))];
+  for (let i = 0; i < 15 && checked < COMPANIES_PER_RUN && timeLeft() > 12 * MINUTES; i++) {
+    // Un département, un métier puis une cible de ce métier tirés au hasard à chaque essai : chaque
+    // métier a la même chance, et toute la liste est couverte au fil des jours.
     const [dept, zone] = depts[Math.floor(Math.random() * depts.length)];
-    const target = COMPANY_TARGETS[Math.floor(Math.random() * COMPANY_TARGETS.length)];
-    const base = `https://recherche-entreprises.api.gouv.fr/search?activite_principale=${target.naf}&departement=${dept}&etat_administratif=A&categorie_entreprise=PME&per_page=25`;
+    const label = labels[i % labels.length];
+    const options = COMPANY_TARGETS.filter((t) => t.label === label);
+    const target = options[Math.floor(Math.random() * options.length)];
+    const base = `https://recherche-entreprises.api.gouv.fr/search?activite_principale=${target.naf}&departement=${dept}&etat_administratif=A&per_page=25${target.q ? `&q=${encodeURIComponent(target.q)}` : ""}`;
     const first = JSON.parse((await fetchText(base, { timeout: 15000 })) || "{}");
     const pages = Math.min(first.total_pages || 1, 40);
     const page = 1 + Math.floor(Math.random() * pages);
@@ -638,6 +632,7 @@ async function syncCompanies(settings) {
     for (const c of list.results) {
       if (checked >= COMPANIES_PER_RUN || timeLeft() < 12 * MINUTES) break;
       if (seen.has(`siren:${c.siren}`)) continue;
+      if (c.nature_juridique === "6540") continue;
       if (target.name && !target.name.test(`${c.nom_complet} ${c.siege?.liste_enseignes?.[0] ?? ""}`))
         continue;
       checked++;
@@ -831,6 +826,7 @@ async function enrich() {
     "marchand de biens",
     "société d'investissement immobilier",
     "conseiller en investissement ou gestion de patrimoine",
+    "chasseur immobilier",
     "syndic ou administrateur de biens",
     "agence immobilière",
   ];
@@ -1133,6 +1129,10 @@ const SITUATIONS = {
     "l'acheteur investisseur qui hésite à signer faute de savoir qui s'occupera de son bien",
   ],
   "marchand de biens": ["le bien rénové qui attend sa revente et reste vide en attendant"],
+  "chasseur immobilier": [
+    "le client investisseur qui a trouvé le bon appartement mais hésite faute de savoir qui le gérera",
+    "le client qui achète loin de chez lui et ne pourra pas s'occuper de son bien",
+  ],
   "société d'investissement immobilier": [
     "le logement meublé de son parc qui reste vide entre deux locations et pourrait rapporter davantage sans gestion de plus",
     "les investisseurs qu'elle accompagne, qui veulent un bon rendement de leur appartement sans s'en occuper",
@@ -1280,7 +1280,7 @@ function collabSubject(p) {
     "Partenariat apporteur d'affaires – Spinelle Conciergerie",
     "Proposition de partenariat – Spinelle Conciergerie",
     ...(named ? [`${name} × Spinelle Conciergerie`] : []),
-    ...(/patrimoine|investissement|promoteur/.test(cat)
+    ...(/patrimoine|investissement|promoteur|chasseur/.test(cat)
       ? ["Partenariat pour vos clients investisseurs"]
       : /syndic/.test(cat)
         ? ["Partenariat pour vos copropriétaires bailleurs"]
@@ -1357,6 +1357,7 @@ async function draftMessages(settings) {
     "promoteur immobilier",
     "marchand de biens",
     "société d'investissement immobilier",
+    "chasseur immobilier",
   ];
   const pick = async (kind) => {
     if (!rooms[kind]) return [];
@@ -1747,17 +1748,38 @@ async function dropDeadAddress(p) {
 // Préparation du lot suivant (à chaque passage, et donc dès la fin de journée pour le lendemain) :
 // les prochains messages à partir ont leur adresse vérifiée à l'avance. Pas de surprise au moment
 // de l'envoi, et les adresses inexistantes ne partent jamais.
+// Messages prêts, pris métier par métier (les plus anciens d'abord dans chaque métier) : les
+// agences, plus nombreuses, ne prennent plus toute la place des autres métiers.
+const TRADES = [
+  "agence immobilière",
+  "syndic ou administrateur de biens",
+  "conseiller en investissement ou gestion de patrimoine",
+  "promoteur immobilier",
+  "marchand de biens",
+  "société d'investissement immobilier",
+  "chasseur immobilier",
+];
+async function readyByTrade(statuses, perTrade) {
+  const lists = await Promise.all(
+    TRADES.map(async (cat) => {
+      let q = db.from("prospects").select("*").in("status", statuses).not("email", "is", null);
+      q = cat === "agence immobilière"
+        ? q.or("notes.is.null,notes.ilike.*Catégorie : agence immobilière*")
+        : q.ilike("notes", `%Catégorie : ${cat}%`);
+      const { data } = await q.order("drafted_at", { ascending: true }).limit(perTrade);
+      return data || [];
+    }),
+  );
+  const out = [];
+  for (let i = 0; lists.some((l) => l[i]); i++) for (const l of lists) if (l[i]) out.push(l[i]);
+  return out;
+}
+
 async function prepareNextBatch(settings) {
   const tomorrow = new Date(Date.now() + 86_400_000);
   const target = Math.ceil(allowanceToday(settings, 1, tomorrow) * 1.2);
   const statuses = settings.mode === "auto" ? ["valide", "brouillon"] : ["valide"];
-  const { data: rows } = await db
-    .from("prospects")
-    .select("*")
-    .in("status", statuses)
-    .not("email", "is", null)
-    .order("drafted_at", { ascending: true })
-    .limit(target * 2);
+  const rows = (await readyByTrade(statuses, target * 2)).slice(0, target * 2);
   const queue = (rows || []).filter((p) => !verifiedOf(p));
   const ready = (rows || []).length - queue.length;
   let checked = 0;
@@ -1838,13 +1860,7 @@ async function sendBatch(settings, box) {
   }
 
   const statuses = settings.mode === "auto" ? ["valide", "brouillon"] : ["valide"];
-  const { data: candidates } = await db
-    .from("prospects")
-    .select("*")
-    .in("status", statuses)
-    .not("email", "is", null)
-    .order("drafted_at", { ascending: true })
-    .limit(Math.max(0, budget) * 8);
+  const candidates = budget > 0 ? await readyByTrade(statuses, budget * 8) : [];
   // Les messages validés d'abord, puis envoi à tour de rôle entre zones et métiers.
   const ready = [
     ...interleave((candidates || []).filter((p) => p.status === "valide")),
