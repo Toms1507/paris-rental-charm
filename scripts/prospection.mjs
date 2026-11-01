@@ -96,6 +96,12 @@ const ZONES = {
       [8000, 45.6186, 6.7692], // Les Arcs, Bourg-Saint-Maurice
       [8000, 46.1792, 6.7089], // Morzine, Avoriaz
       [6000, 45.0907, 6.0703], // L'Alpe d'Huez
+      [8000, 45.31, 6.56], // Val Thorens, Les Menuires
+      [6000, 45.507, 6.678], // La Plagne
+      [7000, 45.92, 6.43], // La Clusaz, Le Grand-Bornand
+      [5000, 45.892, 6.713], // Saint-Gervais
+      [6000, 45.008, 6.123], // Les Deux Alpes
+      [10000, 44.899, 6.643], // Serre Chevalier, Briançon, Montgenèvre
     ],
     season: [8, 9, 10, 11, 12], // biens d'hiver : à démarcher avant la saison
   },
@@ -108,6 +114,15 @@ const ZONES = {
       [10000, 44.6464, -1.2468], // Cap-Ferret
     ],
     season: [1, 2, 3, 4, 5, 6],
+  },
+  "cote-fleurie": {
+    label: "côte fleurie (Deauville, Trouville, Honfleur, Cabourg)",
+    arounds: [
+      [7000, 49.36, 0.075], // Deauville, Trouville
+      [6000, 49.4194, 0.2331], // Honfleur
+      [8000, 49.2833, -0.1167], // Cabourg, Houlgate, Dives
+    ],
+    season: [1, 2, 3, 4, 5, 6], // résidences secondaires : à démarcher avant l'été
   },
 };
 
@@ -128,6 +143,8 @@ const ZONE_CONTEXT = {
   ski: "Les stations de ski des Alpes : chalets et appartements très demandés pendant la saison d'hiver ; Spinelle y intervient avec une équipe locale.",
   "cote-basque-arcachon":
     "La côte basque et le bassin d'Arcachon : forte demande l'été et pendant les vacances ; Spinelle y intervient avec une équipe locale.",
+  "cote-fleurie":
+    "La côte fleurie normande (Deauville, Trouville, Honfleur, Cabourg) : la plage des Parisiens, des voyageurs le week-end toute l'année et pendant les vacances, beaucoup de résidences secondaires qui restent fermées une partie de l'année ; Spinelle y intervient avec une équipe locale.",
 };
 
 const env = (k) => {
@@ -515,7 +532,8 @@ export async function lookupCompany(p) {
 // de nom strict. La recherche par mot-clé donne des listes précises au lieu de pages tirées au hasard
 // parmi des milliers de sociétés. Les SCI (souvent familiales, donc des particuliers) sont exclues.
 const COMPANY_TARGETS = [
-  { naf: "41.10A", label: "promoteur immobilier" },
+  // Promoteurs : on écarte les sociétés de programme (SCCV, SNC…), sans site ni interlocuteur.
+  { naf: "41.10A", label: "promoteur immobilier", name: /^(?!.*\b(sccv|scc|snc|sci|scicv)\b)/i },
   { naf: "68.10Z", label: "marchand de biens" },
   { naf: "68.32A", label: "syndic ou administrateur de biens" },
   { naf: "68.32A", label: "syndic ou administrateur de biens", q: "gestion locative" },
@@ -524,6 +542,11 @@ const COMPANY_TARGETS = [
   { naf: "70.22Z", label: "conseiller en investissement ou gestion de patrimoine", q: "patrimoine", name: /patrimoin/i },
   { naf: "66.22Z", label: "conseiller en investissement ou gestion de patrimoine", q: "patrimoine", name: /patrimoin/i },
   { naf: "68.31Z", label: "conseiller en investissement ou gestion de patrimoine", q: "patrimoine", name: /patrimoin/i },
+  // Courtiers en crédit immobilier (66.19B, IOBSP) : ils voient passer chaque investisseur qui achète.
+  { naf: "66.19B", label: "conseiller en investissement ou gestion de patrimoine", q: "courtier", name: /^(?!.*(banque|bank|assurance|caisse|mutuel))(?=.*(courti|courtag|cr[ée]dit|financ|taux|pr[eê]t))/i },
+  { naf: "66.19B", label: "conseiller en investissement ou gestion de patrimoine", q: "credit immobilier", name: /^(?!.*(banque|bank|assurance|caisse|mutuel))(?=.*(courti|courtag|cr[ée]dit|financ|taux|pr[eê]t))/i },
+  // Experts-comptables spécialisés en location meublée (69.20Z) : tous leurs clients sont des propriétaires de meublés.
+  { naf: "69.20Z", label: "conseiller en investissement ou gestion de patrimoine", q: "lmnp", name: /lmnp|meubl/i },
   // Chasseurs immobiliers : ils trouvent des biens pour des acheteurs, souvent investisseurs.
   { naf: "68.31Z", label: "chasseur immobilier", q: "chasseur", name: /chasseur|chasse/i },
   { naf: "70.22Z", label: "chasseur immobilier", q: "chasseur immobilier", name: /chasseur|chasse/i },
@@ -550,6 +573,8 @@ const DEPT_ZONE = {
   74: "ski",
   38: "ski",
   64: "cote-basque-arcachon",
+  "05": "ski",
+  14: "cote-fleurie",
 };
 const COMPANIES_PER_RUN = 60;
 
@@ -948,6 +973,8 @@ Comment écrire un message qui éveille la curiosité (c'est LE critère) :
   · agence de gestion locative : le propriétaire dont le locataire s'en va et qui parle d'essayer Airbnb, et que l'agence risque de perdre ; le propriétaire lassé de la location classique ;
   · syndic ou administrateur de biens : le copropriétaire bailleur qui demande un contact sérieux pour louer aux voyageurs, alors que l'immeuble veut des voyageurs respectueux et un vrai suivi (nous veillons au calme et au respect de l'immeuble) ;
   · conseiller en patrimoine : le client qui veut faire travailler un bien sans s'en occuper ;
+  · courtier en crédit immobilier : le client qui fait financer l'achat d'un appartement à louer et se demande qui le gérera ;
+  · expert-comptable spécialisé en location meublée : le client qui loue son meublé lui-même et s'épuise à tout gérer ;
   · promoteur : l'acheteur investisseur qui hésite à signer faute de savoir qui s'occupera de son bien ;
   · société d'investissement immobilier (foncière, investisseur, gérant de fonds) : le logement meublé de son parc qui reste vide entre deux locations, les investisseurs qu'elle accompagne qui veulent un bon rendement sans gestion ;
   · marchand de biens : le bien rénové qui attend sa revente ;
@@ -1133,6 +1160,8 @@ const SITUATIONS = {
   "conseiller en investissement ou gestion de patrimoine": [
     "le client qui veut faire travailler un bien sans s'en occuper",
     "le client qui hésite à investir dans un appartement faute de savoir qui le gérera",
+    "le client qui fait financer l'achat d'un appartement pour le louer et se demande qui s'en occupera au quotidien",
+    "le client qui loue un meublé lui-même et s'épuise à tout gérer entre deux voyageurs",
   ],
   "promoteur immobilier": [
     "l'acheteur investisseur qui hésite à signer faute de savoir qui s'occupera de son bien",
