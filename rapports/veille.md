@@ -1,5 +1,30 @@
 # Veille marché Spinelle
 
+## Veille du 2026-11-02
+Nouveautés depuis la veille du 31/10. Sources souvent agrégateurs ou blogs : dates et chiffres à confirmer.
+- PLF 2027 : état inchangé, rien n'est voté. Texte initial (art. 7) : plafond d'amortissement LMNP 1,5 %/an et 5 000 € pour les meublés de tourisme (2,5 % et 7 000 € pour les autres meublés) ; amendement de commission du 8 oct. : plus d'amortissement pour un meublé de tourisme acquis dès le 1er janv. 2027 ; vote solennel sur les recettes le 3 nov. et vote d'ensemble le 17 nov. selon les sources (à confirmer). https://hospitality-on.com/fr/tendances/budget-2027-les-deputes-concentrent-le-durcissement-fiscal-sur-les-meubles-de-tourisme
+- Airbnb : fin des « corvées de départ » (tâches demandées aux voyageurs) pour les réservations effectuées à partir du 20 nov. 2026 (source secondaire, à confirmer) ; la « Sortie d'hiver » Airbnb est attendue en novembre. https://www.mediaterranee.com/2832026-airbnb-fin-des-corvees-de-depart-le-20-novembre.html
+- Airbnb : 20 000 hôtes ont demandé à rejoindre le programme Airbnb Plus et 1 million ont utilisé les nouvelles catégories de logement (communiqué, juillet 2026). https://www.tendancehotellerie.fr/articles-breves/communique-de-presse/9321-article/20-000-hotes-ont-demande-a-integrer-le-programme-airbnb-plus-et-1-million-ont-utilise-les-nouvelles-categories-pour-leur-logement
+- Paris, tourisme d'affaires : la CCI Paris IDF (sept. 2026) annonce un retour du secteur à son niveau d'excellence ; mais son baromètre du 1er semestre 2026 note une baisse du nombre de visiteurs de salons malgré un record à la Foire de Paris. https://www.cci-paris-idf.fr/fr/newsroom/presse/cp/tourisme-daffaires-paris-ile-de-france-retrouve-son-niveau-dexcellence-et-confirme-son-leadership-mondial
+- Paris fin nov.-début déc. : congrès ADF (dentaire) et JDP (dermatologie) au Palais des Congrès, All4Pack à Villepinte (baromètre Paris je t'aime, dates exactes à confirmer). https://cdn.paris.fr/paris/2026/08/17/barometre-paris-je-taime-aout-2026-0XpC.pdf
+- Roissy : Paris Design Week du 14 au 18 janv. 2027 à Paris Nord Villepinte (eventseye, à confirmer). https://www.eventseye.com/fairs/f-paris-design-week-22360-0.html
+- Côte d'Azur : Carnaval de Nice et Fête du citron de Menton en février ; Nice prospecte des congrès 2027 (mars ~150 pers., fin sept./oct. ~250 et ~2 000 pers., projets à confirmer). https://www.explorenicecotedazur.com/?p=80345
+- Investissement résidentiel : volume de 1 217 M€ au S1 2026 (-42 % sur un an), dont 367 M€ en résidentiel géré (808 M€ un an plus tôt) ; les résidences étudiantes restent le segment actif, les marchands de biens et fonds visent le « value-add » (Colliers/relais, à confirmer). https://assetphysics.com/wp-content/uploads/2026/02/260202_Colliers-Flash-Investissement-Residentiel-T4-2025.pdf
+- Annecy : selon Ulysse (blog), 3 740 annonces retirées autour du lac avant juin 2026 après les quotas ; offre en repli, propriétaires bloqués à convertir (chiffre à confirmer). https://ulysse.com/news/annecy-airbnb-quotas-loi-le-meur-ete-2026
+- Réglementation : un téléservice d'enregistrement des loueurs doit ouvrir au 4e trimestre 2026 (page GuestReady, à confirmer). https://www.guestready.com/fr/blog/comparaison-meilleure-conciergerie-airbnb/
+- Concurrence : aucune levée ni rachat récent trouvé (WeHost : 400 000 € de levée annoncée, date à confirmer ; autres résultats anciens). https://www.tendancehotellerie.fr/articles-breves/communique-de-presse/8797-article/wehost-annonce-une-premiere-levee-de-fonds-de-400-000-euros-pour-devenir-la-reference-en-france-des-conciergeries-airbnb
+- Nantes, La Rochelle, Marseille : aucune donnée fiable trouvée sur la demande ou la réglementation.
+
+### Opportunités
+1. Roissy / Paris Nord : janvier (Paris Design Week 14-18 janv.) puis CDG Express (28 mars) : campagne auprès des agences du secteur avec un message « séjours professionnels » ; fin nov. : congrès au Palais des Congrès pour les agences Paris 17e.
+2. Annecy et Haute-Savoie : propriétaires touchés par les quotas, cibler les agences locales avec une offre de gestion réglementée ; sujet de blog « Quotas courte durée : que faire de son bien ? » (vérifier les règles de chaque commune).
+3. Marchands de biens/fonds : offre de gestion courte durée pour les lots meublés hors résidences étudiantes, en insistant sur la conformité plutôt que sur le rendement.
+
+### Points d'attention
+- Votes PLF 2027 les 3 et 17 nov. : mettre à jour l'argumentaire fiscal dès le résultat connu.
+- Investissement résidentiel en net recul : prudence sur les volumes attendus des prescripteurs.
+- Baisse de fréquentation des salons au S1 2026 : ne pas promettre de taux d'occupation lié aux événements.
+
 ## Veille du 2026-10-31
 Nouveautés depuis la veille du 30/10. Beaucoup de sources sont des agrégateurs ou blogs : dates et chiffres à confirmer.
 - PLF 2027 : le texte de base du gouvernement (art. 7) plafonne l'amortissement LMNP (1,5 %/an et 5 000 € pour les meublés de tourisme). Comme la commission a rejeté la partie recettes, les amendements de commission (suppression de l'amortissement pour les meublés de tourisme achetés dès 2027) ne seraient pas dans le texte débattu en séance : non acquis ; dates de vote 3 nov. / 17 nov. à confirmer. https://fiscalonline.com/outils-fiscaux/plf-2027-location-meublee-commission-finances-recentre-plafonnement
