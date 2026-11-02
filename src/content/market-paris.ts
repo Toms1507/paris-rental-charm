@@ -13,7 +13,7 @@ export const MARKET_PARIS = {
   "source": "Inside Airbnb",
   "sourceUrl": "https://insideairbnb.com/paris/",
   "license": "CC BY 4.0",
-  "snapshot": "2026-09-16",
+  "snapshot": "2026-10-08",
   "snapshots": [
     "2025-11-12",
     "2025-12-13",
@@ -25,69 +25,70 @@ export const MARKET_PARIS = {
     "2026-06-16",
     "2026-07-15",
     "2026-08-15",
-    "2026-09-16"
+    "2026-09-16",
+    "2026-10-08"
   ],
   "previousSnapshot": null,
-  "listings": 20314,
+  "listings": 21085,
   "paris": {
     "0": {
-      "price": 124,
+      "price": 125,
       "occupancy": 0.427,
       "occupancyTop": 0.699,
-      "sample": 4842
+      "sample": 5028
     },
     "1": {
       "price": 162,
       "occupancy": 0.312,
-      "occupancyTop": 0.597,
-      "sample": 9041
+      "occupancyTop": 0.57,
+      "sample": 9509
     },
     "2": {
-      "price": 270,
+      "price": 272,
       "occupancy": 0.342,
       "occupancyTop": 0.699,
-      "sample": 4325
+      "sample": 4410
     },
     "3": {
-      "price": 406,
+      "price": 408,
       "occupancy": 0.342,
       "occupancyTop": 0.699,
-      "sample": 2106
+      "sample": 2138
     }
   },
   "parisTrend": null,
   "capacity": {
     "0": {
-      "1": 0.698,
-      "2": 0.963,
-      "3": 1.147,
-      "4": 1.274
+      "1": 0.705,
+      "2": 0.966,
+      "3": 1.148,
+      "4": 1.282
     },
     "1": {
-      "1": 0.565,
-      "2": 0.896,
-      "3": 0.938,
-      "4": 1.114,
-      "5": 1.257,
-      "6": 1.336
+      "1": 0.562,
+      "2": 0.902,
+      "3": 0.943,
+      "4": 1.119,
+      "5": 1.258,
+      "6": 1.356
     },
     "2": {
-      "2": 0.623,
-      "3": 0.735,
-      "4": 0.961,
-      "5": 0.927,
-      "6": 1.14,
-      "7": 1.015,
-      "8": 1.141
+      "2": 0.621,
+      "3": 0.732,
+      "4": 0.956,
+      "5": 0.928,
+      "6": 1.136,
+      "7": 1.03,
+      "8": 1.159
     },
     "3": {
-      "4": 0.657,
-      "5": 0.762,
-      "6": 0.951,
+      "4": 0.65,
+      "5": 0.764,
+      "6": 0.954,
       "7": 0.966,
-      "8": 1.117,
-      "9": 1.122,
-      "10": 1.347
+      "8": 1.12,
+      "9": 1.119,
+      "10": 1.349
     }
   },
   "amenities": {
@@ -97,104 +98,104 @@ export const MARKET_PARIS = {
     },
     "ascenseur": {
       "occupancy": 1,
-      "price": 1.1
+      "price": 1.092
     },
     "balcon": {
       "occupancy": 1,
-      "price": 1.12
+      "price": 1.101
     },
     "parking": {
       "occupancy": 1.08,
-      "price": 1.032
+      "price": 1.044
     },
     "jardin": {
       "occupancy": 1.048,
-      "price": 1.061
+      "price": 1.011
     },
     "vue": {
       "occupancy": 1,
-      "price": 1.096
+      "price": 1.101
     }
   },
   "propertyKinds": {
     "loft": {
       "price": 1,
       "occupancy": 1,
-      "sample": 79
+      "sample": 92
     },
     "maison": {
       "price": 1,
       "occupancy": 1,
-      "sample": 10
+      "sample": 21
     }
   },
   "bathrooms": {
     "2": {
-      "price": 1.282,
+      "price": 1.298,
       "occupancy": 1.1,
-      "sample": 1511
+      "sample": 1472
     }
   },
   "extraBedrooms": {
     "4": {
-      "price": 1.299,
-      "occupancy": 1.048,
-      "sample": 366
+      "price": 1.277,
+      "occupancy": 1.083,
+      "sample": 395
     },
     "5": {
       "price": 1,
       "occupancy": 1,
-      "sample": 16
+      "sample": 15
     }
   },
   "seasonality": {
     "1": {
-      "price": 0.876,
-      "occupancy": 0.872
+      "price": 0.883,
+      "occupancy": 0.875
     },
     "2": {
-      "price": 0.966,
-      "occupancy": 0.884
+      "price": 0.964,
+      "occupancy": 0.886
     },
     "3": {
-      "price": 1.056,
-      "occupancy": 1.05
+      "price": 1.044,
+      "occupancy": 1.053
     },
     "4": {
-      "price": 1.051,
-      "occupancy": 0.96
+      "price": 1.042,
+      "occupancy": 0.963
     },
     "5": {
-      "price": 1.109,
-      "occupancy": 1.138
+      "price": 1.099,
+      "occupancy": 1.142
     },
     "6": {
-      "price": 1.191,
-      "occupancy": 1.088
+      "price": 1.181,
+      "occupancy": 1.092
     },
     "7": {
-      "price": 0.99,
-      "occupancy": 0.825
+      "price": 0.981,
+      "occupancy": 0.828
     },
     "8": {
-      "price": 0.919,
-      "occupancy": 0.942
+      "price": 0.911,
+      "occupancy": 0.945
     },
     "9": {
-      "price": 1.227,
-      "occupancy": 1.179
+      "price": 1.214,
+      "occupancy": 1.183
     },
     "10": {
-      "price": 1.134,
-      "occupancy": 1.095
+      "price": 1.158,
+      "occupancy": 1.061
     },
     "11": {
-      "price": 0.696,
-      "occupancy": 1.011
+      "price": 0.721,
+      "occupancy": 1.014
     },
     "12": {
-      "price": 0.786,
-      "occupancy": 0.956
+      "price": 0.802,
+      "occupancy": 0.959
     }
   },
   "arrondissements": {
@@ -203,255 +204,255 @@ export const MARKET_PARIS = {
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.954,
+          "index": 0.949,
           "occupancyIndex": 1.0,
-          "sample": 458
+          "sample": 512
         },
         "sud": {
-          "index": 1.037,
+          "index": 1.032,
           "occupancyIndex": 1.0,
-          "sample": 1489
+          "sample": 1670
         },
         "est": {
-          "index": 0.907,
-          "occupancyIndex": 0.98,
-          "sample": 1632
+          "index": 0.905,
+          "occupancyIndex": 1.0,
+          "sample": 1840
         },
         "ouest": {
-          "index": 1.063,
+          "index": 1.066,
           "occupancyIndex": 1.0,
-          "sample": 2263
+          "sample": 2547
         }
       },
       "buckets": {
         "0": {
-          "price": 175,
+          "price": 176,
           "occupancy": 0.512,
           "occupancyTop": 0.699,
           "sample": 175
         },
         "1": {
-          "price": 241,
-          "occupancy": 0.37,
+          "price": 243,
+          "occupancy": 0.356,
           "occupancyTop": 0.685,
-          "sample": 282
+          "sample": 296
         },
         "2": {
-          "price": 416,
-          "occupancy": 0.47,
+          "price": 414,
+          "occupancy": 0.455,
           "occupancyTop": 0.699,
-          "sample": 182
+          "sample": 177
         },
         "3": {
-          "price": 549,
+          "price": 558,
           "occupancy": 0.485,
           "occupancyTop": 0.699,
-          "sample": 78
+          "sample": 79
         }
       }
     },
     "2": {
-      "priceIndex": 1.232,
+      "priceIndex": 1.236,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.955,
+          "index": 0.956,
           "occupancyIndex": 1.0,
-          "sample": 1319
+          "sample": 1491
         },
         "sud": {
-          "index": 0.963,
+          "index": 0.966,
           "occupancyIndex": 1.0,
-          "sample": 2418
+          "sample": 2709
         },
         "est": {
-          "index": 0.984,
+          "index": 0.981,
           "occupancyIndex": 1.0,
-          "sample": 2772
+          "sample": 3123
         },
         "ouest": {
-          "index": 1.06,
+          "index": 1.059,
           "occupancyIndex": 1.0,
-          "sample": 3303
-        }
-      },
-      "buckets": {
-        "0": {
-          "price": 147,
-          "occupancy": 0.512,
-          "occupancyTop": 0.699,
-          "sample": 273
-        },
-        "1": {
-          "price": 210,
-          "occupancy": 0.37,
-          "occupancyTop": 0.699,
-          "sample": 444
-        },
-        "2": {
-          "price": 328,
-          "occupancy": 0.455,
-          "occupancyTop": 0.699,
-          "sample": 273
-        },
-        "3": {
-          "price": 473,
-          "occupancy": 0.512,
-          "occupancyTop": 0.699,
-          "sample": 202
-        }
-      }
-    },
-    "3": {
-      "priceIndex": 1.237,
-      "priceTrend": null,
-      "sectors": {
-        "nord": {
-          "index": 0.942,
-          "occupancyIndex": 1.0,
-          "sample": 3021
-        },
-        "sud": {
-          "index": 1.089,
-          "occupancyIndex": 1.0,
-          "sample": 2264
-        },
-        "est": {
-          "index": 1.018,
-          "occupancyIndex": 1.0,
-          "sample": 2738
-        },
-        "ouest": {
-          "index": 0.97,
-          "occupancyIndex": 1.0,
-          "sample": 2962
+          "sample": 3699
         }
       },
       "buckets": {
         "0": {
           "price": 148,
-          "occupancy": 0.427,
+          "occupancy": 0.512,
           "occupancyTop": 0.699,
-          "sample": 295
+          "sample": 299
         },
         "1": {
-          "price": 206,
-          "occupancy": 0.342,
-          "occupancyTop": 0.685,
-          "sample": 556
+          "price": 211,
+          "occupancy": 0.37,
+          "occupancyTop": 0.699,
+          "sample": 440
         },
         "2": {
-          "price": 331,
-          "occupancy": 0.427,
+          "price": 327,
+          "occupancy": 0.47,
           "occupancyTop": 0.699,
-          "sample": 290
+          "sample": 274
         },
         "3": {
-          "price": 487,
-          "occupancy": 0.4,
+          "price": 475,
+          "occupancy": 0.512,
           "occupancyTop": 0.699,
-          "sample": 182
+          "sample": 197
+        }
+      }
+    },
+    "3": {
+      "priceIndex": 1.238,
+      "priceTrend": null,
+      "sectors": {
+        "nord": {
+          "index": 0.949,
+          "occupancyIndex": 1.0,
+          "sample": 3395
+        },
+        "sud": {
+          "index": 1.09,
+          "occupancyIndex": 1.0,
+          "sample": 2530
+        },
+        "est": {
+          "index": 1.022,
+          "occupancyIndex": 1.0,
+          "sample": 3099
+        },
+        "ouest": {
+          "index": 0.981,
+          "occupancyIndex": 1.0,
+          "sample": 3322
+        }
+      },
+      "buckets": {
+        "0": {
+          "price": 150,
+          "occupancy": 0.411,
+          "occupancyTop": 0.699,
+          "sample": 310
+        },
+        "1": {
+          "price": 207,
+          "occupancy": 0.37,
+          "occupancyTop": 0.699,
+          "sample": 575
+        },
+        "2": {
+          "price": 333,
+          "occupancy": 0.414,
+          "occupancyTop": 0.699,
+          "sample": 292
+        },
+        "3": {
+          "price": 491,
+          "occupancy": 0.427,
+          "occupancyTop": 0.699,
+          "sample": 184
         }
       }
     },
     "4": {
-      "priceIndex": 1.308,
+      "priceIndex": 1.317,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 1.029,
-          "occupancyIndex": 1.02,
-          "sample": 1793
+          "index": 1.031,
+          "occupancyIndex": 1.062,
+          "sample": 2002
         },
         "sud": {
-          "index": 1.032,
+          "index": 1.022,
           "occupancyIndex": 0.9,
-          "sample": 1194
+          "sample": 1342
         },
         "est": {
-          "index": 0.974,
-          "occupancyIndex": 1.0,
-          "sample": 2524
+          "index": 0.969,
+          "occupancyIndex": 1.042,
+          "sample": 2837
         },
         "ouest": {
-          "index": 0.998,
-          "occupancyIndex": 1.02,
-          "sample": 1514
+          "index": 1.006,
+          "occupancyIndex": 1.062,
+          "sample": 1715
         }
       },
       "buckets": {
         "0": {
-          "price": 153,
+          "price": 155,
           "occupancy": 0.441,
           "occupancyTop": 0.699,
-          "sample": 218
+          "sample": 222
         },
         "1": {
-          "price": 221,
-          "occupancy": 0.342,
-          "occupancyTop": 0.57,
-          "sample": 351
+          "price": 224,
+          "occupancy": 0.336,
+          "occupancyTop": 0.597,
+          "sample": 358
         },
         "2": {
           "price": 362,
-          "occupancy": 0.349,
-          "occupancyTop": 0.685,
-          "sample": 202
+          "occupancy": 0.342,
+          "occupancyTop": 0.655,
+          "sample": 210
         },
         "3": {
-          "price": 480,
-          "occupancy": 0.356,
+          "price": 485,
+          "occupancy": 0.342,
           "occupancyTop": 0.699,
-          "sample": 76
+          "sample": 81
         }
       }
     },
     "5": {
-      "priceIndex": 1.15,
+      "priceIndex": 1.149,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 1.143,
-          "occupancyIndex": 1.092,
-          "sample": 2520
+          "index": 1.145,
+          "occupancyIndex": 1.1,
+          "sample": 2830
         },
         "sud": {
-          "index": 0.89,
-          "occupancyIndex": 0.9,
-          "sample": 1857
+          "index": 0.891,
+          "occupancyIndex": 0.908,
+          "sample": 2079
         },
         "est": {
-          "index": 0.951,
-          "occupancyIndex": 1.044,
-          "sample": 1337
+          "index": 0.955,
+          "occupancyIndex": 0.917,
+          "sample": 1501
         },
         "ouest": {
-          "index": 1.005,
-          "occupancyIndex": 0.961,
-          "sample": 922
+          "index": 1.007,
+          "occupancyIndex": 0.9,
+          "sample": 1023
         }
       },
       "buckets": {
         "0": {
-          "price": 140,
-          "occupancy": 0.37,
+          "price": 141,
+          "occupancy": 0.342,
           "occupancyTop": 0.655,
-          "sample": 177
+          "sample": 191
         },
         "1": {
           "price": 192,
           "occupancy": 0.312,
-          "occupancyTop": 0.57,
-          "sample": 314
+          "occupancyTop": 0.542,
+          "sample": 336
         },
         "2": {
-          "price": 303,
+          "price": 304,
           "occupancy": 0.342,
-          "occupancyTop": 0.575,
-          "sample": 182
+          "occupancyTop": 0.597,
+          "sample": 183
         },
         "3": {
-          "price": 432,
+          "price": 443,
           "occupancy": 0.37,
           "occupancyTop": 0.699,
           "sample": 87
@@ -459,311 +460,311 @@ export const MARKET_PARIS = {
       }
     },
     "6": {
-      "priceIndex": 1.413,
+      "priceIndex": 1.414,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 1.062,
+          "index": 1.061,
           "occupancyIndex": 0.958,
-          "sample": 1483
+          "sample": 1694
         },
         "sud": {
-          "index": 0.941,
+          "index": 0.95,
           "occupancyIndex": 0.9,
-          "sample": 1067
+          "sample": 1211
         },
         "est": {
           "index": 1.054,
           "occupancyIndex": 1.067,
-          "sample": 1607
+          "sample": 1772
         },
         "ouest": {
-          "index": 0.917,
-          "occupancyIndex": 1.046,
-          "sample": 1599
+          "index": 0.916,
+          "occupancyIndex": 1.067,
+          "sample": 1789
         }
       },
       "buckets": {
         "0": {
           "price": 156,
-          "occupancy": 0.4,
+          "occupancy": 0.37,
           "occupancyTop": 0.699,
-          "sample": 174
+          "sample": 172
         },
         "1": {
-          "price": 241,
+          "price": 243,
           "occupancy": 0.312,
-          "occupancyTop": 0.655,
-          "sample": 291
+          "occupancyTop": 0.627,
+          "sample": 300
         },
         "2": {
-          "price": 392,
-          "occupancy": 0.312,
-          "occupancyTop": 0.597,
+          "price": 395,
+          "occupancy": 0.37,
+          "occupancyTop": 0.627,
           "sample": 161
         },
         "3": {
-          "price": 544,
-          "occupancy": 0.285,
+          "price": 549,
+          "occupancy": 0.312,
           "occupancyTop": 0.655,
-          "sample": 73
+          "sample": 77
         }
       }
     },
     "7": {
-      "priceIndex": 1.39,
+      "priceIndex": 1.391,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.977,
+          "index": 0.985,
           "occupancyIndex": 1.0,
-          "sample": 920
+          "sample": 1036
         },
         "sud": {
-          "index": 0.926,
+          "index": 0.925,
           "occupancyIndex": 0.98,
-          "sample": 940
+          "sample": 1053
         },
         "est": {
-          "index": 1.055,
+          "index": 1.056,
           "occupancyIndex": 0.937,
-          "sample": 1601
+          "sample": 1776
         },
         "ouest": {
-          "index": 1.009,
+          "index": 1.011,
           "occupancyIndex": 1.0,
-          "sample": 1894
+          "sample": 2110
         }
       },
       "buckets": {
         "0": {
-          "price": 158,
-          "occupancy": 0.414,
+          "price": 159,
+          "occupancy": 0.4,
           "occupancyTop": 0.699,
-          "sample": 134
+          "sample": 140
         },
         "1": {
-          "price": 230,
+          "price": 231,
           "occupancy": 0.342,
-          "occupancyTop": 0.685,
-          "sample": 284
+          "occupancyTop": 0.699,
+          "sample": 292
         },
         "2": {
-          "price": 379,
-          "occupancy": 0.37,
+          "price": 381,
+          "occupancy": 0.356,
           "occupancyTop": 0.699,
-          "sample": 131
+          "sample": 130
         },
         "3": {
-          "price": 624,
-          "occupancy": 0.271,
-          "occupancyTop": 0.685,
-          "sample": 64
+          "price": 621,
+          "occupancy": 0.312,
+          "occupancyTop": 0.699,
+          "sample": 58
         }
       }
     },
     "8": {
-      "priceIndex": 1.371,
+      "priceIndex": 1.38,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.791,
+          "index": 0.786,
           "occupancyIndex": 1.0,
-          "sample": 948
+          "sample": 1061
         },
         "sud": {
-          "index": 1.088,
+          "index": 1.083,
           "occupancyIndex": 1.0,
-          "sample": 856
+          "sample": 935
         },
         "est": {
-          "index": 0.974,
+          "index": 0.976,
           "occupancyIndex": 1.0,
-          "sample": 2547
+          "sample": 2878
         },
         "ouest": {
-          "index": 1.088,
+          "index": 1.099,
           "occupancyIndex": 1.0,
-          "sample": 2541
+          "sample": 2866
         }
       },
       "buckets": {
         "0": {
-          "price": 160,
-          "occupancy": 0.485,
+          "price": 162,
+          "occupancy": 0.455,
           "occupancyTop": 0.699,
-          "sample": 185
+          "sample": 196
         },
         "1": {
-          "price": 225,
+          "price": 229,
           "occupancy": 0.37,
           "occupancyTop": 0.699,
-          "sample": 290
+          "sample": 295
         },
         "2": {
-          "price": 387,
+          "price": 391,
           "occupancy": 0.485,
           "occupancyTop": 0.699,
-          "sample": 228
+          "sample": 230
         },
         "3": {
-          "price": 554,
-          "occupancy": 0.4,
+          "price": 553,
+          "occupancy": 0.37,
           "occupancyTop": 0.699,
-          "sample": 125
+          "sample": 127
         }
       }
     },
     "9": {
-      "priceIndex": 1.036,
+      "priceIndex": 1.037,
       "priceTrend": null,
       "sectors": {
         "nord": {
           "index": 0.964,
-          "occupancyIndex": 0.98,
-          "sample": 1400
+          "occupancyIndex": 0.937,
+          "sample": 1567
         },
         "sud": {
-          "index": 1.11,
+          "index": 1.111,
           "occupancyIndex": 1.0,
-          "sample": 1919
+          "sample": 2147
         },
         "est": {
-          "index": 0.9,
+          "index": 0.899,
           "occupancyIndex": 1.0,
-          "sample": 2284
+          "sample": 2559
         },
         "ouest": {
           "index": 1.051,
           "occupancyIndex": 1.0,
-          "sample": 2959
+          "sample": 3312
         }
       },
       "buckets": {
         "0": {
-          "price": 132,
-          "occupancy": 0.512,
+          "price": 133,
+          "occupancy": 0.527,
           "occupancyTop": 0.699,
-          "sample": 239
+          "sample": 240
         },
         "1": {
           "price": 170,
-          "occupancy": 0.321,
-          "occupancyTop": 0.685,
-          "sample": 420
+          "occupancy": 0.342,
+          "occupancyTop": 0.627,
+          "sample": 447
         },
         "2": {
-          "price": 269,
-          "occupancy": 0.385,
+          "price": 272,
+          "occupancy": 0.37,
           "occupancyTop": 0.699,
-          "sample": 216
+          "sample": 222
         },
         "3": {
           "price": 404,
-          "occupancy": 0.441,
+          "occupancy": 0.414,
           "occupancyTop": 0.699,
-          "sample": 106
+          "sample": 114
         }
       }
     },
     "10": {
-      "priceIndex": 0.925,
+      "priceIndex": 0.928,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.897,
+          "index": 0.894,
           "occupancyIndex": 0.9,
-          "sample": 3399
+          "sample": 3817
         },
         "sud": {
-          "index": 1.098,
+          "index": 1.1,
           "occupancyIndex": 1.02,
-          "sample": 2106
+          "sample": 2361
         },
         "est": {
           "index": 0.962,
           "occupancyIndex": 0.9,
-          "sample": 3239
+          "sample": 3609
         },
         "ouest": {
-          "index": 1.075,
+          "index": 1.074,
           "occupancyIndex": 1.02,
-          "sample": 3789
+          "sample": 4259
         }
       },
       "buckets": {
         "0": {
           "price": 118,
-          "occupancy": 0.4,
-          "occupancyTop": 0.699,
-          "sample": 329
-        },
-        "1": {
-          "price": 151,
-          "occupancy": 0.312,
-          "occupancyTop": 0.57,
-          "sample": 632
-        },
-        "2": {
-          "price": 242,
-          "occupancy": 0.342,
+          "occupancy": 0.427,
           "occupancyTop": 0.699,
           "sample": 331
         },
+        "1": {
+          "price": 152,
+          "occupancy": 0.312,
+          "occupancyTop": 0.57,
+          "sample": 672
+        },
+        "2": {
+          "price": 243,
+          "occupancy": 0.342,
+          "occupancyTop": 0.699,
+          "sample": 332
+        },
         "3": {
           "price": 371,
-          "occupancy": 0.427,
+          "occupancy": 0.4,
           "occupancyTop": 0.699,
-          "sample": 167
+          "sample": 178
         }
       }
     },
     "11": {
-      "priceIndex": 0.915,
+      "priceIndex": 0.919,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.937,
-          "occupancyIndex": 0.952,
-          "sample": 5199
+          "index": 0.941,
+          "occupancyIndex": 0.9,
+          "sample": 5848
         },
         "sud": {
-          "index": 1.035,
+          "index": 1.027,
           "occupancyIndex": 1.1,
-          "sample": 4423
+          "sample": 4967
         },
         "est": {
-          "index": 0.94,
+          "index": 0.942,
           "occupancyIndex": 0.908,
-          "sample": 3329
+          "sample": 3736
         },
         "ouest": {
-          "index": 1.185,
-          "occupancyIndex": 1.0,
-          "sample": 2522
+          "index": 1.195,
+          "occupancyIndex": 0.908,
+          "sample": 2824
         }
       },
       "buckets": {
         "0": {
           "price": 118,
-          "occupancy": 0.4,
-          "occupancyTop": 0.699,
-          "sample": 411
+          "occupancy": 0.37,
+          "occupancyTop": 0.685,
+          "sample": 442
         },
         "1": {
-          "price": 149,
+          "price": 151,
           "occupancy": 0.312,
           "occupancyTop": 0.542,
-          "sample": 890
+          "sample": 952
         },
         "2": {
-          "price": 241,
+          "price": 243,
           "occupancy": 0.37,
           "occupancyTop": 0.699,
-          "sample": 333
+          "sample": 350
         },
         "3": {
-          "price": 328,
+          "price": 332,
           "occupancy": 0.312,
           "occupancyTop": 0.627,
           "sample": 158
@@ -771,340 +772,340 @@ export const MARKET_PARIS = {
       }
     },
     "12": {
-      "priceIndex": 0.814,
+      "priceIndex": 0.819,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 1.06,
+          "index": 1.069,
           "occupancyIndex": 0.9,
-          "sample": 361
+          "sample": 399
         },
         "sud": {
           "index": 0.915,
           "occupancyIndex": 0.9,
-          "sample": 1345
+          "sample": 1498
         },
         "est": {
-          "index": 0.931,
+          "index": 0.929,
           "occupancyIndex": 0.9,
-          "sample": 1812
+          "sample": 2031
         },
         "ouest": {
-          "index": 1.1,
-          "occupancyIndex": 1.0,
-          "sample": 2861
-        }
-      },
-      "buckets": {
-        "0": {
-          "price": 104,
-          "occupancy": 0.455,
-          "occupancyTop": 0.699,
-          "sample": 193
-        },
-        "1": {
-          "price": 137,
-          "occupancy": 0.342,
-          "occupancyTop": 0.655,
-          "sample": 373
-        },
-        "2": {
-          "price": 201,
-          "occupancy": 0.342,
-          "occupancyTop": 0.685,
-          "sample": 129
-        },
-        "3": {
-          "price": 294,
-          "occupancy": 0.312,
-          "occupancyTop": 0.597,
-          "sample": 65
-        }
-      }
-    },
-    "13": {
-      "priceIndex": 0.801,
-      "priceTrend": null,
-      "sectors": {
-        "nord": {
           "index": 1.102,
-          "occupancyIndex": 0.952,
-          "sample": 1301
-        },
-        "sud": {
-          "index": 0.924,
           "occupancyIndex": 1.0,
-          "sample": 901
-        },
-        "est": {
-          "index": 0.986,
-          "occupancyIndex": 1.1,
-          "sample": 1269
-        },
-        "ouest": {
-          "index": 0.977,
-          "occupancyIndex": 1.1,
-          "sample": 1263
+          "sample": 3219
         }
       },
       "buckets": {
         "0": {
           "price": 105,
-          "occupancy": 0.385,
-          "occupancyTop": 0.655,
-          "sample": 142
+          "occupancy": 0.485,
+          "occupancyTop": 0.699,
+          "sample": 199
         },
         "1": {
-          "price": 135,
-          "occupancy": 0.312,
-          "occupancyTop": 0.57,
-          "sample": 251
+          "price": 138,
+          "occupancy": 0.37,
+          "occupancyTop": 0.627,
+          "sample": 373
         },
         "2": {
-          "price": 197,
-          "occupancy": 0.37,
-          "occupancyTop": 0.57,
-          "sample": 91
+          "price": 203,
+          "occupancy": 0.312,
+          "occupancyTop": 0.699,
+          "sample": 130
         },
         "3": {
-          "price": 262,
+          "price": 297,
           "occupancy": 0.312,
-          "occupancyTop": 0.542,
-          "sample": 45
+          "occupancyTop": 0.597,
+          "sample": 66
         }
       }
     },
-    "14": {
-      "priceIndex": 0.858,
+    "13": {
+      "priceIndex": 0.802,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 1.148,
+          "index": 1.1,
           "occupancyIndex": 0.952,
-          "sample": 1570
+          "sample": 1452
         },
         "sud": {
-          "index": 0.951,
-          "occupancyIndex": 1.044,
-          "sample": 1253
+          "index": 0.926,
+          "occupancyIndex": 1.048,
+          "sample": 1018
         },
         "est": {
-          "index": 0.979,
-          "occupancyIndex": 0.9,
-          "sample": 1313
+          "index": 0.987,
+          "occupancyIndex": 1.1,
+          "sample": 1410
         },
         "ouest": {
-          "index": 0.932,
-          "occupancyIndex": 1.1,
-          "sample": 1396
+          "index": 0.979,
+          "occupancyIndex": 1.0,
+          "sample": 1404
         }
       },
       "buckets": {
         "0": {
-          "price": 110,
-          "occupancy": 0.37,
+          "price": 105,
+          "occupancy": 0.427,
           "occupancyTop": 0.699,
-          "sample": 166
+          "sample": 145
         },
         "1": {
-          "price": 142,
+          "price": 135,
           "occupancy": 0.312,
-          "occupancyTop": 0.627,
-          "sample": 282
+          "occupancyTop": 0.542,
+          "sample": 257
+        },
+        "2": {
+          "price": 199,
+          "occupancy": 0.37,
+          "occupancyTop": 0.57,
+          "sample": 99
+        },
+        "3": {
+          "price": 267,
+          "occupancy": 0.258,
+          "occupancyTop": 0.512,
+          "sample": 49
+        }
+      }
+    },
+    "14": {
+      "priceIndex": 0.863,
+      "priceTrend": null,
+      "sectors": {
+        "nord": {
+          "index": 1.147,
+          "occupancyIndex": 0.9,
+          "sample": 1765
+        },
+        "sud": {
+          "index": 0.942,
+          "occupancyIndex": 1.044,
+          "sample": 1416
+        },
+        "est": {
+          "index": 0.976,
+          "occupancyIndex": 0.9,
+          "sample": 1470
+        },
+        "ouest": {
+          "index": 0.926,
+          "occupancyIndex": 1.1,
+          "sample": 1545
+        }
+      },
+      "buckets": {
+        "0": {
+          "price": 111,
+          "occupancy": 0.37,
+          "occupancyTop": 0.699,
+          "sample": 175
+        },
+        "1": {
+          "price": 143,
+          "occupancy": 0.312,
+          "occupancyTop": 0.597,
+          "sample": 312
         },
         "2": {
           "price": 218,
           "occupancy": 0.312,
-          "occupancyTop": 0.685,
-          "sample": 119
+          "occupancyTop": 0.699,
+          "sample": 122
         },
         "3": {
           "price": 322,
-          "occupancy": 0.227,
-          "occupancyTop": 0.4,
+          "occupancy": 0.263,
+          "occupancyTop": 0.427,
           "sample": 55
         }
       }
     },
     "15": {
-      "priceIndex": 0.995,
+      "priceIndex": 0.997,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 1.184,
-          "occupancyIndex": 1.0,
-          "sample": 3842
+          "index": 1.179,
+          "occupancyIndex": 1.02,
+          "sample": 4306
         },
         "sud": {
-          "index": 0.862,
-          "occupancyIndex": 1.0,
-          "sample": 3447
+          "index": 0.864,
+          "occupancyIndex": 0.956,
+          "sample": 3839
         },
         "est": {
           "index": 0.99,
-          "occupancyIndex": 1.0,
-          "sample": 3482
+          "occupancyIndex": 1.02,
+          "sample": 3906
         },
         "ouest": {
-          "index": 0.991,
+          "index": 0.984,
           "occupancyIndex": 0.9,
-          "sample": 2698
+          "sample": 2999
         }
       },
       "buckets": {
         "0": {
-          "price": 125,
-          "occupancy": 0.455,
+          "price": 126,
+          "occupancy": 0.427,
           "occupancyTop": 0.699,
-          "sample": 406
+          "sample": 416
         },
         "1": {
           "price": 162,
           "occupancy": 0.342,
-          "occupancyTop": 0.655,
-          "sample": 685
+          "occupancyTop": 0.627,
+          "sample": 707
         },
         "2": {
-          "price": 264,
-          "occupancy": 0.37,
+          "price": 263,
+          "occupancy": 0.349,
           "occupancyTop": 0.685,
-          "sample": 313
+          "sample": 320
         },
         "3": {
-          "price": 402,
-          "occupancy": 0.312,
+          "price": 405,
+          "occupancy": 0.285,
           "occupancyTop": 0.627,
           "sample": 138
         }
       }
     },
     "16": {
-      "priceIndex": 1.143,
+      "priceIndex": 1.149,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 1.079,
-          "occupancyIndex": 1.096,
-          "sample": 2713
+          "index": 1.077,
+          "occupancyIndex": 1.05,
+          "sample": 3043
         },
         "sud": {
-          "index": 0.877,
+          "index": 0.87,
           "occupancyIndex": 0.908,
-          "sample": 3526
+          "sample": 3935
         },
         "est": {
-          "index": 1.181,
+          "index": 1.176,
           "occupancyIndex": 1.1,
-          "sample": 1903
+          "sample": 2140
         },
         "ouest": {
-          "index": 0.933,
+          "index": 0.924,
           "occupancyIndex": 0.9,
-          "sample": 1037
+          "sample": 1158
         }
       },
       "buckets": {
         "0": {
-          "price": 130,
-          "occupancy": 0.485,
+          "price": 131,
+          "occupancy": 0.427,
           "occupancyTop": 0.699,
-          "sample": 222
+          "sample": 233
         },
         "1": {
           "price": 189,
           "occupancy": 0.285,
           "occupancyTop": 0.57,
-          "sample": 400
+          "sample": 422
         },
         "2": {
-          "price": 320,
+          "price": 321,
           "occupancy": 0.285,
           "occupancyTop": 0.512,
-          "sample": 307
+          "sample": 303
         },
         "3": {
-          "price": 508,
-          "occupancy": 0.258,
-          "occupancyTop": 0.542,
-          "sample": 138
+          "price": 507,
+          "occupancy": 0.312,
+          "occupancyTop": 0.57,
+          "sample": 139
         }
       }
     },
     "17": {
-      "priceIndex": 0.922,
+      "priceIndex": 0.923,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.852,
+          "index": 0.854,
           "occupancyIndex": 1.02,
-          "sample": 1866
+          "sample": 2122
         },
         "sud": {
-          "index": 1.043,
-          "occupancyIndex": 0.916,
-          "sample": 374
+          "index": 1.058,
+          "occupancyIndex": 1.0,
+          "sample": 390
         },
         "est": {
-          "index": 0.912,
+          "index": 0.922,
           "occupancyIndex": 0.9,
-          "sample": 2811
+          "sample": 3112
         },
         "ouest": {
-          "index": 1.124,
+          "index": 1.128,
           "occupancyIndex": 1.02,
-          "sample": 4335
+          "sample": 4863
         }
       },
       "buckets": {
         "0": {
-          "price": 115,
-          "occupancy": 0.512,
+          "price": 117,
+          "occupancy": 0.542,
           "occupancyTop": 0.699,
-          "sample": 257
+          "sample": 269
         },
         "1": {
-          "price": 152,
+          "price": 153,
           "occupancy": 0.312,
-          "occupancyTop": 0.57,
-          "sample": 495
+          "occupancyTop": 0.542,
+          "sample": 523
         },
         "2": {
-          "price": 237,
+          "price": 239,
           "occupancy": 0.342,
-          "occupancyTop": 0.685,
-          "sample": 204
+          "occupancyTop": 0.699,
+          "sample": 211
         },
         "3": {
-          "price": 384,
-          "occupancy": 0.285,
-          "occupancyTop": 0.699,
-          "sample": 101
+          "price": 386,
+          "occupancy": 0.342,
+          "occupancyTop": 0.685,
+          "sample": 98
         }
       }
     },
     "18": {
-      "priceIndex": 0.824,
+      "priceIndex": 0.825,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.93,
+          "index": 0.929,
           "occupancyIndex": 1.0,
-          "sample": 3409
+          "sample": 3799
         },
         "sud": {
-          "index": 1.173,
+          "index": 1.17,
           "occupancyIndex": 1.1,
-          "sample": 3415
+          "sample": 3825
         },
         "est": {
-          "index": 0.898,
+          "index": 0.897,
           "occupancyIndex": 0.952,
-          "sample": 5396
+          "sample": 6036
         },
         "ouest": {
-          "index": 1.088,
-          "occupancyIndex": 1.048,
-          "sample": 4331
+          "index": 1.091,
+          "occupancyIndex": 1.0,
+          "sample": 4848
         }
       },
       "buckets": {
@@ -1112,129 +1113,129 @@ export const MARKET_PARIS = {
           "price": 106,
           "occupancy": 0.4,
           "occupancyTop": 0.699,
-          "sample": 433
+          "sample": 439
         },
         "1": {
           "price": 136,
           "occupancy": 0.312,
-          "occupancyTop": 0.542,
-          "sample": 991
+          "occupancyTop": 0.512,
+          "sample": 1070
         },
         "2": {
-          "price": 207,
+          "price": 206,
           "occupancy": 0.342,
           "occupancyTop": 0.597,
-          "sample": 318
+          "sample": 334
         },
         "3": {
-          "price": 303,
+          "price": 304,
           "occupancy": 0.285,
-          "occupancyTop": 0.542,
-          "sample": 108
+          "occupancyTop": 0.485,
+          "sample": 114
         }
       }
     },
     "19": {
-      "priceIndex": 0.715,
+      "priceIndex": 0.718,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.967,
-          "occupancyIndex": 1.059,
-          "sample": 2228
+          "index": 0.962,
+          "occupancyIndex": 1.056,
+          "sample": 2472
         },
         "sud": {
-          "index": 1.072,
+          "index": 1.067,
           "occupancyIndex": 0.9,
-          "sample": 1827
+          "sample": 2096
         },
         "est": {
           "index": 1.0,
           "occupancyIndex": 1.1,
-          "sample": 1856
+          "sample": 2076
         },
         "ouest": {
-          "index": 0.993,
-          "occupancyIndex": 0.947,
-          "sample": 1400
+          "index": 0.99,
+          "occupancyIndex": 1.056,
+          "sample": 1560
         }
       },
       "buckets": {
         "0": {
-          "price": 97,
+          "price": 99,
           "occupancy": 0.37,
-          "occupancyTop": 0.699,
-          "sample": 180
+          "occupancyTop": 0.685,
+          "sample": 203
         },
         "1": {
-          "price": 120,
-          "occupancy": 0.258,
+          "price": 121,
+          "occupancy": 0.285,
           "occupancyTop": 0.455,
-          "sample": 396
+          "sample": 431
         },
         "2": {
           "price": 167,
           "occupancy": 0.258,
-          "occupancyTop": 0.512,
-          "sample": 176
+          "occupancyTop": 0.485,
+          "sample": 183
         },
         "3": {
-          "price": 253,
-          "occupancy": 0.258,
+          "price": 254,
+          "occupancy": 0.227,
           "occupancyTop": 0.4,
-          "sample": 79
+          "sample": 76
         }
       }
     },
     "20": {
-      "priceIndex": 0.689,
+      "priceIndex": 0.691,
       "priceTrend": null,
       "sectors": {
         "nord": {
-          "index": 0.976,
+          "index": 0.977,
           "occupancyIndex": 0.9,
-          "sample": 1542
+          "sample": 1716
         },
         "sud": {
-          "index": 1.003,
+          "index": 1.0,
           "occupancyIndex": 1.1,
-          "sample": 2824
+          "sample": 3155
         },
         "est": {
-          "index": 0.967,
-          "occupancyIndex": 0.944,
-          "sample": 985
+          "index": 0.969,
+          "occupancyIndex": 1.051,
+          "sample": 1110
         },
         "ouest": {
           "index": 1.027,
-          "occupancyIndex": 0.944,
-          "sample": 2202
+          "occupancyIndex": 0.9,
+          "sample": 2464
         }
       },
       "buckets": {
         "0": {
           "price": 91,
-          "occupancy": 0.395,
+          "occupancy": 0.384,
           "occupancyTop": 0.655,
-          "sample": 233
+          "sample": 231
         },
         "1": {
           "price": 114,
           "occupancy": 0.285,
           "occupancyTop": 0.485,
-          "sample": 414
+          "sample": 451
         },
         "2": {
           "price": 162,
           "occupancy": 0.258,
           "occupancyTop": 0.485,
-          "sample": 139
+          "sample": 147
         },
         "3": {
-          "price": 254,
-          "occupancy": 0.258,
+          "price": 253,
+          "occupancy": 0.227,
           "occupancyTop": 0.542,
-          "sample": 59
+          "sample": 63
         }
       }
     }
@@ -1242,9 +1243,9 @@ export const MARKET_PARIS = {
   "cities": {
     "lyon": {
       "label": "Lyon",
-      "snapshot": "2026-09-17",
-      "snapshots": 9,
-      "listings": 2683,
+      "snapshot": "2026-10-11",
+      "snapshots": 10,
+      "listings": 2691,
       "areas": [
         "1er Arrondissement",
         "2e Arrondissement",
@@ -1258,25 +1259,25 @@ export const MARKET_PARIS = {
       ],
       "buckets": {
         "0": {
-          "price": 76,
-          "occupancy": 0.345,
+          "price": 77,
+          "occupancy": 0.362,
           "occupancyTop": 0.674,
-          "sample": 761
+          "sample": 760
         },
         "1": {
           "price": 97,
-          "occupancy": 0.296,
+          "occupancy": 0.312,
           "occupancyTop": 0.575,
-          "sample": 1181
+          "sample": 1189
         },
         "2": {
           "price": 141,
-          "occupancy": 0.263,
-          "occupancyTop": 0.493,
-          "sample": 497
+          "occupancy": 0.247,
+          "occupancyTop": 0.477,
+          "sample": 498
         },
         "3": {
-          "price": 223,
+          "price": 225,
           "occupancy": 0.214,
           "occupancyTop": 0.444,
           "sample": 244
@@ -1284,60 +1285,60 @@ export const MARKET_PARIS = {
       },
       "seasonality": {
         "1": {
-          "price": 0.931,
-          "occupancy": 0.902
+          "price": 0.927,
+          "occupancy": 0.898
         },
         "2": {
-          "price": 1.016,
-          "occupancy": 0.913
+          "price": 1.005,
+          "occupancy": 0.909
         },
         "3": {
-          "price": 1.1,
-          "occupancy": 0.987
+          "price": 1.082,
+          "occupancy": 0.982
         },
         "4": {
-          "price": 1.096,
-          "occupancy": 0.983
+          "price": 1.081,
+          "occupancy": 0.979
         },
         "5": {
-          "price": 1.094,
-          "occupancy": 1.03
+          "price": 1.076,
+          "occupancy": 1.026
         },
         "6": {
-          "price": 1.106,
-          "occupancy": 0.988
+          "price": 1.092,
+          "occupancy": 0.983
         },
         "7": {
-          "price": 1.041,
-          "occupancy": 0.83
+          "price": 1.026,
+          "occupancy": 0.826
         },
         "8": {
-          "price": 1.053,
-          "occupancy": 1.08
+          "price": 1.039,
+          "occupancy": 1.075
         },
         "9": {
-          "price": 1.134,
-          "occupancy": 1.204
+          "price": 1.118,
+          "occupancy": 1.198
         },
         "10": {
-          "price": 0.82,
-          "occupancy": 1.051
+          "price": 0.933,
+          "occupancy": 1.099
         },
         "11": {
-          "price": 0.762,
-          "occupancy": 1.102
+          "price": 0.772,
+          "occupancy": 1.097
         },
         "12": {
-          "price": 0.847,
-          "occupancy": 0.93
+          "price": 0.849,
+          "occupancy": 0.926
         }
       }
     },
     "bordeaux": {
       "label": "Bordeaux",
-      "snapshot": "2026-09-17",
-      "snapshots": 9,
-      "listings": 3584,
+      "snapshot": "2026-10-11",
+      "snapshots": 10,
+      "listings": 3586,
       "areas": [
         "3M-Bourgailh",
         "Ambars-et-Lagrave",
@@ -1406,84 +1407,84 @@ export const MARKET_PARIS = {
         "0": {
           "price": 74,
           "occupancy": 0.263,
-          "occupancyTop": 0.542,
-          "sample": 761
+          "occupancyTop": 0.526,
+          "sample": 772
         },
         "1": {
-          "price": 96,
+          "price": 97,
           "occupancy": 0.23,
-          "occupancyTop": 0.444,
-          "sample": 1373
+          "occupancyTop": 0.46,
+          "sample": 1377
         },
         "2": {
           "price": 139,
-          "occupancy": 0.197,
-          "occupancyTop": 0.378,
-          "sample": 763
+          "occupancy": 0.214,
+          "occupancyTop": 0.395,
+          "sample": 752
         },
         "3": {
-          "price": 248,
+          "price": 249,
           "occupancy": 0.148,
           "occupancyTop": 0.279,
-          "sample": 687
+          "sample": 685
         }
       },
       "seasonality": {
         "1": {
-          "price": 0.906,
+          "price": 0.903,
           "occupancy": 0.902
         },
         "2": {
-          "price": 0.976,
+          "price": 0.968,
           "occupancy": 0.906
         },
         "3": {
-          "price": 1.046,
+          "price": 1.033,
           "occupancy": 0.955
         },
         "4": {
-          "price": 1.067,
-          "occupancy": 1.008
+          "price": 1.056,
+          "occupancy": 1.007
         },
         "5": {
-          "price": 1.097,
+          "price": 1.084,
           "occupancy": 1.061
         },
         "6": {
-          "price": 1.099,
+          "price": 1.084,
           "occupancy": 1.012
         },
         "7": {
-          "price": 1.127,
+          "price": 1.116,
           "occupancy": 1.007
         },
         "8": {
-          "price": 1.131,
-          "occupancy": 1.08
+          "price": 1.12,
+          "occupancy": 1.079
         },
         "9": {
-          "price": 1.121,
+          "price": 1.11,
           "occupancy": 1.124
         },
         "10": {
-          "price": 0.827,
-          "occupancy": 0.984
+          "price": 0.918,
+          "occupancy": 0.988
         },
         "11": {
-          "price": 0.767,
+          "price": 0.772,
           "occupancy": 0.99
         },
         "12": {
           "price": 0.837,
-          "occupancy": 0.97
+          "occupancy": 0.969
         }
       }
     },
     "pays-basque": {
       "label": "Pays basque",
-      "snapshot": "2026-09-19",
-      "snapshots": 9,
-      "listings": 4497,
+      "snapshot": "2026-10-13",
+      "snapshots": 10,
+      "listings": 4428,
       "areas": [
         "Ahaxe-Alciette-Bascassan",
         "Ahetze",
@@ -1507,6 +1508,7 @@ export const MARKET_PARIS = {
         "Arraute-Charritte",
         "Ascain",
         "Ascarat",
+        "Aussurucq",
         "Ayherre",
         "AÃ¯cirits-Camou-Suhast",
         "Banca",
@@ -1554,8 +1556,6 @@ export const MARKET_PARIS = {
         "Isturits",
         "Itxassou",
         "Jatxou",
-        "Jaxu",
-        "Juxue",
         "L'HÃ´pital-Saint-Blaise",
         "La Bastide-Clairence",
         "Labets-Biscay",
@@ -1591,6 +1591,7 @@ export const MARKET_PARIS = {
         "Saint-Jean-Pied-de-Port",
         "Saint-Jean-de-Luz",
         "Saint-Jean-le-Vieux",
+        "Saint-Just-Ibarre",
         "Saint-Martin-d'Arberoue",
         "Saint-Martin-d'Arrossa",
         "Saint-Michel",
@@ -1619,112 +1620,112 @@ export const MARKET_PARIS = {
         "0": {
           "price": 88,
           "occupancy": 0.197,
-          "occupancyTop": 0.329,
-          "sample": 765
+          "occupancyTop": 0.362,
+          "sample": 760
         },
         "1": {
-          "price": 99,
-          "occupancy": 0.181,
-          "occupancyTop": 0.312,
-          "sample": 1524
+          "price": 98,
+          "occupancy": 0.197,
+          "occupancyTop": 0.329,
+          "sample": 1507
         },
         "2": {
-          "price": 129,
+          "price": 128,
           "occupancy": 0.164,
-          "occupancyTop": 0.268,
-          "sample": 1170
+          "occupancyTop": 0.279,
+          "sample": 1144
         },
         "3": {
-          "price": 251,
+          "price": 250,
           "occupancy": 0.115,
           "occupancyTop": 0.197,
-          "sample": 1038
+          "sample": 1017
         }
       },
       "seasonality": {
         "1": {
-          "price": 0.877,
-          "occupancy": 0.924
+          "price": 0.88,
+          "occupancy": 0.914
         },
         "2": {
-          "price": 0.933,
-          "occupancy": 0.893
+          "price": 0.932,
+          "occupancy": 0.883
         },
         "3": {
-          "price": 0.99,
-          "occupancy": 1.04
+          "price": 0.984,
+          "occupancy": 1.029
         },
         "4": {
-          "price": 1.032,
-          "occupancy": 0.994
+          "price": 1.025,
+          "occupancy": 0.982
         },
         "5": {
-          "price": 1.026,
-          "occupancy": 0.958
+          "price": 1.017,
+          "occupancy": 0.947
         },
         "6": {
-          "price": 1.073,
-          "occupancy": 1.066
+          "price": 1.065,
+          "occupancy": 1.054
         },
         "7": {
-          "price": 1.302,
-          "occupancy": 1.323
+          "price": 1.289,
+          "occupancy": 1.308
         },
         "8": {
-          "price": 1.282,
-          "occupancy": 1.009
+          "price": 1.271,
+          "occupancy": 0.997
         },
         "9": {
-          "price": 1.069,
-          "occupancy": 0.995
+          "price": 1.06,
+          "occupancy": 0.984
         },
         "10": {
-          "price": 0.831,
-          "occupancy": 0.865
+          "price": 0.874,
+          "occupancy": 0.99
         },
         "11": {
-          "price": 0.765,
-          "occupancy": 0.932
+          "price": 0.776,
+          "occupancy": 0.921
         },
         "12": {
-          "price": 0.821,
-          "occupancy": 1.002
+          "price": 0.828,
+          "occupancy": 0.991
         }
       }
     }
   },
   "nationalModel": {
     "price": {
-      "a": -1.2124,
-      "b": 0.6836,
-      "r2": 0.883,
-      "residualSd": 0.114,
-      "zones": 71,
+      "a": -1.2142,
+      "b": 0.6839,
+      "r2": 0.878,
+      "residualSd": 0.124,
+      "zones": 72,
       "crossValidationError": {
-        "Paris": 0.13,
-        "bordeaux": 0.066,
+        "Paris": 0.127,
+        "bordeaux": 0.069,
         "lyon": 0.087,
-        "pays-basque": 0.049
+        "pays-basque": 0.051
       }
     },
     "buckets": {
       "0": {
-        "ratio": 0.791,
-        "occupancy": 0.304,
-        "occupancyTop": 0.608
+        "ratio": 0.787,
+        "occupancy": 0.312,
+        "occupancyTop": 0.6
       },
       "1": {
         "ratio": 1.0,
-        "occupancy": 0.263,
-        "occupancyTop": 0.509
+        "occupancy": 0.271,
+        "occupancyTop": 0.517
       },
       "2": {
-        "ratio": 1.448,
+        "ratio": 1.438,
         "occupancy": 0.23,
-        "occupancyTop": 0.435
+        "occupancyTop": 0.436
       },
       "3": {
-        "ratio": 2.533,
+        "ratio": 2.541,
         "occupancy": 0.181,
         "occupancyTop": 0.362
       }
@@ -1736,7 +1737,7 @@ export const MARKET_PARIS = {
       },
       "1": {
         "occupancy": 0.312,
-        "occupancyTop": 0.597
+        "occupancyTop": 0.57
       },
       "2": {
         "occupancy": 0.342,
@@ -1747,694 +1748,58 @@ export const MARKET_PARIS = {
         "occupancyTop": 0.699
       }
     },
-    "priceSeasonSlope": 0.858,
+    "priceSeasonSlope": 0.837,
     "seasonality": {
-      "FRY4": {
+      "FRY2": {
         "year": "2025",
         "months": {
           "1": {
-            "occupancy": 0.913,
-            "price": 0.925
+            "occupancy": 1.515,
+            "price": 1.431
           },
           "2": {
-            "occupancy": 0.758,
-            "price": 0.792
+            "occupancy": 1.703,
+            "price": 1.588
           },
           "3": {
-            "occupancy": 0.738,
-            "price": 0.775
+            "occupancy": 1.396,
+            "price": 1.331
           },
           "4": {
-            "occupancy": 0.882,
-            "price": 0.899
+            "occupancy": 1.325,
+            "price": 1.272
           },
           "5": {
-            "occupancy": 0.87,
-            "price": 0.888
+            "occupancy": 0.603,
+            "price": 0.668
           },
           "6": {
-            "occupancy": 0.609,
-            "price": 0.665
+            "occupancy": 0.442,
+            "price": 0.533
           },
           "7": {
-            "occupancy": 1.245,
-            "price": 1.21
+            "occupancy": 1.1,
+            "price": 1.084
           },
           "8": {
-            "occupancy": 1.149,
-            "price": 1.128
-          },
-          "9": {
-            "occupancy": 0.957,
-            "price": 0.963
-          },
-          "10": {
-            "occupancy": 1.424,
-            "price": 1.364
-          },
-          "11": {
-            "occupancy": 1.304,
-            "price": 1.261
-          },
-          "12": {
-            "occupancy": 1.15,
-            "price": 1.129
-          }
-        }
-      },
-      "FRM0": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.041,
-            "price": 0.177
-          },
-          "2": {
-            "occupancy": 0.056,
-            "price": 0.19
-          },
-          "3": {
-            "occupancy": 0.069,
-            "price": 0.201
-          },
-          "4": {
-            "occupancy": 0.625,
-            "price": 0.678
-          },
-          "5": {
-            "occupancy": 0.84,
-            "price": 0.863
-          },
-          "6": {
-            "occupancy": 1.574,
-            "price": 1.492
-          },
-          "7": {
-            "occupancy": 2.952,
-            "price": 2.675
-          },
-          "8": {
-            "occupancy": 3.48,
-            "price": 3.128
-          },
-          "9": {
-            "occupancy": 1.489,
-            "price": 1.42
-          },
-          "10": {
-            "occupancy": 0.715,
-            "price": 0.755
-          },
-          "11": {
-            "occupancy": 0.068,
-            "price": 0.2
-          },
-          "12": {
-            "occupancy": 0.091,
-            "price": 0.22
-          }
-        }
-      },
-      "FRI2": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.394,
-            "price": 0.48
-          },
-          "2": {
-            "occupancy": 0.492,
-            "price": 0.564
-          },
-          "3": {
-            "occupancy": 0.519,
-            "price": 0.587
-          },
-          "4": {
-            "occupancy": 0.861,
-            "price": 0.881
-          },
-          "5": {
-            "occupancy": 1.084,
-            "price": 1.072
-          },
-          "6": {
-            "occupancy": 0.988,
-            "price": 0.99
-          },
-          "7": {
-            "occupancy": 1.969,
-            "price": 1.831
-          },
-          "8": {
-            "occupancy": 2.676,
-            "price": 2.438
-          },
-          "9": {
-            "occupancy": 0.85,
-            "price": 0.871
-          },
-          "10": {
-            "occupancy": 0.831,
-            "price": 0.855
-          },
-          "11": {
-            "occupancy": 0.547,
-            "price": 0.611
-          },
-          "12": {
-            "occupancy": 0.789,
-            "price": 0.819
-          }
-        }
-      },
-      "FRD1": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.267,
-            "price": 0.371
-          },
-          "2": {
-            "occupancy": 0.394,
-            "price": 0.48
-          },
-          "3": {
-            "occupancy": 0.37,
-            "price": 0.459
-          },
-          "4": {
-            "occupancy": 1.064,
-            "price": 1.055
-          },
-          "5": {
-            "occupancy": 1.246,
-            "price": 1.211
-          },
-          "6": {
-            "occupancy": 1.136,
-            "price": 1.117
-          },
-          "7": {
-            "occupancy": 2.188,
-            "price": 2.019
-          },
-          "8": {
-            "occupancy": 2.639,
-            "price": 2.406
-          },
-          "9": {
-            "occupancy": 0.841,
-            "price": 0.864
-          },
-          "10": {
-            "occupancy": 0.781,
-            "price": 0.812
-          },
-          "11": {
-            "occupancy": 0.411,
-            "price": 0.495
-          },
-          "12": {
-            "occupancy": 0.665,
-            "price": 0.713
-          }
-        }
-      },
-      "FRL0": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.359,
-            "price": 0.45
-          },
-          "2": {
-            "occupancy": 0.549,
-            "price": 0.613
-          },
-          "3": {
-            "occupancy": 0.451,
-            "price": 0.529
-          },
-          "4": {
-            "occupancy": 0.806,
-            "price": 0.834
-          },
-          "5": {
-            "occupancy": 0.998,
-            "price": 0.998
-          },
-          "6": {
-            "occupancy": 1.275,
-            "price": 1.236
-          },
-          "7": {
-            "occupancy": 2.296,
-            "price": 2.112
-          },
-          "8": {
-            "occupancy": 2.718,
-            "price": 2.474
-          },
-          "9": {
-            "occupancy": 1.027,
-            "price": 1.023
-          },
-          "10": {
-            "occupancy": 0.692,
-            "price": 0.736
-          },
-          "11": {
-            "occupancy": 0.293,
-            "price": 0.393
-          },
-          "12": {
-            "occupancy": 0.537,
-            "price": 0.603
-          }
-        }
-      },
-      "FRB0": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.413,
-            "price": 0.496
-          },
-          "2": {
-            "occupancy": 0.504,
-            "price": 0.574
-          },
-          "3": {
-            "occupancy": 0.532,
-            "price": 0.598
-          },
-          "4": {
-            "occupancy": 1.137,
-            "price": 1.118
-          },
-          "5": {
-            "occupancy": 1.296,
-            "price": 1.254
-          },
-          "6": {
-            "occupancy": 1.088,
-            "price": 1.076
-          },
-          "7": {
-            "occupancy": 1.692,
-            "price": 1.594
-          },
-          "8": {
-            "occupancy": 2.022,
-            "price": 1.877
-          },
-          "9": {
-            "occupancy": 0.906,
-            "price": 0.919
-          },
-          "10": {
-            "occupancy": 0.984,
-            "price": 0.986
-          },
-          "11": {
-            "occupancy": 0.59,
-            "price": 0.648
-          },
-          "12": {
-            "occupancy": 0.835,
-            "price": 0.858
-          }
-        }
-      },
-      "FRC1": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.464,
-            "price": 0.54
-          },
-          "2": {
-            "occupancy": 0.522,
-            "price": 0.59
-          },
-          "3": {
-            "occupancy": 0.537,
-            "price": 0.603
-          },
-          "4": {
-            "occupancy": 0.982,
-            "price": 0.985
-          },
-          "5": {
-            "occupancy": 1.245,
-            "price": 1.21
-          },
-          "6": {
-            "occupancy": 1.108,
-            "price": 1.093
-          },
-          "7": {
-            "occupancy": 1.727,
-            "price": 1.624
-          },
-          "8": {
-            "occupancy": 1.956,
-            "price": 1.82
-          },
-          "9": {
-            "occupancy": 0.993,
-            "price": 0.994
-          },
-          "10": {
-            "occupancy": 0.954,
-            "price": 0.961
-          },
-          "11": {
-            "occupancy": 0.656,
-            "price": 0.705
-          },
-          "12": {
-            "occupancy": 0.856,
-            "price": 0.876
-          }
-        }
-      },
-      "FRI1": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.27,
-            "price": 0.374
-          },
-          "2": {
-            "occupancy": 0.339,
-            "price": 0.433
-          },
-          "3": {
-            "occupancy": 0.351,
-            "price": 0.443
-          },
-          "4": {
-            "occupancy": 0.786,
-            "price": 0.816
-          },
-          "5": {
-            "occupancy": 0.95,
-            "price": 0.957
-          },
-          "6": {
-            "occupancy": 1.008,
-            "price": 1.007
-          },
-          "7": {
-            "occupancy": 2.502,
-            "price": 2.289
-          },
-          "8": {
-            "occupancy": 3.401,
-            "price": 3.06
-          },
-          "9": {
-            "occupancy": 0.877,
-            "price": 0.894
-          },
-          "10": {
-            "occupancy": 0.633,
-            "price": 0.685
-          },
-          "11": {
-            "occupancy": 0.338,
-            "price": 0.432
-          },
-          "12": {
-            "occupancy": 0.546,
-            "price": 0.61
-          }
-        }
-      },
-      "FRH0": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.279,
-            "price": 0.381
-          },
-          "2": {
-            "occupancy": 0.367,
-            "price": 0.457
-          },
-          "3": {
-            "occupancy": 0.37,
-            "price": 0.459
-          },
-          "4": {
-            "occupancy": 0.95,
-            "price": 0.957
-          },
-          "5": {
-            "occupancy": 1.087,
-            "price": 1.075
-          },
-          "6": {
-            "occupancy": 1.06,
+            "occupancy": 1.061,
             "price": 1.051
           },
-          "7": {
-            "occupancy": 2.28,
-            "price": 2.098
-          },
-          "8": {
-            "occupancy": 3.018,
-            "price": 2.731
-          },
           "9": {
-            "occupancy": 0.908,
-            "price": 0.921
+            "occupancy": 0.282,
+            "price": 0.399
           },
           "10": {
-            "occupancy": 0.712,
-            "price": 0.753
+            "occupancy": 0.559,
+            "price": 0.631
           },
           "11": {
-            "occupancy": 0.36,
-            "price": 0.451
+            "occupancy": 0.704,
+            "price": 0.752
           },
           "12": {
-            "occupancy": 0.61,
-            "price": 0.665
-          }
-        }
-      },
-      "FRI3": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.286,
-            "price": 0.387
-          },
-          "2": {
-            "occupancy": 0.379,
-            "price": 0.467
-          },
-          "3": {
-            "occupancy": 0.4,
-            "price": 0.485
-          },
-          "4": {
-            "occupancy": 0.969,
-            "price": 0.973
-          },
-          "5": {
-            "occupancy": 1.083,
-            "price": 1.071
-          },
-          "6": {
-            "occupancy": 0.986,
-            "price": 0.988
-          },
-          "7": {
-            "occupancy": 2.336,
-            "price": 2.146
-          },
-          "8": {
-            "occupancy": 3.125,
-            "price": 2.823
-          },
-          "9": {
-            "occupancy": 0.808,
-            "price": 0.835
-          },
-          "10": {
-            "occupancy": 0.679,
-            "price": 0.725
-          },
-          "11": {
-            "occupancy": 0.385,
-            "price": 0.472
-          },
-          "12": {
-            "occupancy": 0.566,
-            "price": 0.628
-          }
-        }
-      },
-      "FRD2": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.416,
-            "price": 0.499
-          },
-          "2": {
-            "occupancy": 0.509,
-            "price": 0.579
-          },
-          "3": {
-            "occupancy": 0.516,
-            "price": 0.585
-          },
-          "4": {
-            "occupancy": 1.069,
-            "price": 1.059
-          },
-          "5": {
-            "occupancy": 1.203,
-            "price": 1.174
-          },
-          "6": {
-            "occupancy": 1.064,
-            "price": 1.055
-          },
-          "7": {
-            "occupancy": 1.868,
-            "price": 1.745
-          },
-          "8": {
-            "occupancy": 2.227,
-            "price": 2.053
-          },
-          "9": {
-            "occupancy": 0.869,
-            "price": 0.888
-          },
-          "10": {
-            "occupancy": 0.89,
-            "price": 0.906
-          },
-          "11": {
-            "occupancy": 0.572,
-            "price": 0.633
-          },
-          "12": {
-            "occupancy": 0.797,
-            "price": 0.826
-          }
-        }
-      },
-      "FRJ2": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.646,
-            "price": 0.696
-          },
-          "2": {
-            "occupancy": 1.095,
-            "price": 1.082
-          },
-          "3": {
-            "occupancy": 0.668,
-            "price": 0.715
-          },
-          "4": {
-            "occupancy": 0.724,
-            "price": 0.763
-          },
-          "5": {
-            "occupancy": 0.837,
-            "price": 0.86
-          },
-          "6": {
-            "occupancy": 0.822,
-            "price": 0.847
-          },
-          "7": {
-            "occupancy": 1.783,
-            "price": 1.672
-          },
-          "8": {
-            "occupancy": 2.504,
-            "price": 2.29
-          },
-          "9": {
-            "occupancy": 0.731,
-            "price": 0.769
-          },
-          "10": {
-            "occupancy": 0.732,
-            "price": 0.77
-          },
-          "11": {
-            "occupancy": 0.458,
-            "price": 0.535
-          },
-          "12": {
-            "occupancy": 1.0,
-            "price": 1.0
-          }
-        }
-      },
-      "FRJ1": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.342,
-            "price": 0.435
-          },
-          "2": {
-            "occupancy": 0.453,
-            "price": 0.531
-          },
-          "3": {
-            "occupancy": 0.374,
-            "price": 0.463
-          },
-          "4": {
-            "occupancy": 0.763,
-            "price": 0.797
-          },
-          "5": {
-            "occupancy": 0.878,
-            "price": 0.895
-          },
-          "6": {
-            "occupancy": 0.984,
-            "price": 0.986
-          },
-          "7": {
-            "occupancy": 2.404,
-            "price": 2.205
-          },
-          "8": {
-            "occupancy": 3.322,
-            "price": 2.992
-          },
-          "9": {
-            "occupancy": 0.82,
-            "price": 0.846
-          },
-          "10": {
-            "occupancy": 0.647,
-            "price": 0.697
-          },
-          "11": {
-            "occupancy": 0.343,
-            "price": 0.436
-          },
-          "12": {
-            "occupancy": 0.672,
-            "price": 0.719
+            "occupancy": 1.31,
+            "price": 1.259
           }
         }
       },
@@ -2443,15 +1808,15 @@ export const MARKET_PARIS = {
         "months": {
           "1": {
             "occupancy": 0.421,
-            "price": 0.503
+            "price": 0.515
           },
           "2": {
             "occupancy": 0.449,
-            "price": 0.527
+            "price": 0.539
           },
           "3": {
             "occupancy": 0.472,
-            "price": 0.547
+            "price": 0.558
           },
           "4": {
             "occupancy": 1.004,
@@ -2459,7 +1824,7 @@ export const MARKET_PARIS = {
           },
           "5": {
             "occupancy": 1.029,
-            "price": 1.025
+            "price": 1.024
           },
           "6": {
             "occupancy": 0.995,
@@ -2467,610 +1832,27 @@ export const MARKET_PARIS = {
           },
           "7": {
             "occupancy": 1.357,
-            "price": 1.306
+            "price": 1.299
           },
           "8": {
             "occupancy": 1.542,
-            "price": 1.465
+            "price": 1.454
           },
           "9": {
             "occupancy": 0.859,
-            "price": 0.879
+            "price": 0.882
           },
           "10": {
             "occupancy": 1.022,
-            "price": 1.019
+            "price": 1.018
           },
           "11": {
             "occupancy": 0.782,
-            "price": 0.813
+            "price": 0.818
           },
           "12": {
             "occupancy": 2.068,
-            "price": 1.916
-          }
-        }
-      },
-      "FRC2": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.551,
-            "price": 0.615
-          },
-          "2": {
-            "occupancy": 0.927,
-            "price": 0.937
-          },
-          "3": {
-            "occupancy": 0.556,
-            "price": 0.619
-          },
-          "4": {
-            "occupancy": 0.861,
-            "price": 0.881
-          },
-          "5": {
-            "occupancy": 1.056,
-            "price": 1.048
-          },
-          "6": {
-            "occupancy": 0.991,
-            "price": 0.992
-          },
-          "7": {
-            "occupancy": 1.759,
-            "price": 1.651
-          },
-          "8": {
-            "occupancy": 2.068,
-            "price": 1.916
-          },
-          "9": {
-            "occupancy": 0.784,
-            "price": 0.815
-          },
-          "10": {
-            "occupancy": 0.835,
-            "price": 0.858
-          },
-          "11": {
-            "occupancy": 0.538,
-            "price": 0.604
-          },
-          "12": {
-            "occupancy": 1.073,
-            "price": 1.063
-          }
-        }
-      },
-      "FRY5": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.62,
-            "price": 0.674
-          },
-          "2": {
-            "occupancy": 0.7,
-            "price": 0.743
-          },
-          "3": {
-            "occupancy": 0.669,
-            "price": 0.716
-          },
-          "4": {
-            "occupancy": 0.927,
-            "price": 0.937
-          },
-          "5": {
-            "occupancy": 1.065,
-            "price": 1.056
-          },
-          "6": {
-            "occupancy": 0.919,
-            "price": 0.931
-          },
-          "7": {
-            "occupancy": 1.044,
-            "price": 1.038
-          },
-          "8": {
-            "occupancy": 1.214,
-            "price": 1.184
-          },
-          "9": {
-            "occupancy": 1.046,
-            "price": 1.039
-          },
-          "10": {
-            "occupancy": 1.255,
-            "price": 1.219
-          },
-          "11": {
-            "occupancy": 1.353,
-            "price": 1.303
-          },
-          "12": {
-            "occupancy": 1.187,
-            "price": 1.16
-          }
-        }
-      },
-      "FRY2": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 1.515,
-            "price": 1.442
-          },
-          "2": {
-            "occupancy": 1.703,
-            "price": 1.603
-          },
-          "3": {
-            "occupancy": 1.396,
-            "price": 1.34
-          },
-          "4": {
-            "occupancy": 1.325,
-            "price": 1.279
-          },
-          "5": {
-            "occupancy": 0.603,
-            "price": 0.659
-          },
-          "6": {
-            "occupancy": 0.442,
-            "price": 0.521
-          },
-          "7": {
-            "occupancy": 1.1,
-            "price": 1.086
-          },
-          "8": {
-            "occupancy": 1.061,
-            "price": 1.052
-          },
-          "9": {
-            "occupancy": 0.282,
-            "price": 0.384
-          },
-          "10": {
-            "occupancy": 0.559,
-            "price": 0.622
-          },
-          "11": {
-            "occupancy": 0.704,
-            "price": 0.746
-          },
-          "12": {
-            "occupancy": 1.31,
-            "price": 1.266
-          }
-        }
-      },
-      "FR10": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.719,
-            "price": 0.759
-          },
-          "2": {
-            "occupancy": 0.682,
-            "price": 0.727
-          },
-          "3": {
-            "occupancy": 0.829,
-            "price": 0.853
-          },
-          "4": {
-            "occupancy": 1.187,
-            "price": 1.16
-          },
-          "5": {
-            "occupancy": 1.123,
-            "price": 1.106
-          },
-          "6": {
-            "occupancy": 1.277,
-            "price": 1.238
-          },
-          "7": {
-            "occupancy": 1.234,
-            "price": 1.201
-          },
-          "8": {
-            "occupancy": 1.086,
-            "price": 1.074
-          },
-          "9": {
-            "occupancy": 1.003,
-            "price": 1.003
-          },
-          "10": {
-            "occupancy": 1.118,
-            "price": 1.101
-          },
-          "11": {
-            "occupancy": 0.777,
-            "price": 0.809
-          },
-          "12": {
-            "occupancy": 0.964,
-            "price": 0.969
-          }
-        }
-      },
-      "FRF2": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.47,
-            "price": 0.545
-          },
-          "2": {
-            "occupancy": 0.531,
-            "price": 0.598
-          },
-          "3": {
-            "occupancy": 0.571,
-            "price": 0.632
-          },
-          "4": {
-            "occupancy": 1.035,
-            "price": 1.03
-          },
-          "5": {
-            "occupancy": 1.247,
-            "price": 1.212
-          },
-          "6": {
-            "occupancy": 1.132,
-            "price": 1.113
-          },
-          "7": {
-            "occupancy": 1.552,
-            "price": 1.474
-          },
-          "8": {
-            "occupancy": 1.692,
-            "price": 1.594
-          },
-          "9": {
-            "occupancy": 1.012,
-            "price": 1.01
-          },
-          "10": {
-            "occupancy": 1.071,
-            "price": 1.061
-          },
-          "11": {
-            "occupancy": 0.698,
-            "price": 0.741
-          },
-          "12": {
-            "occupancy": 0.989,
-            "price": 0.991
-          }
-        }
-      },
-      "FRK1": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.547,
-            "price": 0.611
-          },
-          "2": {
-            "occupancy": 1.09,
-            "price": 1.077
-          },
-          "3": {
-            "occupancy": 0.52,
-            "price": 0.588
-          },
-          "4": {
-            "occupancy": 0.848,
-            "price": 0.87
-          },
-          "5": {
-            "occupancy": 1.046,
-            "price": 1.039
-          },
-          "6": {
-            "occupancy": 0.839,
-            "price": 0.862
-          },
-          "7": {
-            "occupancy": 1.758,
-            "price": 1.65
-          },
-          "8": {
-            "occupancy": 2.45,
-            "price": 2.244
-          },
-          "9": {
-            "occupancy": 0.711,
-            "price": 0.752
-          },
-          "10": {
-            "occupancy": 0.768,
-            "price": 0.801
-          },
-          "11": {
-            "occupancy": 0.452,
-            "price": 0.53
-          },
-          "12": {
-            "occupancy": 0.972,
-            "price": 0.976
-          }
-        }
-      },
-      "FRF3": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.649,
-            "price": 0.699
-          },
-          "2": {
-            "occupancy": 0.962,
-            "price": 0.967
-          },
-          "3": {
-            "occupancy": 0.552,
-            "price": 0.616
-          },
-          "4": {
-            "occupancy": 0.966,
-            "price": 0.971
-          },
-          "5": {
-            "occupancy": 1.041,
-            "price": 1.035
-          },
-          "6": {
-            "occupancy": 0.991,
-            "price": 0.992
-          },
-          "7": {
-            "occupancy": 1.442,
-            "price": 1.379
-          },
-          "8": {
-            "occupancy": 1.749,
-            "price": 1.643
-          },
-          "9": {
-            "occupancy": 0.796,
-            "price": 0.825
-          },
-          "10": {
-            "occupancy": 0.91,
-            "price": 0.923
-          },
-          "11": {
-            "occupancy": 0.581,
-            "price": 0.64
-          },
-          "12": {
-            "occupancy": 1.361,
-            "price": 1.31
-          }
-        }
-      },
-      "FRY1": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 1.61,
-            "price": 1.523
-          },
-          "2": {
-            "occupancy": 1.734,
-            "price": 1.63
-          },
-          "3": {
-            "occupancy": 1.486,
-            "price": 1.417
-          },
-          "4": {
-            "occupancy": 1.371,
-            "price": 1.318
-          },
-          "5": {
-            "occupancy": 0.626,
-            "price": 0.679
-          },
-          "6": {
-            "occupancy": 0.514,
-            "price": 0.583
-          },
-          "7": {
-            "occupancy": 1.023,
-            "price": 1.02
-          },
-          "8": {
-            "occupancy": 0.922,
-            "price": 0.933
-          },
-          "9": {
-            "occupancy": 0.266,
-            "price": 0.37
-          },
-          "10": {
-            "occupancy": 0.461,
-            "price": 0.538
-          },
-          "11": {
-            "occupancy": 0.708,
-            "price": 0.749
-          },
-          "12": {
-            "occupancy": 1.279,
-            "price": 1.239
-          }
-        }
-      },
-      "FRE1": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.48,
-            "price": 0.554
-          },
-          "2": {
-            "occupancy": 0.61,
-            "price": 0.665
-          },
-          "3": {
-            "occupancy": 0.625,
-            "price": 0.678
-          },
-          "4": {
-            "occupancy": 1.131,
-            "price": 1.112
-          },
-          "5": {
-            "occupancy": 1.171,
-            "price": 1.147
-          },
-          "6": {
-            "occupancy": 1.014,
-            "price": 1.012
-          },
-          "7": {
-            "occupancy": 1.679,
-            "price": 1.583
-          },
-          "8": {
-            "occupancy": 1.884,
-            "price": 1.758
-          },
-          "9": {
-            "occupancy": 0.894,
-            "price": 0.909
-          },
-          "10": {
-            "occupancy": 0.949,
-            "price": 0.956
-          },
-          "11": {
-            "occupancy": 0.646,
-            "price": 0.696
-          },
-          "12": {
-            "occupancy": 0.916,
-            "price": 0.928
-          }
-        }
-      },
-      "FRK2": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 1.138,
-            "price": 1.118
-          },
-          "2": {
-            "occupancy": 1.679,
-            "price": 1.583
-          },
-          "3": {
-            "occupancy": 1.097,
-            "price": 1.083
-          },
-          "4": {
-            "occupancy": 0.72,
-            "price": 0.76
-          },
-          "5": {
-            "occupancy": 0.643,
-            "price": 0.694
-          },
-          "6": {
-            "occupancy": 0.761,
-            "price": 0.795
-          },
-          "7": {
-            "occupancy": 1.422,
-            "price": 1.362
-          },
-          "8": {
-            "occupancy": 1.761,
-            "price": 1.653
-          },
-          "9": {
-            "occupancy": 0.603,
-            "price": 0.659
-          },
-          "10": {
-            "occupancy": 0.534,
-            "price": 0.6
-          },
-          "11": {
-            "occupancy": 0.395,
-            "price": 0.481
-          },
-          "12": {
-            "occupancy": 1.247,
-            "price": 1.212
-          }
-        }
-      },
-      "FRG0": {
-        "year": "2025",
-        "months": {
-          "1": {
-            "occupancy": 0.347,
-            "price": 0.44
-          },
-          "2": {
-            "occupancy": 0.41,
-            "price": 0.494
-          },
-          "3": {
-            "occupancy": 0.429,
-            "price": 0.51
-          },
-          "4": {
-            "occupancy": 0.933,
-            "price": 0.943
-          },
-          "5": {
-            "occupancy": 1.157,
-            "price": 1.135
-          },
-          "6": {
-            "occupancy": 1.127,
-            "price": 1.109
-          },
-          "7": {
-            "occupancy": 2.101,
-            "price": 1.945
-          },
-          "8": {
-            "occupancy": 2.766,
-            "price": 2.515
-          },
-          "9": {
-            "occupancy": 0.831,
-            "price": 0.855
-          },
-          "10": {
-            "occupancy": 0.791,
-            "price": 0.821
-          },
-          "11": {
-            "occupancy": 0.466,
-            "price": 0.542
-          },
-          "12": {
-            "occupancy": 0.642,
-            "price": 0.693
+            "price": 1.894
           }
         }
       },
@@ -3079,11 +1861,11 @@ export const MARKET_PARIS = {
         "months": {
           "1": {
             "occupancy": 0.73,
-            "price": 0.768
+            "price": 0.774
           },
           "2": {
             "occupancy": 0.957,
-            "price": 0.963
+            "price": 0.964
           },
           "3": {
             "occupancy": 0.987,
@@ -3091,31 +1873,31 @@ export const MARKET_PARIS = {
           },
           "4": {
             "occupancy": 0.891,
-            "price": 0.906
+            "price": 0.909
           },
           "5": {
             "occupancy": 0.789,
-            "price": 0.819
+            "price": 0.823
           },
           "6": {
             "occupancy": 0.749,
-            "price": 0.785
+            "price": 0.79
           },
           "7": {
             "occupancy": 1.197,
-            "price": 1.169
+            "price": 1.165
           },
           "8": {
             "occupancy": 1.489,
-            "price": 1.42
+            "price": 1.409
           },
           "9": {
             "occupancy": 0.924,
-            "price": 0.935
+            "price": 0.936
           },
           "10": {
             "occupancy": 1.254,
-            "price": 1.218
+            "price": 1.213
           },
           "11": {
             "occupancy": 1.018,
@@ -3127,56 +1909,1275 @@ export const MARKET_PARIS = {
           }
         }
       },
+      "FRJ2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.646,
+            "price": 0.704
+          },
+          "2": {
+            "occupancy": 1.095,
+            "price": 1.08
+          },
+          "3": {
+            "occupancy": 0.668,
+            "price": 0.722
+          },
+          "4": {
+            "occupancy": 0.724,
+            "price": 0.769
+          },
+          "5": {
+            "occupancy": 0.837,
+            "price": 0.864
+          },
+          "6": {
+            "occupancy": 0.822,
+            "price": 0.851
+          },
+          "7": {
+            "occupancy": 1.783,
+            "price": 1.655
+          },
+          "8": {
+            "occupancy": 2.504,
+            "price": 2.259
+          },
+          "9": {
+            "occupancy": 0.731,
+            "price": 0.775
+          },
+          "10": {
+            "occupancy": 0.732,
+            "price": 0.776
+          },
+          "11": {
+            "occupancy": 0.458,
+            "price": 0.546
+          },
+          "12": {
+            "occupancy": 1.0,
+            "price": 1.0
+          }
+        }
+      },
+      "FR10": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.719,
+            "price": 0.765
+          },
+          "2": {
+            "occupancy": 0.682,
+            "price": 0.734
+          },
+          "3": {
+            "occupancy": 0.829,
+            "price": 0.857
+          },
+          "4": {
+            "occupancy": 1.187,
+            "price": 1.157
+          },
+          "5": {
+            "occupancy": 1.123,
+            "price": 1.103
+          },
+          "6": {
+            "occupancy": 1.277,
+            "price": 1.232
+          },
+          "7": {
+            "occupancy": 1.234,
+            "price": 1.196
+          },
+          "8": {
+            "occupancy": 1.086,
+            "price": 1.072
+          },
+          "9": {
+            "occupancy": 1.003,
+            "price": 1.003
+          },
+          "10": {
+            "occupancy": 1.118,
+            "price": 1.099
+          },
+          "11": {
+            "occupancy": 0.777,
+            "price": 0.813
+          },
+          "12": {
+            "occupancy": 0.964,
+            "price": 0.97
+          }
+        }
+      },
+      "FRY1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 1.61,
+            "price": 1.511
+          },
+          "2": {
+            "occupancy": 1.734,
+            "price": 1.614
+          },
+          "3": {
+            "occupancy": 1.486,
+            "price": 1.407
+          },
+          "4": {
+            "occupancy": 1.371,
+            "price": 1.311
+          },
+          "5": {
+            "occupancy": 0.626,
+            "price": 0.687
+          },
+          "6": {
+            "occupancy": 0.514,
+            "price": 0.593
+          },
+          "7": {
+            "occupancy": 1.023,
+            "price": 1.019
+          },
+          "8": {
+            "occupancy": 0.922,
+            "price": 0.935
+          },
+          "9": {
+            "occupancy": 0.266,
+            "price": 0.386
+          },
+          "10": {
+            "occupancy": 0.461,
+            "price": 0.549
+          },
+          "11": {
+            "occupancy": 0.708,
+            "price": 0.756
+          },
+          "12": {
+            "occupancy": 1.279,
+            "price": 1.234
+          }
+        }
+      },
+      "FRE1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.48,
+            "price": 0.565
+          },
+          "2": {
+            "occupancy": 0.61,
+            "price": 0.674
+          },
+          "3": {
+            "occupancy": 0.625,
+            "price": 0.686
+          },
+          "4": {
+            "occupancy": 1.131,
+            "price": 1.11
+          },
+          "5": {
+            "occupancy": 1.171,
+            "price": 1.143
+          },
+          "6": {
+            "occupancy": 1.014,
+            "price": 1.012
+          },
+          "7": {
+            "occupancy": 1.679,
+            "price": 1.568
+          },
+          "8": {
+            "occupancy": 1.884,
+            "price": 1.74
+          },
+          "9": {
+            "occupancy": 0.894,
+            "price": 0.911
+          },
+          "10": {
+            "occupancy": 0.949,
+            "price": 0.957
+          },
+          "11": {
+            "occupancy": 0.646,
+            "price": 0.704
+          },
+          "12": {
+            "occupancy": 0.916,
+            "price": 0.93
+          }
+        }
+      },
+      "FRI1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.27,
+            "price": 0.389
+          },
+          "2": {
+            "occupancy": 0.339,
+            "price": 0.447
+          },
+          "3": {
+            "occupancy": 0.351,
+            "price": 0.457
+          },
+          "4": {
+            "occupancy": 0.786,
+            "price": 0.821
+          },
+          "5": {
+            "occupancy": 0.95,
+            "price": 0.958
+          },
+          "6": {
+            "occupancy": 1.008,
+            "price": 1.007
+          },
+          "7": {
+            "occupancy": 2.502,
+            "price": 2.257
+          },
+          "8": {
+            "occupancy": 3.401,
+            "price": 3.01
+          },
+          "9": {
+            "occupancy": 0.877,
+            "price": 0.897
+          },
+          "10": {
+            "occupancy": 0.633,
+            "price": 0.693
+          },
+          "11": {
+            "occupancy": 0.338,
+            "price": 0.446
+          },
+          "12": {
+            "occupancy": 0.546,
+            "price": 0.62
+          }
+        }
+      },
+      "FRC1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.464,
+            "price": 0.551
+          },
+          "2": {
+            "occupancy": 0.522,
+            "price": 0.6
+          },
+          "3": {
+            "occupancy": 0.537,
+            "price": 0.612
+          },
+          "4": {
+            "occupancy": 0.982,
+            "price": 0.985
+          },
+          "5": {
+            "occupancy": 1.245,
+            "price": 1.205
+          },
+          "6": {
+            "occupancy": 1.108,
+            "price": 1.09
+          },
+          "7": {
+            "occupancy": 1.727,
+            "price": 1.608
+          },
+          "8": {
+            "occupancy": 1.956,
+            "price": 1.8
+          },
+          "9": {
+            "occupancy": 0.993,
+            "price": 0.994
+          },
+          "10": {
+            "occupancy": 0.954,
+            "price": 0.961
+          },
+          "11": {
+            "occupancy": 0.656,
+            "price": 0.712
+          },
+          "12": {
+            "occupancy": 0.856,
+            "price": 0.879
+          }
+        }
+      },
       "FRE2": {
         "year": "2025",
         "months": {
           "1": {
             "occupancy": 0.444,
-            "price": 0.523
+            "price": 0.535
           },
           "2": {
             "occupancy": 0.532,
-            "price": 0.598
+            "price": 0.608
           },
           "3": {
             "occupancy": 0.536,
-            "price": 0.602
+            "price": 0.612
           },
           "4": {
             "occupancy": 1.188,
-            "price": 1.161
+            "price": 1.157
           },
           "5": {
             "occupancy": 1.249,
-            "price": 1.214
+            "price": 1.208
           },
           "6": {
             "occupancy": 1.11,
-            "price": 1.094
+            "price": 1.092
           },
           "7": {
             "occupancy": 1.645,
-            "price": 1.553
+            "price": 1.54
           },
           "8": {
             "occupancy": 1.934,
-            "price": 1.801
+            "price": 1.782
           },
           "9": {
             "occupancy": 0.914,
-            "price": 0.926
+            "price": 0.928
           },
           "10": {
             "occupancy": 0.944,
-            "price": 0.952
+            "price": 0.953
           },
           "11": {
             "occupancy": 0.596,
-            "price": 0.653
+            "price": 0.662
           },
           "12": {
             "occupancy": 0.906,
-            "price": 0.919
+            "price": 0.921
+          }
+        }
+      },
+      "FRD2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.416,
+            "price": 0.511
+          },
+          "2": {
+            "occupancy": 0.509,
+            "price": 0.589
+          },
+          "3": {
+            "occupancy": 0.516,
+            "price": 0.595
+          },
+          "4": {
+            "occupancy": 1.069,
+            "price": 1.058
+          },
+          "5": {
+            "occupancy": 1.203,
+            "price": 1.17
+          },
+          "6": {
+            "occupancy": 1.064,
+            "price": 1.054
+          },
+          "7": {
+            "occupancy": 1.868,
+            "price": 1.727
+          },
+          "8": {
+            "occupancy": 2.227,
+            "price": 2.027
+          },
+          "9": {
+            "occupancy": 0.869,
+            "price": 0.89
+          },
+          "10": {
+            "occupancy": 0.89,
+            "price": 0.908
+          },
+          "11": {
+            "occupancy": 0.572,
+            "price": 0.642
+          },
+          "12": {
+            "occupancy": 0.797,
+            "price": 0.83
+          }
+        }
+      },
+      "FRK1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.547,
+            "price": 0.621
+          },
+          "2": {
+            "occupancy": 1.09,
+            "price": 1.075
+          },
+          "3": {
+            "occupancy": 0.52,
+            "price": 0.598
+          },
+          "4": {
+            "occupancy": 0.848,
+            "price": 0.873
+          },
+          "5": {
+            "occupancy": 1.046,
+            "price": 1.039
+          },
+          "6": {
+            "occupancy": 0.839,
+            "price": 0.865
+          },
+          "7": {
+            "occupancy": 1.758,
+            "price": 1.634
+          },
+          "8": {
+            "occupancy": 2.45,
+            "price": 2.214
+          },
+          "9": {
+            "occupancy": 0.711,
+            "price": 0.758
+          },
+          "10": {
+            "occupancy": 0.768,
+            "price": 0.806
+          },
+          "11": {
+            "occupancy": 0.452,
+            "price": 0.541
+          },
+          "12": {
+            "occupancy": 0.972,
+            "price": 0.977
+          }
+        }
+      },
+      "FRD1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.267,
+            "price": 0.386
+          },
+          "2": {
+            "occupancy": 0.394,
+            "price": 0.493
+          },
+          "3": {
+            "occupancy": 0.37,
+            "price": 0.473
+          },
+          "4": {
+            "occupancy": 1.064,
+            "price": 1.054
+          },
+          "5": {
+            "occupancy": 1.246,
+            "price": 1.206
+          },
+          "6": {
+            "occupancy": 1.136,
+            "price": 1.114
+          },
+          "7": {
+            "occupancy": 2.188,
+            "price": 1.994
+          },
+          "8": {
+            "occupancy": 2.639,
+            "price": 2.372
+          },
+          "9": {
+            "occupancy": 0.841,
+            "price": 0.867
+          },
+          "10": {
+            "occupancy": 0.781,
+            "price": 0.817
+          },
+          "11": {
+            "occupancy": 0.411,
+            "price": 0.507
+          },
+          "12": {
+            "occupancy": 0.665,
+            "price": 0.72
+          }
+        }
+      },
+      "FRK2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 1.138,
+            "price": 1.116
+          },
+          "2": {
+            "occupancy": 1.679,
+            "price": 1.568
+          },
+          "3": {
+            "occupancy": 1.097,
+            "price": 1.081
+          },
+          "4": {
+            "occupancy": 0.72,
+            "price": 0.766
+          },
+          "5": {
+            "occupancy": 0.643,
+            "price": 0.701
+          },
+          "6": {
+            "occupancy": 0.761,
+            "price": 0.8
+          },
+          "7": {
+            "occupancy": 1.422,
+            "price": 1.353
+          },
+          "8": {
+            "occupancy": 1.761,
+            "price": 1.637
+          },
+          "9": {
+            "occupancy": 0.603,
+            "price": 0.668
+          },
+          "10": {
+            "occupancy": 0.534,
+            "price": 0.61
+          },
+          "11": {
+            "occupancy": 0.395,
+            "price": 0.494
+          },
+          "12": {
+            "occupancy": 1.247,
+            "price": 1.207
+          }
+        }
+      },
+      "FRY4": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.913,
+            "price": 0.927
+          },
+          "2": {
+            "occupancy": 0.758,
+            "price": 0.797
+          },
+          "3": {
+            "occupancy": 0.738,
+            "price": 0.781
+          },
+          "4": {
+            "occupancy": 0.882,
+            "price": 0.901
+          },
+          "5": {
+            "occupancy": 0.87,
+            "price": 0.891
+          },
+          "6": {
+            "occupancy": 0.609,
+            "price": 0.673
+          },
+          "7": {
+            "occupancy": 1.245,
+            "price": 1.205
+          },
+          "8": {
+            "occupancy": 1.149,
+            "price": 1.125
+          },
+          "9": {
+            "occupancy": 0.957,
+            "price": 0.964
+          },
+          "10": {
+            "occupancy": 1.424,
+            "price": 1.355
+          },
+          "11": {
+            "occupancy": 1.304,
+            "price": 1.254
+          },
+          "12": {
+            "occupancy": 1.15,
+            "price": 1.126
+          }
+        }
+      },
+      "FRH0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.279,
+            "price": 0.397
+          },
+          "2": {
+            "occupancy": 0.367,
+            "price": 0.47
+          },
+          "3": {
+            "occupancy": 0.37,
+            "price": 0.473
+          },
+          "4": {
+            "occupancy": 0.95,
+            "price": 0.958
+          },
+          "5": {
+            "occupancy": 1.087,
+            "price": 1.073
+          },
+          "6": {
+            "occupancy": 1.06,
+            "price": 1.05
+          },
+          "7": {
+            "occupancy": 2.28,
+            "price": 2.071
+          },
+          "8": {
+            "occupancy": 3.018,
+            "price": 2.689
+          },
+          "9": {
+            "occupancy": 0.908,
+            "price": 0.923
+          },
+          "10": {
+            "occupancy": 0.712,
+            "price": 0.759
+          },
+          "11": {
+            "occupancy": 0.36,
+            "price": 0.464
+          },
+          "12": {
+            "occupancy": 0.61,
+            "price": 0.674
+          }
+        }
+      },
+      "FRC2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.551,
+            "price": 0.624
+          },
+          "2": {
+            "occupancy": 0.927,
+            "price": 0.939
+          },
+          "3": {
+            "occupancy": 0.556,
+            "price": 0.628
+          },
+          "4": {
+            "occupancy": 0.861,
+            "price": 0.884
+          },
+          "5": {
+            "occupancy": 1.056,
+            "price": 1.047
+          },
+          "6": {
+            "occupancy": 0.991,
+            "price": 0.992
+          },
+          "7": {
+            "occupancy": 1.759,
+            "price": 1.635
+          },
+          "8": {
+            "occupancy": 2.068,
+            "price": 1.894
+          },
+          "9": {
+            "occupancy": 0.784,
+            "price": 0.819
+          },
+          "10": {
+            "occupancy": 0.835,
+            "price": 0.862
+          },
+          "11": {
+            "occupancy": 0.538,
+            "price": 0.613
+          },
+          "12": {
+            "occupancy": 1.073,
+            "price": 1.061
+          }
+        }
+      },
+      "FRJ1": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.342,
+            "price": 0.449
+          },
+          "2": {
+            "occupancy": 0.453,
+            "price": 0.542
+          },
+          "3": {
+            "occupancy": 0.374,
+            "price": 0.476
+          },
+          "4": {
+            "occupancy": 0.763,
+            "price": 0.802
+          },
+          "5": {
+            "occupancy": 0.878,
+            "price": 0.898
+          },
+          "6": {
+            "occupancy": 0.984,
+            "price": 0.987
+          },
+          "7": {
+            "occupancy": 2.404,
+            "price": 2.175
+          },
+          "8": {
+            "occupancy": 3.322,
+            "price": 2.944
+          },
+          "9": {
+            "occupancy": 0.82,
+            "price": 0.849
+          },
+          "10": {
+            "occupancy": 0.647,
+            "price": 0.705
+          },
+          "11": {
+            "occupancy": 0.343,
+            "price": 0.45
+          },
+          "12": {
+            "occupancy": 0.672,
+            "price": 0.725
+          }
+        }
+      },
+      "FRY5": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.62,
+            "price": 0.682
+          },
+          "2": {
+            "occupancy": 0.7,
+            "price": 0.749
+          },
+          "3": {
+            "occupancy": 0.669,
+            "price": 0.723
+          },
+          "4": {
+            "occupancy": 0.927,
+            "price": 0.939
+          },
+          "5": {
+            "occupancy": 1.065,
+            "price": 1.054
+          },
+          "6": {
+            "occupancy": 0.919,
+            "price": 0.932
+          },
+          "7": {
+            "occupancy": 1.044,
+            "price": 1.037
+          },
+          "8": {
+            "occupancy": 1.214,
+            "price": 1.179
+          },
+          "9": {
+            "occupancy": 1.046,
+            "price": 1.039
+          },
+          "10": {
+            "occupancy": 1.255,
+            "price": 1.213
+          },
+          "11": {
+            "occupancy": 1.353,
+            "price": 1.295
+          },
+          "12": {
+            "occupancy": 1.187,
+            "price": 1.157
+          }
+        }
+      },
+      "FRI3": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.286,
+            "price": 0.402
+          },
+          "2": {
+            "occupancy": 0.379,
+            "price": 0.48
+          },
+          "3": {
+            "occupancy": 0.4,
+            "price": 0.498
+          },
+          "4": {
+            "occupancy": 0.969,
+            "price": 0.974
+          },
+          "5": {
+            "occupancy": 1.083,
+            "price": 1.069
+          },
+          "6": {
+            "occupancy": 0.986,
+            "price": 0.988
+          },
+          "7": {
+            "occupancy": 2.336,
+            "price": 2.118
+          },
+          "8": {
+            "occupancy": 3.125,
+            "price": 2.779
+          },
+          "9": {
+            "occupancy": 0.808,
+            "price": 0.839
+          },
+          "10": {
+            "occupancy": 0.679,
+            "price": 0.731
+          },
+          "11": {
+            "occupancy": 0.385,
+            "price": 0.485
+          },
+          "12": {
+            "occupancy": 0.566,
+            "price": 0.637
+          }
+        }
+      },
+      "FRI2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.394,
+            "price": 0.493
+          },
+          "2": {
+            "occupancy": 0.492,
+            "price": 0.575
+          },
+          "3": {
+            "occupancy": 0.519,
+            "price": 0.597
+          },
+          "4": {
+            "occupancy": 0.861,
+            "price": 0.884
+          },
+          "5": {
+            "occupancy": 1.084,
+            "price": 1.07
+          },
+          "6": {
+            "occupancy": 0.988,
+            "price": 0.99
+          },
+          "7": {
+            "occupancy": 1.969,
+            "price": 1.811
+          },
+          "8": {
+            "occupancy": 2.676,
+            "price": 2.403
+          },
+          "9": {
+            "occupancy": 0.85,
+            "price": 0.874
+          },
+          "10": {
+            "occupancy": 0.831,
+            "price": 0.859
+          },
+          "11": {
+            "occupancy": 0.547,
+            "price": 0.621
+          },
+          "12": {
+            "occupancy": 0.789,
+            "price": 0.823
+          }
+        }
+      },
+      "FRG0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.347,
+            "price": 0.453
+          },
+          "2": {
+            "occupancy": 0.41,
+            "price": 0.506
+          },
+          "3": {
+            "occupancy": 0.429,
+            "price": 0.522
+          },
+          "4": {
+            "occupancy": 0.933,
+            "price": 0.944
+          },
+          "5": {
+            "occupancy": 1.157,
+            "price": 1.131
+          },
+          "6": {
+            "occupancy": 1.127,
+            "price": 1.106
+          },
+          "7": {
+            "occupancy": 2.101,
+            "price": 1.922
+          },
+          "8": {
+            "occupancy": 2.766,
+            "price": 2.478
+          },
+          "9": {
+            "occupancy": 0.831,
+            "price": 0.859
+          },
+          "10": {
+            "occupancy": 0.791,
+            "price": 0.825
+          },
+          "11": {
+            "occupancy": 0.466,
+            "price": 0.553
+          },
+          "12": {
+            "occupancy": 0.642,
+            "price": 0.7
+          }
+        }
+      },
+      "FRF2": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.47,
+            "price": 0.556
+          },
+          "2": {
+            "occupancy": 0.531,
+            "price": 0.607
+          },
+          "3": {
+            "occupancy": 0.571,
+            "price": 0.641
+          },
+          "4": {
+            "occupancy": 1.035,
+            "price": 1.029
+          },
+          "5": {
+            "occupancy": 1.247,
+            "price": 1.207
+          },
+          "6": {
+            "occupancy": 1.132,
+            "price": 1.11
+          },
+          "7": {
+            "occupancy": 1.552,
+            "price": 1.462
+          },
+          "8": {
+            "occupancy": 1.692,
+            "price": 1.579
+          },
+          "9": {
+            "occupancy": 1.012,
+            "price": 1.01
+          },
+          "10": {
+            "occupancy": 1.071,
+            "price": 1.059
+          },
+          "11": {
+            "occupancy": 0.698,
+            "price": 0.747
+          },
+          "12": {
+            "occupancy": 0.989,
+            "price": 0.991
+          }
+        }
+      },
+      "FRB0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.413,
+            "price": 0.509
+          },
+          "2": {
+            "occupancy": 0.504,
+            "price": 0.585
+          },
+          "3": {
+            "occupancy": 0.532,
+            "price": 0.608
+          },
+          "4": {
+            "occupancy": 1.137,
+            "price": 1.115
+          },
+          "5": {
+            "occupancy": 1.296,
+            "price": 1.248
+          },
+          "6": {
+            "occupancy": 1.088,
+            "price": 1.074
+          },
+          "7": {
+            "occupancy": 1.692,
+            "price": 1.579
+          },
+          "8": {
+            "occupancy": 2.022,
+            "price": 1.855
+          },
+          "9": {
+            "occupancy": 0.906,
+            "price": 0.921
+          },
+          "10": {
+            "occupancy": 0.984,
+            "price": 0.987
+          },
+          "11": {
+            "occupancy": 0.59,
+            "price": 0.657
+          },
+          "12": {
+            "occupancy": 0.835,
+            "price": 0.862
+          }
+        }
+      },
+      "FRM0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.041,
+            "price": 0.197
+          },
+          "2": {
+            "occupancy": 0.056,
+            "price": 0.21
+          },
+          "3": {
+            "occupancy": 0.069,
+            "price": 0.221
+          },
+          "4": {
+            "occupancy": 0.625,
+            "price": 0.686
+          },
+          "5": {
+            "occupancy": 0.84,
+            "price": 0.866
+          },
+          "6": {
+            "occupancy": 1.574,
+            "price": 1.48
+          },
+          "7": {
+            "occupancy": 2.952,
+            "price": 2.634
+          },
+          "8": {
+            "occupancy": 3.48,
+            "price": 3.076
+          },
+          "9": {
+            "occupancy": 1.489,
+            "price": 1.409
+          },
+          "10": {
+            "occupancy": 0.715,
+            "price": 0.761
+          },
+          "11": {
+            "occupancy": 0.068,
+            "price": 0.22
+          },
+          "12": {
+            "occupancy": 0.091,
+            "price": 0.239
+          }
+        }
+      },
+      "FRL0": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.359,
+            "price": 0.463
+          },
+          "2": {
+            "occupancy": 0.549,
+            "price": 0.623
+          },
+          "3": {
+            "occupancy": 0.451,
+            "price": 0.54
+          },
+          "4": {
+            "occupancy": 0.806,
+            "price": 0.838
+          },
+          "5": {
+            "occupancy": 0.998,
+            "price": 0.998
+          },
+          "6": {
+            "occupancy": 1.275,
+            "price": 1.23
+          },
+          "7": {
+            "occupancy": 2.296,
+            "price": 2.085
+          },
+          "8": {
+            "occupancy": 2.718,
+            "price": 2.438
+          },
+          "9": {
+            "occupancy": 1.027,
+            "price": 1.023
+          },
+          "10": {
+            "occupancy": 0.692,
+            "price": 0.742
+          },
+          "11": {
+            "occupancy": 0.293,
+            "price": 0.408
+          },
+          "12": {
+            "occupancy": 0.537,
+            "price": 0.612
+          }
+        }
+      },
+      "FRF3": {
+        "year": "2025",
+        "months": {
+          "1": {
+            "occupancy": 0.649,
+            "price": 0.706
+          },
+          "2": {
+            "occupancy": 0.962,
+            "price": 0.968
+          },
+          "3": {
+            "occupancy": 0.552,
+            "price": 0.625
+          },
+          "4": {
+            "occupancy": 0.966,
+            "price": 0.972
+          },
+          "5": {
+            "occupancy": 1.041,
+            "price": 1.034
+          },
+          "6": {
+            "occupancy": 0.991,
+            "price": 0.992
+          },
+          "7": {
+            "occupancy": 1.442,
+            "price": 1.37
+          },
+          "8": {
+            "occupancy": 1.749,
+            "price": 1.627
+          },
+          "9": {
+            "occupancy": 0.796,
+            "price": 0.829
+          },
+          "10": {
+            "occupancy": 0.91,
+            "price": 0.925
+          },
+          "11": {
+            "occupancy": 0.581,
+            "price": 0.649
+          },
+          "12": {
+            "occupancy": 1.361,
+            "price": 1.302
           }
         }
       }
@@ -3325,7 +3326,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 69.9,
+        "modelPrice": 70.0,
         "seasonality": {
           "1": {
             "occupancy": 0.716,
@@ -3577,7 +3578,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 76.4,
+        "modelPrice": 76.5,
         "seasonality": {
           "1": {
             "occupancy": 0.815,
@@ -3829,7 +3830,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 66.8,
+        "modelPrice": 66.9,
         "seasonality": {
           "1": {
             "occupancy": 0.725,
@@ -4207,7 +4208,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 97.7,
+        "modelPrice": 97.8,
         "seasonality": {
           "1": {
             "occupancy": 0.737,
@@ -4522,7 +4523,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 69.1,
+        "modelPrice": 69.2,
         "seasonality": {
           "1": {
             "occupancy": 0.796,
@@ -4648,7 +4649,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 67.9,
+        "modelPrice": 68.0,
         "seasonality": {
           "1": {
             "occupancy": 0.833,
@@ -5530,7 +5531,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 102.6,
+        "modelPrice": 102.7,
         "seasonality": {
           "1": {
             "occupancy": 0.658,
@@ -5593,7 +5594,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 99.9,
+        "modelPrice": 100.0,
         "seasonality": {
           "1": {
             "occupancy": 0.689,
@@ -5719,7 +5720,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 106.7,
+        "modelPrice": 106.8,
         "seasonality": {
           "1": {
             "occupancy": 0.623,
@@ -5845,7 +5846,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 97.7,
+        "modelPrice": 97.8,
         "seasonality": {
           "1": {
             "occupancy": 0.591,
@@ -6034,7 +6035,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 135.4,
+        "modelPrice": 135.5,
         "seasonality": {
           "1": {
             "occupancy": 0.506,
@@ -6097,7 +6098,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 124.4,
+        "modelPrice": 124.5,
         "seasonality": {
           "1": {
             "occupancy": 0.837,
@@ -6160,7 +6161,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 147.1,
+        "modelPrice": 147.3,
         "seasonality": {
           "1": {
             "occupancy": 0.834,
@@ -6223,7 +6224,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 170.5,
+        "modelPrice": 170.7,
         "seasonality": {
           "1": {
             "occupancy": 0.927,
@@ -6286,7 +6287,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 154.8,
+        "modelPrice": 155.0,
         "seasonality": {
           "1": {
             "occupancy": 0.813,
@@ -6349,7 +6350,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 138.8,
+        "modelPrice": 138.9,
         "seasonality": {
           "1": {
             "occupancy": 0.84,
@@ -6412,7 +6413,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 130.6,
+        "modelPrice": 130.8,
         "seasonality": {
           "1": {
             "occupancy": 0.802,
@@ -6475,7 +6476,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 126.9,
+        "modelPrice": 127.0,
         "seasonality": {
           "1": {
             "occupancy": 0.836,
@@ -6538,7 +6539,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 131.6,
+        "modelPrice": 131.7,
         "seasonality": {
           "1": {
             "occupancy": 0.863,
@@ -6601,7 +6602,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 133.6,
+        "modelPrice": 133.7,
         "seasonality": {
           "1": {
             "occupancy": 0.797,
@@ -6664,7 +6665,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 117.9,
+        "modelPrice": 118.0,
         "seasonality": {
           "1": {
             "occupancy": 0.825,
@@ -6727,7 +6728,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 85.4,
+        "modelPrice": 85.5,
         "seasonality": {
           "1": {
             "occupancy": 0.871,
@@ -6790,7 +6791,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 121.9,
+        "modelPrice": 122.0,
         "seasonality": {
           "1": {
             "occupancy": 0.84,
@@ -6853,7 +6854,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 115.7,
+        "modelPrice": 115.8,
         "seasonality": {
           "1": {
             "occupancy": 0.865,
@@ -6916,7 +6917,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 149.2,
+        "modelPrice": 149.4,
         "seasonality": {
           "1": {
             "occupancy": 0.85,
@@ -6979,7 +6980,7 @@ export const MARKET_PARIS = {
           "2025-08",
           "2026-07"
         ],
-        "modelPrice": 102.3,
+        "modelPrice": 102.4,
         "seasonality": {
           "1": {
             "occupancy": 0.843,
@@ -7037,25 +7038,25 @@ export const MARKET_PARIS = {
   },
   "priceCorrection": {
     "paris": {
-      "factor": 0.841,
-      "listed": 194,
+      "factor": 0.836,
+      "listed": 195,
       "billed": 163.2,
       "source": "airroi"
     },
     "lyon": {
-      "factor": 0.91,
-      "listed": 101,
+      "factor": 0.901,
+      "listed": 102,
       "billed": 91.9,
       "source": "airroi"
     },
     "bordeaux": {
-      "factor": 1.001,
+      "factor": 0.996,
       "listed": 100,
       "billed": 99.6,
       "source": "airroi"
     },
     "pays-basque": {
-      "factor": 0.91,
+      "factor": 0.901,
       "source": "median"
     }
   }
