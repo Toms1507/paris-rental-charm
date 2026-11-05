@@ -56,7 +56,7 @@ export const SpeakScene: React.FC<{ photo: string; l: Line; position?: string }>
 };
 
 /** Logo + phrase, sur fond clair. */
-export const SpeakLogoScene: React.FC<{ l: Line }> = ({ l }) => {
+export const SpeakLogoScene: React.FC<{ l: Line; chain?: React.ReactNode }> = ({ l, chain }) => {
   const L = useLayout();
   return (
     <AbsoluteFill>
@@ -64,6 +64,7 @@ export const SpeakLogoScene: React.FC<{ l: Line }> = ({ l }) => {
       <Column gap={L.fs(60, 44, 50)}>
         <Logo variant="color" width={L.fs(760, 640, 700)} />
         <SpokenLine text={l.show} starts={l.starts} size={L.fs(84, 72, 80)} color={C.ink} accent={C.navy} maxWidth={L.landscape ? 1500 : undefined} />
+        {chain ? <div style={{ transform: `scale(${L.fs(0.62, 0.62, 1.25)})`, marginTop: L.fs(10, 10, 30) }}>{chain}</div> : null}
       </Column>
       <VoiceLine id={l.id} />
     </AbsoluteFill>
@@ -71,25 +72,34 @@ export const SpeakLogoScene: React.FC<{ l: Line }> = ({ l }) => {
 };
 
 /** Un service : phrase dite à gauche, interface animée à droite (paysage). */
-export const SpeakBenefitScene: React.FC<{ photo: string; l: Line; sub: string; widget: React.ReactNode }> = ({ photo, l, sub, widget }) => {
+export const SpeakBenefitScene: React.FC<{
+  photo: string;
+  l: Line;
+  sub?: string;
+  widget: React.ReactNode;
+  /** Remplace la photo de fond (ex. photo qui reprend ses couleurs). */
+  background?: React.ReactNode;
+  overlay?: React.ReactNode;
+}> = ({ photo, l, sub, widget, background, overlay }) => {
   const L = useLayout();
   const textBlock = (
     <div style={{ display: "flex", flexDirection: "column", gap: 30, alignItems: L.landscape ? "flex-start" : "center" }}>
       <Speaker talkingUntil={l.end} />
       <SpokenLine text={l.show} starts={l.starts} size={L.fs(80, 62, 82)} align={L.landscape ? "left" : "center"} />
-      <SlideIn delay={Math.min(l.end - 6, 30)} dist={16}>
+      {sub ? <SlideIn delay={Math.min(l.end - 6, 30)} dist={16}>
         <div style={{ fontFamily: FONT_SANS, fontSize: L.fs(36, 30, 36), lineHeight: 1.35, color: "rgba(255,255,255,0.88)", textAlign: L.landscape ? "left" : "center" }}>
           {sub}
         </div>
-      </SlideIn>
+      </SlideIn> : null}
     </div>
   );
   const scale = L.fs(1.1, 0.85, 1.2);
   const w = <div style={{ transform: `scale(${scale})`, transformOrigin: L.landscape ? "center right" : "center" }}>{widget}</div>;
   return (
     <AbsoluteFill>
-      <KenBurns src={photo} zoom={[1.03, 1.1]} />
+      {background ?? <KenBurns src={photo} zoom={[1.03, 1.1]} />}
       <Scrim strength={0.7} direction={L.landscape ? "left" : "center"} />
+      {overlay}
       <AbsoluteFill
         style={{
           padding: `${L.padTop}px ${L.padX}px ${L.padBottom}px`,

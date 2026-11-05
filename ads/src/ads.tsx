@@ -147,19 +147,54 @@ export const AD6 = withAudio(scenes6, 6);
 
 
 // --- Publicité avec voix off (version principale) ------------------------------------------
-import { SpeakBenefitScene, SpeakCtaScene, SpeakLogoScene, SpeakOfferScene, SpeakScene } from "./talk";
+import { SpeakBenefitScene, SpeakCtaScene, SpeakLogoScene, SpeakOfferScene } from "./talk";
 import { line, TOTAL_SECONDS } from "./voice";
+import { CalendarCard, ColorizePhoto, LightSweep, RentCard, ServiceChain } from "./montage";
 
 const V = (id: string) => line(id);
 const voiceScenes: Scene[] = [
-  { beats: V("hook1").beats, el: <SpeakScene photo="chambre-parisienne.jpg" l={V("hook1")} />, t: "fade" },
-  { beats: V("hook2").beats, el: <SpeakScene photo="hero-paris.jpg" l={V("hook2")} />, t: "fade" },
-  { beats: V("hook3").beats, el: <SpeakScene photo="paris-rooftops.jpg" l={V("hook3")} />, t: "fade" },
-  { beats: V("logo").beats, el: <SpeakLogoScene l={V("logo")} />, t: "fade" },
-  { beats: V("annonce").beats, el: <SpeakBenefitScene photo="appartement-balcon.jpg" l={V("annonce")} sub="Photos pro · Airbnb, Booking, Abritel" widget={<ListingWidget />} />, t: "fade" },
+  {
+    beats: V("hook1").beats,
+    el: (
+      <SpeakBenefitScene
+        photo="chambre-parisienne.jpg"
+        l={V("hook1")}
+        background={<ColorizePhoto src="chambre-parisienne.jpg" from={0} to={1} at={V("hook1").starts[4]!} />}
+        widget={<CalendarCard mode="empty" delay={V("hook1").starts[4]! - 2} />}
+      />
+    ),
+    t: "fade",
+  },
+  {
+    beats: V("hook2").beats,
+    el: (
+      <SpeakBenefitScene
+        photo="hero-paris.jpg"
+        l={V("hook2")}
+        background={<ColorizePhoto src="hero-paris.jpg" from={0.85} to={0.85} />}
+        widget={<RentCard delay={V("hook2").starts[2]!} />}
+      />
+    ),
+    t: "fade",
+  },
+  {
+    beats: V("hook3").beats,
+    el: (
+      <SpeakBenefitScene
+        photo="paris-coucher-de-soleil.jpg"
+        l={V("hook3")}
+        background={<ColorizePhoto src="paris-coucher-de-soleil.jpg" from={1} to={0} at={V("hook3").starts[5]!} />}
+        overlay={<LightSweep at={V("hook3").starts[5]!} />}
+        widget={<CalendarCard mode="filling" delay={V("hook3").starts[5]! - 4} />}
+      />
+    ),
+    t: "fade",
+  },
+  { beats: V("logo").beats, el: <SpeakLogoScene l={V("logo")} chain={<ServiceChain delay={V("logo").starts[8]!} />} />, t: "fade" },
+  { beats: V("annonce").beats, el: <SpeakBenefitScene photo="appartement-balcon.jpg" l={V("annonce")} sub="Photos pro · Airbnb, Booking, Abritel" widget={<ListingWidget />} overlay={<LightSweep at={V("annonce").starts[6]!} />} />, t: "fade" },
   { beats: V("prix").beats, el: <SpeakBenefitScene photo="toits-de-paris.jpg" l={V("prix")} sub="Selon la saison, les événements et la demande" widget={<PriceWidget />} />, t: "fade" },
   { beats: V("voyageurs").beats, el: <SpeakBenefitScene photo="remise-des-cles.jpg" l={V("voyageurs")} sub="Messages, arrivées et départs gérés pour vous" widget={<ChatWidget />} />, t: "fade" },
-  { beats: V("menage").beats, el: <SpeakBenefitScene photo="lit-linge-hotelier.jpg" l={V("menage")} sub="Linge professionnel et contrôle après chaque séjour" widget={<CleanWidget />} />, t: "fade" },
+  { beats: V("menage").beats, el: <SpeakBenefitScene photo="lit-linge-hotelier.jpg" l={V("menage")} sub="Linge professionnel et contrôle après chaque séjour" widget={<CleanWidget />} overlay={<LightSweep at={V("menage").starts[3]!} />} />, t: "fade" },
   { beats: V("suivi").beats, el: <SpeakBenefitScene photo="chambre-parisienne-portrait.jpg" l={V("suivi")} sub="Un récapitulatif clair, en toute transparence" widget={<RecapWidget />} />, t: "fade" },
   { beats: V("offre").beats, el: <SpeakOfferScene l={V("offre")} />, t: "fade" },
 ];

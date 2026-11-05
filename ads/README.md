@@ -22,7 +22,7 @@ pip install kokoro-onnx soundfile
 # Modèle : paquet npm kokoro-q8-shards (6 fichiers à concaténer en kokoro-q8.onnx)
 # Voix : voices/ff_siwis.bin du paquet npm kokoro-js, enregistrée dans voices.npz (clé ff_siwis)
 python3 -I voice/build.py <dossier contenant kokoro-q8.onnx et voices.npz>
-python3 music/generate.py 32 public/music/track-32.wav   # durée affichée par build.py
+python3 music/generate.py 38 public/music/track-38.wav   # durée affichée par build.py
 ```
 
 Pour une voix encore plus naturelle (ElevenLabs, ou votre propre voix), remplacez les fichiers de

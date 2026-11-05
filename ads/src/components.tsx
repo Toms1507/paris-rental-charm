@@ -606,26 +606,64 @@ export const SpokenLine: React.FC<{
     >
       {lines.map((line, li) => (
         <div key={li}>
-          {line.split(" ").map((raw, wi) => {
+          {line.split(" ").map((raw, wi, arr) => {
             const idx = i++;
+            const nextHighlighted = (arr[wi + 1] ?? "").includes("*");
             const start = starts?.[idx] ?? delay + idx * WORD_FRAMES;
             const next = starts?.[idx + 1] ?? start + WORD_FRAMES;
             const highlighted = raw.includes("*");
             const word = raw.replaceAll("*", "");
-            const o = interpolate(frame, [start, start + 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-            const active = frame >= start && frame < next + 2;
+            // Le mot monte derrière un masque, au moment où il est prononcé.
+            const o = interpolate(frame, [start - 1, start + 6], [0, 1], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+              easing: Easing.out(Easing.cubic),
+            });
+            // Surligneur qui se déroule derrière les mots clés.
+            const m = interpolate(frame, [start + 2, start + 11], [0, 1], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+              easing: Easing.inOut(Easing.cubic),
+            });
+            void next;
+            const onLight = color !== C.white;
             return (
               <span
                 key={wi}
                 style={{
                   display: "inline-block",
-                  marginRight: "0.24em",
-                  opacity: o,
-                  transform: `translateY(${(1 - o) * 0.12}em)`,
-                  color: highlighted || active ? accent : undefined,
+                  overflow: nextHighlighted && frame > start + 8 ? "visible" : "hidden",
+                  verticalAlign: "bottom",
+                  padding: "0 0.07em 0.06em",
+                  margin: "0 0.17em 0 -0.07em",
                 }}
               >
-                {word}
+                <span style={{ display: "inline-block", position: "relative", transform: `translateY(${(1 - o) * 105}%)` }}>
+                  {highlighted ? (
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "-0.07em",
+                        right: nextHighlighted ? "-0.3em" : "-0.07em",
+                        top: "0.14em",
+                        bottom: "0.02em",
+                        background: onLight ? C.navy : accent,
+                        borderRadius: "0.1em",
+                        transform: `scaleX(${m})`,
+                        transformOrigin: "left center",
+                      }}
+                    />
+                  ) : null}
+                  <span
+                    style={{
+                      position: "relative",
+                      color: highlighted && m > 0.35 ? (onLight ? C.white : C.ink) : undefined,
+                      textShadow: highlighted && m > 0.35 ? "none" : undefined,
+                    }}
+                  >
+                    {word}
+                  </span>
+                </span>
               </span>
             );
           })}

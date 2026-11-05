@@ -19,7 +19,7 @@ import soundfile as sf
 from kokoro_onnx import Kokoro
 
 ROOT = Path(__file__).resolve().parent.parent
-SPEED = 1.15
+SPEED = 1.0
 VOICE = "ff_siwis"
 
 model_dir = Path(sys.argv[1])
@@ -44,7 +44,7 @@ for line in lines:
         ["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-af",
          "highpass=f=80,acompressor=threshold=-22dB:ratio=3:attack=5:release=90:makeup=2,"
          "equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=180:t=q:w=1:g=1.5,"
-         "loudnorm=I=-16:TP=-1.5:LRA=6", "-ar", "48000", str(out_dir / f"{line['id']}.wav")],
+         "aecho=0.8:0.5:18|31:0.10|0.06,deesser=i=0.4,loudnorm=I=-16:TP=-1.5:LRA=6", "-ar", "48000", str(out_dir / f"{line['id']}.wav")],
         check=True,
     )
     raw.unlink()
@@ -78,7 +78,7 @@ import math
 LEAD = 4 / 30
 ids = [l["id"] for l in lines]
 for i in ids[:-1]:
-    result[i]["beats"] = max(4, math.ceil((LEAD + result[i]["duration"] + 0.15) / 0.5))
+    result[i]["beats"] = max(4, math.ceil((LEAD + result[i]["duration"] + 0.3) / 0.5))
 # Dernière scène : la phrase, puis au moins 2,5 s pour le bouton et le logo ; durée totale
 # arrondie à une mesure entière (2 s) pour que la musique finisse sur l'accord final.
 last = ids[-1]

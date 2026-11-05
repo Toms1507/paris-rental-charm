@@ -6,8 +6,8 @@
   },
   {
     "id": "hook2",
-    "say": "Ou une location longue durée qui rapporte trop peu ?",
-    "show": "Ou une location longue durée qui rapporte *trop* *peu* ?"
+    "say": "Ou une location longue durée, qui vous rapporte trop peu ?",
+    "show": "Ou une location longue durée, qui vous rapporte *trop* *peu* ?"
   },
   {
     "id": "hook3",
@@ -16,18 +16,18 @@
   },
   {
     "id": "logo",
-    "say": "Spinelle gère votre location courte durée, de A à Z.",
-    "show": "Spinelle gère votre location courte durée, *de* *A* *à* *Z.*"
+    "say": "Avec Spinelle, on gère votre location courte durée, de A à Z.",
+    "show": "Avec Spinelle, on gère votre location courte durée, *de* *A* *à* *Z.*"
   },
   {
     "id": "annonce",
-    "say": "On crée une annonce qui donne envie.",
-    "show": "On crée une annonce qui *donne* *envie.*"
+    "say": "On crée une annonce qui donne vraiment envie.",
+    "show": "On crée une annonce qui donne *vraiment* *envie.*"
   },
   {
     "id": "prix",
-    "say": "On ajuste vos prix chaque jour.",
-    "show": "On ajuste vos prix *chaque* *jour.*"
+    "say": "On ajuste vos prix, chaque jour.",
+    "show": "On ajuste vos prix, *chaque* *jour.*"
   },
   {
     "id": "voyageurs",
@@ -46,8 +46,8 @@
   },
   {
     "id": "offre",
-    "say": "Vous ne payez que si c'est loué. Vingt pour cent, tout compris.",
-    "show": "Vous ne payez que si c'est *loué.*"
+    "say": "Et vous ne payez que si c'est loué. Vingt pour cent, tout compris.",
+    "show": "Et vous ne payez que si c'est *loué.*"
   },
   {
     "id": "cta",
