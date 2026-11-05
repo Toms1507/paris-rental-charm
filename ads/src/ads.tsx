@@ -30,7 +30,7 @@ import {
 const Track: React.FC<{ seconds: number; frames: number }> = ({ seconds, frames }) => (
   <Audio
     src={staticFile(`music/track-${seconds}.wav`)}
-    volume={(f) => interpolate(f, [frames - 8, frames], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+    volume={(f) => interpolate(f, [frames - 8, frames], [0.6, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
   />
 );
 

@@ -13,7 +13,7 @@ Le texte reste hors des zones masquées par l'interface YouTube.
 
 ## Musique
 
-`music/generate.py` compose la musique (house/pop positive, 120 BPM) entièrement par programme :
+`music/generate.py` compose la musique (lounge parisien chic : piano électrique, basse ronde, célesta, 120 BPM) entièrement par programme :
 aucun échantillon ni morceau externe, donc aucune réclamation de droits d'auteur sur YouTube.
 Le montage est calé sur ce tempo : chaque coupe tombe sur un temps et le logo final apparaît sur
 l'accord final.
