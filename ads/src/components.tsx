@@ -10,18 +10,28 @@ import {
 } from "remotion";
 import { BRAND, C, FONT_DISPLAY, FONT_SANS, img } from "./theme";
 
-/** Format vertical (9:16) ou flux (4:5). */
+/** 120 BPM à 30 i/s : un temps = 15 images. Toutes les coupes tombent sur un temps. */
+export const BEAT = 15;
+
+export type Orient = "portrait" | "square" | "landscape";
+
 export const useLayout = () => {
   const { width, height } = useVideoConfig();
-  const vertical = height / width > 1.5;
+  const r = height / width;
+  const orient: Orient = r > 1.4 ? "portrait" : r < 0.8 ? "landscape" : "square";
   return {
-    vertical,
+    orient,
+    portrait: orient === "portrait",
+    landscape: orient === "landscape",
+    square: orient === "square",
     width,
     height,
-    // Marges hors des zones masquées par l'interface des Reels / TikTok / Stories.
-    safeTop: vertical ? 250 : 90,
-    safeBottom: vertical ? 400 : 90,
-    padX: vertical ? 80 : 90,
+    // Marges hors des zones masquées par l'interface YouTube (Shorts, in-stream).
+    padTop: orient === "portrait" ? 230 : orient === "square" ? 80 : 90,
+    padBottom: orient === "portrait" ? 380 : orient === "square" ? 80 : 120,
+    padX: orient === "portrait" ? 80 : orient === "square" ? 80 : 130,
+    /** Taille de police selon le format : [portrait, carré, paysage]. */
+    fs: (p: number, s: number, l: number) => (orient === "portrait" ? p : orient === "square" ? s : l),
   };
 };
 
@@ -31,24 +41,28 @@ export const useSpring = (delay = 0, config: Parameters<typeof spring>[0]["confi
   return spring({ frame: frame - delay, fps, config: { damping: 200, ...config } });
 };
 
-/** Photo plein cadre avec lent zoom (effet Ken Burns). */
+/** 1 sur chaque temps, puis retombe : pour faire « battre » l'image avec la musique. */
+export const useBeatPulse = (decay = 5) => {
+  const frame = useCurrentFrame();
+  return Math.exp(-(frame % BEAT) / decay);
+};
+
+/** Photo plein cadre : zoom continu + petit coup de zoom à chaque temps. */
 export const KenBurns: React.FC<{
   src: string;
   zoom?: [number, number];
   pan?: [number, number];
   position?: string;
-  style?: React.CSSProperties;
-}> = ({ src, zoom = [1.05, 1.18], pan = [0, 0], position = "center", style }) => {
+  pulse?: boolean;
+}> = ({ src, zoom = [1.1, 1.28], pan = [0, 0], position = "center", pulse = true }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
-  const t = interpolate(frame, [0, durationInFrames], [0, 1], {
-    extrapolateRight: "clamp",
-    easing: Easing.inOut(Easing.quad),
-  });
-  const scale = interpolate(t, [0, 1], zoom);
+  const beat = useBeatPulse(4);
+  const t = interpolate(frame, [0, durationInFrames], [0, 1], { extrapolateRight: "clamp" });
+  const scale = interpolate(t, [0, 1], zoom) * (pulse ? 1 + beat * 0.025 : 1);
   const x = interpolate(t, [0, 1], pan);
   return (
-    <AbsoluteFill style={{ overflow: "hidden", ...style }}>
+    <AbsoluteFill style={{ overflow: "hidden" }}>
       <Img
         src={img(src)}
         style={{
@@ -63,20 +77,30 @@ export const KenBurns: React.FC<{
   );
 };
 
-/** Apparition d'un bloc : glissement vers le haut + fondu + léger flou. */
-export const Reveal: React.FC<{
+/** Éclair blanc au début d'une scène (effet « flash » de coupe). */
+export const Flash: React.FC<{ at?: number; strength?: number }> = ({ at = 0, strength = 0.55 }) => {
+  const frame = useCurrentFrame();
+  const o = interpolate(frame, [at, at + 1, at + 7], [0, strength, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  return <AbsoluteFill style={{ background: C.white, opacity: o, pointerEvents: "none" }} />;
+};
+
+/** Apparition « punch » : arrive en grand puis se pose, avec flou de mouvement. */
+export const Punch: React.FC<{
   delay?: number;
-  y?: number;
+  from?: number;
   children: React.ReactNode;
   style?: React.CSSProperties;
-}> = ({ delay = 0, y = 40, children, style }) => {
-  const p = useSpring(delay);
+}> = ({ delay = 0, from = 1.5, children, style }) => {
+  const p = useSpring(delay, { damping: 13, stiffness: 190, mass: 0.6 });
   return (
     <div
       style={{
-        opacity: p,
-        transform: `translateY(${(1 - p) * y}px)`,
-        filter: `blur(${(1 - p) * 8}px)`,
+        opacity: interpolate(p, [0, 0.25], [0, 1], { extrapolateRight: "clamp" }),
+        transform: `scale(${interpolate(p, [0, 1], [from, 1])})`,
+        filter: `blur(${Math.max(0, (1 - p) * 10)}px)`,
         ...style,
       }}
     >
@@ -85,8 +109,27 @@ export const Reveal: React.FC<{
   );
 };
 
-/** Titre qui apparaît mot par mot. Les mots entre *astérisques* sont surlignés. */
-export const WordReveal: React.FC<{
+/** Glissement rapide depuis un côté. */
+export const SlideIn: React.FC<{
+  delay?: number;
+  dir?: "left" | "right" | "up" | "down";
+  dist?: number;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}> = ({ delay = 0, dir = "up", dist = 80, children, style }) => {
+  const p = useSpring(delay, { damping: 18, stiffness: 170 });
+  const d = (1 - p) * dist;
+  const tr =
+    dir === "left" ? `translateX(${-d}px)` : dir === "right" ? `translateX(${d}px)` : dir === "down" ? `translateY(${-d}px)` : `translateY(${d}px)`;
+  return (
+    <div style={{ opacity: p, transform: tr, ...style }}>
+      {children}
+    </div>
+  );
+};
+
+/** Titre qui claque mot par mot. Les mots entre *astérisques* passent en bleu ciel. */
+export const SlamText: React.FC<{
   text: string;
   delay?: number;
   stagger?: number;
@@ -100,19 +143,19 @@ export const WordReveal: React.FC<{
 }> = ({
   text,
   delay = 0,
-  stagger = 3,
+  stagger = 2,
   size,
   color = C.white,
   accent = C.sky,
-  weight = 600,
+  weight = 700,
   align = "center",
-  lineHeight = 1.08,
+  lineHeight = 1.05,
   font = FONT_DISPLAY,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  // Espaces insécables avant ? : ! » et après « pour éviter une ponctuation seule en début de ligne.
-  const lines = text.replace(/ ([?:!»])/g, "\u00a0$1").replace(/« /g, "«\u00a0").split("\n");
+  // Espaces insécables avant ? : ! » et après « (pas de ponctuation seule en début de ligne).
+  const lines = text.replace(/ ([?:!»])/g, " $1").replace(/« /g, "« ").split("\n");
   let i = 0;
   return (
     <div
@@ -121,29 +164,31 @@ export const WordReveal: React.FC<{
         fontSize: size,
         fontWeight: weight,
         lineHeight,
-        letterSpacing: "-0.015em",
+        letterSpacing: "-0.02em",
         color,
         textAlign: align,
+        textShadow: color === C.white ? "0 4px 30px rgba(0,0,0,0.35)" : undefined,
       }}
     >
       {lines.map((line, li) => (
         <div key={li}>
           {line.split(" ").map((raw, wi) => {
-            const highlighted = raw.startsWith("*") || raw.endsWith("*");
+            const highlighted = raw.includes("*");
             const word = raw.replaceAll("*", "");
             const p = spring({
               frame: frame - delay - i++ * stagger,
               fps,
-              config: { damping: 16, stiffness: 140, mass: 0.6 },
+              config: { damping: 12, stiffness: 220, mass: 0.5 },
             });
             return (
               <span
                 key={wi}
                 style={{
                   display: "inline-block",
-                  marginRight: "0.24em",
-                  opacity: interpolate(p, [0, 0.4], [0, 1], { extrapolateRight: "clamp" }),
-                  transform: `translateY(${(1 - p) * 0.5}em)`,
+                  marginRight: "0.22em",
+                  opacity: interpolate(p, [0, 0.2], [0, 1], { extrapolateRight: "clamp" }),
+                  transform: `scale(${interpolate(p, [0, 1], [1.7, 1])}) translateY(${(1 - p) * -0.15}em)`,
+                  filter: `blur(${Math.max(0, (1 - p) * 6)}px)`,
                   color: highlighted ? accent : undefined,
                 }}
               >
@@ -157,10 +202,11 @@ export const WordReveal: React.FC<{
   );
 };
 
-export const Eyebrow: React.FC<{ children: React.ReactNode; color?: string; delay?: number }> = ({
+export const Eyebrow: React.FC<{ children: React.ReactNode; color?: string; delay?: number; size?: number }> = ({
   children,
   color = C.sky,
   delay = 0,
+  size = 30,
 }) => {
   const p = useSpring(delay);
   return (
@@ -168,8 +214,8 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; color?: string; dela
       style={{
         fontFamily: FONT_SANS,
         fontWeight: 700,
-        fontSize: 30,
-        letterSpacing: `${0.12 + (1 - p) * 0.2}em`,
+        fontSize: size,
+        letterSpacing: `${0.14 + (1 - p) * 0.3}em`,
         textTransform: "uppercase",
         color,
         opacity: p,
@@ -184,40 +230,37 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; color?: string; dela
   );
 };
 
-/** Fond de marque : dégradé bleu nuit avec les facettes du logo en filigrane. */
+/** Fond de marque : dégradé bleu nuit et facettes du logo qui tournent et battent. */
 export const BrandBackground: React.FC<{ light?: boolean }> = ({ light = false }) => {
   const frame = useCurrentFrame();
-  const rot = frame * 0.06;
-  const stroke = light ? "rgba(33,63,108,0.07)" : "rgba(152,204,235,0.08)";
+  const beat = useBeatPulse(6);
+  const rot = frame * 0.35;
+  const stroke = light ? "rgba(33,63,108,0.09)" : "rgba(152,204,235,0.12)";
   return (
     <AbsoluteFill
       style={{
         background: light
-          ? `radial-gradient(ellipse at 50% 30%, ${C.white} 0%, ${C.sand} 70%)`
-          : `radial-gradient(ellipse at 50% 35%, ${C.navy} 0%, ${C.ink} 75%)`,
+          ? `radial-gradient(ellipse at 50% 40%, ${C.white} 0%, ${C.sand} 75%)`
+          : `radial-gradient(ellipse at 50% 40%, #2A4F86 0%, ${C.navy} 35%, ${C.ink} 85%)`,
+        overflow: "hidden",
       }}
     >
       <svg
         viewBox="0 0 100 100"
         style={{
           position: "absolute",
-          width: "160%",
-          left: "-30%",
+          width: "170%",
+          aspectRatio: "1",
+          left: "-35%",
           top: "50%",
-          transform: `translateY(-50%) rotate(${rot}deg)`,
+          transform: `translateY(-50%) rotate(${rot}deg) scale(${1 + beat * 0.03})`,
         }}
       >
-        {[46, 36, 26, 16].map((r, k) => (
-          <polygon
-            key={k}
-            points={pentagon(50, 50, r)}
-            fill="none"
-            stroke={stroke}
-            strokeWidth={0.25}
-          />
+        {[46, 36, 26, 16, 8].map((r, k) => (
+          <polygon key={k} points={pentagon(50, 50, r)} fill="none" stroke={stroke} strokeWidth={0.28} />
         ))}
         {pentagonPoints(50, 50, 46).map(([x, y], k) => (
-          <line key={k} x1={50} y1={50} x2={x} y2={y} stroke={stroke} strokeWidth={0.2} />
+          <line key={k} x1={50} y1={50} x2={x} y2={y} stroke={stroke} strokeWidth={0.22} />
         ))}
       </svg>
     </AbsoluteFill>
@@ -234,52 +277,42 @@ const pentagon = (cx: number, cy: number, r: number) =>
     .map(([x, y]) => `${x},${y}`)
     .join(" ");
 
-/** Voile sombre pour garder le texte lisible sur une photo. */
-export const Scrim: React.FC<{ strength?: number; from?: "bottom" | "center" }> = ({
-  strength = 0.75,
-  from = "center",
-}) => (
-  <AbsoluteFill
-    style={{
-      background:
-        from === "center"
-          ? `radial-gradient(ellipse at center, rgba(17,29,48,${strength}) 0%, rgba(17,29,48,${strength * 0.8}) 55%, rgba(17,29,48,${strength * 0.6}) 100%)`
-          : `linear-gradient(to top, rgba(17,29,48,${strength + 0.15}) 0%, rgba(17,29,48,${strength}) 45%, rgba(17,29,48,0.15) 100%)`,
-    }}
-  />
-);
+/** Voile bleu nuit pour garder le texte lisible sur une photo. */
+export const Scrim: React.FC<{ strength?: number; direction?: "center" | "bottom" | "left" }> = ({
+  strength = 0.7,
+  direction = "center",
+}) => {
+  const c = (a: number) => `rgba(17,29,48,${Math.min(1, a)})`;
+  const bg =
+    direction === "bottom"
+      ? `linear-gradient(to top, ${c(strength + 0.2)} 0%, ${c(strength)} 45%, ${c(strength * 0.35)} 100%)`
+      : direction === "left"
+        ? `linear-gradient(to right, ${c(strength + 0.2)} 0%, ${c(strength)} 45%, ${c(strength * 0.3)} 100%)`
+        : `radial-gradient(ellipse at center, ${c(strength)} 0%, ${c(strength * 0.85)} 60%, ${c(strength * 0.7)} 100%)`;
+  return <AbsoluteFill style={{ background: bg }} />;
+};
 
 export const Logo: React.FC<{ variant?: "color" | "white"; width: number; delay?: number }> = ({
   variant = "white",
   width,
   delay = 0,
-}) => {
-  const p = useSpring(delay, { damping: 14, stiffness: 120 });
-  return (
-    <Img
-      src={img(variant === "white" ? "logo-blanc.png" : "logo.png")}
-      style={{
-        width,
-        opacity: interpolate(p, [0, 0.5], [0, 1], { extrapolateRight: "clamp" }),
-        transform: `scale(${0.85 + p * 0.15})`,
-      }}
-    />
-  );
-};
+}) => (
+  <Punch delay={delay} from={1.4}>
+    <Img src={img(variant === "white" ? "logo-blanc.png" : "logo.png")} style={{ width, display: "block" }} />
+  </Punch>
+);
 
-/** Bouton d'appel à l'action avec pulsation et reflet. */
+/** Bouton d'appel à l'action : pulsation sur le temps + reflet. */
 export const CtaButton: React.FC<{ label: string; delay?: number; size?: number }> = ({
   label,
   delay = 0,
   size = 44,
 }) => {
   const frame = useCurrentFrame();
-  const p = useSpring(delay, { damping: 12, stiffness: 160 });
-  const local = Math.max(0, frame - delay - 15);
-  const pulse = 1 + Math.sin(local / 7) * 0.025 * Math.min(1, local / 15);
-  const shine = interpolate((local % 75) / 75, [0, 0.45], [-40, 140], {
-    extrapolateRight: "clamp",
-  });
+  const p = useSpring(delay, { damping: 11, stiffness: 200 });
+  const beat = useBeatPulse(5);
+  const local = Math.max(0, frame - delay);
+  const shine = interpolate((local % 45) / 45, [0, 0.5], [-40, 140], { extrapolateRight: "clamp" });
   return (
     <div
       style={{
@@ -288,7 +321,7 @@ export const CtaButton: React.FC<{ label: string; delay?: number; size?: number 
         display: "inline-flex",
         alignItems: "center",
         gap: 20,
-        padding: `${size * 0.6}px ${size * 1.1}px`,
+        padding: `${size * 0.62}px ${size * 1.15}px`,
         borderRadius: 999,
         background: C.sky,
         color: C.ink,
@@ -296,8 +329,9 @@ export const CtaButton: React.FC<{ label: string; delay?: number; size?: number 
         fontWeight: 700,
         fontSize: size,
         opacity: p,
-        transform: `scale(${(0.6 + 0.4 * p) * pulse})`,
-        boxShadow: `0 20px 60px -10px rgba(152,204,235,0.55)`,
+        transform: `scale(${(0.5 + 0.5 * p) * (1 + beat * 0.045 * Math.min(1, local / 10))})`,
+        boxShadow: `0 20px 70px -10px rgba(152,204,235,${0.45 + beat * 0.3})`,
+        whiteSpace: "nowrap",
       }}
     >
       <span
@@ -307,7 +341,7 @@ export const CtaButton: React.FC<{ label: string; delay?: number; size?: number 
           bottom: 0,
           left: `${shine}%`,
           width: "30%",
-          background: "linear-gradient(100deg, transparent, rgba(255,255,255,0.6), transparent)",
+          background: "linear-gradient(100deg, transparent, rgba(255,255,255,0.65), transparent)",
           transform: "skewX(-20deg)",
         }}
       />
@@ -319,22 +353,10 @@ export const CtaButton: React.FC<{ label: string; delay?: number; size?: number 
 
 const ICONS: Record<string, React.ReactNode> = {
   check: <path d="M20 6 9 17l-5-5" />,
-  x: (
-    <>
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </>
-  ),
   arrow: (
     <>
       <path d="M5 12h14" />
       <path d="m12 5 7 7-7 7" />
-    </>
-  ),
-  clock: (
-    <>
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v6l4 2" />
     </>
   ),
   trending: (
@@ -366,21 +388,46 @@ const ICONS: Record<string, React.ReactNode> = {
       <path d="m15.5 7.5 3 3L22 7l-3-3" />
     </>
   ),
-  euro: (
+  wrench: (
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+  ),
+  chart: (
     <>
-      <path d="M4 10h12" />
-      <path d="M4 14h9" />
-      <path d="M19 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 6 12c0 4.4 3.5 8 7.8 8 2 0 3.8-.8 5.2-2" />
+      <path d="M3 3v18h18" />
+      <path d="M18 17V9" />
+      <path d="M13 17V5" />
+      <path d="M8 17v-3" />
+    </>
+  ),
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+      <path d="M2 12h20" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M16 2v4" />
+      <path d="M8 2v4" />
+      <path d="M3 10h18" />
+    </>
+  ),
+  bell: (
+    <>
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
     </>
   ),
 };
 
-export const Icon: React.FC<{
-  name: keyof typeof ICONS | string;
-  size: number;
-  color?: string;
-  strokeWidth?: number;
-}> = ({ name, size, color = C.sky, strokeWidth = 2 }) => (
+export const Icon: React.FC<{ name: string; size: number; color?: string; strokeWidth?: number }> = ({
+  name,
+  size,
+  color = C.sky,
+  strokeWidth = 2,
+}) => (
   <svg
     width={size}
     height={size}
@@ -390,7 +437,7 @@ export const Icon: React.FC<{
     strokeWidth={strokeWidth}
     strokeLinecap="round"
     strokeLinejoin="round"
-    style={{ flexShrink: 0 }}
+    style={{ flexShrink: 0, display: "block" }}
   >
     {ICONS[name]}
   </svg>
@@ -399,9 +446,10 @@ export const Icon: React.FC<{
 const STAR =
   "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z";
 
-export const Stars: React.FC<{ size: number; delay?: number; color?: string }> = ({
+export const Stars: React.FC<{ size: number; delay?: number; stagger?: number; color?: string }> = ({
   size,
   delay = 0,
+  stagger = 3,
   color = "#F5B83D",
 }) => {
   const frame = useCurrentFrame();
@@ -409,13 +457,9 @@ export const Stars: React.FC<{ size: number; delay?: number; color?: string }> =
   return (
     <div style={{ display: "flex", gap: size * 0.15 }}>
       {Array.from({ length: 5 }, (_, k) => {
-        const p = spring({
-          frame: frame - delay - k * 4,
-          fps,
-          config: { damping: 9, stiffness: 180 },
-        });
+        const p = spring({ frame: frame - delay - k * stagger, fps, config: { damping: 8, stiffness: 220 } });
         return (
-          <svg key={k} width={size} height={size} viewBox="0 0 24 24" style={{ transform: `scale(${p})` }}>
+          <svg key={k} width={size} height={size} viewBox="0 0 24 24" style={{ transform: `scale(${p}) rotate(${(1 - p) * -90}deg)` }}>
             <path d={STAR} fill={color} />
           </svg>
         );
@@ -424,61 +468,53 @@ export const Stars: React.FC<{ size: number; delay?: number; color?: string }> =
   );
 };
 
-/** Compteur animé (ex. 0 → 20 %). */
 export const Counter: React.FC<{
   from: number;
   to: number;
   delay?: number;
   duration?: number;
-  format?: (n: number) => string;
   style?: React.CSSProperties;
-}> = ({ from, to, delay = 0, duration = 30, format = (n) => String(n), style }) => {
+}> = ({ from, to, delay = 0, duration = 30, style }) => {
   const frame = useCurrentFrame();
   const v = interpolate(frame, [delay, delay + duration], [from, to], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
-  return <span style={{ fontVariantNumeric: "tabular-nums", ...style }}>{format(Math.round(v))}</span>;
+  return <span style={{ fontVariantNumeric: "tabular-nums", ...style }}>{Math.round(v)}</span>;
 };
 
-/** Ligne de liste cochée qui apparaît. */
-export const CheckRow: React.FC<{
-  label: string;
-  delay?: number;
-  size?: number;
-  color?: string;
-  icon?: string;
-  iconColor?: string;
-  strike?: boolean;
-}> = ({ label, delay = 0, size = 42, color = C.white, icon = "check", iconColor = C.sky, strike }) => {
-  const frame = useCurrentFrame();
-  const p = useSpring(delay, { damping: 15, stiffness: 150 });
-  const strikeP = strike
-    ? interpolate(frame, [delay + 10, delay + 22], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
-    : 0;
+export const CheckRow: React.FC<{ label: string; delay?: number; size?: number; color?: string; dark?: boolean }> = ({
+  label,
+  delay = 0,
+  size = 42,
+  color,
+  dark = false,
+}) => {
+  const p = useSpring(delay, { damping: 13, stiffness: 200 });
+  const accent = dark ? C.navy : C.sky;
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
-        gap: size * 0.55,
+        gap: size * 0.5,
         opacity: p,
-        transform: `translateX(${(1 - p) * -60}px)`,
+        transform: `translateX(${(1 - p) * -50}px)`,
         fontFamily: FONT_SANS,
         fontWeight: 500,
         fontSize: size,
-        color,
+        color: color ?? (dark ? C.ink : C.white),
         lineHeight: 1.2,
       }}
     >
       <div
         style={{
-          width: size * 1.45,
-          height: size * 1.45,
+          width: size * 1.35,
+          height: size * 1.35,
           borderRadius: 999,
-          background: icon === "x" ? "rgba(255,255,255,0.08)" : "rgba(152,204,235,0.16)",
-          border: `2px solid ${icon === "x" ? "rgba(255,255,255,0.25)" : iconColor}`,
+          background: dark ? C.navy : "rgba(152,204,235,0.18)",
+          border: `2px solid ${accent}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -486,83 +522,45 @@ export const CheckRow: React.FC<{
           flexShrink: 0,
         }}
       >
-        <Icon name={icon} size={size * 0.85} color={iconColor} strokeWidth={3} />
+        <Icon name="check" size={size * 0.8} color={dark ? C.white : C.sky} strokeWidth={3.2} />
       </div>
-      <span style={{ position: "relative" }}>
-        {label}
-        {strike ? (
-          <span
-            style={{
-              position: "absolute",
-              left: 0,
-              top: "54%",
-              height: 4,
-              width: `${strikeP * 100}%`,
-              background: C.sky,
-              borderRadius: 2,
-            }}
-          />
-        ) : null}
-      </span>
+      <span>{label}</span>
     </div>
   );
 };
 
-/** Bloc de conclusion commun à toutes les publicités. */
-export const CtaScene: React.FC<{
-  title: string;
-  subtitle?: string;
-  button?: string;
-  photo?: string;
-}> = ({
-  title,
-  subtitle = "Audit gratuit · réponse sous 24 h · sans engagement",
-  button = "Estimer mes revenus",
-  photo = "paris-coucher-de-soleil.jpg",
+/** Carte blanche des petites interfaces animées. */
+export const Card: React.FC<{ children: React.ReactNode; style?: React.CSSProperties; delay?: number }> = ({
+  children,
+  style,
+  delay = 0,
 }) => {
-  const L = useLayout();
+  const p = useSpring(delay, { damping: 15, stiffness: 160 });
   return (
-    <AbsoluteFill>
-      <KenBurns src={photo} zoom={[1.15, 1.02]} />
-      <Scrim strength={0.78} />
-      <AbsoluteFill
-        style={{
-          padding: `${L.safeTop}px ${L.padX}px ${L.safeBottom}px`,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-          textAlign: "center",
-        }}
-      >
-        <Logo width={L.vertical ? 560 : 480} />
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: L.vertical ? 44 : 30 }}>
-          <WordReveal text={title} size={L.vertical ? 92 : 80} delay={8} />
-          <Reveal delay={24}>
-            <div style={{ fontFamily: FONT_SANS, fontSize: L.vertical ? 38 : 34, color: "rgba(255,255,255,0.88)" }}>
-              {subtitle}
-            </div>
-          </Reveal>
-          <div style={{ marginTop: L.vertical ? 20 : 6 }}>
-            <CtaButton label={button} delay={34} size={L.vertical ? 46 : 42} />
-          </div>
-        </div>
-        <Reveal delay={46}>
-          <div
-            style={{
-              fontFamily: FONT_SANS,
-              fontWeight: 700,
-              fontSize: L.vertical ? 40 : 34,
-              color: C.white,
-              letterSpacing: "0.02em",
-            }}
-          >
-            {BRAND.url}
-            <span style={{ color: C.sky, margin: "0 18px" }}>·</span>
-            {BRAND.phone}
-          </div>
-        </Reveal>
-      </AbsoluteFill>
-    </AbsoluteFill>
+    <div
+      style={{
+        background: C.white,
+        borderRadius: 34,
+        padding: 40,
+        boxShadow: "0 40px 90px -25px rgba(0,0,0,0.55)",
+        transform: `translateY(${(1 - p) * 140}px) scale(${0.85 + p * 0.15}) rotate(${(1 - p) * -4}deg)`,
+        opacity: interpolate(p, [0, 0.3], [0, 1], { extrapolateRight: "clamp" }),
+        fontFamily: FONT_SANS,
+        color: C.ink,
+        ...style,
+      }}
+    >
+      {children}
+    </div>
   );
 };
+
+export const ContactLine: React.FC<{ size: number; delay?: number }> = ({ size, delay = 0 }) => (
+  <SlideIn delay={delay} dir="up" dist={30}>
+    <div style={{ fontFamily: FONT_SANS, fontWeight: 700, fontSize: size, color: C.white, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
+      {BRAND.url}
+      <span style={{ color: C.sky, margin: "0 18px" }}>·</span>
+      {BRAND.phone}
+    </div>
+  </SlideIn>
+);

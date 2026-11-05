@@ -24,8 +24,8 @@ mkdirSync("out/stills", { recursive: true });
 for (const c of comps) {
   const composition = await selectComposition({ serveUrl, id: c.id, browserExecutable });
   if (stills) {
-    const step = 45;
-    for (let f = 30; f < c.durationInFrames; f += step) {
+    const step = 30;
+    for (let f = 20; f < c.durationInFrames; f += step) {
       await renderStill({
         serveUrl,
         composition,
