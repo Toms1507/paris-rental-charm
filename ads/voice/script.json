@@ -1,13 +1,13 @@
 [
   {
     "id": "hook1",
-    "say": "Vous avez un appartement inoccupé à Paris ?",
-    "show": "Vous avez un appartement *inoccupé* à Paris ?"
+    "say": "Votre appartement à Paris est inoccupé ?",
+    "show": "Votre appartement à Paris est *inoccupé* ?"
   },
   {
     "id": "hook2",
-    "say": "Ou une location longue durée, qui vous rapporte trop peu ?",
-    "show": "Ou une location longue durée, qui vous rapporte *trop* *peu* ?"
+    "say": "Ou loué à l'année, pour trop peu ?",
+    "show": "Ou loué à l'année, pour *trop* *peu* ?"
   },
   {
     "id": "hook3",
@@ -16,28 +16,13 @@
   },
   {
     "id": "logo",
-    "say": "Avec Spinelle, on gère votre location courte durée, de A à Z.",
-    "show": "Avec Spinelle, on gère votre location courte durée, *de* *A* *à* *Z.*"
+    "say": "Spinelle gère votre location, de A à Z.",
+    "show": "Spinelle gère votre location, *de* *A* *à* *Z.*"
   },
   {
-    "id": "annonce",
-    "say": "On crée une annonce qui donne vraiment envie.",
-    "show": "On crée une annonce qui donne *vraiment* *envie.*"
-  },
-  {
-    "id": "prix",
-    "say": "On ajuste vos prix, chaque jour.",
-    "show": "On ajuste vos prix, *chaque* *jour.*"
-  },
-  {
-    "id": "voyageurs",
-    "say": "On accueille vos voyageurs, sept jours sur sept.",
-    "show": "On accueille vos voyageurs, *7* *jours* *sur* *7.*"
-  },
-  {
-    "id": "menage",
-    "say": "Ménage et linge, comme à l'hôtel.",
-    "show": "Ménage et linge, *comme* *à* *l'hôtel.*"
+    "id": "montage",
+    "say": "Annonce, prix, voyageurs, ménage : vous n'avez plus rien à faire.",
+    "show": "Annonce, prix, voyageurs, ménage : vous n'avez *plus* *rien* *à* *faire.*"
   },
   {
     "id": "suivi",
@@ -46,8 +31,8 @@
   },
   {
     "id": "offre",
-    "say": "Et vous ne payez que si c'est loué. Vingt pour cent, tout compris.",
-    "show": "Et vous ne payez que si c'est *loué.*"
+    "say": "Vous ne payez que si c'est loué. Vingt pour cent, tout compris.",
+    "show": "Vous ne payez que si c'est *loué.*"
   },
   {
     "id": "cta",

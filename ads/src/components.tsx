@@ -545,8 +545,9 @@ export const Card: React.FC<{ children: React.ReactNode; style?: React.CSSProper
         borderRadius: 34,
         padding: 40,
         boxShadow: "0 40px 90px -25px rgba(0,0,0,0.55)",
-        transform: `translateY(${(1 - p) * 50}px)`,
-        opacity: interpolate(p, [0, 0.3], [0, 1], { extrapolateRight: "clamp" }),
+        // Entrée en 3D : la carte pivote doucement face à la caméra.
+        transform: `perspective(1800px) rotateY(${(1 - p) * -24}deg) rotateX(${(1 - p) * 10}deg) translateY(${(1 - p) * 40}px) scale(${0.9 + 0.1 * p})`,
+        opacity: interpolate(p, [0, 0.35], [0, 1], { extrapolateRight: "clamp" }),
         fontFamily: FONT_SANS,
         color: C.ink,
         ...style,
