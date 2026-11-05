@@ -13,8 +13,8 @@ export type Scene = {
   t?: "fade" | "left" | "up" | "wipe";
 };
 
-/** Transitions très courtes (0,2 s), lancées pile sur le temps. */
-const T = 6;
+/** Transitions courtes (0,33 s), lancées pile sur le temps. */
+const T = 10;
 
 export const seriesDuration = (scenes: Scene[]) => scenes.reduce((sum, s) => sum + s.beats * BEAT, 0);
 

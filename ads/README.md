@@ -11,6 +11,23 @@ Trois publicités, chacune en trois formats, avec musique.
 Formats : `-16x9` (1920×1080 : YouTube in-stream), `-9x16` (1080×1920 : YouTube Shorts) et `-1x1` (1080×1080 : Demand Gen, Discover, Gmail).
 Le texte reste hors des zones masquées par l'interface YouTube.
 
+## Voix off (publicité principale `SpinelleVoixOff`)
+
+Voix IA française neuronale (Kokoro-82M, voix « ff_siwis », licence Apache-2.0) générée en local :
+le texte est dans `voice/script.json` (`say` = ce qui est dit, `show` = le sous-titre). Les
+sous-titres apparaissent mot à mot, calés sur la voix, et la durée de chaque scène suit la voix.
+
+```bash
+pip install kokoro-onnx soundfile
+# Modèle : paquet npm kokoro-q8-shards (6 fichiers à concaténer en kokoro-q8.onnx)
+# Voix : voices/ff_siwis.bin du paquet npm kokoro-js, enregistrée dans voices.npz (clé ff_siwis)
+python3 -I voice/build.py <dossier contenant kokoro-q8.onnx et voices.npz>
+python3 music/generate.py 32 public/music/track-32.wav   # durée affichée par build.py
+```
+
+Pour une voix encore plus naturelle (ElevenLabs, ou votre propre voix), remplacez les fichiers de
+`public/voice/` par vos enregistrements (un fichier par phrase, mêmes noms) puis relancez le rendu.
+
 ## Musique
 
 `music/generate.py` compose la musique (lounge parisien chic : piano électrique, basse ronde, célesta, 120 BPM) entièrement par programme :

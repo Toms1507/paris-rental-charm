@@ -1,0 +1,57 @@
+[
+  {
+    "id": "hook1",
+    "say": "Vous avez un appartement inoccupé à Paris ?",
+    "show": "Vous avez un appartement *inoccupé* à Paris ?"
+  },
+  {
+    "id": "hook2",
+    "say": "Ou une location longue durée qui rapporte trop peu ?",
+    "show": "Ou une location longue durée qui rapporte *trop* *peu* ?"
+  },
+  {
+    "id": "hook3",
+    "say": "Et si votre logement travaillait enfin pour vous ?",
+    "show": "Et si votre logement travaillait *enfin* *pour* *vous* ?"
+  },
+  {
+    "id": "logo",
+    "say": "Spinelle gère votre location courte durée, de A à Z.",
+    "show": "Spinelle gère votre location courte durée, *de* *A* *à* *Z.*"
+  },
+  {
+    "id": "annonce",
+    "say": "On crée une annonce qui donne envie.",
+    "show": "On crée une annonce qui *donne* *envie.*"
+  },
+  {
+    "id": "prix",
+    "say": "On ajuste vos prix chaque jour.",
+    "show": "On ajuste vos prix *chaque* *jour.*"
+  },
+  {
+    "id": "voyageurs",
+    "say": "On accueille vos voyageurs, sept jours sur sept.",
+    "show": "On accueille vos voyageurs, *7* *jours* *sur* *7.*"
+  },
+  {
+    "id": "menage",
+    "say": "Ménage et linge, comme à l'hôtel.",
+    "show": "Ménage et linge, *comme* *à* *l'hôtel.*"
+  },
+  {
+    "id": "suivi",
+    "say": "Et vous suivez vos revenus, chaque mois.",
+    "show": "Et vous suivez vos revenus, *chaque* *mois.*"
+  },
+  {
+    "id": "offre",
+    "say": "Vous ne payez que si c'est loué. Vingt pour cent, tout compris.",
+    "show": "Vous ne payez que si c'est *loué.*"
+  },
+  {
+    "id": "cta",
+    "say": "Demandez votre estimation gratuite !",
+    "show": "Demandez votre *estimation* *gratuite* !"
+  }
+]

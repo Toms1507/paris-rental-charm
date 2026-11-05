@@ -145,3 +145,43 @@ export const AD30 = withAudio(scenes30, 30);
 export const AD15 = withAudio(scenes15, 15);
 export const AD6 = withAudio(scenes6, 6);
 
+
+// --- Publicité avec voix off (version principale) ------------------------------------------
+import { SpeakBenefitScene, SpeakCtaScene, SpeakLogoScene, SpeakOfferScene, SpeakScene } from "./talk";
+import { line, TOTAL_SECONDS } from "./voice";
+
+const V = (id: string) => line(id);
+const voiceScenes: Scene[] = [
+  { beats: V("hook1").beats, el: <SpeakScene photo="chambre-parisienne.jpg" l={V("hook1")} />, t: "fade" },
+  { beats: V("hook2").beats, el: <SpeakScene photo="hero-paris.jpg" l={V("hook2")} />, t: "fade" },
+  { beats: V("hook3").beats, el: <SpeakScene photo="paris-rooftops.jpg" l={V("hook3")} />, t: "fade" },
+  { beats: V("logo").beats, el: <SpeakLogoScene l={V("logo")} />, t: "fade" },
+  { beats: V("annonce").beats, el: <SpeakBenefitScene photo="appartement-balcon.jpg" l={V("annonce")} sub="Photos pro · Airbnb, Booking, Abritel" widget={<ListingWidget />} />, t: "fade" },
+  { beats: V("prix").beats, el: <SpeakBenefitScene photo="toits-de-paris.jpg" l={V("prix")} sub="Selon la saison, les événements et la demande" widget={<PriceWidget />} />, t: "fade" },
+  { beats: V("voyageurs").beats, el: <SpeakBenefitScene photo="remise-des-cles.jpg" l={V("voyageurs")} sub="Messages, arrivées et départs gérés pour vous" widget={<ChatWidget />} />, t: "fade" },
+  { beats: V("menage").beats, el: <SpeakBenefitScene photo="lit-linge-hotelier.jpg" l={V("menage")} sub="Linge professionnel et contrôle après chaque séjour" widget={<CleanWidget />} />, t: "fade" },
+  { beats: V("suivi").beats, el: <SpeakBenefitScene photo="chambre-parisienne-portrait.jpg" l={V("suivi")} sub="Un récapitulatif clair, en toute transparence" widget={<RecapWidget />} />, t: "fade" },
+  { beats: V("offre").beats, el: <SpeakOfferScene l={V("offre")} />, t: "fade" },
+];
+// Accord final de la musique à TOTAL - 2 s : le logo apparaît à cet instant.
+voiceScenes.push({
+  beats: V("cta").beats,
+  el: <SpeakCtaScene l={V("cta")} hit={(TOTAL_SECONDS - 2) * 30 - sceneStart(voiceScenes, voiceScenes.length)} />,
+});
+
+const voiceFrames = seriesDuration(voiceScenes);
+const VoiceAd: React.FC = () => (
+  <AbsoluteFill style={{ background: "#111D30" }}>
+    <SceneSeries scenes={voiceScenes} />
+    <Audio
+      src={staticFile(`music/track-${TOTAL_SECONDS}.wav`)}
+      volume={(f) =>
+        interpolate(f, [0, voiceFrames - 80, voiceFrames - 50, voiceFrames - 6, voiceFrames], [0.2, 0.2, 0.5, 0.5, 0], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        })
+      }
+    />
+  </AbsoluteFill>
+);
+export const AD_VOICE = { Ad: VoiceAd, frames: voiceFrames };

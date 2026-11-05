@@ -54,12 +54,14 @@ export const KenBurns: React.FC<{
   pan?: [number, number];
   position?: string;
   pulse?: boolean;
-}> = ({ src, zoom = [1.1, 1.28], pan = [0, 0], position = "center", pulse = true }) => {
+}> = ({ src, zoom = [1.04, 1.12], pan = [0, 0], position = "center", pulse = false }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const beat = useBeatPulse(4);
-  const t = interpolate(frame, [0, durationInFrames], [0, 1], { extrapolateRight: "clamp" });
-  const scale = interpolate(t, [0, 1], zoom) * (pulse ? 1 + beat * 0.025 : 1);
+  const t = interpolate(frame, [0, durationInFrames], [0, 1], { extrapolateRight: "clamp", easing: Easing.inOut(Easing.sin) });
+  // Zoom limité pour rester doux même si une scène passe une plage plus large.
+  const [z0, z1] = zoom;
+  const scale = interpolate(t, [0, 1], [Math.min(z0, 1.12), Math.min(z1, 1.12)]) * (pulse ? 1 + beat * 0.01 : 1);
   const x = interpolate(t, [0, 1], pan);
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
@@ -78,7 +80,8 @@ export const KenBurns: React.FC<{
 };
 
 /** Éclair blanc au début d'une scène (effet « flash » de coupe). */
-export const Flash: React.FC<{ at?: number; strength?: number }> = ({ at = 0, strength = 0.55 }) => {
+export const Flash: React.FC<{ at?: number; strength?: number }> = ({ at = 0, strength: s = 0.55 }) => {
+  const strength = Math.min(s, 0.15);
   const frame = useCurrentFrame();
   const o = interpolate(frame, [at, at + 1, at + 7], [0, strength, 0], {
     extrapolateLeft: "clamp",
@@ -94,13 +97,13 @@ export const Punch: React.FC<{
   children: React.ReactNode;
   style?: React.CSSProperties;
 }> = ({ delay = 0, from = 1.5, children, style }) => {
-  const p = useSpring(delay, { damping: 13, stiffness: 190, mass: 0.6 });
+  const p = useSpring(delay, { damping: 200, stiffness: 120 });
+  from = 1 + Math.min(from - 1, 0.08);
   return (
     <div
       style={{
         opacity: interpolate(p, [0, 0.25], [0, 1], { extrapolateRight: "clamp" }),
         transform: `scale(${interpolate(p, [0, 1], [from, 1])})`,
-        filter: `blur(${Math.max(0, (1 - p) * 10)}px)`,
         ...style,
       }}
     >
@@ -117,7 +120,7 @@ export const SlideIn: React.FC<{
   children: React.ReactNode;
   style?: React.CSSProperties;
 }> = ({ delay = 0, dir = "up", dist = 80, children, style }) => {
-  const p = useSpring(delay, { damping: 18, stiffness: 170 });
+  const p = useSpring(delay, { damping: 200, stiffness: 130 });
   const d = (1 - p) * dist;
   const tr =
     dir === "left" ? `translateX(${-d}px)` : dir === "right" ? `translateX(${d}px)` : dir === "down" ? `translateY(${-d}px)` : `translateY(${d}px)`;
@@ -178,7 +181,7 @@ export const SlamText: React.FC<{
             const p = spring({
               frame: frame - delay - i++ * stagger,
               fps,
-              config: { damping: 12, stiffness: 220, mass: 0.5 },
+              config: { damping: 200, stiffness: 140 },
             });
             return (
               <span
@@ -186,9 +189,8 @@ export const SlamText: React.FC<{
                 style={{
                   display: "inline-block",
                   marginRight: "0.22em",
-                  opacity: interpolate(p, [0, 0.2], [0, 1], { extrapolateRight: "clamp" }),
-                  transform: `scale(${interpolate(p, [0, 1], [1.7, 1])}) translateY(${(1 - p) * -0.15}em)`,
-                  filter: `blur(${Math.max(0, (1 - p) * 6)}px)`,
+                  opacity: p,
+                  transform: `translateY(${(1 - p) * 0.25}em)`,
                   color: highlighted ? accent : undefined,
                 }}
               >
@@ -234,7 +236,7 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; color?: string; dela
 export const BrandBackground: React.FC<{ light?: boolean }> = ({ light = false }) => {
   const frame = useCurrentFrame();
   const beat = useBeatPulse(6);
-  const rot = frame * 0.35;
+  const rot = frame * 0.04;
   const stroke = light ? "rgba(33,63,108,0.09)" : "rgba(152,204,235,0.12)";
   return (
     <AbsoluteFill
@@ -253,7 +255,7 @@ export const BrandBackground: React.FC<{ light?: boolean }> = ({ light = false }
           aspectRatio: "1",
           left: "-35%",
           top: "50%",
-          transform: `translateY(-50%) rotate(${rot}deg) scale(${1 + beat * 0.03})`,
+          transform: `translateY(-50%) rotate(${rot}deg) scale(${1 + beat * 0})`,
         }}
       >
         {[46, 36, 26, 16, 8].map((r, k) => (
@@ -309,8 +311,8 @@ export const CtaButton: React.FC<{ label: string; delay?: number; size?: number 
   size = 44,
 }) => {
   const frame = useCurrentFrame();
-  const p = useSpring(delay, { damping: 11, stiffness: 200 });
-  const beat = useBeatPulse(5);
+  const p = useSpring(delay, { damping: 200, stiffness: 120 });
+  const beat = 0;
   const local = Math.max(0, frame - delay);
   const shine = interpolate((local % 45) / 45, [0, 0.5], [-40, 140], { extrapolateRight: "clamp" });
   return (
@@ -329,7 +331,7 @@ export const CtaButton: React.FC<{ label: string; delay?: number; size?: number 
         fontWeight: 700,
         fontSize: size,
         opacity: p,
-        transform: `scale(${(0.5 + 0.5 * p) * (1 + beat * 0.045 * Math.min(1, local / 10))})`,
+        transform: `translateY(${(1 - p) * 20}px)`,
         boxShadow: `0 20px 70px -10px rgba(152,204,235,${0.45 + beat * 0.3})`,
         whiteSpace: "nowrap",
       }}
@@ -457,9 +459,9 @@ export const Stars: React.FC<{ size: number; delay?: number; stagger?: number; c
   return (
     <div style={{ display: "flex", gap: size * 0.15 }}>
       {Array.from({ length: 5 }, (_, k) => {
-        const p = spring({ frame: frame - delay - k * stagger, fps, config: { damping: 8, stiffness: 220 } });
+        const p = spring({ frame: frame - delay - k * stagger, fps, config: { damping: 200, stiffness: 160 } });
         return (
-          <svg key={k} width={size} height={size} viewBox="0 0 24 24" style={{ transform: `scale(${p}) rotate(${(1 - p) * -90}deg)` }}>
+          <svg key={k} width={size} height={size} viewBox="0 0 24 24" style={{ transform: `scale(${p})` }}>
             <path d={STAR} fill={color} />
           </svg>
         );
@@ -491,7 +493,7 @@ export const CheckRow: React.FC<{ label: string; delay?: number; size?: number; 
   color,
   dark = false,
 }) => {
-  const p = useSpring(delay, { damping: 13, stiffness: 200 });
+  const p = useSpring(delay, { damping: 200, stiffness: 140 });
   const accent = dark ? C.navy : C.sky;
   return (
     <div
@@ -535,7 +537,7 @@ export const Card: React.FC<{ children: React.ReactNode; style?: React.CSSProper
   style,
   delay = 0,
 }) => {
-  const p = useSpring(delay, { damping: 15, stiffness: 160 });
+  const p = useSpring(delay, { damping: 200, stiffness: 110 });
   return (
     <div
       style={{
@@ -543,7 +545,7 @@ export const Card: React.FC<{ children: React.ReactNode; style?: React.CSSProper
         borderRadius: 34,
         padding: 40,
         boxShadow: "0 40px 90px -25px rgba(0,0,0,0.55)",
-        transform: `translateY(${(1 - p) * 140}px) scale(${0.85 + p * 0.15}) rotate(${(1 - p) * -4}deg)`,
+        transform: `translateY(${(1 - p) * 50}px)`,
         opacity: interpolate(p, [0, 0.3], [0, 1], { extrapolateRight: "clamp" }),
         fontFamily: FONT_SANS,
         color: C.ink,
@@ -564,3 +566,108 @@ export const ContactLine: React.FC<{ size: number; delay?: number }> = ({ size, 
     </div>
   </SlideIn>
 );
+
+/** Nombre d'images par mot pour les sous-titres « parlés » (~3,5 mots par seconde). */
+export const WORD_FRAMES = 8;
+
+export const spokenDuration = (text: string) => text.replace(/\n/g, " ").split(" ").filter(Boolean).length * WORD_FRAMES;
+
+/**
+ * Sous-titres « parlés » : les mots apparaissent au rythme de la parole, le mot en cours
+ * est surligné. Tous les mots sont placés dès le départ : l'alignement ne bouge jamais.
+ */
+export const SpokenLine: React.FC<{
+  text: string;
+  delay?: number;
+  size: number;
+  align?: "left" | "center";
+  color?: string;
+  accent?: string;
+  maxWidth?: number;
+  /** Image de début de chaque mot (calée sur la voix off) ; sinon rythme régulier. */
+  starts?: number[];
+}> = ({ text, delay = 0, size, align = "center", color = C.white, accent = C.sky, maxWidth, starts }) => {
+  const frame = useCurrentFrame();
+  const lines = text.replace(/ ([?:!»])/g, " $1").replace(/« /g, "« ").split("\n");
+  let i = 0;
+  return (
+    <div
+      style={{
+        fontFamily: FONT_DISPLAY,
+        fontWeight: 600,
+        fontSize: size,
+        lineHeight: 1.12,
+        letterSpacing: "-0.015em",
+        color,
+        textAlign: align,
+        maxWidth,
+        textShadow: color === C.white ? "0 3px 24px rgba(0,0,0,0.45)" : undefined,
+      }}
+    >
+      {lines.map((line, li) => (
+        <div key={li}>
+          {line.split(" ").map((raw, wi) => {
+            const idx = i++;
+            const start = starts?.[idx] ?? delay + idx * WORD_FRAMES;
+            const next = starts?.[idx + 1] ?? start + WORD_FRAMES;
+            const highlighted = raw.includes("*");
+            const word = raw.replaceAll("*", "");
+            const o = interpolate(frame, [start, start + 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const active = frame >= start && frame < next + 2;
+            return (
+              <span
+                key={wi}
+                style={{
+                  display: "inline-block",
+                  marginRight: "0.24em",
+                  opacity: o,
+                  transform: `translateY(${(1 - o) * 0.12}em)`,
+                  color: highlighted || active ? accent : undefined,
+                }}
+              >
+                {word}
+              </span>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+/** Étiquette « qui parle » avec petite onde sonore, pour l'effet d'adresse directe. */
+export const Speaker: React.FC<{ talkingUntil: number; delay?: number; light?: boolean }> = ({ talkingUntil, delay = 0, light = false }) => {
+  const frame = useCurrentFrame();
+  const p = useSpring(delay, { damping: 200, stiffness: 120 });
+  const talking = frame >= delay && frame < talkingUntil;
+  return (
+    <div
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 16,
+        padding: "12px 24px 12px 12px",
+        borderRadius: 999,
+        background: light ? "rgba(33,63,108,0.08)" : "rgba(17,29,48,0.55)",
+        border: `1px solid ${light ? "rgba(33,63,108,0.15)" : "rgba(152,204,235,0.35)"}`,
+        opacity: p,
+        transform: `translateY(${(1 - p) * 12}px)`,
+        fontFamily: FONT_SANS,
+        fontWeight: 700,
+        fontSize: 26,
+        color: light ? C.navy : C.white,
+      }}
+    >
+      <div style={{ width: 52, height: 52, borderRadius: 99, background: C.white, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Img src={img("logo-mark.png")} style={{ width: 36 }} />
+      </div>
+      {BRAND.name}
+      <div style={{ display: "flex", alignItems: "center", gap: 4, height: 26, marginLeft: 4 }}>
+        {[0, 1, 2, 3].map((k) => {
+          const h = talking ? 8 + 16 * Math.abs(Math.sin((frame + k * 3.3) / 3.1)) : 6;
+          return <span key={k} style={{ width: 4, height: h, borderRadius: 2, background: C.sky }} />;
+        })}
+      </div>
+    </div>
+  );
+};

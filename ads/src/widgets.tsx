@@ -17,7 +17,7 @@ const Title: React.FC<{ icon: string; children: React.ReactNode }> = ({ icon, ch
 );
 
 const Chip: React.FC<{ children: React.ReactNode; delay: number; dark?: boolean }> = ({ children, delay, dark }) => {
-  const p = useSpring(delay, { damping: 10, stiffness: 220 });
+  const p = useSpring(delay, { damping: 200, stiffness: 150 });
   return (
     <div
       style={{
@@ -47,13 +47,11 @@ const Shutter: React.FC<{ at: number }> = ({ at }) => {
 
 export const ListingWidget: React.FC = () => {
   const frame = useCurrentFrame();
-  const zoom = interpolate(frame, [0, 60], [1.15, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
+  const zoom = interpolate(frame, [0, 60], [1.05, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
   return (
     <Card style={{ width: WIDGET_W, padding: 26 }}>
       <div style={{ position: "relative", height: 380, borderRadius: 22, overflow: "hidden" }}>
         <Img src={img("appartement-balcon.jpg")} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${zoom})` }} />
-        <Shutter at={6} />
-        <Shutter at={21} />
         <div style={{ position: "absolute", top: 18, left: 18 }}>
           <Chip delay={10}>
             <Icon name="camera" size={26} color={C.navy} strokeWidth={2.4} /> Photos pro
@@ -72,7 +70,7 @@ export const ListingWidget: React.FC = () => {
 };
 
 export const PlatformsWidget: React.FC = () => {
-  const notif = useSpring(30, { damping: 12, stiffness: 180 });
+  const notif = useSpring(30, { damping: 200, stiffness: 130 });
   return (
     <div style={{ width: WIDGET_W, display: "flex", flexDirection: "column", gap: 26, alignItems: "center" }}>
       <Card style={{ width: WIDGET_W }}>
@@ -173,7 +171,7 @@ export const PriceWidget: React.FC = () => {
 const TagPop: React.FC<{ label: string; start: number }> = ({ label, start }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const p = spring({ frame: frame - start, fps, config: { damping: 10, stiffness: 240 } });
+  const p = spring({ frame: frame - start, fps, config: { damping: 200, stiffness: 150 } });
   const width = label.length * 15 + 34;
   return (
     <g transform={`scale(${p})`}>
@@ -186,7 +184,7 @@ const TagPop: React.FC<{ label: string; start: number }> = ({ label, start }) =>
 };
 
 const Bubble: React.FC<{ side: "left" | "right"; delay: number; children: React.ReactNode }> = ({ side, delay, children }) => {
-  const p = useSpring(delay, { damping: 13, stiffness: 220 });
+  const p = useSpring(delay, { damping: 200, stiffness: 150 });
   const right = side === "right";
   return (
     <div
@@ -248,7 +246,7 @@ export const ChatWidget: React.FC = () => {
 };
 
 const Tick: React.FC<{ label: string; delay: number }> = ({ label, delay }) => {
-  const p = useSpring(delay, { damping: 11, stiffness: 230 });
+  const p = useSpring(delay, { damping: 200, stiffness: 150 });
   const frame = useCurrentFrame();
   const done = frame >= delay + 4;
   return (
@@ -292,7 +290,7 @@ export const CleanWidget: React.FC = () => {
       ].map(([x, y, d], k) => {
         const s = Math.max(0, Math.sin(((frame - d!) / 22) * Math.PI));
         return (
-          <div key={k} style={{ position: "absolute", left: x, top: y, transform: `scale(${s}) rotate(${frame * 3}deg)` }}>
+          <div key={k} style={{ position: "absolute", left: x, top: y, transform: `scale(${s * 0.8})` }}>
             <Icon name="sparkles" size={70} color={C.sky} strokeWidth={1.6} />
           </div>
         );
@@ -355,7 +353,7 @@ export const RecapWidget: React.FC = () => {
       <Title icon="chart">Votre récapitulatif mensuel</Title>
       <div style={{ display: "flex", alignItems: "flex-end", gap: 12, height: 200, marginTop: 30 }}>
         {BARS.map((b, i) => {
-          const g = interpolate(frame, [6 + i * 2, 20 + i * 2], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.6)) });
+          const g = interpolate(frame, [6 + i * 2, 20 + i * 2], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
           return <div key={i} style={{ flex: 1, height: `${b * g}%`, borderRadius: "10px 10px 4px 4px", background: i === 7 ? C.navy : "#BFD9EC" }} />;
         })}
       </div>

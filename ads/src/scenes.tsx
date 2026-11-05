@@ -166,9 +166,8 @@ export const MontageScene: React.FC<{ items: { photo: string; word: string }[] }
 
 const MontageShot: React.FC<{ photo: string; word: string; i: number; size: number }> = ({ photo, word, i, size }) => {
   const frame = useCurrentFrame();
-  const rot = interpolate(frame, [0, BEAT], [i % 2 ? -2 : 2, 0], { extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill style={{ transform: `rotate(${rot}deg) scale(1.04)` }}>
+    <AbsoluteFill>
       <KenBurns src={photo} zoom={[1.35, 1.15]} pulse={false} />
       <Scrim strength={0.55} />
       <Frame>

@@ -1,9 +1,10 @@
 import React from "react";
 import { Composition, Folder } from "remotion";
 import "./theme";
-import { AD15, AD30, AD6 } from "./ads";
+import { AD15, AD30, AD6, AD_VOICE } from "./ads";
 
 const ADS = [
+  { id: "SpinelleVoixOff", ...AD_VOICE },
   { id: "Spinelle30s", ...AD30 },
   { id: "Spinelle15s", ...AD15 },
   { id: "Spinelle6s", ...AD6 },
