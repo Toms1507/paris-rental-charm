@@ -1027,6 +1027,17 @@ const MIN_SCORE = 6;
 const FORBIDDEN =
   /[[\]{}!%€]|\d|encadr|réglement|reglement|plafond|conformit|médian|median|prix|tarif|clé en main|cle en main|synergie|stratégique|n'hésitez|café|cordialement|Tom Simon/i;
 
+// Phrase d'offre claire : « si vous nous recommandez… » et « commission » dans la même phrase.
+export const hasOffer = (body = "") =>
+  body
+    .split(/(?<=[.?])\s+/)
+    .some(
+      (t) =>
+        /commission/i.test(t) &&
+        /\bsi vous\b/i.test(t) &&
+        /recommand|transmet|transférez|mettez en (relation|contact)|orientez|adressez/i.test(t),
+    );
+
 export function check(draft) {
   const problems = [];
   const all = `${draft.subject}\n${draft.body}\n${draft.followup}`;
@@ -1035,11 +1046,7 @@ export function check(draft) {
   if (draft.subject.length > 45) problems.push("objet trop long (moins de 40 caractères)");
   if (!/commission/i.test(draft.body))
     problems.push("le message doit dire qu'il touche une commission sur chaque logement recommandé que nous signons");
-  else if (
-    !draft.body
-      .split(/(?<=[.?])\s+/)
-      .some((t) => /commission/i.test(t) && /\bsi vous\b/i.test(t) && /recommand|transmet|transférez|mettez en (relation|contact)|orientez|adressez/i.test(t))
-  )
+  else if (!hasOffer(draft.body))
     problems.push(
       "l'offre doit tenir dans une phrase claire du type « Si vous nous recommandez un client ou un contact qui veut louer en courte durée, vous touchez une commission sur chaque logement que nous signons »",
     );
@@ -1359,6 +1366,19 @@ async function renameSubjects() {
     renamed++;
   }
   return renamed;
+}
+
+// Messages prêts rédigés avant la phrase d'offre obligatoire : réécrits par lots de 40 au plus,
+// en gardant toujours au moins 60 messages prêts pour que les envois ne manquent jamais.
+async function redraftWithoutOffer() {
+  const rows = await selectAll(() =>
+    db.from("prospects").select("id,body").eq("status", "brouillon").not("body", "is", null),
+  );
+  const stale = rows.filter((p) => !hasOffer(p.body));
+  const n = Math.min(40, Math.max(0, rows.length - 60), stale.length);
+  for (const p of stale.slice(0, n))
+    await db.from("prospects").update({ ...CLEAN_DRAFT, status: "nouveau" }).eq("id", p.id);
+  return { redone: n, left: stale.length - n };
 }
 
 async function draftMessages(settings) {
@@ -2605,6 +2625,11 @@ async function main() {
   //    jamais être empêchés par une préparation trop longue.
   if (!settings.paused) {
     const renamed = await renameSubjects();
+    if (!SEND_ONLY) {
+      const offer = await redraftWithoutOffer();
+      if (offer.redone)
+        note(`Messages sans phrase d'offre claire renvoyés en rédaction : ${offer.redone} (reste ${offer.left})`);
+    }
     if (renamed) note(`Objets remplacés par « Demande de collaboration » (ou équivalent) : ${renamed}`);
     const fixed = await resolveErrors();
     if (fixed.retried || fixed.dropped)
