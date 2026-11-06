@@ -864,19 +864,18 @@ async function enrich() {
     "syndic ou administrateur de biens",
     "agence immobilière",
   ];
-  const lists = await Promise.all(
-    kinds.map(async (cat) => {
-      let q = db.from("prospects").select("*").eq("status", "nouveau").is("crawled_at", null);
-      q = cat === "agence immobilière"
-        ? q.or("notes.is.null,notes.ilike.*Catégorie : agence immobilière*")
-        : q.ilike("notes", `%Catégorie : ${cat}%`);
-      const { data } = await q
-        .order("email", { ascending: true, nullsFirst: false })
-        .order("website", { ascending: true, nullsFirst: false })
-        .limit(ENRICH_PER_RUN);
-      return data || [];
-    }),
+  // Lecture des fiches à analyser, puis tri par métier ici même (le filtre métier côté base ne
+  // renvoyait plus rien, sans erreur).
+  const pending = await selectAll(() =>
+    db
+      .from("prospects")
+      .select("*")
+      .eq("status", "nouveau")
+      .is("crawled_at", null)
+      .order("email", { ascending: true, nullsFirst: false })
+      .order("website", { ascending: true, nullsFirst: false }),
   );
+  const lists = kinds.map((cat) => pending.filter((p) => tradeOf(p) === cat).slice(0, ENRICH_PER_RUN));
   // Tour de rôle entre métiers (les autres métiers d'abord), dans la limite du passage.
   const queue = [];
   const ids = new Set();
@@ -1518,20 +1517,20 @@ async function draftMessages(settings) {
   ];
   const pick = async (kind) => {
     if (!rooms[kind]) return [];
+    // Lecture par zone, puis tri par métier ici même (le filtre métier côté base ne renvoyait
+    // plus rien, sans erreur).
     const lists = await Promise.all(
-      Object.keys(ZONES).flatMap((zone) =>
-        CATEGORIES.map(async (cat) => {
-          let q = db.from("prospects").select("*").eq("status", "nouveau").eq("zone", zone);
-          q = cat === "agence immobilière"
-            ? q.or("notes.is.null,notes.ilike.*Catégorie : agence immobilière*")
-            : q.ilike("notes", `%Catégorie : ${cat}%`);
-          const { data } = await (kind === "email"
-            ? q.not("email", "is", null)
-            : q.is("email", null).ilike("notes", "%Formulaire de contact :%")
-          ).limit(rooms[kind] * 2);
-          return (data || []).filter((p) => !parked(p)).slice(0, rooms[kind]);
-        }),
-      ),
+      Object.keys(ZONES).map(async (zone) => {
+        const q = db.from("prospects").select("*").eq("status", "nouveau").eq("zone", zone);
+        const { data, error } = await (kind === "email"
+          ? q.not("email", "is", null)
+          : q.is("email", null).ilike("notes", "%Formulaire de contact :%")
+        ).limit(1000);
+        if (error) note(`Lecture des contacts (${zone}) impossible : ${error.message}`);
+        const byCat = new Map(CATEGORIES.map((c) => [c, []]));
+        for (const p of data || []) if (!parked(p)) byCat.get(tradeOf(p))?.push(p);
+        return [...byCat.values()].flatMap((l) => l.slice(0, rooms[kind]));
+      }),
     );
     return lists.flat();
   };
@@ -1909,6 +1908,7 @@ async function dropDeadAddress(p) {
 // de l'envoi, et les adresses inexistantes ne partent jamais.
 // Messages prêts, pris métier par métier (les plus anciens d'abord dans chaque métier) : les
 // agences, plus nombreuses, ne prennent plus toute la place des autres métiers.
+const tradeOf = (p) => (p.notes || "").match(/Catégorie : ([^\n]+)/)?.[1]?.trim() ?? "agence immobilière";
 const TRADES = [
   "agence immobilière",
   "syndic ou administrateur de biens",
@@ -1919,17 +1919,17 @@ const TRADES = [
   "chasseur immobilier",
 ];
 async function readyByTrade(statuses, perTrade) {
-  const lists = await Promise.all(
-    TRADES.map(async (cat) => {
-      let q = db.from("prospects").select("*").in("status", statuses).not("email", "is", null);
-      q = cat === "agence immobilière"
-        ? q.or("notes.is.null,notes.ilike.*Catégorie : agence immobilière*")
-        : q.ilike("notes", `%Catégorie : ${cat}%`);
-      const { data, error } = await q.order("drafted_at", { ascending: true }).limit(perTrade);
-      if (error) note(`Lecture des messages prêts (${cat}) impossible : ${error.message}`);
-      return data || [];
-    }),
+  // Lecture de tous les messages prêts, puis tri par métier ici même (le filtre métier côté base
+  // ne renvoyait plus rien, sans erreur).
+  const all = await selectAll(() =>
+    db
+      .from("prospects")
+      .select("*")
+      .in("status", statuses)
+      .not("email", "is", null)
+      .order("drafted_at", { ascending: true }),
   );
+  const lists = TRADES.map((cat) => all.filter((p) => tradeOf(p) === cat).slice(0, perTrade));
   const out = [];
   for (let i = 0; lists.some((l) => l[i]); i++) for (const l of lists) if (l[i]) out.push(l[i]);
   if (out.length) return out;
