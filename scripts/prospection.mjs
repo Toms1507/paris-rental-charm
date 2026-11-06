@@ -1925,13 +1925,25 @@ async function readyByTrade(statuses, perTrade) {
       q = cat === "agence immobilière"
         ? q.or("notes.is.null,notes.ilike.*Catégorie : agence immobilière*")
         : q.ilike("notes", `%Catégorie : ${cat}%`);
-      const { data } = await q.order("drafted_at", { ascending: true }).limit(perTrade);
+      const { data, error } = await q.order("drafted_at", { ascending: true }).limit(perTrade);
+      if (error) note(`Lecture des messages prêts (${cat}) impossible : ${error.message}`);
       return data || [];
     }),
   );
   const out = [];
   for (let i = 0; lists.some((l) => l[i]); i++) for (const l of lists) if (l[i]) out.push(l[i]);
-  return out;
+  if (out.length) return out;
+  // Secours : jamais d'envoi bloqué par la lecture métier par métier.
+  const { data, error } = await db
+    .from("prospects")
+    .select("*")
+    .in("status", statuses)
+    .not("email", "is", null)
+    .order("drafted_at", { ascending: true })
+    .limit(perTrade);
+  if (error) note(`Lecture des messages prêts impossible : ${error.message}`);
+  else if (data?.length) note(`Messages prêts lus sans tri par métier (secours) : ${data.length}`);
+  return data || [];
 }
 
 async function prepareNextBatch(settings) {
