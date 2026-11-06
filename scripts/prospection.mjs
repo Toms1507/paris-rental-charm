@@ -991,6 +991,7 @@ Comment écrire un message qui éveille la curiosité (c'est LE critère) :
 - Salutation : « Bonjour Prénom, » (prénom seul) si un dirigeant est fourni, sinon « Bonjour, ». Juste après, OBLIGATOIREMENT, la présentation : « Je m'appelle Tom, fondateur de Spinelle Conciergerie. » (dans le premier e-mail ET dans la relance), puis la suite. Ne répète pas « Chez Spinelle Conciergerie » juste après.
 - Court : 70 à 110 mots, trois petits paragraphes, des phrases simples. Il doit se lire en quinze secondes.
 - Varie vraiment les versions : chacune part d'une situation ou d'une accroche différente.
+- Si les informations indiquent « Nouvelle approche », ce professionnel a déjà reçu nos anciens messages (trop formels) sans répondre : juste après la présentation, une phrase simple et humaine qui le reconnaît, par exemple « Je vous avais écrit il y a quelques semaines, je me permets de revenir vers vous plus simplement. », puis le message habituel, avec une situation différente.
 - Si l'extrait du site est vide ou pauvre, ne fais pas semblant de connaître l'agence : pars de son métier et de son secteur, avec la question-situation.
 
 À ne jamais faire :
@@ -1426,6 +1427,46 @@ async function redraftWithoutOffer() {
   for (const p of stale.slice(0, n))
     await db.from("prospects").update({ ...CLEAN_DRAFT, status: "nouveau" }).eq("id", p.id);
   return { redone: n, left: stale.length - n };
+}
+
+// Nouvelle approche (demande de Tom) : les professionnels dont l'adresse fonctionne et qui n'ont pas
+// répondu à nos anciens messages, trop formels, reçoivent un nouveau message dans le nouveau style.
+// Il compte dans le plafond quotidien, une seule fois par contact, sans relance ensuite, au plus
+// dix par passage complet (une trentaine par jour au maximum sur les 80).
+const NEW_STYLE_SINCE = "2026-11-06T12:00:00Z";
+const SECOND_CHANCE_AFTER_DAYS = 7;
+async function secondChance() {
+  const before = new Date(Date.now() - SECOND_CHANCE_AFTER_DAYS * 86_400_000).toISOString();
+  const { data: rows } = await db
+    .from("prospects")
+    .select("id,notes,first_contact_at,email")
+    .in("status", ["relance", "sans_reponse"])
+    .not("email", "is", null)
+    .lt("last_contact_at", before)
+    .lt("drafted_at", NEW_STYLE_SINCE)
+    .order("last_contact_at", { ascending: true })
+    .limit(40);
+  let n = 0;
+  for (const p of rows || []) {
+    if (n >= 10) break;
+    if (/Nouvelle approche|non remis|Refusé par le serveur|désinscri/i.test(p.notes || "")) continue;
+    if (ISP_MAIL.test(p.email) || PLACEHOLDER_EMAIL.test(p.email)) continue;
+    await db
+      .from("prospects")
+      .update({
+        ...CLEAN_DRAFT,
+        // L'identifiant de l'ancien e-mail est gardé : une réponse tardive y reste rattachée.
+        message_id: undefined,
+        status: "nouveau",
+        followups: 1,
+        notes: [p.notes, `Nouvelle approche : déjà contacté le ${(p.first_contact_at || "").slice(0, 10)}, sans réponse`]
+          .filter(Boolean)
+          .join("\n"),
+      })
+      .eq("id", p.id);
+    n++;
+  }
+  return n;
 }
 
 async function draftMessages(settings) {
@@ -2295,7 +2336,9 @@ async function checkReplies(box) {
     db
       .from("prospects")
       .select("id,name,email,website,status,notes,message_id,subject,first_contact_at,last_contact_at")
-      .in("status", ["contacte", "relance", "sans_reponse"]),
+      // Contacts en « nouvelle approche » : une réponse tardive à l'ancien message est reconnue.
+      .or("status.in.(contacte,relance,sans_reponse),notes.ilike.*Nouvelle approche*")
+      .not("status", "in", "(repondu,partenaire,refus,desinscrit,erreur)"),
   );
   const byEmail = new Map();
   const byHost = new Map();
@@ -2675,6 +2718,8 @@ async function main() {
   if (!settings.paused) {
     const renamed = await renameSubjects();
     if (!SEND_ONLY) {
+      const again = await secondChance();
+      if (again) note(`Nouvelle approche préparée pour ${again} contacts restés sans réponse`);
       const offer = await redraftWithoutOffer();
       if (offer.redone)
         note(`Messages sans phrase d'offre claire renvoyés en rédaction : ${offer.redone} (reste ${offer.left})`);
