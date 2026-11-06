@@ -2772,6 +2772,24 @@ async function main() {
       note(`Réponses détectées : ${r.replies}, adresses invalides : ${r.bounces}`);
       if (!settings.paused) {
         const sent = await sendBatch(settings, box);
+        // Surveillance du quota (une fois par jour, vers 13 h 47) : à mi-journée, moins d'un quart
+        // du quota parti → e-mail d'alerte au gérant, pour qu'un blocage ne passe jamais inaperçu.
+        const hourNow = parisNow().getHours();
+        if (officeHours() && hourNow === 13 && settings.first_send_at) {
+          const today = await sentToday();
+          const expected = allowanceToday(settings, 1);
+          if (today < expected / 4) {
+            note(`ALERTE : seulement ${today} e-mails envoyés à mi-journée pour ${expected} prévus.`);
+            await box
+              .send({
+                from: { name: "Prospection Spinelle", address: FROM_EMAIL },
+                to: FROM_EMAIL,
+                subject: "Alerte prospection : envois en retard aujourd'hui",
+                text: `Bonjour Tom,\n\nÀ mi-journée, seulement ${today} e-mails de prospection sont partis, pour ${expected} prévus aujourd'hui. Quelque chose bloque probablement (messages prêts, boîte d'envoi ou frein anti-spam).\n\nOuvre Claude et dis-lui : « alerte prospection, envois en retard ».\n\nLa prospection Spinelle`,
+              })
+              .catch(() => {});
+          }
+        }
         note(
           `Envoyés : ${sent.sent} premiers messages, ${sent.followups} relances (mode ${settings.mode})`,
         );
