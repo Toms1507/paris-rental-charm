@@ -988,8 +988,8 @@ Comment écrire un message qui éveille la curiosité (c'est LE critère) :
 - Laisse une part de mystère qui donne envie d'en savoir plus : ne dis pas tout (comment ça se passe concrètement, ce que son client y gagnerait), propose de le lui expliquer.
 - Termine par UNE question courte, précise, liée à la situation, à laquelle il peut répondre en une ligne : « Vous avez un dossier comme ça en ce moment ? », « Ça vous arrive souvent ? ». Jamais « Ça vous dirait qu'on en parle ? » ni une demande de rendez-vous en première intention.
 - Objet : court (moins de 40 caractères), intrigant et personnel, qui évoque la situation, pas Spinelle : « Vos vendeurs qui préfèrent attendre », « Une question sur vos fins de bail », « Ce bien hérité qui reste vide ». Jamais racoleur.
-- Salutation : « Bonjour Prénom, » (prénom seul) si un dirigeant est fourni, sinon « Bonjour, ».
-- Court : 60 à 100 mots, trois petits paragraphes, des phrases simples. Il doit se lire en quinze secondes.
+- Salutation : « Bonjour Prénom, » (prénom seul) si un dirigeant est fourni, sinon « Bonjour, ». Juste après, OBLIGATOIREMENT, la présentation : « Je m'appelle Tom, fondateur de Spinelle Conciergerie. » (dans le premier e-mail ET dans la relance), puis la suite. Ne répète pas « Chez Spinelle Conciergerie » juste après.
+- Court : 70 à 110 mots, trois petits paragraphes, des phrases simples. Il doit se lire en quinze secondes.
 - Varie vraiment les versions : chacune part d'une situation ou d'une accroche différente.
 - Si l'extrait du site est vide ou pauvre, ne fais pas semblant de connaître l'agence : pars de son métier et de son secteur, avec la question-situation.
 
@@ -1001,7 +1001,7 @@ Comment écrire un message qui éveille la curiosité (c'est LE critère) :
 - Ne précise pas ce qu'il n'aurait PAS à faire (« pas de fichier à nous confier », « aucun engagement de votre part »…) : ça sonne faux.
 - Pas de compliment générique ni de flatterie (« on sent que vous connaissez bien… », « vos biens ont du charme », « votre belle agence »).
 
-Relance (sept jours plus tard, en réponse au premier e-mail) : deux ou trois phrases chaleureuses et légères, sans reproche : tu reviens vers lui avec un autre angle (une autre situation de ses clients que la première), en une phrase, et tu l'invites à te transférer un contact quand l'occasion se présentera. Même salutation que le premier e-mail.
+Relance (sept jours plus tard, en réponse au premier e-mail) : courte et chaleureuse, sans reproche, 40 à 80 mots. Structure obligatoire : même salutation que le premier e-mail ; « Je m'appelle Tom, fondateur de Spinelle Conciergerie » et tu reviens vers lui au sujet de ton message ; un autre angle (une autre situation de ses clients que la première), en une phrase ; puis CE QU'IL Y GAGNE, dit clairement, sur le modèle : « Si vous nous recommandez un client ou un contact qui veut louer son bien en courte durée, vous touchez une commission sur chaque logement que nous signons, et votre client reste le vôtre. » ; enfin une invitation simple à te transférer un contact quand l'occasion se présentera.
 
 Propose le nombre de versions demandé, vraiment différentes entre elles (accroche, angle, objet), toutes conformes à ces règles. Réponds uniquement au format suivant, une fois par version :
 <version>
@@ -1038,11 +1038,50 @@ export const hasOffer = (body = "") =>
         /recommand|transmet|transférez|mettez en (relation|contact)|orientez|adressez/i.test(t),
     );
 
+// Présentation obligatoire au début de chaque e-mail (demande de Tom).
+const INTRO = "Je m'appelle Tom, fondateur de Spinelle Conciergerie.";
+export const hasIntro = (body = "") => /je m'appelle tom\b[^.\n]{0,15}fondateur de spinelle/i.test(body.replace(/’/g, "'"));
+const OFFER =
+  "Si vous nous recommandez un client ou un contact qui veut louer son bien en courte durée, vous touchez une commission sur chaque logement que nous signons, et votre client reste le vôtre.";
+// Filet de sécurité au moment de l'envoi (messages et relances rédigés avant ces règles) :
+// présentation ajoutée après « Bonjour… », phrase d'offre ajoutée avant la dernière phrase.
+export function withIntroAndOffer(content, followup) {
+  let out = content.replace(/’/g, "'");
+  if (!hasIntro(out)) {
+    out = /^Bonjour[^\n]*\n+/.test(out)
+      ? out.replace(/^(Bonjour[^\n]*\n+)/, `$1${INTRO} `)
+      : `${INTRO} ${out}`;
+    // « Je m'appelle Tom… Chez Spinelle Conciergerie, nous… » : la répétition est allégée.
+    out = out.replace(`${INTRO} Chez Spinelle Conciergerie, nous`, `${INTRO} Nous`);
+  }
+  if (!hasOffer(out)) {
+    const sentence = followup ? `Pour rappel : ${OFFER[0].toLowerCase()}${OFFER.slice(1)}` : OFFER;
+    // La phrase qui parle déjà de commission est remplacée par la phrase d'offre (pas de doublon).
+    let replaced = false;
+    const paras = out.split(/\n{2,}/).map((para) =>
+      para
+        .split(/(?<=[.?])\s+/)
+        .map((t) => {
+          if (replaced || !/commission/i.test(t)) return t;
+          replaced = true;
+          return OFFER;
+        })
+        .join(" "),
+    );
+    if (!replaced) {
+      if (paras.length > 2) paras.splice(paras.length - 1, 0, sentence);
+      else paras.push(sentence);
+    }
+    out = paras.join("\n\n");
+  }
+  return out;
+}
+
 export function check(draft) {
   const problems = [];
   const all = `${draft.subject}\n${draft.body}\n${draft.followup}`;
   const words = draft.body.split(/\s+/).filter(Boolean).length;
-  if (words < 45 || words > 115) problems.push(`le message fait ${words} mots (60 à 100 attendus)`);
+  if (words < 50 || words > 125) problems.push(`le message fait ${words} mots (70 à 110 attendus)`);
   if (draft.subject.length > 45) problems.push("objet trop long (moins de 40 caractères)");
   if (!/commission/i.test(draft.body))
     problems.push("le message doit dire qu'il touche une commission sur chaque logement recommandé que nous signons");
@@ -1052,6 +1091,12 @@ export function check(draft) {
     );
   if (!/^Bonjour/.test(draft.body) || !/^Bonjour/.test(draft.followup))
     problems.push("doit commencer par « Bonjour »");
+  if (!hasIntro(draft.body) || !hasIntro(draft.followup || ""))
+    problems.push("le premier e-mail et la relance doivent contenir « Je m'appelle Tom, fondateur de Spinelle Conciergerie » juste après « Bonjour »");
+  if (draft.followup && !hasOffer(draft.followup))
+    problems.push(
+      "la relance doit redire clairement ce qu'il y gagne : « Si vous nous recommandez un client ou un contact qui veut louer son bien en courte durée, vous touchez une commission sur chaque logement que nous signons »",
+    );
   const bad = all.match(FORBIDDEN);
   if (bad)
     problems.push(
@@ -1372,9 +1417,11 @@ async function renameSubjects() {
 // en gardant toujours au moins 60 messages prêts pour que les envois ne manquent jamais.
 async function redraftWithoutOffer() {
   const rows = await selectAll(() =>
-    db.from("prospects").select("id,body").eq("status", "brouillon").not("body", "is", null),
+    db.from("prospects").select("id,body,followup_body").eq("status", "brouillon").not("body", "is", null),
   );
-  const stale = rows.filter((p) => !hasOffer(p.body));
+  const stale = rows.filter(
+    (p) => !hasOffer(p.body) || !hasOffer(p.followup_body || "") || !hasIntro(p.body) || !hasIntro(p.followup_body || ""),
+  );
   const n = Math.min(40, Math.max(0, rows.length - 60), stale.length);
   for (const p of stale.slice(0, n))
     await db.from("prospects").update({ ...CLEAN_DRAFT, status: "nouveau" }).eq("id", p.id);
@@ -1576,15 +1623,17 @@ function warmFollowup(p) {
   const first = p.contact_name ? ` ${p.contact_name.split(" ")[0]}` : "";
   return `Bonjour${first},
 
-Je me permets de revenir vers vous au sujet de mon message de la semaine dernière.
+Je m'appelle Tom, fondateur de Spinelle Conciergerie, et je me permets de revenir vers vous au sujet de mon message de la semaine dernière.
 
-Si l'un de vos clients pense un jour à louer son bien sur Airbnb, il vous suffit de me transférer son contact : nous nous occupons de tout pour lui, et vous touchez une commission sur chaque logement recommandé que nous signons.`;
+Si vous nous recommandez un client ou un contact qui veut louer son bien en courte durée, vous touchez une commission sur chaque logement que nous signons, et votre client reste le vôtre. Nous nous occupons de tout pour lui.
+
+Il vous suffit de me transférer son contact quand l'occasion se présentera.`;
 }
 
 function compose(p, followup) {
   const unsubscribe = `${SITE}/desinscription?t=${p.unsubscribe_token}`;
   const oldStyle = !p.drafted_at || p.drafted_at < STYLE_SINCE;
-  let content = followup ? (oldStyle ? warmFollowup(p) : p.followup_body) : p.body;
+  let content = withIntroAndOffer(followup ? (oldStyle ? warmFollowup(p) : p.followup_body) : p.body, followup);
   // Contactés juste avant la coupure du domaine (20-26 octobre 2026) : leur éventuelle réponse
   // ne nous est pas parvenue, on le dit simplement dans la relance.
   if (followup && p.first_contact_at && p.first_contact_at < "2026-10-20T00:00:00Z")
