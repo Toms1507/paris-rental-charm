@@ -957,6 +957,9 @@ const STYLE_SINCE = "2026-10-18T17:59:51Z";
 // professionnel, court, une question précise) : réécrits avant envoi.
 const REDRAFT_SINCE = "2026-10-19T09:17:30Z";
 
+// RÈGLE DE TOM, À NE JAMAIS RETIRER (directeur commercial compris) : chaque message contient la phrase
+// d'offre claire « Si vous nous recommandez un client ou un contact qui veut louer en courte durée,
+// vous touchez une commission sur chaque logement que nous signons » (vérifiée dans check()).
 const SYSTEM = `Tu écris, au nom de Tom Simon, fondateur de Spinelle Conciergerie, un premier e-mail à UN professionnel de l'immobilier précis, et sa relance. Un seul objectif : qu'il ait envie de lire jusqu'au bout et de répondre.
 
 Spinelle Conciergerie gère de A à Z la location courte durée (Airbnb, Booking) pour les propriétaires : création et mise en valeur de l'annonce avec de belles photos, calendrier ajusté au fil de la demande, accueil et échanges avec les voyageurs tous les jours, ménage soigné de qualité hôtelière, linge, entretien et petites réparations. Le propriétaire n'a rien à faire et suit ses revenus chaque mois.
@@ -981,7 +984,7 @@ Comment écrire un message qui éveille la curiosité (c'est LE critère) :
   · zones de vacances (mer, montagne) : la résidence secondaire qui reste fermée une bonne partie de l'année.
 - Accroche (première ou deuxième phrase) : relie un détail vrai et précis tiré de son site (spécialité, type de biens, secteur exact, façon de travailler) à cette situation, ou pose directement la question qui la fait surgir (« Quand un vendeur vous dit qu'il préfère attendre plutôt que baisser, que lui proposez-vous ? »). Jamais d'évidence (« la demande est forte l'été », « beaucoup de voyageurs viennent à Paris »).
 - Puis une seule phrase sur Spinelle, qui répond à cette situation : nous louons le bien en courte durée et nous nous occupons de tout pour le propriétaire. Pas de liste de services (au plus un détail concret et vivant, adapté à la situation).
-- Puis ce qu'il y gagne, en une phrase : une vraie solution pour son client, qui reste le sien (nous ne faisons que de la courte durée, jamais de concurrence avec lui), et une commission sur chaque logement recommandé que nous signons (sans montant).
+- Puis L'OFFRE, dite clairement et obligatoirement, en une phrase construite sur ce modèle : « Si vous nous recommandez un client ou un contact qui veut louer son bien en courte durée, vous touchez une commission sur chaque logement que nous signons. » (formulation libre mais toujours : « si vous nous recommandez / nous transmettez / nous mettez en relation avec » + « un client, un propriétaire ou un contact qui veut louer en courte durée » + « vous touchez une commission sur chaque logement que nous signons », sans montant). Le lecteur doit comprendre en une lecture ce qu'on lui demande et ce qu'il y gagne. Tu peux y ajouter que son client reste le sien (nous ne faisons que de la courte durée, jamais de concurrence avec lui).
 - Laisse une part de mystère qui donne envie d'en savoir plus : ne dis pas tout (comment ça se passe concrètement, ce que son client y gagnerait), propose de le lui expliquer.
 - Termine par UNE question courte, précise, liée à la situation, à laquelle il peut répondre en une ligne : « Vous avez un dossier comme ça en ce moment ? », « Ça vous arrive souvent ? ». Jamais « Ça vous dirait qu'on en parle ? » ni une demande de rendez-vous en première intention.
 - Objet : court (moins de 40 caractères), intrigant et personnel, qui évoque la situation, pas Spinelle : « Vos vendeurs qui préfèrent attendre », « Une question sur vos fins de bail », « Ce bien hérité qui reste vide ». Jamais racoleur.
@@ -1032,6 +1035,14 @@ export function check(draft) {
   if (draft.subject.length > 45) problems.push("objet trop long (moins de 40 caractères)");
   if (!/commission/i.test(draft.body))
     problems.push("le message doit dire qu'il touche une commission sur chaque logement recommandé que nous signons");
+  else if (
+    !draft.body
+      .split(/(?<=[.?])\s+/)
+      .some((t) => /commission/i.test(t) && /\bsi vous\b/i.test(t) && /recommand|transmet|transférez|mettez en (relation|contact)|orientez|adressez/i.test(t))
+  )
+    problems.push(
+      "l'offre doit tenir dans une phrase claire du type « Si vous nous recommandez un client ou un contact qui veut louer en courte durée, vous touchez une commission sur chaque logement que nous signons »",
+    );
   if (!/^Bonjour/.test(draft.body) || !/^Bonjour/.test(draft.followup))
     problems.push("doit commencer par « Bonjour »");
   const bad = all.match(FORBIDDEN);
