@@ -1494,18 +1494,20 @@ async function secondChance() {
 
 // Contacts que Tom suit lui-même (demande de Tom) : plus aucun envoi automatique (ni relance,
 // ni nouvelle approche). Dans l'intranet, le bouton « Je m'en occupe » fait la même chose.
-const FOLLOWED_BY_TOM = ["eden liwer"];
+const FOLLOWED_BY_TOM = ["liwer"];
 async function markFollowedByTom() {
   const rows = await selectAll(() =>
     db
       .from("prospects")
-      .select("id,name,status")
-      .in("status", ["nouveau", "brouillon", "valide", "contacte", "relance", "sans_reponse", "sans_email"]),
+      .select("id,name,status,email,website")
+      .neq("status", "suivi_tom"),
   );
-  const hits = rows.filter((p) => FOLLOWED_BY_TOM.some((n) => norm(p.name || "").includes(n)));
+  const hits = rows.filter((p) =>
+    FOLLOWED_BY_TOM.some((n) => norm(`${p.name} ${p.email || ""} ${p.website || ""}`).includes(n)),
+  );
   for (const p of hits)
     await db.from("prospects").update({ status: "suivi_tom", updated_at: new Date().toISOString() }).eq("id", p.id);
-  return hits.map((p) => p.name);
+  return hits.map((p) => `${p.name} (${p.status})`);
 }
 
 async function draftMessages(settings) {
