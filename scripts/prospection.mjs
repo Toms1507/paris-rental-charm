@@ -1492,6 +1492,22 @@ async function secondChance() {
   return n;
 }
 
+// Contacts que Tom suit lui-même (demande de Tom) : plus aucun envoi automatique (ni relance,
+// ni nouvelle approche). Dans l'intranet, le bouton « Je m'en occupe » fait la même chose.
+const FOLLOWED_BY_TOM = ["eden liwer"];
+async function markFollowedByTom() {
+  const rows = await selectAll(() =>
+    db
+      .from("prospects")
+      .select("id,name,status")
+      .in("status", ["nouveau", "brouillon", "valide", "contacte", "relance", "sans_reponse", "sans_email"]),
+  );
+  const hits = rows.filter((p) => FOLLOWED_BY_TOM.some((n) => norm(p.name || "").includes(n)));
+  for (const p of hits)
+    await db.from("prospects").update({ status: "suivi_tom", updated_at: new Date().toISOString() }).eq("id", p.id);
+  return hits.map((p) => p.name);
+}
+
 async function draftMessages(settings) {
   const workspace = process.env.ANTHROPIC_WORKSPACE_ID;
   const ai = new Anthropic({
@@ -2754,6 +2770,8 @@ async function main() {
   // 1. D'abord les envois (messages préparés lors des passages précédents) : ils ne doivent
   //    jamais être empêchés par une préparation trop longue.
   if (!settings.paused) {
+    const followed = await markFollowedByTom();
+    if (followed.length) note(`Suivis par Tom, plus d'envoi automatique : ${followed.join(", ")}`);
     const renamed = await renameSubjects();
     if (!SEND_ONLY) {
       const again = await secondChance();

@@ -67,6 +67,7 @@ const STATUSES: Record<string, { label: string; tone: string }> = {
   partenaire: { label: "Partenaire", tone: "bg-emerald-200 text-emerald-900" },
   sans_reponse: { label: "Sans réponse", tone: "bg-slate-100 text-slate-600" },
   refus: { label: "Pas intéressée", tone: "bg-slate-100 text-slate-600" },
+  suivi_tom: { label: "Suivi par Tom (plus d’envoi automatique)", tone: "bg-violet-100 text-violet-800" },
   desinscrit: { label: "Désinscrite", tone: "bg-slate-200 text-slate-700" },
   nouveau: { label: "En cours d'analyse", tone: "bg-slate-100 text-slate-600" },
   sans_email: { label: "Sans e-mail", tone: "bg-slate-100 text-slate-500" },
@@ -545,6 +546,13 @@ function RepliesPanel({
                 <button
                   type="button"
                   className="btn-outline !px-3 !py-1.5 text-xs"
+                  onClick={() => onStatus(p.id, "suivi_tom")}
+                >
+                  Je m’en occupe
+                </button>
+                <button
+                  type="button"
+                  className="btn-outline !px-3 !py-1.5 text-xs"
                   onClick={() => onStatus(p.id, "partenaire")}
                 >
                   Devenue partenaire
@@ -710,10 +718,17 @@ function ProspectDialog({
               Écarter
             </button>
           )}
-          {["contacte", "relance", "sans_reponse", "repondu", "sans_email", "ignore"].includes(
+          {["contacte", "relance", "sans_reponse", "repondu", "sans_email", "ignore", "brouillon", "valide"].includes(
             p.status,
           ) && (
             <>
+              <button
+                type="button"
+                className="btn-outline !px-3 !py-2 text-sm"
+                onClick={() => onStatus("suivi_tom")}
+              >
+                Je m’en occupe
+              </button>
               <button
                 type="button"
                 className="btn-outline !px-3 !py-2 text-sm"
