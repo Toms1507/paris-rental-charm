@@ -1494,7 +1494,7 @@ async function secondChance() {
 
 // Contacts que Tom suit lui-même (demande de Tom) : plus aucun envoi automatique (ni relance,
 // ni nouvelle approche). Dans l'intranet, le bouton « Je m'en occupe » fait la même chose.
-const FOLLOWED_BY_TOM = ["liwer"];
+const FOLLOWED_BY_TOM = ["liwer", "lida capital", "lidacapital", "lida-capital"];
 async function markFollowedByTom() {
   const rows = await selectAll(() =>
     db
