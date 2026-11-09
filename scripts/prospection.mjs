@@ -963,6 +963,8 @@ const SYSTEM = `Tu écris, au nom de Tom Simon, fondateur de Spinelle Concierger
 
 Spinelle Conciergerie gère de A à Z la location courte durée (Airbnb, Booking) pour les propriétaires : création et mise en valeur de l'annonce avec de belles photos, calendrier ajusté au fil de la demande, accueil et échanges avec les voyageurs tous les jours, ménage soigné de qualité hôtelière, linge, entretien et petites réparations. Le propriétaire n'a rien à faire et suit ses revenus chaque mois.
 
+PÉRIMÈTRE STRICT (règle de Tom) : Spinelle ne s'occupe QUE de logements (appartements, studios, maisons) loués meublés en courte durée à des voyageurs (touristes, voyageurs d'affaires, familles), via Airbnb, Booking et équivalents. Jamais de local commercial, boutique, murs, bureau, entrepôt, parking, ni d'événements, pop-up, showroom, tournage, séminaire ou coworking. Si le professionnel est spécialisé dans l'immobilier commercial ou d'entreprise, parle quand même uniquement des logements de ses clients (par exemple le client qui possède aussi un appartement), jamais de ses locaux.
+
 Ce que Spinelle propose aux professionnels : quand l'un de leurs clients veut louer son bien en courte durée, ils nous le recommandent ; leur client reste le leur ; et ils touchent une commission sur chaque logement recommandé que nous signons. Pour eux : un revenu en plus sans rien gérer, et une vraie solution à proposer à leurs clients.
 
 Ce qui rassure un professionnel (à utiliser quand c'est naturel) : nous ne faisons que de la location courte durée, nous ne sommes pas une agence, nous ne lui faisons donc jamais concurrence ; son client reste le sien et il reste son interlocuteur pour tout le reste ; Tom répond lui-même, personnellement. Le lecteur se méfie d'une inconnue qui lui demande ses clients : le message doit sonner comme un service rendu à ses clients, pas comme une demande de fichier.
@@ -1016,6 +1018,8 @@ const JUDGE = `Tu te mets entièrement à la place du professionnel de l'immobil
 
 Tu reçois plusieurs versions d'un même e-mail. Si ton nom n'apparaît pas dans la salutation, c'est normal (l'expéditeur ne le connaît pas) : ne le pénalise pas. L'absence de chiffres, de montant de commission et de conditions détaillées est voulue (l'expéditeur les donne de vive voix au premier échange) : ne la pénalise pas et ne la suggère pas comme amélioration ; juge surtout la curiosité éveillée (est-ce que ça parle d'une situation que tu vis vraiment avec tes clients, est-ce que tu as envie d'en savoir plus ?), puis la pertinence pour toi, la confiance inspirée et la facilité de répondre. Un message qui ressemble à une plaquette (liste de services) ou à un envoi en masse ne dépasse pas 5. Lis-les comme tu le ferais vraiment, honnêtement. Pour chacune, donne une note de 1 à 10 : la probabilité que tu y répondes. Une note de 8 ou plus veut dire : « je réponds, ça m'intéresse vraiment ». Sois exigeant : un message générique, trop long, flatteur ou qui sent l'envoi en masse ne dépasse pas 5.
 
+Une version qui propose autre chose que la location courte durée de logements meublés à des voyageurs (locaux commerciaux, boutiques, bureaux, événements, pop-up, tournages…) reçoit 0 : Spinelle ne fait pas ça.
+
 Réponds uniquement au format :
 <notes>1:N;2:N;…</notes>
 <meilleure>numéro</meilleure>
@@ -1037,6 +1041,10 @@ export const hasOffer = (body = "") =>
         /\bsi vous\b/i.test(t) &&
         /recommand|transmet|transférez|mettez en (relation|contact)|orientez|adressez/i.test(t),
     );
+
+// Hors périmètre : Spinelle ne gère que des logements meublés loués en courte durée à des voyageurs.
+export const OFF_TOPIC =
+  /pop-?up|showroom|tournage|[ée]v[ée]nementi|[ée]v[ée]nements?\b|s[ée]minaire|coworking|boutique|local commercial|locaux commerciaux|murs commerciaux|\bmurs?\b(?! porteur)|fonds de commerce|entrep[ôo]t|parking|bureaux?\b|chaque espace|un espace/i;
 
 // Présentation obligatoire au début de chaque e-mail (demande de Tom).
 const INTRO = "Je m'appelle Tom, fondateur de Spinelle Conciergerie.";
@@ -1079,6 +1087,11 @@ export function withIntroAndOffer(content, followup) {
 
 export function check(draft) {
   const problems = [];
+  const offTopic = `${draft.subject}\n${draft.body}\n${draft.followup || ""}`.match(OFF_TOPIC);
+  if (offTopic)
+    problems.push(
+      `hors sujet « ${offTopic[0]} » : Spinelle ne gère que des logements loués en courte durée à des voyageurs (jamais de local, boutique, bureau, événement, pop-up, tournage)`,
+    );
   const all = `${draft.subject}\n${draft.body}\n${draft.followup}`;
   const words = draft.body.split(/\s+/).filter(Boolean).length;
   if (words < 50 || words > 125) problems.push(`le message fait ${words} mots (70 à 110 attendus)`);
@@ -1420,12 +1433,23 @@ async function redraftWithoutOffer() {
     db.from("prospects").select("id,body,followup_body").eq("status", "brouillon").not("body", "is", null),
   );
   const stale = rows.filter(
-    (p) => !hasOffer(p.body) || !hasOffer(p.followup_body || "") || !hasIntro(p.body) || !hasIntro(p.followup_body || ""),
+    (p) =>
+      !hasOffer(p.body) ||
+      !hasOffer(p.followup_body || "") ||
+      !hasIntro(p.body) ||
+      !hasIntro(p.followup_body || "") ||
+      OFF_TOPIC.test(`${p.body}\n${p.followup_body || ""}`),
   );
-  const n = Math.min(40, Math.max(0, rows.length - 60), stale.length);
-  for (const p of stale.slice(0, n))
+  // Messages hors sujet (locaux, événements…) : tous réécrits tout de suite, jamais envoyés.
+  const off = stale.filter((p) => OFF_TOPIC.test(`${p.body}\n${p.followup_body || ""}`));
+  for (const p of off)
     await db.from("prospects").update({ ...CLEAN_DRAFT, status: "nouveau" }).eq("id", p.id);
-  return { redone: n, left: stale.length - n };
+  const rest = stale.filter((p) => !off.includes(p));
+  const n = Math.min(40, Math.max(0, rows.length - off.length - 60), rest.length);
+  for (const p of rest.slice(0, n))
+    await db.from("prospects").update({ ...CLEAN_DRAFT, status: "nouveau" }).eq("id", p.id);
+  if (off.length) note(`Messages hors sujet (locaux, événements…) renvoyés en rédaction : ${off.length}`);
+  return { redone: n, left: rest.length - n };
 }
 
 // Nouvelle approche (demande de Tom) : les professionnels dont l'adresse fonctionne et qui n'ont pas
@@ -1673,7 +1697,9 @@ Il vous suffit de me transférer son contact quand l'occasion se présentera.`;
 function compose(p, followup) {
   const unsubscribe = `${SITE}/desinscription?t=${p.unsubscribe_token}`;
   const oldStyle = !p.drafted_at || p.drafted_at < STYLE_SINCE;
-  let content = withIntroAndOffer(followup ? (oldStyle ? warmFollowup(p) : p.followup_body) : p.body, followup);
+  // Relance hors sujet (locaux, événements…) d'un ancien message : remplacée par la relance type.
+  const followupText = oldStyle || OFF_TOPIC.test(p.followup_body || "") ? warmFollowup(p) : p.followup_body;
+  let content = withIntroAndOffer(followup ? followupText : p.body, followup);
   // Contactés juste avant la coupure du domaine (20-26 octobre 2026) : leur éventuelle réponse
   // ne nous est pas parvenue, on le dit simplement dans la relance.
   if (followup && p.first_contact_at && p.first_contact_at < "2026-10-20T00:00:00Z")
