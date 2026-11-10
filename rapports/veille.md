@@ -1,5 +1,30 @@
 # Veille marché Spinelle
 
+## Veille du 2026-11-10
+Nouveautés depuis la veille du 02/11. Sources souvent agrégateurs, blogs ou résumés : dates et chiffres à confirmer.
+- PLF 2027 : l'Assemblée aurait rejeté le PLF (partie recettes) ; les députés avaient supprimé le volet de l'article 7 plafonnant l'amortissement LMNP (45 voix contre 41), mais ce plafonnement (2,5 %/7 000 €) figurerait de nouveau dans le texte transmis au Sénat, qui doit en débattre. Rien n'est définitif, chronologie exacte à confirmer. https://www.legifiscal.fr/actualites-fiscales/4722-plf-2027-rejete-assemblee-amendements-pourraient-revenir-senat.html
+- PLF 2027 : la suppression de l'amortissement pour les meublés de tourisme acquis dès 2027 (amendement Kasbarian, commission, 8 oct.) reste une question ouverte, d'après les mêmes sources. https://www.legifiscal.fr/actualites-fiscales/4712-lmnp-deputes-suppriment-plafonnement-amortissements.html
+- Booking.com : la Commission européenne a publié le 28 sept. 2026 une fiche sur les changements volontaires de Booking au titre du DMA : le critère de prix relevés sur d'autres canaux pour l'éligibilité au « Booking Sponsored Benefit » est retiré ; les hébergeurs de l'EEE restent libres de fixer leurs prix hors plateforme. https://hospitality-on.com/fr/hotellerie/bruxelles-obtient-de-bookingcom-de-nouvelles-garanties-sur-la-liberte-tarifaire-des
+- Marseille : plafond de 90 jours/an pour la location touristique de la résidence principale (au lieu de 120) selon la presse, applicable au 1er janv. 2026, amende civile de 15 000 € ; résidences secondaires soumises au changement d'usage/compensation (textes officiels non vérifiés, à confirmer). https://madeinmarseille.net/economie-marseille/179934-marseille-locations-airbnb-limitees-90-jours-par-an-2026/
+- Marché immobilier : Observatoire Bien'ici T3 2026 : contacts acquéreurs -22 % sur un an, offre +4 %, prix affichés +1 % (relayé par Clubpatrimoine, sans confirmation indépendante). https://www.clubpatrimoine.com/contenus/immobilier-residentiel-chute
+- Investissement : au T1 2026, le résidentiel opéré a attiré 279 M€ dont 230 M€ pour les résidences services étudiantes (communiqué Galivel/étude, à confirmer). https://www.galivel.com/media/files/cp_etude_investissement_residentiel_france_t1_2026.pdf
+- Paris Porte de Versailles : Salon du Cheval 4-6 déc. 2026 ; Supply Chain Event 1-2 déc. ; UNIQUE by Mode City 23-25 janv. 2027 (agrégateurs, à confirmer). https://tradefest.io/fr/selection/porte-de-versailles-exhibition-center-paris
+- Paris : illuminations des Champs-Élysées de mi-nov. à début janv. ; marchés de Noël de fin nov. à fin déc. (Saint-Germain-des-Prés, La Défense, Gare de l'Est selon une source, à confirmer). https://parisjetaime.com/article/que-faire-a-paris-en-decembre-a1584
+- Disneyland Paris : saison de Noël annoncée du 7 nov. 2026 au 6 janv. 2027 (début possiblement le 13 nov. selon un site : à confirmer) ; sites de prévision : fréquentation maximale de mi-déc. à début janv. (non officiel). https://www.tarifs.org/news/noel-2026-a-disneyland-paris-le-monde-de-la-reine-des-neiges-s-illumine-pour-la-premiere-fois/
+- Villes à étudier : Rennes ressort en tête d'un classement LocService 2026 de villes où investir (communiqué commercial) avec ~4,7 % de rendement brut (CPIM, longue durée) ; Montpellier : nombreuses conciergeries déjà référencées (Toploc) ; Nantes peu documentée. Aucune donnée fiable de nuitées courte durée. https://www.locservice.fr/_media/locservice-top-10-villes-ou-investir-2026.pdf
+- Concurrence : aucune levée, rachat ou ouverture de conciergerie datée de 2026 trouvée (résultats anciens : GuestReady/BnbLord, Luckey 2018).
+- Biarritz, Arcachon, Versailles, Chartres : rien de nouveau et de fiable trouvé pour l'hiver 2026-27 (au-delà des veilles précédentes).
+
+### Opportunités
+1. Fiscalité : proposer aux CGP et marchands de biens un point « LMNP après le passage au Sénat » (sans rien promettre) ; article de blog « PLF 2027 : où en est l'amortissement des meublés de tourisme ? » à publier après le vote du Sénat.
+2. Paris/Disneyland pour les fêtes : message aux agences et syndics de Paris et Marne-la-Vallée sur la demande de fin d'année (illuminations, marchés de Noël, saison Disney du 7 nov. au 6 janv.).
+3. Marseille/Provence : zone à étudier seulement avec cadrage réglementaire (90 jours en résidence principale, compensation pour les secondaires) ; Rennes et Montpellier à instruire plus avant (règles locales, offre de conciergeries) avant tout démarchage.
+
+### Points d'attention
+- Dates de vote du PLF 2027 et contenu du texte au Sénat incertains : ne rien affirmer aux prescripteurs.
+- Demande d'achat en recul (Bien'ici T3) : prudence sur les volumes attendus des prescripteurs.
+- Plafonds de jours et sanctions varient selon la commune : vérifier avant d'annoncer un rendement.
+
 ## Veille du 2026-11-02
 Nouveautés depuis la veille du 31/10. Sources souvent agrégateurs ou blogs : dates et chiffres à confirmer.
 - PLF 2027 : état inchangé, rien n'est voté. Texte initial (art. 7) : plafond d'amortissement LMNP 1,5 %/an et 5 000 € pour les meublés de tourisme (2,5 % et 7 000 € pour les autres meublés) ; amendement de commission du 8 oct. : plus d'amortissement pour un meublé de tourisme acquis dès le 1er janv. 2027 ; vote solennel sur les recettes le 3 nov. et vote d'ensemble le 17 nov. selon les sources (à confirmer). https://hospitality-on.com/fr/tendances/budget-2027-les-deputes-concentrent-le-durcissement-fiscal-sur-les-meubles-de-tourisme
