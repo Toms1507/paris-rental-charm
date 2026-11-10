@@ -209,6 +209,64 @@ export type BlogPost = {
 
 const ARTICLES: BlogPost[] = [
   {
+    slug: "investir-meuble-paris-gestion",
+    title: "Investir dans un meublé à Paris : qui doit le gérer ?",
+    description:
+      "Avant d'acheter un meublé à louer en courte durée à Paris, décidez qui gérera voyageurs, ménage, tarifs et conformité : nos repères avant de signer.",
+    date: "2026-11-10",
+    readingTime: "5 min",
+    sections: [
+      {
+        heading: "Le piège du rendement calculé sans la gestion",
+        paragraphs: [
+          "Beaucoup d'acheteurs choisissent un meublé à Paris ou en proche banlieue en regardant le prix au mètre carré et un rendement brut théorique, sans avoir répondu à une question simple : qui va s'occuper du logement une fois les clés en main ?",
+          "Cette question change pourtant tout. Un investissement locatif en courte durée n'est pas un placement passif : il suppose une présence quasi quotidienne, que ce soit la vôtre ou celle d'une équipe à qui vous la déléguez.",
+        ],
+      },
+      {
+        heading: "Ce que la gestion recouvre vraiment, semaine après semaine",
+        paragraphs: [
+          "Avant de signer, mieux vaut avoir une idée précise de ce que représente la gestion d'un meublé loué à la nuitée.",
+        ],
+        bullets: [
+          "Les messages des voyageurs, avant, pendant et après le séjour, souvent à des heures décalées",
+          "Le ménage et le linge à organiser entre chaque départ et chaque arrivée",
+          "La tarification à ajuster régulièrement selon la saison et la demande du quartier",
+          "Les petits incidents à traiter rapidement : panne, fuite, objet cassé",
+          "Les démarches de conformité : numéro d'enregistrement, plafond de nuitées pour une résidence principale, taxe de séjour",
+        ],
+      },
+      {
+        heading: "La question à poser avant de signer, pas après",
+        paragraphs: [
+          "Un courtier ou un conseiller en gestion de patrimoine peut vous aider à chiffrer un projet, mais rarement à estimer le temps que demandera sa gestion au quotidien. C'est pourtant ce temps, ou son coût si vous le déléguez, qui détermine la rentabilité réelle de l'opération.",
+          "Posez la question avant de signer : allez-vous gérer vous-même, confier le bien à une conciergerie, ou préférer la location longue durée si la gestion en courte durée s'avère trop lourde ? La réponse influence le choix du bien lui-même : un studio bien placé près de chez vous ne se gère pas comme un grand appartement dans un quartier que vous ne connaissez pas.",
+        ],
+      },
+      {
+        heading: "Rester prudent sur la fiscalité avant d'acheter",
+        paragraphs: [
+          "La fiscalité des revenus de location meublée (régime micro-BIC ou régime réel, selon le montant des recettes et votre situation) peut évoluer : plusieurs textes budgétaires discutés ces derniers mois portent sur l'amortissement des meublés de tourisme, sans qu'aucun ne soit définitivement adopté à ce jour. Tant que le texte voté n'est pas publié, mieux vaut ne pas fonder votre calcul de rentabilité sur une règle fiscale qui pourrait encore changer.",
+          "Avant de signer, faites confirmer le régime applicable à votre situation par un comptable ou sur les sites officiels (service-public.fr, impots.gouv.fr), plutôt que de vous fier à un chiffre lu sur un blog.",
+        ],
+      },
+      {
+        heading: "Ce qu'une conciergerie prend en charge à votre place",
+        paragraphs: [
+          "Déléguer la gestion ne change rien à la décision d'achat, mais elle change ce que vous aurez à faire ensuite. Une conciergerie comme Spinelle s'occupe des annonces, des voyageurs, du ménage, du linge, de la maintenance et des démarches de conformité, pour que l'investissement reste compatible avec votre emploi du temps.",
+          "Cela ne remplace pas la question posée avant l'achat : le bien doit rester adapté à la location courte durée (emplacement, surface, règlement de copropriété) avant même de se demander qui le gérera.",
+        ],
+      },
+      {
+        heading: "Avant de signer, faites chiffrer le projet",
+        paragraphs: [
+          "Si vous hésitez encore entre gérer vous-même, déléguer ou renoncer à la courte durée, un avis extérieur sur le bien que vous visez permet souvent de trancher plus vite.",
+          "Remplissez notre formulaire d'estimation gratuite : nous vous répondons sous 24 h avec une projection de revenus et notre avis sur la gestion du bien, sans engagement.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "check-in-autonome-paris",
     title: "Check-in autonome à Paris : comment bien l'organiser",
     description:
