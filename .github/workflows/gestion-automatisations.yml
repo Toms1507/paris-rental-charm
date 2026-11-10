@@ -28,3 +28,26 @@ jobs:
             echo "Échec sur $base, essai suivant."
           done
           exit 1
+
+  # Demandes du site (audit, simulateur, partenaires) envoyées par e-mail à contact@ depuis la
+  # boîte IONOS : aucune demande ne doit rester invisible.
+  demandes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: demandes-site
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Envoyer les nouvelles demandes par e-mail
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_HOST: ${{ vars.SMTP_HOST }}
+        run: |
+          npm install --no-audit --no-fund --no-save @supabase/supabase-js nodemailer
+          node scripts/demandes-site.mjs
