@@ -36,6 +36,12 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
     setError(null);
     const form = new FormData(event.currentTarget);
     const raw = Object.fromEntries(form.entries()) as Record<string, string>;
+    // Champ piège invisible : seuls les robots le remplissent. On fait comme si c'était envoyé.
+    if (raw["site_web"]) {
+      setStatus("done");
+      return;
+    }
+    delete raw["site_web"];
     const parsed = schema.safeParse(raw);
 
     if (!parsed.success) {
@@ -73,6 +79,15 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       onSubmit={handleSubmit}
       className="rounded-xl border border-border bg-background p-5 shadow-[var(--shadow-soft)] sm:p-8"
     >
+      {/* Piège à robots : invisible pour les visiteurs, ignoré par les lecteurs d'écran. */}
+      <input
+        type="text"
+        name="site_web"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       <p className="eyebrow">Estimation gratuite en 1 minute</p>
       <h3 className="mt-2 text-2xl">Parlez-nous de votre bien</h3>
       <p className="mt-2 text-[0.95rem] leading-relaxed text-muted-foreground">

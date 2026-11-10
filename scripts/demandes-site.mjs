@@ -62,7 +62,11 @@ for (const l of pending) {
     ["Ville", l.city],
     ["Détails", details],
   ].filter(([, v]) => v);
-  const subject = `${KIND[source] || "Demande"} : ${l.full_name}${l.city ? ` (${l.city})` : ""}`;
+  // Spam probable (robots qui remplissent les formulaires pour placer un lien) : signalé dans l'objet.
+  const spam =
+    /https?:\/\/|www\./i.test(`${details} ${l.full_name}`) ||
+    /\.(my\.id|ru|xyz|top|click|online|site|icu|buzz)$/i.test(l.email || "");
+  const subject = `${spam ? "[Probable spam, ne pas cliquer] " : ""}${KIND[source] || "Demande"} : ${l.full_name}${l.city ? ` (${l.city})` : ""}`;
   const text = `Nouvelle demande reçue sur le site.\n\n${rows.map(([k, v]) => `${k} : ${v}`).join("\n")}\n\nRépondez directement à cet e-mail pour écrire à ${l.full_name}.`;
   const html = `<div style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a">
 <h2 style="font-size:18px">${escape(subject)}</h2>
