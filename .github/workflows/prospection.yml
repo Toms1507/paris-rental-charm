@@ -57,5 +57,12 @@ jobs:
           fi
           npm install --no-audit --no-fund --no-save @anthropic-ai/sdk @supabase/supabase-js nodemailer imapflow mailparser playwright
           # Navigateur pour les formulaires de contact (à chaque passage).
-          if [ "$PROSPECT_MODE" != "test" ]; then npx playwright install --with-deps chromium; fi
+          # Une panne d'installation (serveurs Ubuntu injoignables) ne doit jamais bloquer les e-mails :
+          # un nouvel essai, puis le passage continue sans formulaires.
+          if [ "$PROSPECT_MODE" != "test" ]; then
+            npx playwright install --with-deps chromium \
+              || (sleep 30 && npx playwright install --with-deps chromium) \
+              || npx playwright install chromium \
+              || echo "Navigateur non installé : passage sans formulaires de contact."
+          fi
           node scripts/prospection.mjs
