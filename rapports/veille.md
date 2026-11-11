@@ -1,5 +1,26 @@
 # Veille marché Spinelle
 
+## Veille du 2026-11-11
+Peu de nouveautés depuis la veille du 10/11 ; seules les informations nouvelles figurent ici. Sources souvent agrégateurs : dates et chiffres à confirmer.
+- PLF 2027 : sources divergentes sur l'état du texte des députés (une source évoque un amendement I-96 adopté le 30 oct. sans plafonnement LMNP, une autre la suppression du volet de l'art. 7) ; Selectra renvoie au calendrier du Sénat à partir du 20 nov. ; le recours au 49.3 est évoqué. Tant que la loi n'est pas promulguée, le droit actuel s'applique (à confirmer sur le site de l'Assemblée). https://selectra.info/finance/actualites/marche/lmnp-amortissement-amendement-30-octobre-vote
+- Booking.com (Rodolphe Hagué, entretien) : en montagne, pic de réservations de novembre à janvier, fenêtre de réservation d'environ 45 à 60 jours, décembre un peu en retrait (réservations tardives liées à l'enneigement) ; Alpes du Nord et du Sud ne visent pas la même clientèle. https://hospitality-on.com/fr/thematiques-touristiques/rodolphe-hague-bookingcom-alpes-du-nord-et-alpes-du-sud-ne-se-vendent-pas
+- Paris : congrès Pari(s) Santé Femmes du 2 au 4 déc. 2026 au Palais des Congrès (plus de 3 000 participants annoncés) ; Vertical Climbing Gathering (escalade) du 15 au 17 janv. 2027 à la Porte de Versailles (agrégateurs, à confirmer). https://parisjetaime.com/convention/evenement/paris-sante-femmes-e2624
+- Roissy / Villepinte : calendrier Grand Paris Express décalé selon une source de déc. 2025 : ligne 17 jusqu'au Bourget fin 2027, jusqu'au Parc des Expositions 2028, jusqu'à Roissy-CDG 2030 (autres sources : 2031, à confirmer) ; Viparis annonce un nouveau terminal aérien à Paris Nord Villepinte en 2028. Le CDG Express reste annoncé au 28 mars 2027. https://explore.viparis.com/en/news-events/news/in-paris-nord-villepinte-will-welcome-its-new-air-terminal
+- Airbnb : a mené en mai 2026 un tour de 58 M$ dans WeRoad (voyages en groupe) et a recruté un dirigeant pour son activité hôtelière : signe d'une diversification vers l'hôtellerie et les voyages organisés (à confirmer). https://www.lechotouristique.com/article/weroad-leve-58-millions-airbnb-rejoint-laventure
+- Concurrence : HostnFly (levée de 9 M€, plus de 3 000 logements à Paris, Lyon, Marseille) ressort avec une date de juillet 2026 mais le contenu semble ancien : date réelle à vérifier ; aucune opération de conciergerie de 2026 confirmée. https://www.tendancehotellerie.fr/articles-breves/communique-de-presse/11835-article/hostnfly-leve-9-millions-d-euros-pour-etendre-son-service-de-gestion-de-locations-saisonnieres-a-l-europe
+- Nouvelles villes : rien de chiffré sur la courte durée à Lyon, Lille, Strasbourg ; Annecy et Lyon figurent parmi les communes les plus contraignantes (guide 2026, à confirmer). Strasbourg : une conciergerie haut de gamme locale (~30 logements) déjà présente. https://airbtics.com/best-airbnb-markets-france-fr
+- Côte d'Azur : saison 4 de la campagne « Côte d'Azur en Hiver » (CRT et office de Nice) ; Bordeaux : rien de fiable trouvé pour l'hiver. https://www.explorenicecotedazur.com/en/prepare-your-holidays/major-events/events-nice/
+
+### Opportunités
+1. Alpes : messages aux agences et syndics de stations avant le pic de réservation nov.-janv. (fenêtre ~45-60 jours) ; mettre en avant la réactivité pour les réservations tardives de décembre.
+2. Paris : cibler les agences proches du Palais des Congrès et de la Porte de Versailles avec l'agenda congrès déc.-janv. ; blog « Séjours professionnels à Paris : calendrier des salons de l'hiver ».
+3. Fiscalité : attendre le débat du Sénat (à partir du 20 nov. selon une source) avant tout article ou message sur le LMNP.
+
+### Points d'attention
+- Textes du PLF 2027 non stabilisés : aucune promesse fiscale aux prescripteurs.
+- Calendrier de la ligne 17 repoussé : ne pas annoncer d'effet Roissy avant 2028-2030 (hors CDG Express).
+- Recherche courte durée par ville toujours sans donnée fiable : ne pas démarcher de nouvelle ville sans étude.
+
 ## Veille du 2026-11-10
 Nouveautés depuis la veille du 02/11. Sources souvent agrégateurs, blogs ou résumés : dates et chiffres à confirmer.
 - PLF 2027 : l'Assemblée aurait rejeté le PLF (partie recettes) ; les députés avaient supprimé le volet de l'article 7 plafonnant l'amortissement LMNP (45 voix contre 41), mais ce plafonnement (2,5 %/7 000 €) figurerait de nouveau dans le texte transmis au Sénat, qui doit en débattre. Rien n'est définitif, chronologie exacte à confirmer. https://www.legifiscal.fr/actualites-fiscales/4722-plf-2027-rejete-assemblee-amendements-pourraient-revenir-senat.html
