@@ -2146,7 +2146,9 @@ async function sendBatch(settings, box) {
       // Refus passager du serveur d'envoi (code 4xx, saturation chez IONOS) : on s'arrête là pour
       // ce passage sans rien marquer en erreur ; les messages repartent au passage suivant.
       if (e.responseCode >= 400 && e.responseCode < 500) {
-        note(`Serveur d'envoi momentanément saturé (${e.responseCode}) : envois repris au passage suivant.`);
+        note(
+          `Serveur d'envoi momentanément saturé (${e.responseCode} : ${String(e.response || e.message).slice(0, 160)}) après ${sent} envois : envois repris au passage suivant.`,
+        );
         break;
       }
       note(`Envoi ${p.name} : ${e.message}`);
