@@ -2034,6 +2034,7 @@ function officeHours() {
 // d'intervalle : environ une minute entre deux envois, et en cas de refus passager, une pause de
 // trois minutes puis un seul nouvel essai.
 const SEND_GAP_MS = 45_000;
+const THROTTLE_START_UNTIL = "2026-11-11T23:00:00Z";
 async function sendPatiently(box, message) {
   try {
     return await box.send(message);
@@ -2057,6 +2058,8 @@ async function sendBatch(settings, box) {
   let budget = Math.ceil(remaining / runsLeft);
   let sent = 0;
   let followups = 0;
+  // Refus passager d'IONOS pendant ce passage : on arrête d'insister, le plafond baisse (voir main).
+  let throttled = false;
   const { data: optouts } = await db.from("prospect_optouts").select("email");
   const blocked = new Set((optouts || []).map((o) => o.email));
   const now = () => new Date().toISOString();
@@ -2072,8 +2075,10 @@ async function sendBatch(settings, box) {
     .not("email", "is", null)
     .lt("last_contact_at", before)
     .order("last_contact_at", { ascending: true })
-    .limit(FOLLOWUPS_PER_RUN);
+    // Au plus 5 relances par passage : des envois groupés font refuser la boîte par IONOS.
+    .limit(Math.min(FOLLOWUPS_PER_RUN, 5));
   for (const p of due || []) {
+    if (throttled || timeLeft() < 6 * MINUTES) break;
     if (blocked.has(p.email.toLowerCase())) continue;
     try {
       await sendPatiently(box, compose(p, true));
@@ -2084,12 +2089,17 @@ async function sendBatch(settings, box) {
       followups++;
       await sleep(SEND_GAP_MS + Math.random() * 30_000);
     } catch (e) {
+      if (e.responseCode >= 400 && e.responseCode < 500) {
+        throttled = true;
+        note(`Serveur d'envoi momentanément saturé (${e.responseCode}) pendant les relances : arrêt pour ce passage.`);
+        break;
+      }
       note(`Relance ${p.name} : ${e.message}`);
     }
   }
 
   const statuses = settings.mode === "auto" ? ["valide", "brouillon"] : ["valide"];
-  const candidates = budget > 0 ? await readyByTrade(statuses, budget * 8) : [];
+  const candidates = budget > 0 && !throttled ? await readyByTrade(statuses, budget * 8) : [];
   // Les messages validés d'abord, puis envoi à tour de rôle entre zones et métiers.
   const ready = [
     ...interleave((candidates || []).filter((p) => p.status === "valide")),
@@ -2163,6 +2173,7 @@ async function sendBatch(settings, box) {
         note(
           `Serveur d'envoi momentanément saturé (${e.responseCode} : ${String(e.response || e.message).slice(0, 160)}) après ${sent} envois : envois repris au passage suivant.`,
         );
+        throttled = true;
         break;
       }
       note(`Envoi ${p.name} : ${e.message}`);
@@ -2183,7 +2194,7 @@ async function sendBatch(settings, box) {
     .update({ status: "sans_reponse", updated_at: now() })
     .eq("status", "relance")
     .lt("last_contact_at", giveUp);
-  return { sent, followups };
+  return { sent, followups, throttled };
 }
 
 // ------------------------------------------------------------------ 4 bis. Formulaires de contact
@@ -2785,6 +2796,23 @@ async function main() {
     await db.from("prospect_settings").update({ daily_limit: 80 }).eq("id", 1);
     note("Plafond quotidien réglé à 80 nouveaux contacts (environ 2 000 par mois).");
   }
+  // Plafond adaptatif (IONOS refuse les envois quand la boîte écrit trop) : 10 de moins à chaque
+  // passage refusé (jamais sous 30), puis 5 de plus chaque matin sans refus, jusqu'à 80.
+  // Le 11 novembre 2026, premiers refus massifs : plafond ramené à 40 d'un coup.
+  if (Date.now() < new Date(THROTTLE_START_UNTIL).getTime() && settings.daily_limit > 40) {
+    settings.daily_limit = 40;
+    await db.from("prospect_settings").update({ daily_limit: 40 }).eq("id", 1);
+    note("Plafond ramené à 40 nouveaux contacts par jour (refus répétés du serveur d'envoi IONOS).");
+  } else if (
+    settings.last_run_at &&
+    settings.daily_limit < 80 &&
+    settings.last_run_at.slice(0, 10) < new Date().toISOString().slice(0, 10) &&
+    !/saturé/.test(settings.last_run_summary || "")
+  ) {
+    settings.daily_limit = Math.min(80, settings.daily_limit + 5);
+    await db.from("prospect_settings").update({ daily_limit: settings.daily_limit }).eq("id", 1);
+    note(`Plafond remonté à ${settings.daily_limit} nouveaux contacts par jour (aucun refus hier soir).`);
+  }
   // 1. D'abord les envois (messages préparés lors des passages précédents) : ils ne doivent
   //    jamais être empêchés par une préparation trop longue.
   if (!settings.paused) {
@@ -2834,6 +2862,11 @@ async function main() {
       note(`Réponses détectées : ${r.replies}, adresses invalides : ${r.bounces}`);
       if (!settings.paused) {
         const sent = await sendBatch(settings, box);
+        if (sent.throttled && settings.daily_limit > 30) {
+          settings.daily_limit = Math.max(30, settings.daily_limit - 10);
+          await db.from("prospect_settings").update({ daily_limit: settings.daily_limit }).eq("id", 1);
+          note(`Plafond abaissé à ${settings.daily_limit} nouveaux contacts par jour (refus du serveur d'envoi).`);
+        }
         // Surveillance du quota (une fois par jour, vers 13 h 47) : à mi-journée, moins d'un quart
         // du quota parti → e-mail d'alerte au gérant, pour qu'un blocage ne passe jamais inaperçu.
         const hourNow = parisNow().getHours();
