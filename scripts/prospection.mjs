@@ -2030,6 +2030,20 @@ function officeHours() {
   );
 }
 
+// IONOS refuse (451 « local error in processing ») les e-mails envoyés à quelques secondes
+// d'intervalle : environ une minute entre deux envois, et en cas de refus passager, une pause de
+// trois minutes puis un seul nouvel essai.
+const SEND_GAP_MS = 45_000;
+async function sendPatiently(box, message) {
+  try {
+    return await box.send(message);
+  } catch (e) {
+    if (!(e.responseCode >= 400 && e.responseCode < 500) || timeLeft() < 8 * MINUTES) throw e;
+    await sleep(3 * MINUTES);
+    return box.send(message);
+  }
+}
+
 async function sendBatch(settings, box) {
   if (!officeHours()) {
     note("Hors heures de bureau (lundi-samedi, 8 h 30 - 18 h 30) : aucun envoi.");
@@ -2062,13 +2076,13 @@ async function sendBatch(settings, box) {
   for (const p of due || []) {
     if (blocked.has(p.email.toLowerCase())) continue;
     try {
-      await box.send(compose(p, true));
+      await sendPatiently(box, compose(p, true));
       await db
         .from("prospects")
         .update({ status: "relance", followups: 1, last_contact_at: now(), updated_at: now() })
         .eq("id", p.id);
       followups++;
-      await sleep(8000 + Math.random() * 7000);
+      await sleep(SEND_GAP_MS + Math.random() * 30_000);
     } catch (e) {
       note(`Relance ${p.name} : ${e.message}`);
     }
@@ -2082,7 +2096,7 @@ async function sendBatch(settings, box) {
     ...interleave((candidates || []).filter((p) => p.status !== "valide")),
   ];
   for (const p of ready) {
-    if (budget <= 0) break;
+    if (budget <= 0 || timeLeft() < 6 * MINUTES) break;
     if (blocked.has(p.email.toLowerCase())) {
       await db.from("prospects").update({ status: "desinscrit" }).eq("id", p.id);
       continue;
@@ -2121,7 +2135,7 @@ async function sendBatch(settings, box) {
       continue;
     }
     try {
-      const messageId = await box.send(compose(p, false));
+      const messageId = await sendPatiently(box, compose(p, false));
       await db
         .from("prospects")
         .update({
@@ -2141,7 +2155,7 @@ async function sendBatch(settings, box) {
       }
       sent++;
       budget--;
-      await sleep(8000 + Math.random() * 7000);
+      await sleep(SEND_GAP_MS + Math.random() * 30_000);
     } catch (e) {
       // Refus passager du serveur d'envoi (code 4xx, saturation chez IONOS) : on s'arrête là pour
       // ce passage sans rien marquer en erreur ; les messages repartent au passage suivant.
