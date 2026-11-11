@@ -3,9 +3,9 @@
 # Nécessite le secret de dépôt PMS_CRON_SECRET (même valeur que la variable Vercel du même nom).
 name: Automatisations du logiciel de gestion
 
+# Lancée chaque heure par l'horloge Supabase (spinelle-gestion) ; plus d'horloge GitHub, qui
+# consommait les minutes de calcul du compte.
 on:
-  schedule:
-    - cron: "*/15 * * * *"
   workflow_dispatch: {}
 
 jobs:
@@ -13,6 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Demandes du site (audit, simulateur, partenaires) envoyées par e-mail à contact@ depuis la
+      # boîte IONOS : aucune demande ne doit rester invisible. Dans le même travail pour ne compter
+      # qu'une minute de calcul par heure.
+      - name: Envoyer les nouvelles demandes par e-mail
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_HOST: ${{ vars.SMTP_HOST }}
+        run: |
+          npm install --no-audit --no-fund --no-save @supabase/supabase-js nodemailer
+          node scripts/demandes-site.mjs
       - name: Lancer les automatisations
         env:
           PMS_CRON_SECRET: ${{ secrets.PMS_CRON_SECRET }}
@@ -28,26 +45,3 @@ jobs:
             echo "Échec sur $base, essai suivant."
           done
           exit 1
-
-  # Demandes du site (audit, simulateur, partenaires) envoyées par e-mail à contact@ depuis la
-  # boîte IONOS : aucune demande ne doit rester invisible.
-  demandes:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    concurrency:
-      group: demandes-site
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Envoyer les nouvelles demandes par e-mail
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          SMTP_HOST: ${{ vars.SMTP_HOST }}
-        run: |
-          npm install --no-audit --no-fund --no-save @supabase/supabase-js nodemailer
-          node scripts/demandes-site.mjs

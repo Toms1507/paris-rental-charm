@@ -3,10 +3,8 @@
 # qui le lit pour analyser la semaine. Secrets : SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
 name: Rapport de prospection
 
+# Lancée le dimanche par l'horloge Supabase (spinelle-rapport), avant le directeur commercial.
 on:
-  schedule:
-    # Dimanche, 18 h 43 à Paris en été (une heure plus tôt en hiver), avant la routine de 19 h 13.
-    - cron: "43 16 * * 0"
   workflow_dispatch: {}
 
 permissions:

@@ -4,13 +4,10 @@
 # Sans SUPABASE_SERVICE_ROLE_KEY la tâche ne fait rien ; sans SMTP_PASSWORD elle n'envoie rien.
 name: Prospection des agences
 
+# Lancée uniquement par l'horloge Supabase (pg_cron, fonction spinelle_dispatch) : 3 passages
+# complets et 5 passages d'envoi par jour, plus la surveillance (relance si aucun passage depuis
+# 3 h). Les horloges GitHub faisaient doublon et consommaient les minutes de calcul du compte.
 on:
-  schedule:
-    # Du lundi au samedi (heure de Paris en été, une heure plus tôt en hiver) :
-    # passages complets à 9 h 17, 12 h 17 et 15 h 17 ; passages d'envoi seul toutes les heures à
-    # la demie, de 8 h 47 à 18 h 47 (envois étalés, un passage sauté par GitHub ne bloque rien).
-    - cron: "17 7,10,13 * * 1-6"
-    - cron: "47 6-16 * * 1-6"
   workflow_dispatch:
     inputs:
       mode:
@@ -59,7 +56,8 @@ jobs:
           # Navigateur pour les formulaires de contact (à chaque passage).
           # Une panne d'installation (serveurs Ubuntu injoignables) ne doit jamais bloquer les e-mails :
           # un nouvel essai, puis le passage continue sans formulaires.
-          if [ "$PROSPECT_MODE" != "test" ]; then
+          # Navigateur seulement pour les passages complets (formulaires) : économise les minutes.
+          if [ "$PROSPECT_MODE" = "complet" ]; then
             npx playwright install --with-deps chromium \
               || (sleep 30 && npx playwright install --with-deps chromium) \
               || npx playwright install chromium \

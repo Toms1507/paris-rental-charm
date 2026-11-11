@@ -46,7 +46,8 @@ const DRAFT_PER_RUN = 40;
 
 // Durée d'un passage : GitHub l'arrête à 45 minutes ; on s'arrête proprement avant.
 const RUN_START = Date.now();
-const timeLeft = () => RUN_START + 38 * 60_000 - Date.now();
+// 30 minutes de travail au plus par passage (minutes de calcul GitHub comptées).
+const timeLeft = () => RUN_START + 30 * 60_000 - Date.now();
 const MINUTES = 60_000;
 
 const SIGNATURE = `Bien cordialement,

@@ -3,8 +3,10 @@
 name: Signaler les mises à jour aux moteurs (IndexNow)
 
 on:
+  # Seulement quand le site change (pas pour les rapports ni la prospection) : économise les minutes.
   push:
     branches: [main]
+    paths: ["src/**", "public/**"]
   # Les commits de l'action de données ne déclenchent pas « push » : on suit donc sa fin.
   workflow_run:
     workflows: ["Mise à jour des données du simulateur"]
