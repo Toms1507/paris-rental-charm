@@ -1,5 +1,31 @@
 # Veille marché Spinelle
 
+## Veille du 2026-11-12
+Seules les nouveautés depuis la veille du 11/11 figurent ici. Sources souvent agrégateurs ou blogs : dates et chiffres à confirmer.
+- PLF 2027 : calendrier du Sénat selon Selectra : examen en séance du 20 nov. au 8 déc., vote solennel le 9 déc., puis recherche d'une version commune avant la mi-décembre ; le vote du 30 oct. (retrait du plafonnement LMNP) tombe si les députés rejettent la partie recettes. Régime actuel toujours en vigueur (à confirmer sur le site de l'Assemblée). https://selectra.info/finance/actualites/marche/lmnp-amortissement-amendement-30-octobre-vote
+- Airbnb : à partir des réservations faites le 20 nov. 2026, les hôtes ne pourront plus ajouter de règles ou demandes (ex. vaisselle) après la réservation ; tout doit figurer dans l'annonce, les écarts seront signalés et pourront réduire la visibilité de l'annonce (presse spécialisée, texte officiel non consulté). https://www.rentalscaleup.com/fr/nous-avons-teste-le-nouvel-outil-de-verification-des-regles-de-maison-dairbnb-voici-ce-quil-signale-et-ce-que-cela-signifie-pour-les-gestionnaires/
+- Airbnb : le modèle de frais partagés (hôtes ~3 %, voyageurs ~14-16,5 %) serait supprimé pour les derniers hôtes indépendants d'ici fin 2026 (Hostfully, à confirmer). https://www.hostfully.com/fr/blog/heberger-sur-airbnb-le-guide-complet-pour-les-operateurs-2026/
+- Réglementation : deux décrets de mars 2026 ouvrent aux communes l'accès aux données d'activité des meublés ; le téléservice national d'enregistrement reste annoncé au T4 2026 avec la nouvelle API meublés (ouverture non confirmée à ce jour). Sanctions citées : 5 000 € (annonce sans numéro) à 20 000 € (faux numéro). https://www.moneyvox.fr/immobilier/actualites/108657/meubles-touristiques-une-declaration-en-ligne-bientot-obligatoire-pour-tous-les-loueurs
+- Lyon : compensation exigée dès le 1er m² pour les personnes morales ; hors centre, dès 35 m² pour les particuliers (site de la Ville, à confirmer) ; Strasbourg : conditions de changement d'usage durcies en déc. 2025. https://www.lyon.fr/node/838135
+- Biarritz / Pays basque : un guide (juin 2026) évoque le passage de 120 à 90 jours pour les résidences principales comme imminent (à confirmer) ; Lège-Cap Ferret : règles locales décrites comme strictes, sources secondaires non concordantes sur les dates. https://www.holidu.fr/magazine/reglement-locations-saisonnieres-biarritz-pays-basque
+- Disneyland Paris 2027 (annonces D23, à confirmer) : deux nouveaux spectacles en février 2027, Wilderness Explorers Sky Swings (Là-Haut) en 2027, Crush's Coaster réouvert à l'été 2027, parade « Magic Happens » l'été, 35 ans le 12 avril 2027 ; salle de « Mickey & the Magician » fermée pour rénovation dès le 10 janv. https://dlptips.com/whats-new-disneyland-paris-2027/
+- Paris : Salon Bien-être Médecine douce du 28 janv. au 1er févr. 2027 à la Porte de Versailles ; aucun événement confirmé au Palais des Congrès en janv.-févr. 2027 (agrégateurs). https://parisjetaime.com/evenement/salon-bien-etre-medecine-douce-e2042
+- Côte d'Azur : CANNESERIES du 11 au 16 févr. 2027 (10e édition) ; MIPTV annoncé pour février 2027, dates non confirmées. https://www.eventseye.com/fairs/f-mipim-8438-0.html
+- Alpes : ouvertures de stations, pic de réservation et hausse Sunweb déjà signalés ; nouveauté : la majorité des stations ouvriraient en décembre, avec une troisième vague le 19 déc. (près de 80 stations) selon Ulysse. https://ulysse.com/news/je-pensais-devoir-attendre-decembre-pour-skier-ces-stations-francaises-ouvrent-pourtant-des-le-21-novembre
+- Investissement : résidences de services (étudiantes, seniors) exonérées de la réintégration fiscale visée pour les meublés classiques, d'après Cafpi (juillet 2026, à confirmer). https://www.cafpi.fr/credit-immobilier/actualites/investissement-locatif-meuble-pourquoi-les-residences-etudiantes-et-seniors-attirent-autant-les-particuliers
+- Concurrence : aucune levée, rachat ou ouverture de conciergerie datée de 2026 confirmée (Hostmaker, GuestReady, Hostnfly : articles anciens ou dates à vérifier).
+- Bordeaux, Arcachon, Chartres, Versailles : rien de nouveau et de fiable pour l'hiver ; nouvelles villes : pas de donnée de demande courte durée fiable pour Lille, Rennes, Nantes.
+
+### Opportunités
+1. Airbnb 20 nov. : proposer aux prescripteurs une conciergerie qui affiche règles et consignes dans l'annonce avant réservation (argument de conformité) ; sujet de blog « Airbnb : ce qui change pour les règles de maison au 20 novembre ».
+2. Disneyland Paris : 35e anniversaire (12 avril 2027) et nouveautés 2027 comme argument auprès des agences de Marne-la-Vallée et Chessy ; blog « Séjourner près de Disney en 2027 ».
+3. Côte d'Azur : agenda février-mars 2027 (CANNESERIES 11-16 févr., Carnaval de Nice, MIPIM 15-19 mars) pour démarcher agences de Cannes et Nice.
+
+### Points d'attention
+- Sénat du 20 nov. au 8 déc. : ne rien promettre sur le LMNP avant le texte final.
+- Vérifier l'ouverture du téléservice d'enregistrement national avant d'informer les propriétaires.
+- Plafond de 90 jours à Biarritz non confirmé : ne pas l'annoncer.
+
 ## Veille du 2026-11-11
 Peu de nouveautés depuis la veille du 10/11 ; seules les informations nouvelles figurent ici. Sources souvent agrégateurs : dates et chiffres à confirmer.
 - PLF 2027 : sources divergentes sur l'état du texte des députés (une source évoque un amendement I-96 adopté le 30 oct. sans plafonnement LMNP, une autre la suppression du volet de l'art. 7) ; Selectra renvoie au calendrier du Sénat à partir du 20 nov. ; le recours au 49.3 est évoqué. Tant que la loi n'est pas promulguée, le droit actuel s'applique (à confirmer sur le site de l'Assemblée). https://selectra.info/finance/actualites/marche/lmnp-amortissement-amendement-30-octobre-vote
