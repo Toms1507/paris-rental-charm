@@ -6,7 +6,12 @@ name: Automatisations du logiciel de gestion
 # Lancée chaque heure par l'horloge Supabase (spinelle-gestion) ; plus d'horloge GitHub, qui
 # consommait les minutes de calcul du compte.
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      redeposer_depuis:
+        description: "Déposer à nouveau dans la boîte les demandes notifiées depuis cette date (AAAA-MM-JJ)"
+        required: false
+        default: ""
 
 jobs:
   run:
@@ -17,8 +22,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      # Demandes du site (audit, simulateur, partenaires) envoyées par e-mail à contact@ depuis la
-      # boîte IONOS : aucune demande ne doit rester invisible. Dans le même travail pour ne compter
+      # Demandes du site (audit, simulateur, partenaires) déposées dans la boîte de réception de
+      # contact@ (IMAP, e-mail en secours) : aucune demande ne doit rester invisible. Dans le même travail pour ne compter
       # qu'une minute de calcul par heure.
       - name: Envoyer les nouvelles demandes par e-mail
         continue-on-error: true
@@ -27,8 +32,10 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SMTP_HOST: ${{ vars.SMTP_HOST }}
+          IMAP_HOST: ${{ vars.IMAP_HOST }}
+          REDEPOSER_DEPUIS: ${{ inputs.redeposer_depuis }}
         run: |
-          npm install --no-audit --no-fund --no-save @supabase/supabase-js nodemailer
+          npm install --no-audit --no-fund --no-save @supabase/supabase-js nodemailer imapflow
           node scripts/demandes-site.mjs
       - name: Lancer les automatisations
         env:

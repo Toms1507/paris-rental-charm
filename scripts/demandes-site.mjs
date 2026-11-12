@@ -1,11 +1,17 @@
 // Demandes du site (audit / estimation, simulateur, partenaires) : chaque nouvelle demande
-// enregistrée dans la table « leads » est envoyée par e-mail à contact@, depuis la boîte IONOS
-// (la même que la prospection), sans service payant. La demande est ensuite marquée « notifiée »
-// dans son champ message, pour ne jamais être envoyée deux fois.
+// enregistrée dans la table « leads » est déposée directement dans la boîte de réception de
+// contact@ (IMAP), sans passer par l'envoi d'e-mails : ni le serveur d'envoi IONOS (qui peut
+// refuser les envois quand la prospection l'a saturé) ni le filtre anti-spam ne peuvent la
+// bloquer. Envoi SMTP seulement en secours. La demande est ensuite marquée « notifiée » dans son
+// champ message, pour ne jamais être transmise deux fois.
+// REDEPOSER_DEPUIS=AAAA-MM-JJ : dépose à nouveau les demandes notifiées depuis cette date.
+// Aucun détail de demande n'est écrit dans le journal (dépôt public).
 //
-// Variables : SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SMTP_PASSWORD (+ SMTP_HOST facultatif).
+// Variables : SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SMTP_PASSWORD (+ SMTP_HOST, IMAP_HOST).
 import { createClient } from "@supabase/supabase-js";
 import nodemailer from "nodemailer";
+import MailComposer from "nodemailer/lib/mail-composer/index.js";
+import { ImapFlow } from "imapflow";
 
 const env = (k) => {
   const v = process.env[k];
@@ -29,18 +35,52 @@ const { data, error } = await db
   .gte("created_at", since)
   .order("created_at", { ascending: true });
 if (error) throw new Error(error.message);
-const pending = (data || []).filter((l) => !(l.message || "").includes(MARK));
+const again = (process.env.REDEPOSER_DEPUIS || "").trim();
+const notifiedOn = (l) => (l.message || "").match(/\[notifié par e-mail le (\d{4}-\d{2}-\d{2})\]/)?.[1];
+const pending = (data || []).filter(
+  (l) => !(l.message || "").includes(MARK) || (again && (notifiedOn(l) || "") >= again),
+);
 if (!pending.length) {
   console.log("Aucune nouvelle demande.");
   process.exit(0);
 }
 
-const smtp = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.ionos.fr",
-  port: 465,
+const auth = { user: EMAIL, pass: env("SMTP_PASSWORD") };
+const imap = new ImapFlow({
+  host: process.env.IMAP_HOST || "imap.ionos.fr",
+  port: 993,
   secure: true,
-  auth: { user: EMAIL, pass: env("SMTP_PASSWORD") },
+  auth,
+  logger: false,
 });
+let imapReady = false;
+try {
+  await imap.connect();
+  imapReady = true;
+} catch (e) {
+  console.error(`Boîte de réception injoignable (${e.message}) : envoi par e-mail en secours.`);
+}
+let smtp;
+// Dépose le message non lu dans la boîte de réception ; sinon l'envoie par e-mail.
+async function deliver(message) {
+  const raw = await new MailComposer({ ...message, date: new Date() }).compile().build();
+  if (imapReady) {
+    try {
+      await imap.append("INBOX", raw, []);
+      return "boîte de réception";
+    } catch (e) {
+      console.error(`Dépôt dans la boîte impossible (${e.message}) : envoi par e-mail en secours.`);
+    }
+  }
+  smtp ||= nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.ionos.fr",
+    port: 465,
+    secure: true,
+    auth,
+  });
+  await smtp.sendMail({ envelope: { from: EMAIL, to: [EMAIL] }, raw });
+  return "e-mail";
+}
 
 const escape = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const KIND = { formulaire: "Demande d'audit", simulateur: "Simulateur", partenaire: "Partenaire" };
@@ -78,7 +118,7 @@ for (const l of pending) {
     .join("")}</table>
 <p style="margin-top:16px">Répondez directement à cet e-mail pour écrire à ${escape(l.full_name)}.</p></div>`;
   try {
-    await smtp.sendMail({
+    const via = await deliver({
       from: { name: "Site Spinelle", address: EMAIL },
       to: EMAIL,
       replyTo: l.email,
@@ -86,16 +126,21 @@ for (const l of pending) {
       text,
       html,
     });
+    console.log(`Demande du ${date} transmise (${via}).`);
   } catch (e) {
-    console.error(`Envoi impossible pour une demande du ${date} : ${e.message}`);
+    console.error(`Transmission impossible pour une demande du ${date} : ${e.message}`);
     continue;
   }
-  const stamp = new Date().toISOString().slice(0, 10);
-  await db
-    .from("leads")
-    .update({ message: `${l.message || ""}\n${MARK} ${stamp}]` })
-    .eq("id", l.id);
+  if (!(l.message || "").includes(MARK)) {
+    const stamp = new Date().toISOString().slice(0, 10);
+    await db
+      .from("leads")
+      .update({ message: `${l.message || ""}\n${MARK} ${stamp}]` })
+      .eq("id", l.id);
+  }
   sent++;
 }
-console.log(`Demandes envoyées par e-mail : ${sent} sur ${pending.length}`);
+if (imapReady) await imap.logout().catch(() => {});
+smtp?.close();
+console.log(`Demandes transmises : ${sent} sur ${pending.length}`);
 if (sent < pending.length) process.exit(1);
