@@ -1,5 +1,28 @@
 # Veille marché Spinelle
 
+## Veille du 2026-11-13
+Peu de nouveautés depuis la veille du 12/11 ; seules les informations nouvelles figurent ici. Sources souvent agrégateurs ou presse : dates et chiffres à confirmer.
+- PLF 2027 : les sources restent divergentes sur le texte transmis au Sénat (Legifiscal : les députés suppriment le plafonnement LMNP ; MySweetImmo : exemption votée en commission mais fiscalité durcie pour de futurs achats touristiques, une déduction supprimée pour les meublés de tourisme achetés dès le 1er janv. 2027 étant évoquée). Projet initial cité : 2,5 % / 7 000 € par foyer, et 1,5 % / 5 000 € pour les meublés de tourisme. Droit actuel applicable tant que la loi n'est pas promulguée (à confirmer sur le site de l'Assemblée). https://www.mysweetimmo.com/2026/10/09/plf-2027-les-locations-meublees-dhabitation-epargnees/
+- Europe : en sept. 2026, l'UE a présenté un plan pour aider les villes à encadrer les locations courte durée de type Airbnb (pour information interne ; détail des mesures non consulté). https://www.parismatch.be/actualites/economie/2026/09/09/logement-lue-veut-aider-les-villes-a-hausser-le-ton-face-a-airbnb-HSVCP6ED3VCPRBIDC3HCEOCR6E/
+- Île-de-France : une étude relayée par L'Écho touristique indique une hausse du nombre de locations Airbnb « à l'année » (date et chiffres non consultés, à confirmer) : signe d'un report de meublés vers la longue durée. https://www.lechotouristique.com/france/le-nombre-de-locations-airbnb-a-l-annee-augmente-en-ile-de-france-selon-une-etude
+- Paris : une nouvelle amende record contre un loueur Airbnb est signalée par Actu-Juridique (montant et date non consultés, à confirmer). https://www.actu-juridique.fr/civil/logement/locations-airbnb-nouvelle-amende-record-a-paris/
+- Versailles : « Parcours du Roi de Noël » (visite-spectacle autour de Marie-Antoinette) du 12 déc. 2026 au 2 janv. 2027 ; exposition du photographe Yasumichi Morita à partir du 8 déc. 2026 ; spectacle « Marie-Antoinette à Trianon » annoncé pour mai 2027 sur la place d'Armes (à confirmer). https://en.chateauversailles.fr/press/exhibitions/2026-exhibition-programme-chateau-versailles
+- Côte d'Azur : Carnaval de Nice 2027 « Vive l'Amour » du 9 au 28 févr. ; Bataille de fleurs le 9 févr., corso d'ouverture le 13 févr. à 21 h (déjà vu en veille antérieure pour les dates ; programme détaillé nouveau, à confirmer). https://www.meet-in-nicecotedazur.com/en/fiche/carnaval-de-nice-2027-vive-l-amour-en/
+- Montagne : PAP observe +3,3 % de demandes de réservation sur l'hiver 2026 (7 févr.-9 mars, ~33 740 demandes), +4 % en montagne, avec de fortes hausses dans les Pyrénées ; l'ANMSM cite 63 % de taux de réservation des lits touristiques à la date de son document (écart avec d'autres chiffres déjà notés : bases et dates différentes, à confirmer). https://www.pap.fr/blog/vacances-dhiver-2026-les-alpes-toujours-numero-1-mais-les-pyrenees-explosent/a29631
+- Concurrence : aucune levée ou rachat de conciergerie confirmé en 2026 (HostnFly, Hostmaker, GuestReady : articles anciens aux dates trompeuses).
+- Bordeaux, Arcachon, Chartres : calendriers 2027 pas encore publiés ; seuls quelques concerts datés trouvés (Arcachon 29 janv., Bordeaux 3 févr., Biarritz 2 mars 2027), sans impact démontré sur la demande.
+- Villes à étudier : aucune donnée courte durée fiable pour Annecy, Strasbourg, Dijon, Lille dans les résultats du jour.
+
+### Opportunités
+1. Versailles : proposer aux agences un message « fêtes + Roi de Noël + exposition Coppola (jusqu'au 24 janv.) » ; sujet de blog « Séjourner à Versailles pendant les illuminations de Noël ».
+2. Investisseurs/CGP : argumentaire « PLF 2027 incertain » avec scénarios de rentabilité sans amortissement et avec le plafond initial ; ne rien promettre avant le texte final.
+3. Propriétaires parisiens tentés par la longue durée (hausse des locations « à l'année » citée) : article « Courte, moyenne ou longue durée : comparer avec une conciergerie ».
+
+### Points d'attention
+- Plan européen de sept. 2026 et amendes à Paris : vérifier enregistrement et conformité de chaque bien avant de signer.
+- Ne pas citer de chiffre d'occupation hiver sans préciser la source (valeurs divergentes entre ANMSM, PAP et autres).
+- Sénat du 20 nov. au 8 déc. : suivre l'évolution du texte LMNP.
+
 ## Veille du 2026-11-12
 Seules les nouveautés depuis la veille du 11/11 figurent ici. Sources souvent agrégateurs ou blogs : dates et chiffres à confirmer.
 - PLF 2027 : calendrier du Sénat selon Selectra : examen en séance du 20 nov. au 8 déc., vote solennel le 9 déc., puis recherche d'une version commune avant la mi-décembre ; le vote du 30 oct. (retrait du plafonnement LMNP) tombe si les députés rejettent la partie recettes. Régime actuel toujours en vigueur (à confirmer sur le site de l'Assemblée). https://selectra.info/finance/actualites/marche/lmnp-amortissement-amendement-30-octobre-vote
